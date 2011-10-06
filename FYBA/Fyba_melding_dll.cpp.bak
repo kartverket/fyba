@@ -1,0 +1,368 @@
+//////////////////////////////////////////////////////////////////////////
+// Fil: fyba_melding_dll.cpp
+//////////////////////////////////////////////////////////////////////////
+#include "stdafx.h"
+
+#include "fyba.h"
+
+extern void  (*LC_ErrorAdr) (short ifeilnr, const char *logtx, const char *vartx);
+extern void  (*LC_StartMessageAdr)(const char *cfil);
+extern void  (*LC_ShowMessageAdr)(double prosent);
+extern void  (*LC_EndMessageAdr)(void);
+extern short (*LC_CancelAdr)(void);
+
+static short sProsent;
+
+// Rutiner for å definere callback-rutiner for informasjon til brukeren.
+
+/*
+AR:2006-03-21
+CH LC_SetErrorHandler                              Registrer feilmeldingsrutine
+CD =============================================================================
+CD Formål:
+CD Registrer feilmeldingsrutine.
+CD Feilmeldingsrutinen blir kallt hvis det oppstår feil.
+CD
+CD Parametre:
+CD Type   Navn                       I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD void  (*f) (short ,char *,char *)  i   Peker til feilmeldingsrutine
+CD
+CD Bruk:
+CD LC_SetErrorHandler(ErrorHandler);
+CD
+CD
+CD Feilmeldingsrutinen skal ha følgende definisjon:
+CD
+CD void ErrorHandler(short feil_nr,const char *logtx,const char *vartx);
+CD
+CD Med følgende parametre:
+CD Type    Navn     I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD short   feil_nr   i   Feil-nummer
+CD char   *logtx     i   Tekst som bare skrives til logfil.
+CD                       Eks:"(utført i LC_RxGr)"
+CD char   *vartx     i   Denne tekststreng henges etter feilmeldingsteksten.
+CD =============================================================================
+*/
+SK_EntPnt_FYBA void LC_SetErrorHandler(void (*f) (short,const char*,const char*))
+{
+   LC_ErrorAdr = f;
+}
+
+
+/*
+AR:2006-03-21
+CH LC_SetStartMessageHandler                           Registrer initieringsrutine
+CD =============================================================================
+CD Formål:
+CD Registrer initieringsrutine.
+CD Initieringsrutinen blir kalt for å starte visning av framdrift.
+CD
+CD Parametre:
+CD Type   Navn       I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD void  (*f)(char*)  i   Peker til initieringsrutine
+CD
+CD Bruk:
+CD LC_SetStartMessageHandler(StartMessageHandler);
+CD
+CD Initieringsrutinen skal ha følgende definisjon:
+CD
+CD void StartMessageHandler(char *pszFilnavn);
+CD
+CD Med følgende parametre:
+CD Type     Navn        I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
+CD =============================================================================
+*/
+SK_EntPnt_FYBA void LC_SetStartMessageHandler(void (*f)(const char*)) 
+{ 
+   LC_StartMessageAdr = f;
+}
+
+
+/*
+AR:2006-03-21
+CH LC_SetShowMessageHandler                               Registrer visningsrutine
+CD =============================================================================
+CD Formål:
+CD Registrer visningsrutine.
+CD Visningsrutine blir kalt for å vise framdrift ved indeks-oppbygging.
+CD
+CD Parametre:
+CD Type   Navn       I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD void  (*f)(double)  i   Peker til visningsrutine
+CD
+CD Bruk:
+CD LC_SetShowMessageHandler(ShowMessageHandler);
+CD
+CD Visningsrutinen skal ha følgende definisjon:
+CD
+CD void ShowMessageHandler(double prosent);
+CD
+CD Med følgende parametre:
+CD Type     Navn        I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD double   prosent      i   Prosent ferdig (0.0 - 100.0)
+CD =============================================================================
+*/
+SK_EntPnt_FYBA void LC_SetShowMessageHandler(void (*f)(double))
+{
+   LC_ShowMessageAdr = f;
+}
+
+
+/*
+AR:2006-03-21
+CH LC_SetEndMessageHandler                             Registrer avslutningsrutine
+CD =============================================================================
+CD Formål:
+CD Registrer avslutningsrutine.
+CD Avslutningsrutinen blir kalt for å avslutte visning av framdrift ved indeksoppbygging.
+CD
+CD Parametre:
+CD Type   Navn       I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD void  (*f)(void)  i   Peker til avslutningsrutine
+CD
+CD Bruk:
+CD LC_SetEndMessageHandler(EndMessageHandler);
+CD
+CD Avslutningsrutinen skal ha følgende definisjon:
+CD
+CD void EndMessageHandler(void);
+CD =============================================================================
+*/
+SK_EntPnt_FYBA void LC_SetEndMessageHandler(void (*f)(void))
+{
+   LC_EndMessageAdr = f;
+}
+
+
+/*
+AR:2006-03-21
+CH LC_SetCancelHandler                                Registrer avbruddsstyring
+CD =============================================================================
+CD Formål:
+CD Registrer avbruddsstyring.
+CD Rutine for avbruddsstyring blir kalt for å sjekke om bruker ønsker
+CD å avbryte beregningen.
+CD
+CD Parametre:
+CD Type   Navn       I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD short  (*f)(void)  i   Peker til rutine for avbruddsstyring.
+CD
+CD Bruk:
+CD LC_SetCancelHandler(CancelHandler);
+CD
+CD Rutine for avbruddsstyring skal ha følgende definisjon:
+CD
+CD short CancelHandler(void);
+CD
+CD Med følgende parametre:
+CD Type   Navn      I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD short  sAvbrutt   r   UT_TRUE  = Cancel
+CD                       UT_FALSE = ikke avbrudd
+CD =============================================================================
+*/
+SK_EntPnt_FYBA void LC_SetCancelHandler(short (*f)(void))
+{
+   LC_CancelAdr = f;
+}
+
+
+/*
+AR-890911
+CH LC_Error                                                  Feilmeldingsrutine
+CD =============================================================================
+CD Formål:
+CD Standard feilmeldingsrutine.
+CD
+CD Parametre:
+CD Type     Navn        I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD short    feil_nr      i   Feil-nummer
+CD char    *logtx        i   Tekst som bare skrives til logfil.
+CD                           Eks:"(utført i LC_RxGr)"
+CD char    *vartx        i   Denne tekststreng henges etter feilmeldingsteksten.
+CD
+CD Bruk:
+CD LC_Error(35,"(Kallt i LC_Xxxx)","");
+CD =============================================================================
+*/
+void LC_Error(short feil_nr,const char *logtx,const char *vartx)
+{
+   char szErrMsg[260];
+   short strategi;
+   char *pszFeilmelding;
+
+
+   // Kaller hovedprogrammets implementasjon av feilhandteringen
+   if (LC_ErrorAdr != NULL) {
+      (*LC_ErrorAdr) (feil_nr,logtx,vartx);
+
+
+   // Egen enkel implementasjon av feilhandtering   
+   } else {
+      /* Hent feilmeldingstekst og strategi */
+      strategi = LC_StrError(feil_nr,&pszFeilmelding);
+      switch(strategi) {
+         case 2:  UT_SNPRINTF(szErrMsg,260,"%s","Observer følgende! \n\n");break;
+         case 3:  UT_SNPRINTF(szErrMsg,260,"%s","Det er oppstått en feil! \n\n");break;
+         case 4:  UT_SNPRINTF(szErrMsg,260,"%s","Alvorlig feil avslutt programmet! \n\n");break;
+         default: szErrMsg[0]='\0';
+      }
+
+#ifdef WIN32
+      if (strategi > 2) {
+         Beep(100,500);
+      }
+
+      if (UT_StrCat (szErrMsg,pszFeilmelding, sizeof(szErrMsg))) {
+         if (UT_StrCat (szErrMsg,&vartx[0], sizeof(szErrMsg))) {
+            MessageBox(NULL, szErrMsg, "Melding fra FYBA ", MB_ICONHAND | MB_OK);
+
+         } else {
+            MessageBox(NULL, "Klarer ikke å vise teksten", "Melding fra FYBA ", MB_ICONHAND | MB_OK);
+         }
+
+      } else {
+         MessageBox(NULL, "Klarer ikke å vise teksten", "Melding fra FYBA ", MB_ICONHAND | MB_OK);
+      }
+#endif
+   }
+}
+
+
+/*
+AR-900609
+CH LC_StartMessage                                          Vise melding
+CD =============================================================================
+CD Formål:
+CD Starter vising av melding om baseoppbygging.
+CD
+CD Parametre:
+CD Type     Navn        I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
+CD
+CD Bruk:
+CD LC_StartMessage(pszFilnavn);
+CD =============================================================================
+*/
+void LC_StartMessage(const char *pszFilnavn)
+{
+   // Kaller hovedprogrammets implementasjon
+   if (LC_StartMessageAdr != NULL) {
+      (*LC_StartMessageAdr) (pszFilnavn);
+
+   // Egen enkel implementasjon  
+   } else {
+#ifndef LINUX
+      printf("\nLeser: %s ",pszFilnavn);
+      printf("\n0%%");
+      fflush(stdout);
+#endif
+   }
+}
+
+
+/*
+AR-900609
+CH LC_ShowMessage                                          Vise melding
+CD =============================================================================
+CD Formål:
+CD Vising av melding om baseoppbygging.
+CD
+CD Parametre:
+CD Type     Navn        I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD double   prosent      i   Prosent ferdig (0.0 - 100.0)
+CD
+CD Bruk:
+CD LC_ShowMessage(prosent);
+CD =============================================================================
+*/
+void LC_ShowMessage(double prosent)
+{
+   // Kaller hovedprogrammets implementasjon
+   if (LC_ShowMessageAdr != NULL) {
+      (*LC_ShowMessageAdr) (prosent);
+
+   // Egen enkel implementasjon  
+   } else {
+#ifndef LINUX
+      printf("\r%d%%",(short)prosent);
+      fflush(stdout);
+#endif
+   }
+}
+
+
+/*
+AR-900609
+CH LC_EndMessage                                          Avslutt melding
+CD =============================================================================
+CD Formål:
+CD Avslutt melding om baseoppbygging.
+CD
+CD Parametre:
+CD Type     Navn        I/U  Forklaring
+CD -----------------------------------------------------------------------------
+CD
+CD Bruk:
+CD LC_EndMessage();
+CD =============================================================================
+*/
+void LC_EndMessage(void)
+{
+   // Kaller hovedprogrammets implementasjon
+   if (LC_EndMessageAdr != NULL) {
+      (*LC_EndMessageAdr) ();
+
+   // Egen enkel implementasjon  
+   } else {
+#ifndef LINUX
+      printf("\r100%% ferdig.");
+      fflush(stdout);
+#endif
+   }
+}
+
+
+/*
+AR-910402
+CH LC_Cancel                                         Sjekk om Esc er trykket
+CD ==========================================================================
+CD Formål:
+CD Sjekk om det er trykkt på Esc (Avbryte indeksoppbygging).
+CD
+CD
+CD Parametre:
+CD Type   Navn      I/U   Forklaring
+CD --------------------------------------------------------------------------
+CD short  sAvbrutt   r    UT_TRUE  = Cancel
+CD                        UT_FALSE = ikke avbrudd
+CD
+CD Bruk:
+CD sAvbrutt = LC_Cancel();
+CD ==========================================================================
+*/
+short LC_Cancel(void)
+{
+   // Kaller hovedprogrammets implementasjon
+   if (LC_CancelAdr != NULL) {
+      return (*LC_CancelAdr) ();
+
+   // Egen enkel implementasjon  
+   } else {
+      /* Ikke mulig å avbryte */ 
+      return UT_FALSE;
+   }
+}
+
