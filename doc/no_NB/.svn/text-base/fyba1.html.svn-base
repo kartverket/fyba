@@ -1,0 +1,300 @@
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" CONTENT="text/htm; iso-8859-1">
+</HEAD>
+<STYLE>
+<
+BODY {background: white; color: black}
+A   {font-size: 9pt; color: blue ; text-decoration: none; font-family: arial, helvetica, sans-serif;}
+PRE {font-size: 10pt; font-family: arial, helvetica, sans-serif;}
+>
+</STYLE>
+<BODY>
+<PRE><B>Innhold:</B>
+<P><A HREF="fyba2.html" target="Felt2"><FONT COLOR=BLACK>Topp</FONT></A>
+<P><A HREF="fyba2.html#O1" target="Felt2"><FONT COLOR=BLACK><B>1 Innledning</B></FONT></A>
+<P><A HREF="fyba2.html#O2" target="Felt2"><FONT COLOR=BLACK><B>2 Oversikt over funksjonaliteten til FYBA</B></FONT></A>
+<P><A HREF="fyba2.html#O3" target="Felt2"><FONT COLOR=BLACK><B>3 Indeks-systemets oppbygning</B></FONT></A>
+<A HREF="fyba2.html#Gruppetabell" target="Felt2">- Gruppetabell</A>
+<A HREF="fyba2.html#Brukttabell" target="Felt2">- Brukttabell</A>
+<A HREF="fyba2.html#SOSI-buffer" target="Felt2">- SOSI-buffer</A>
+<A HREF="fyba2.html#Serienummer-tabell" target="Felt2">- Serienummer-tabell</A>
+<A HREF="fyba2.html#Geografisk-søketabell" target="Felt2">- Geografisk-søketabell</A>
+<P><A HREF="fyba2.html#O4" target="Felt2"><FONT COLOR=BLACK><B>4 Navnekonvensjoner</B></FONT></A>
+<P><A HREF="fyba2.html#O5" target="Felt2"><FONT COLOR=BLACK><B>5 Initiering og styring</B></FONT></A>
+<A HREF="fyba2.html#LC_Init" target="Felt2">- LC_Init</A>
+<A HREF="fyba2.html#LC_InqVer" target="Felt2">- LC_InqVer</A>
+<A HREF="fyba2.html#LC_Close" target="Felt2">- LC_Close</A>
+<A HREF="fyba2.html#LC_MaxSkriv" target="Felt2">- LC_MaxSkriv</A>
+<A HREF="fyba2.html#LC_InqMaxSkriv" target="Felt2">- LC_InqMaxSkriv</A>
+<A HREF="fyba2.html#LC_SetNgisModus" target="Felt2">- LC_SetNgisModus</A>
+<A HREF="fyba2.html#LC_SetDefLpfi" target="Felt2">- LC_SetDefLpfi</A>
+<A HREF="fyba2.html#LC_InqDefLpfi" target="Felt2">- LC_InqDefLpfi</A>
+<A HREF="fyba2.html#LC_SetUtvidModus" target="Felt2">- LC_SetUtvidModus</A>
+<P><A HREF="fyba2.html#O6" target="Felt2"><FONT COLOR=BLACK><B>6 Åpning av base og sosi-filer</B></FONT></A>
+<A HREF="fyba2.html#LC_OpenBase" target="Felt2">- LC_OpenBase</A>
+<A HREF="fyba2.html#LC_CloseBase" target="Felt2">- LC_CloseBase</A>
+<A HREF="fyba2.html#LC_SelectBase" target="Felt2">- LC_SelectBase</A>
+<A HREF="fyba2.html#LC_InqCurBase" target="Felt2">- LC_InqCurBase</A>
+<A HREF="fyba2.html#LC_OpenSos" target="Felt2">- LC_OpenSos</A>
+<A HREF="fyba2.html#LC_CloseSos" target="Felt2">- LC_CloseSos</A>
+<A HREF="fyba2.html#LC_DelIdx" target="Felt2">- LC_DelIdx</A>
+<A HREF="fyba2.html#LC_FcloseSos" target="Felt2">- LC_FcloseSos</A>
+<P><A HREF="fyba2.html#O7" target="Felt2"><FONT COLOR=BLACK><B>7 Hjelpefunksjoner</B></FONT></A>
+<P><A HREF="fyba2.html#O8" target="Felt2"><FONT COLOR=GREEN><B>7.1 Base og fil</B></FONT></A>
+<A HREF="fyba2.html#LC_GetBaOm" target="Felt2">- LC_GetBaOm</A>
+<A HREF="fyba2.html#LC_GetFiOm" target="Felt2">- LC_GetFiOm</A>
+<A HREF="fyba2.html#LC_GetFiNr" target="Felt2">- LC_GetFiNr</A>
+<A HREF="fyba2.html#LC_GetFiNa" target="Felt2">- LC_GetFiNa</A>
+<A HREF="fyba2.html#LC_GetTegnsett" target="Felt2">- LC_GetTegnsett</A>
+<A HREF="fyba2.html#LC_InqLag" target="Felt2">- LC_InqLag</A>
+<A HREF="fyba2.html#LC_InqFilLag" target="Felt2">- LC_InqFilLag</A>
+<A HREF="fyba2.html#LC_SetFilLag" target="Felt2">- LC_SetFilLag</A>
+<A HREF="fyba2.html#LC_FiLastGr" target="Felt2">- LC_FiLastGr</A>
+<A HREF="fyba2.html#LC_ErFilBase" target="Felt2">- LC_ErFilBase</A>
+<A HREF="fyba2.html#LC_ErKoordsysLik" target="Felt2">- LC_ErKoordsysLik</A>
+<A HREF="fyba2.html#LC_Backup" target="Felt2">- LC_Backup</A>
+<A HREF="fyba2.html#LC_GetNgisLag" target="Felt2">- LC_GetNgisLag</A>
+<A HREF="fyba2.html#LC_SetFilType" target="Felt2">- LC_SetFilType</A>
+<A HREF="fyba2.html#LC_GetFilType" target="Felt2">- LC_GetFilType</A>
+<A HREF="fyba2.html#LC_ErLik_Avrundet" target="Felt2">- LC_ErLik_Avrundet</A>
+<A HREF="fyba2.html#LC_ErLik_IkkeAvrundet" target="Felt2">- LC_ErLik_IkkeAvrundet</A>
+<A HREF="fyba2.html#LC_ErReferert" target="Felt2">- LC_ErReferert</A>
+<P><A HREF="fyba2.html#O9" target="Felt2"><FONT COLOR=GREEN><B>7.2 SOSI-gruppe</B></FONT></A>
+<A HREF="fyba2.html#LC_GetGrNr" target="Felt2">- LC_GetGrNr</A>
+<A HREF="fyba2.html#LC_GetGrPara" target="Felt2">- LC_GetGrPara</A>
+<A HREF="fyba2.html#LC_GetGrParaBgr" target="Felt2">- LC_GetGrParaBgr</A>
+<A HREF="fyba2.html#LC_GetGrFi" target="Felt2">- LC_GetGrFi</A>
+<A HREF="fyba2.html#LC_SetEndringsstatus" target="Felt2">- LC_SetEndringsstatus</A>
+<P><A HREF="fyba2.html#O10" target="Felt2"><FONT COLOR=GREEN><B>7.3 Hode, aktuell gruppe</B></FONT></A>
+<A HREF="fyba2.html#LC_NyttHode" target="Felt2">- LC_NyttHode</A>
+<A HREF="fyba2.html#LC_TestHode" target="Felt2">- LC_TestHode</A>
+<A HREF="fyba2.html#LC_GetOmr" target="Felt2">- LC_GetOmr</A>
+<A HREF="fyba2.html#LC_PutOmr" target="Felt2">- LC_PutOmr</A>
+<A HREF="fyba2.html#LC_GetTrans" target="Felt2">- LC_GetTrans</A>
+<A HREF="fyba2.html#LC_GetTransEx" target="Felt2">- LC_GetTransEx</A>
+<A HREF="fyba2.html#LC_PutTrans" target="Felt2">- LC_PutTrans</A>
+<A HREF="fyba2.html#LC_PutTransEx" target="Felt2">- LC_PutTransEx</A>
+<P><A HREF="fyba2.html#O11" target="Felt2"><FONT COLOR=GREEN><B>7.4 Hode, direkte fra SOSI-fil</B></FONT></A>
+<A HREF="fyba2.html#HO_New" target="Felt2">- HO_New</A>
+<A HREF="fyba2.html#HO_TestSOSI" target="Felt2">- HO_TestSOSI</A>
+<A HREF="fyba2.html#HO_GetKvalitet" target="Felt2">- HO_GetKvalitet</A>
+<A HREF="fyba2.html#HO_GetTegnsett" target="Felt2">- HO_GetTegnsett</A>
+<A HREF="fyba2.html#HO_GetVal" target="Felt2">- HO_GetVal</A>
+<A HREF="fyba2.html#HO_GetTrans" target="Felt2">- HO_GetTrans</A>
+<A HREF="fyba2.html#HO_GetTransEx" target="Felt2">- HO_GetTransEx</A>
+<A HREF="fyba2.html#HO_GetOmr" target="Felt2">- HO_GetOmr</A>
+<A HREF="fyba2.html#HO_SjekkTegnsett" target="Felt2">- HO_SjekkTegnsett</A>
+<P><A HREF="fyba2.html#O12" target="Felt2"><FONT COLOR=BLACK><B>8 Ny gruppe</B></FONT></A>
+<A HREF="fyba2.html#LC_NyGr" target="Felt2">- LC_NyGr</A>
+<P><A HREF="fyba2.html#O13" target="Felt2"><FONT COLOR=BLACK><B>9 Direkte les/skriv</B></FONT></A>
+<A HREF="fyba2.html#LC_RxGr" target="Felt2">- LC_RxGr</A>
+<A HREF="fyba2.html#LC_WxGr" target="Felt2">- LC_WxGr</A>
+<P><A HREF="fyba2.html#O14" target="Felt2"><FONT COLOR=BLACK><B>10 Sekvensiell les/skriv</B></FONT></A>
+<A HREF="fyba2.html#LC_RsGr" target="Felt2">- LC_RsGr</A>
+<A HREF="fyba2.html#LC_RsHode" target="Felt2">- LC_RsHode</A>
+<A HREF="fyba2.html#LC_WsGr" target="Felt2">- LC_WsGr</A>
+<A HREF="fyba2.html#LC_WsGrPart" target="Felt2">- LC_WsGrPart</A>
+<A HREF="fyba2.html#LC_EndreHode" target="Felt2">- LC_EndreHode</A>
+<P><A HREF="fyba2.html#O15" target="Felt2"><FONT COLOR=BLACK><B>11 Slette gruppe</B></FONT></A>
+<A HREF="fyba2.html#LC_DelGr" target="Felt2">- LC_DelGr</A>
+<P><A HREF="fyba2.html#O16" target="Felt2"><FONT COLOR=BLACK><B>12 Tilbakeskriving av buffret info til SOSI-fil</B></FONT></A>
+<A HREF="fyba2.html#LC_Save" target="Felt2">- LC_Save</A>
+<P><A HREF="fyba2.html#O17" target="Felt2"><FONT COLOR=BLACK><B>13 Reservere plass i ringbuffer</B></FONT></A>
+<A HREF="fyba2.html#LC_InsGiL" target="Felt2">- LC_InsGiL</A>
+<A HREF="fyba2.html#LC_AppGiL" target="Felt2">- LC_AppGiL</A>
+<A HREF="fyba2.html#LC_InsKoL" target="Felt2">- LC_InsKoL</A>
+<A HREF="fyba2.html#LC_AppKoL" target="Felt2">- LC_AppKoL</A>
+<A HREF="fyba2.html#LC_DelGiL" target="Felt2">- LC_DelGiL</A>
+<A HREF="fyba2.html#LC_DelKoL" target="Felt2">- LC_DelKoL</A>
+<P><A HREF="fyba2.html#O18" target="Felt2"><FONT COLOR=BLACK><B>14 Legge data inn i ringbuffer</B></FONT></A>
+<P><A HREF="fyba2.html#O19" target="Felt2"><FONT COLOR=GREEN><B>14.1 Kopiere gruppe</B></FONT></A>
+<A HREF="fyba2.html#LC_CopyGr" target="Felt2">- LC_CopyGr</A>
+<A HREF="fyba2.html#LC_CopyCoord" target="Felt2">- LC_CopyCoord</A>
+<P><A HREF="fyba2.html#O20" target="Felt2"><FONT COLOR=GREEN><B>14.2 Gruppeinforasjon</B></FONT></A>
+<A HREF="fyba2.html#LC_PutGi" target="Felt2">- LC_PutGi</A>
+<A HREF="fyba2.html#LC_PutGP" target="Felt2">- LC_PutGP</A>
+<A HREF="fyba2.html#LC_AppGP" target="Felt2">- LC_AppGP</A>
+<A HREF="fyba2.html#LC_UpdateGP" target="Felt2">- LC_UpdateGP</A>
+<A HREF="fyba2.html#LC_UpdateGiEnhet" target="Felt2">- LC_UpdateGiEnhet</A>
+<A HREF="fyba2.html#LC_UpdateGiKvalitet" target="Felt2">- LC_UpdateGiKvalitet</A>
+<A HREF="fyba2.html#LC_UpdatePiKvalitet" target="Felt2">- LC_UpdatePiKvalitet</A>
+<A HREF="fyba2.html#LC_OppdaterEndret" target="Felt2">- LC_OppdaterEndret</A>
+<A HREF="fyba2.html#LC_DelGiNavn" target="Felt2">- LC_DelGiNavn</A>
+<P><A HREF="fyba2.html#O21" target="Felt2"><FONT COLOR=GREEN><B>14.3 Serienummer og referansenummer</B></FONT></A>
+<A HREF="fyba2.html#LC_PutSn" target="Felt2">- LC_PutSn</A>
+<A HREF="fyba2.html#LC_PutRef" target="Felt2">- LC_PutRef</A>
+<P><A HREF="fyba2.html#O22" target="Felt2"><FONT COLOR=GREEN><B>14.4 Koordinater</B></FONT></A>
+<A HREF="fyba2.html#LC_PutTK" target="Felt2">- LC_PutTK</A>
+<A HREF="fyba2.html#LC_PutTH" target="Felt2">- LC_PutTH</A>
+<A HREF="fyba2.html#LC_PutTD" target="Felt2">- LC_PutTD</A>
+<P><A HREF="fyba2.html#O23" target="Felt2"><FONT COLOR=GREEN><B>14.5 Knutepunkt</B></FONT></A>
+<A HREF="fyba2.html#LC_PutKp" target="Felt2">- LC_PutKp</A>
+<P><A HREF="fyba2.html#O24" target="Felt2"><FONT COLOR=GREEN><B>14.6 Punktinformasjon</B></FONT></A>
+<A HREF="fyba2.html#LC_PutPi" target="Felt2">- LC_PutPi</A>
+<P><A HREF="fyba2.html#O25" target="Felt2"><FONT COLOR=BLACK><B>15 Hente data fra ringbuffer</B></FONT></A>
+<P><A HREF="fyba2.html#O26" target="Felt2"><FONT COLOR=GREEN><B>15.1 Generell verdi til et SOSI-navn</B></FONT></A>
+<P><A HREF="fyba2.html#O27" target="Felt2"><FONT COLOR=GREEN><B>15.2 Gruppeinforasjon</B></FONT></A>
+<A HREF="fyba2.html#LC_GetGi" target="Felt2">- LC_GetGi</A>
+<A HREF="fyba2.html#LC_GetGP" target="Felt2">- LC_GetGP</A>
+<P><A HREF="fyba2.html#O28" target="Felt2"><FONT COLOR=GREEN><B>15.3 Serienummer og referansenummer</B></FONT></A>
+<A HREF="fyba2.html#LC_GetSn" target="Felt2">- LC_GetSn</A>
+<A HREF="fyba2.html#LC_GetRef" target="Felt2">- LC_GetRef</A>
+<A HREF="fyba2.html#LC_InqAntRef" target="Felt2">- LC_InqAntRef</A>
+<A HREF="fyba2.html#LC_InitGetRefFlate" target="Felt2">- LC_InitGetRefFlate</A>
+<A HREF="fyba2.html#LC_GetRefFlate" target="Felt2">- LC_GetRefFlate</A>
+<A HREF="fyba2.html#LC_ErLinjeRefLin" target="Felt2">- LC_ErLinjeRefLin</A>
+<P><A HREF="fyba2.html#O29" target="Felt2"><FONT COLOR=GREEN><B>15.4 Spesielle get-rutiner</B></FONT></A>
+<A HREF="fyba2.html#LC_GetBuePar" target="Felt2">- LC_GetBuePar</A>
+<A HREF="fyba2.html#LC_GetBue" target="Felt2">- LC_GetBue</A>
+<A HREF="fyba2.html#LC_GetBuep" target="Felt2">- LC_GetBuep</A>
+<A HREF="fyba2.html#LC_GetSirkel" target="Felt2">- LC_GetSirkel</A>
+<A HREF="fyba2.html#LC_GetSirkelp" target="Felt2">- LC_GetSirkelp</A>
+<A HREF="fyba2.html#LC_GetKvalitet" target="Felt2">- LC_GetKvalitet</A>
+<P><A HREF="fyba2.html#O30" target="Felt2"><FONT COLOR=GREEN><B>15.5 Koordinater</B></FONT></A>
+<A HREF="fyba2.html#LC_GetTK" target="Felt2">- LC_GetTK</A>
+<A HREF="fyba2.html#LC_GetArrayTK" target="Felt2">- LC_GetArrayTK</A>
+<A HREF="fyba2.html#LC_GetTH" target="Felt2">- LC_GetTH</A>
+<A HREF="fyba2.html#LC_GetArrayTH" target="Felt2">- LC_GetArrayTH</A>
+<A HREF="fyba2.html#LC_GetHoyde" target="Felt2">- LC_GetHoyde</A>
+<A HREF="fyba2.html#LC_GetTD" target="Felt2">- LC_GetTD</A>
+<A HREF="fyba2.html#LC_GetDybde" target="Felt2">- LC_GetDybde</A>
+<P><A HREF="fyba2.html#O31" target="Felt2"><FONT COLOR=GREEN><B>15.6 Knutepunkt</B></FONT></A>
+<A HREF="fyba2.html#LC_GetKp" target="Felt2">- LC_GetKp</A>
+<A HREF="fyba2.html#LC_FinnKp" target="Felt2">- LC_FinnKp</A>
+<P><A HREF="fyba2.html#O32" target="Felt2"><FONT COLOR=GREEN><B>15.7 Punktinformasjon</B></FONT></A>
+<A HREF="fyba2.html#LC_GetPi" target="Felt2">- LC_GetPi</A>
+<A HREF="fyba2.html#LC_InitPP" target="Felt2">- LC_InitPP</A>
+<A HREF="fyba2.html#LC_GetPP" target="Felt2">- LC_GetPP</A>
+<A HREF="fyba2.html#LC_GetPiVerdi" target="Felt2">- LC_GetPiVerdi</A>
+<A HREF="fyba2.html#LC_TestPi" target="Felt2">- LC_TestPi</A>
+<P><A HREF="fyba2.html#O33" target="Felt2"><FONT COLOR=GREEN><B>15.8 Spesielle henteoperasjoner</B></FONT></A>
+<A HREF="fyba2.html#LC_GetCurEnhet" target="Felt2">- LC_GetCurEnhet</A>
+<A HREF="fyba2.html#LC_GetCurKvalitet" target="Felt2">- LC_GetCurKvalitet</A>
+<A HREF="fyba2.html#LC_GetObjtypeBgr" target="Felt2">- LC_GetObjtypeBgr</A>
+<A HREF="fyba2.html#LC_GetElementNavn" target="Felt2">- LC_GetElementNavn</A>
+<P><A HREF="fyba2.html#O34" target="Felt2"><FONT COLOR=BLACK><B>16 Blaing i basen</B></FONT></A>
+<A HREF="fyba2.html#LC_InitNextFil" target="Felt2">- LC_InitNextFil</A>
+<A HREF="fyba2.html#LC_NextFil" target="Felt2">- LC_NextFil</A>
+<A HREF="fyba2.html#LC_InitNextBgr" target="Felt2">- LC_InitNextBgr</A>
+<A HREF="fyba2.html#LC_NextBgr" target="Felt2">- LC_NextBgr</A>
+<P><A HREF="fyba2.html#O35" target="Felt2"><FONT COLOR=BLACK><B>17 Geografisk søking</B></FONT></A>
+<A HREF="fyba2.html#LC_GetGrWin" target="Felt2">- LC_GetGrWin</A>
+<A HREF="fyba2.html#LC_SBFlate" target="Felt2">- LC_SBFlate</A>
+<A HREF="fyba2.html#LC_FFFlate" target="Felt2">- LC_FFFlate</A>
+<A HREF="fyba2.html#LC_FNFlate" target="Felt2">- LC_FNFlate</A>
+<A HREF="fyba2.html#LC_SBGeo" target="Felt2">- LC_SBGeo</A>
+<A HREF="fyba2.html#LC_FFGeo" target="Felt2">- LC_FFGeo</A>
+<A HREF="fyba2.html#LC_FNGeo" target="Felt2">- LC_FNGeo</A>
+<A HREF="fyba2.html#LC_FAGeo" target="Felt2">- LC_FAGeo</A>
+<A HREF="fyba2.html#LC_FFGeoFil" target="Felt2">- LC_FFGeoFil</A>
+<A HREF="fyba2.html#LC_FNGeoFil" target="Felt2">- LC_FNGeoFil</A>
+<A HREF="fyba2.html#LC_AvsluttSok" target="Felt2">- LC_AvsluttSok</A>
+<A HREF="fyba2.html#LC_WTst" target="Felt2">- LC_WTst</A>
+<A HREF="fyba2.html#LC_PTst" target="Felt2">- LC_PTst</A>
+<A HREF="fyba2.html#LC_PTstOmkrets" target="Felt2">- LC_PTstOmkrets</A>
+<P><A HREF="fyba2.html#O36" target="Felt2"><FONT COLOR=BLACK><B>18 Serienummer-søking</B></FONT></A>
+<A HREF="fyba2.html#LC_SBSn" target="Felt2">- LC_SBSn</A>
+<A HREF="fyba2.html#LC_MoveSn" target="Felt2">- LC_MoveSn</A>
+<A HREF="fyba2.html#LC_FiSn" target="Felt2">- LC_FiSn</A>
+<A HREF="fyba2.html#LC_FiArraySn" target="Felt2">- LC_FiArraySn</A>
+<A HREF="fyba2.html#LC_FASn" target="Felt2">- LC_FASn</A>
+<A HREF="fyba2.html#LC_FFSn" target="Felt2">- LC_FFSn</A>
+<A HREF="fyba2.html#LC_FNSn" target="Felt2">- LC_FNSn</A>
+<A HREF="fyba2.html#LC_FPSn" target="Felt2">- LC_FPSn</A>
+<A HREF="fyba2.html#LC_FLSn" target="Felt2">- LC_FLSn</A>
+<A HREF="fyba2.html#LC_FFSnBt" target="Felt2">- LC_FFSnBt</A>
+<A HREF="fyba2.html#LC_FNSnBt" target="Felt2">- LC_FNSnBt</A>
+<A HREF="fyba2.html#LC_FPSnBt" target="Felt2">- LC_FPSnBt</A>
+<A HREF="fyba2.html#LC_FLSnBt" target="Felt2">- LC_FLSnBt</A>
+<P><A HREF="fyba2.html#O37" target="Felt2"><FONT COLOR=BLACK><B>19 Egenskapsutvalg</B></FONT></A>
+<A HREF="fyba2.html#LC_OpenQuery" target="Felt2">- LC_OpenQuery</A>
+<A HREF="fyba2.html#LC_CloseQuery" target="Felt2">- LC_CloseQuery</A>
+<A HREF="fyba2.html#LC_PutQueryLine" target="Felt2">- LC_PutQueryLine</A>
+<A HREF="fyba2.html#LC_PutQueryRegel" target="Felt2">- LC_PutQueryRegel</A>
+<A HREF="fyba2.html#LC_LesUtvalg" target="Felt2">- LC_LesUtvalg</A>
+<A HREF="fyba2.html#LC_GetUtRegelNavn" target="Felt2">- LC_GetUtRegelNavn</A>
+<A HREF="fyba2.html#LC_GruppeUtvalg" target="Felt2">- LC_GruppeUtvalg</A>
+<A HREF="fyba2.html#LC_PunktUtvalg" target="Felt2">- LC_PunktUtvalg</A>
+<A HREF="fyba2.html#LC_FinnPinfoUtvalg" target="Felt2">- LC_FinnPinfoUtvalg</A>
+<A HREF="fyba2.html#LC_PiTestUtvalg" target="Felt2">- LC_PiTestUtvalg</A>
+<A HREF="fyba2.html#LC_GiQuery" target="Felt2">- LC_GiQuery</A>
+<A HREF="fyba2.html#LC_FAGiQuery" target="Felt2">- LC_FAGiQuery</A>
+<A HREF="fyba2.html#LC_FAGiKombinertFlateQuery" target="Felt2">- LC_FAGiKombinertFlateQuery</A>
+<A HREF="fyba2.html#LC_QueryGP" target="Felt2">- LC_QueryGP</A>
+<A HREF="fyba2.html#LC_InqMaxPrioritet" target="Felt2">- LC_InqMaxPrioritet</A>
+<A HREF="fyba2.html#LC_TestPrioritetBrukt" target="Felt2">- LC_TestPrioritetBrukt</A>
+<A HREF="fyba2.html#LC_UtvalgPrioritet" target="Felt2">- LC_UtvalgPrioritet</A>
+<P><A HREF="fyba2.html#O38" target="Felt2"><FONT COLOR=BLACK><B>20 Merke grupper</B></FONT></A>
+<A HREF="fyba2.html#LC_SetBt" target="Felt2">- LC_SetBt</A>
+<A HREF="fyba2.html#LC_ClrBt" target="Felt2">- LC_ClrBt</A>
+<A HREF="fyba2.html#LC_GetBt" target="Felt2">- LC_GetBt</A>
+<A HREF="fyba2.html#LC_EraseBt" target="Felt2">- LC_EraseBt</A>
+<A HREF="fyba2.html#LC_CopyBt" target="Felt2">- LC_CopyBt</A>
+<A HREF="fyba2.html#LC_SetModusMerk" target="Felt2">- LC_SetModusMerk</A>
+<A HREF="fyba2.html#LC_MerkGr" target="Felt2">- LC_MerkGr</A>
+<P><A HREF="fyba2.html#O39" target="Felt2"><FONT COLOR=BLACK><B>21 Spesiell handtering av flater</B></FONT></A>
+<A HREF="fyba2.html#Polygonbeskrivelse" target="Felt2">- Polygonbeskrivelse</A>
+<A HREF="fyba2.html#LC_POL_InitPolygon" target="Felt2">- LC_POL_InitPolygon</A>
+<A HREF="fyba2.html#LC_POL_FrigiPolygon" target="Felt2">- LC_POL_FrigiPolygon</A>
+<A HREF="fyba2.html#LC_POL_InitOmkrets" target="Felt2">- LC_POL_InitOmkrets</A>
+<A HREF="fyba2.html#LC_POL_LeggTilGruppeOmkrets" target="Felt2">- LC_POL_LeggTilGruppeOmkrets</A>
+<A HREF="fyba2.html#LC_POL_FjernGruppeOmkrets" target="Felt2">- LC_POL_FjernGruppeOmkrets</A>
+<A HREF="fyba2.html#LC_POL_FjernSisteGruppeOmkrets" target="Felt2">- LC_POL_FjernSisteGruppeOmkrets</A>
+<A HREF="fyba2.html#LC_POL_FrigiOmkrets" target="Felt2">- LC_POL_FrigiOmkrets</A>
+<A HREF="fyba2.html#LC_POL_InitOy" target="Felt2">- LC_POL_InitOy</A>
+<A HREF="fyba2.html#LC_POL_FrigiAlleOyer" target="Felt2">- LC_POL_FrigiAlleOyer</A>
+<A HREF="fyba2.html#LC_POL_FjernOy" target="Felt2">- LC_POL_FjernOy</A>
+<A HREF="fyba2.html#LC_POL_LeggTilOy" target="Felt2">- LC_POL_LeggTilOy</A>
+<A HREF="fyba2.html#LC_POL_TestBrukt" target="Felt2">- LC_POL_TestBrukt</A>
+<A HREF="fyba2.html#LC_POL_PutRef" target="Felt2">- LC_POL_PutRef</A>
+<A HREF="fyba2.html#LC_POL_GetRef" target="Felt2">- LC_POL_GetRef</A>
+<A HREF="fyba2.html#LC_POL_GetRefOmkrets" target="Felt2">- LC_POL_GetRefOmkrets</A>
+<A HREF="fyba2.html#LC_POL_PTst" target="Felt2">- LC_POL_PTst</A>
+<A HREF="fyba2.html#LC_POL_PTstOmkrets" target="Felt2">- LC_POL_PTstOmkrets</A>
+<A HREF="fyba2.html#LC_POL_Box" target="Felt2">- LC_POL_Box</A>
+<P><A HREF="fyba2.html#O40" target="Felt2"><FONT COLOR=BLACK><B>22 Diverse funksjoner</B></FONT></A>
+<P><A HREF="fyba2.html#O41" target="Felt2"><FONT COLOR=GREEN><B>22.1 Beregninger</B></FONT></A>
+<A HREF="fyba2.html#LC_BerAreal" target="Felt2">- LC_BerAreal</A>
+<A HREF="fyba2.html#LC_BerLengde" target="Felt2">- LC_BerLengde</A>
+<A HREF="fyba2.html#LC_BerLengde3D" target="Felt2">- LC_BerLengde3D</A>
+<A HREF="fyba2.html#LC_BerAvgrensLengde" target="Felt2">- LC_BerAvgrensLengde</A>
+<A HREF="fyba2.html#LC_BerYtreAvgrensLengde" target="Felt2">- LC_BerYtreAvgrensLengde</A>
+<A HREF="fyba2.html#LC_BerIndreAvgrensLengde" target="Felt2">- LC_BerIndreAvgrensLengde</A>
+<A HREF="fyba2.html#LC_RoundKoord" target="Felt2">- LC_RoundKoord</A>
+<P><A HREF="fyba2.html#O42" target="Felt2"><FONT COLOR=GREEN><B>22.2 Strukturendring</B></FONT></A>
+<A HREF="fyba2.html#LC_SnuGr" target="Felt2">- LC_SnuGr</A>
+<A HREF="fyba2.html#LC_SammenfoyGr" target="Felt2">- LC_SammenfoyGr</A>
+<A HREF="fyba2.html#LC_SplittGr" target="Felt2">- LC_SplittGr</A>
+<A HREF="fyba2.html#LC_ErstattReferanse" target="Felt2">- LC_ErstattReferanse</A>
+<P><A HREF="fyba2.html#O43" target="Felt2"><FONT COLOR=GREEN><B>22.3 Hele basen</B></FONT></A>
+<A HREF="fyba2.html#LC_InqAntFiler" target="Felt2">- LC_InqAntFiler</A>
+<P><A HREF="fyba2.html#O44" target="Felt2"><FONT COLOR=GREEN><B>22.4 Prioritet</B></FONT></A>
+<A HREF="fyba2.html#LC_ClrPrioritet" target="Felt2">- LC_ClrPrioritet</A>
+<A HREF="fyba2.html#LC_SetPrioritet" target="Felt2">- LC_SetPrioritet</A>
+<A HREF="fyba2.html#LC_InqPrioritet" target="Felt2">- LC_InqPrioritet</A>
+<A HREF="fyba2.html#LC_ErasePrioritet" target="Felt2">- LC_ErasePrioritet</A>
+<A HREF="fyba2.html#LC_EraseAllPrioritet" target="Felt2">- LC_EraseAllPrioritet</A>
+<P><A HREF="fyba2.html#O45" target="Felt2"><FONT COLOR=GREEN><B>22.5 Kvalitet</B></FONT></A>
+<A HREF="fyba2.html#LC_FormatterKvalitet" target="Felt2">- LC_FormatterKvalitet</A>
+<P><A HREF="fyba2.html#O46" target="Felt2"><FONT COLOR=GREEN><B>22.6 Tabellhandtering</B></FONT></A>
+<A HREF="fyba2.html#LC_InitTabel" target="Felt2">- LC_InitTabel</A>
+<A HREF="fyba2.html#LC_PutTabel" target="Felt2">- LC_PutTabel</A>
+<A HREF="fyba2.html#LC_GetTabel" target="Felt2">- LC_GetTabel</A>
+<A HREF="fyba2.html#LC_CloseTabel" target="Felt2">- LC_CloseTabel</A>
+<P><A HREF="fyba2.html#O47" target="Felt2"><FONT COLOR=GREEN><B>22.7 Meldingshandtering</B></FONT></A>
+<A HREF="fyba2.html#LC_SetErrorHandler" target="Felt2">- LC_SetErrorHandler</A>
+<A HREF="fyba2.html#LC_SetStartMessageHandler" target="Felt2">- LC_SetStartMessageHandler</A>
+<A HREF="fyba2.html#LC_SetShowMessageHandler" target="Felt2">- LC_SetShowMessageHandler</A>
+<A HREF="fyba2.html#LC_SetEndMessageHandler" target="Felt2">- LC_SetEndMessageHandler</A>
+<A HREF="fyba2.html#LC_SetCancelHandler" target="Felt2">- LC_SetCancelHandler</A>
+<A HREF="fyba2.html#LC_StartMessage" target="Felt2">- LC_StartMessage</A>
+<A HREF="fyba2.html#LC_ShowMessage" target="Felt2">- LC_ShowMessage</A>
+<A HREF="fyba2.html#LC_EndMessage" target="Felt2">- LC_EndMessage</A>
+<A HREF="fyba2.html#LC_Cancel" target="Felt2">- LC_Cancel</A>
+<A HREF="fyba2.html#LC_Error" target="Felt2">- LC_Error</A>
+<P><A HREF="fyba2.html#O48" target="Felt2"><FONT COLOR=GREEN><B>22.8 Hjelperutine for meldingshandtering</B></FONT></A>
+<A HREF="fyba2.html#LC_StrError" target="Felt2">- LC_StrError</A>
+<P><A HREF="fyba2.html#O49" target="Felt2"><FONT COLOR=GREEN><B>22.9 Feilsøking</B></FONT></A>
+<A HREF="fyba2.html#LC_DumpTab" target="Felt2">- LC_DumpTab</A>
+</PRE></BODY></HTML>
