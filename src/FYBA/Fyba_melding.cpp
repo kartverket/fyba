@@ -38,7 +38,7 @@
 
 #include <fyba.h>
 
-static short sProsent;
+//static short sProsent;
 
 
 /*
