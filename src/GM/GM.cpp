@@ -2235,8 +2235,8 @@ SK_EntPnt_GM void GM_buebox(double as,double ns,double radius,double fi,double d
 //                 |
 //	                |
 //               --|-
-//             /   |  \
-//           1     |   \
+//             /   |  \        -
+//           1     |   \       -
 //   ----------2---|-------
 //                 |    |
 //                 |   3/
