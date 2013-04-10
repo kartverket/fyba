@@ -1,11 +1,11 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.67])
+AC_PREREQ([2.59])
 AC_INIT(fyba, 4.1.0, thomas.hirsch@statkart.no)
 AM_INIT_AUTOMAKE(fyba, 4.1.0)
 LT_INIT()
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([./m4])
 AC_CONFIG_SRCDIR([include/fygm.h])
 AC_CONFIG_HEADERS([config.h])
 
@@ -13,6 +13,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_CPP
+AC_PROG_LIBTOOL
 
 # Checks for libraries.
 

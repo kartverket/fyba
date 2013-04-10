@@ -31,8 +31,14 @@ and UT for utilities. The general procedure is therefore:
  
 ** Linux **
 
-There currently are shell scripts called make.sh which might build the 
-library. Migration to a build system is in progress.
+./configure
+make 
+make install
+
+If the first step does not work right away, try to rebuild the configure 
+file for your system with autotools first:
+
+autoreconf --force --install 
 
 ** Windows **
 

@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <fyut.h>
-#include <fygm.h>
+#include <../UT/fyut.h>
+#include <../GM/fygm.h>
 
 #include "fyba.h"
 #include "fybax.h"
