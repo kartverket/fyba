@@ -42,8 +42,7 @@ autoreconf --force --install
 
 ** Windows **
 
-Visual Studio project files are provided that might help you with the 
-correct settings. 
+...
 
 ** Other **
 
