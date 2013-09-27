@@ -515,20 +515,20 @@ SK_EntPnt_UT extern unsigned long UT_InqFreemem (void)
 JEK-920604
 CH UT_SortD                                         Sorteringsrutine
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Sorterer verdier i en double-tabell i stigende rekkefølge.
 CD Teorien bak sorteringsalgoritmen(CombSort11) er beskrevet i
 CD Byte April-91 s315-320.
 CD
 CD NB! Rutina flytter de enkelte elementer i tabellen!!
 CD
-CD PARAMETERLISTE:
-CD Navn      Type  Array I/U  Merknad
+CD Parameters:
+CD Name      Type  Array I/O  Explanation
 CD ------------------------------------------------------------------
 CD *db_arr   double       i/u Tabell som skal sorteres
 CD size      short        i   Ant elementer i tabell
 CD
-CD Bruk:  UT_SortD(db_arr, size)
+CD Usage:  UT_SortD(db_arr, size)
 	==================================================================
 */
 SK_EntPnt_UT void UT_SortD ( double *db_arr, short size)

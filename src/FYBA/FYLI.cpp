@@ -41,18 +41,18 @@ static void  LI_FrigiIdx(LC_FILADM *pFil);
 AR-910928
 CH LI_TestIdx                               Sjekk at indeksfilene eksisterer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk at indeksfilene eksisterer.
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char   *szSosFil   i    SOSI-fil
 CD short   status     r    Status
 CD                          UT_TRUE = OK
 CD                          UT_FALSE = Fil mangler
 CD
-CD Bruk:
+CD Usage:
 CD status = LI_TestIdx(szSosFil);
    ==========================================================================
 */
@@ -108,18 +108,18 @@ short LI_TestIdx(char *szSosFil)
 AR-910929
 CH LI_OpenInit                              Åpner og nullstiller indeksfilene
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpner indeksfilene og nullstiller tabellene.
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD short      status r    Status
 CD                          UT_TRUE = OK
 CD                          UT_FALSE = Ikke åpnet OK
 CD
-CD Bruk:
+CD Usage:
 CD status = LI_OpenInit(pFil);
    ==========================================================================
 */
@@ -207,11 +207,11 @@ short LI_OpenInit(LC_FILADM *pFil)
 AR-910930
 CH LI_OpenRead                                   Åpner og leser indeksfilene
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpner indeksfilene og leser inn tabellene.
 CD
-CD Parametre:
-CD Type       Navn  I/U Forklaring
+CD Parameters:
+CD Type       Name  I/O Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i  Peker til FilAdm
 CD short      status r  Status
@@ -222,7 +222,7 @@ CD                         LI_FEIL_INDEKSVERSJON: Feil indeksversjon
 CD                         LI_FEIL_STORRELSE: Feil størrelse på SOSI-filen
 CD                         LI_FEIL_OPPDATTID: Feil oppdateringstid på SOSI-filen
 CD
-CD Bruk:
+CD Usage:
 CD status = LI_OpenRead(pFil);
    ==========================================================================
 */
@@ -317,15 +317,15 @@ short LI_OpenRead(LC_FILADM *pFil)
 AR-930809
 CH LI_CreateIdx                               Allokerer Idx struktur i minne
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Allokerer Idx struktur i minne
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD LI_CreateIdx(pFil);
    ==========================================================================
 */
@@ -340,15 +340,15 @@ static void LI_CreateIdx(LC_FILADM *pFil)
 AR-930809
 CH LI_FrigiIdx                                   Frigi Idx struktur i minne
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Frigi Idx struktur i minne
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD LI_FrigiIdx(pFil);
    ==========================================================================
 */
@@ -403,18 +403,18 @@ static void LI_FrigiIdx(LC_FILADM *pFil)
 AR-910830
 CH LI_Close                                             Stenger indeksfilene
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver adm. opplysning og stenger indeksfilene.
 CD
-CD Parametre:
-CD Type       Navn  I/U Forklaring
+CD Parameters:
+CD Type       Name  I/O Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i  Peker til FilAdm
 CD short      s_stat i  Slutt-status (brukes foreløpig ikke)
 CD                         (RESET_IDX) = Fjern indeksfilene
 CD                         (SAVE_IDX ) = Lagrer indeksfilene
 CD
-CD Bruk:
+CD Usage:
 CD LI_Close(pFil,SAVE_IDX);
    ==========================================================================
 */
@@ -508,17 +508,17 @@ void LI_Close(LC_FILADM *pFil,short s_stat)
 AR-910929
 CH LI_OpenIdxFil                                              Åpne indeksfil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpner indeksfil på rett katalog
 CD
-CD Parametre:
-CD Type        Navn    I/U   Forklaring
+CD Parameters:
+CD Type        Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil     i    Peker til FilAdm
 CD const char *pszNavn  i    Filnavn
 CD const char *pszType  i    Filtype
 CD
-CD Bruk:
+CD Usage:
 CD pF = LI_OpenIdxFil(pFil,"Adm",".Idx");
    ==========================================================================
 */
@@ -571,15 +571,15 @@ static FILE *LI_OpenIdxFil(LC_FILADM *pFil, const char *pszNavn, const char *psz
 AR-910929
 CH LI_OpenAdm                                     Åpne og posisjoner, Adm
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at rett Adm-fil er åpen, og posisjoner
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD pF = LI_OpenAdm(pFil);
    ==========================================================================
 */
@@ -596,15 +596,15 @@ static FILE *LI_OpenAdm(LC_FILADM *pFil)
 AR-910929
 CH LI_OpenGrt                                     Åpne og posisjoner, Grt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at rett Grt-fil er åpen, og posisjoner
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD pF = LI_OpenGrt(pFil);
    ==========================================================================
 */
@@ -621,15 +621,15 @@ static FILE *LI_OpenGrt(LC_FILADM *pFil)
 AR-910929
 CH LI_OpenGeo                                     Åpne og posisjoner, Geo
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at rett Geo-fil er åpen, og posisjoner
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD pF = LI_OpenGeo(pFil);
    ==========================================================================
 */
@@ -646,15 +646,15 @@ static FILE *LI_OpenGeo(LC_FILADM *pFil)
 AR-910929
 CH LI_OpenSnr                                     Åpne og posisjoner, Snr
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at rett Snr-fil er åpen, og posisjoner
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD pF = LI_OpenSnr(pFil);
    ==========================================================================
 */
@@ -671,15 +671,15 @@ static FILE *LI_OpenSnr(LC_FILADM *pFil)
 AR-910929
 CH LI_OpenBt                                     Åpne og posisjoner, Bt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpne Bt-fil, og posisjoner
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD pF = LI_OpenBt(pFil);
    ==========================================================================
 */
@@ -696,17 +696,17 @@ static FILE *LI_OpenBt(LC_FILADM *pFil)
 AR-930810
 CH LI_GetGeo                                                   Get geo-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter en linje fra geografisk søketabell.
 CD
-CD Parametre:
-CD Type          Navn  I/U   Forklaring
+CD Parameters:
+CD Type          Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM    *pFil   i    Peker til FilAdm
 CD long          linje  i    Linjenummer i geo-tabellen (gruppenummer)
 CD LC_GEOTABELL *geop   r    Peker til geo-tabell-struktur
 CD
-CD Bruk:
+CD Usage:
 CD geop = LI_GetGeo(pFil,linje);
    ==========================================================================
 */
@@ -724,17 +724,17 @@ LC_R_LEAF * LI_GetGeo(LC_FILADM *pFil,long linje)
 AR-930810
 CH LI_GetSnr                                                   Get snr-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter en linje fra serienummer-tabellen.
 CD
-CD Parametre:
-CD Type             Navn  I/U   Forklaring
+CD Parameters:
+CD Type             Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM       *pFil   i    Peker til FilAdm
 CD long             lSnr   i    Serienummer
 CD long             lGrNr  r    Gruppenummer
 CD
-CD Bruk:
+CD Usage:
 CD lGrNr = LI_GetSnr(pFil,lSnr);
    ==========================================================================
 */
@@ -763,17 +763,17 @@ long LI_GetSnr(LC_FILADM *pFil,long lSnr)
 AR-930810
 CH LI_PutSnr                                                   Put snr-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn en linje i serienummer-tabellen.
 CD
-CD Parametre:
-CD Type          Navn  I/U   Forklaring
+CD Parameters:
+CD Type          Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM    *pFil   i    Peker til FilAdm
 CD long          lSnr   i    Serienummer
 CD long          lGrNr  i    Gruppenummer
 CD
-CD Bruk:
+CD Usage:
 CD LI_PutSnr(pFil,lSnr,lGrNr);
    ==========================================================================
 */
@@ -819,17 +819,17 @@ void LI_PutSnr(LC_FILADM *pFil,long lSnr,long lGrNr)
 AR-930810
 CH LI_GetGrt                                                   Get grt-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter en linje fra gruppetabellen. 
 CD
-CD Parametre:
-CD Type            Navn  I/U  Forklaring
+CD Parameters:
+CD Type            Name  I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil   i   Peker til FilAdm
 CD long            linje  i   Linjenummer i grt-tabellen (gruppenummer)
 CD LC_GRTAB_LINJE *grtp   r   Peker til grt-tabell-linje
 CD
-CD Bruk:
+CD Usage:
 CD grtp = LI_GetGrt(pFil,linje);
    ==========================================================================
 */
@@ -859,17 +859,17 @@ LC_GRTAB_LINJE * LI_GetGrt(LC_FILADM *pFil,long linje)
 AR-930810
 CH LI_AppGrt                                                    Ny grt-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn en NY linje i gruppetabell.
 CD
-CD Parametre:
-CD Type          Navn  I/U   Forklaring
+CD Parameters:
+CD Type          Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM    *pFil   i    Peker til FilAdm
 CD long          linje  i    Linjenummer i grt-tabellen (gruppenummer)
 CD LC_GEOTABELL *grtp   r    Peker til grt-tabell-struktur
 CD
-CD Bruk:
+CD Usage:
 CD pgrt = LI_AppGrt(pFil,linje,geop);
    ==========================================================================
 */
@@ -902,17 +902,17 @@ LC_GRTAB_LINJE * LI_AppGrt(LC_FILADM *pFil,long linje)
 AR-930810
 CH LI_GetBt                                                     Get bt-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter en linje fra brukt-tabellen.
 CD
-CD Parametre:
-CD Type          Navn    I/U   Forklaring
+CD Parameters:
+CD Type          Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM    *pFil     i    Peker til FilAdm
 CD long          linje    i    Linjenummer i bt-tabellen (gruppenummer)
 CD unsigned long bt_val   r    Hentet bit-mønster
 CD
-CD Bruk:
+CD Usage:
 CD bt_val = LI_GetBt(pFil,linje);
    ==========================================================================
 */
@@ -942,17 +942,17 @@ unsigned long LI_GetBt(LC_FILADM *pFil,long linje)
 AR-930810
 CH LI_PutBt                                                     Put bt-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn en linje i brukt-tabell.
 CD
-CD Parametre:
-CD Type              Navn     I/U   Forklaring
+CD Parameters:
+CD Type              Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD long              linje     i    Linjenummer i bt-tabellen (gruppenummer)
 CD unsigned long     bt_val    i    Bit mønster som skal lagres
 CD
-CD Bruk:
+CD Usage:
 CD LI_PutBt(pFil,linje,bt_val);
    ==========================================================================
 */
@@ -985,17 +985,17 @@ void LI_PutBt(LC_FILADM *pFil,long linje,unsigned long bt_val)
 AR-881123
 CH LC_SetBt                                       Sett merke i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legg inn merke i brukttabellen.
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR * pGr       i    Gruppenummer
 CD short   kolonne   i    Kolonne som skal merkes.
 CD                        (Lovlig BT_MIN_USER - BT_MAX_USER)
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetBt(pGr,kolonne);
    ==========================================================================
 */
@@ -1024,17 +1024,17 @@ SK_EntPnt_FYBA void LC_SetBt(LC_BGR * pGr,short kolonne)
 AR-881123
 CH LC_ClrBt                                      Slett merke i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Fjern merke i brukttabellen.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pGr      i    Gruppenummer
 CD kolonne  short    i    Kolonne som skal merkes.
 CD                        (Lovlig BT_MIN_USER - BT_MAX_USER)
 CD
-CD Bruk:
+CD Usage:
 CD LC_ClrBt(pGr,kolonne);
    ==========================================================================
 */
@@ -1063,18 +1063,18 @@ SK_EntPnt_FYBA void LC_ClrBt(LC_BGR * pGr,short kolonne)
 AR-881123
 CH LC_GetBt                                       Hent merke i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hent merke i brukttabellen.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pGr      i    Gruppenummer
 CD kolonne  short    i    Kolonne som skal brukes.
 CD                        (Lovlig BT_MIN_BT - BT_MAX_BT)
 CD merke    short    r    UT_FALSE = ikke marka,  UT_TRUE = merka
 CD
-CD Bruk:
+CD Usage:
 CD merke = LC_GetBt(pGr,kolonne);
    ==========================================================================
 */
@@ -1105,18 +1105,18 @@ SK_EntPnt_FYBA short LC_GetBt(LC_BGR * pGr,short kolonne)
 AR-881123
 CH LC_EraseBt                                   Slett område i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Blanker en eller flere kolonner i brukttabellen i aktuell base.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD fra_kol  short    i    Første kolonne som skal blankes.
 CD                        (Lovlig BT_MIN_USER - BT_MAX_USER)
 CD til_kol  short    i    Siste kolonne som skall blankes.
 CD                        (Lovlig BT_MIN_USER - BT_MAX_USER)
 CD
-CD Bruk:
+CD Usage:
 CD LC_EraseBt(fra_kol,til_kol);
    ==========================================================================
 */
@@ -1134,18 +1134,18 @@ SK_EntPnt_FYBA void LC_EraseBt(short fra_kol,short til_kol)
 AR-891120
 CH LI_SetBt                                       Sett merke i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legg inn merke i brukttabellen.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD long       lGrNr  i    Gruppenummer
 CD kolonne    short  i    Kolonne som skal merkes.
 CD                        (Lovlig BT_MIN_BT - BT_MAX_BT)
 CD
-CD Bruk:
+CD Usage:
 CD LI_SetBt(pFil,lGrNr,kolonne);
    ==========================================================================
 */
@@ -1159,18 +1159,18 @@ void LI_SetBt(LC_FILADM *pFil,long lGrNr,short kolonne)
 AR-891120
 CH LI_ClrBt                                      Slett merke i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Fjern merke i brukttabellen.
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD long       lGrNr  i    Gruppenummer
 CD kolonne    short  i    Kolonne som skal merkes.
 CD                        (Lovlig BT_MIN_BT - BT_MAX_BT)
 CD
-CD Bruk:
+CD Usage:
 CD LI_ClrBt(pFil,lGrNr,kolonne);
    ==========================================================================
 */
@@ -1184,11 +1184,11 @@ void LI_ClrBt(LC_FILADM *pFil,long lGrNr,short kolonne)
 AR-910828
 CH LI_InqBt                                       Hent merke i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hent merke i brukttabellen.
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD long       lGrNr  i    Gruppenummer
@@ -1196,7 +1196,7 @@ CD kolonne    short  i    Kolonne som skal brukes.
 CD                        (Lovlig BT_MIN_BT - BT_MAX_BT)
 CD merke      short  r    UT_TRUE = marka,  UT_FALSE = ikke merka.
 CD
-CD Bruk:
+CD Usage:
 CD merke = LI_InqBt(pFil,lGrNr,kolonne);
    ==========================================================================
 */
@@ -1210,16 +1210,16 @@ short LI_InqBt(LC_FILADM *pFil,long lGrNr,short kolonne)
 AR-910827
 CH LI_EraseBt                                   Slett område i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Blanker en eller flere kolonner i brukttabellen i aktuell base.
 CD
-CD Parametre:
-CD Type   Navn      I/U   Forklaring
+CD Parameters:
+CD Type   Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short  fra_kol    i    Første kolonne som skal blankes. (Lovlig 0 - BT_MAX_BT)
 CD short  til_kol    i    Siste kolonne som skal blankes. (Lovlig 0 - BT_MAX_BT)
 CD
-CD Bruk:
+CD Usage:
 CD LI_EraseBt(fra_kol,til_kol);
    ==========================================================================
 */
@@ -1254,12 +1254,12 @@ void LI_EraseBt(short fra_kol,short til_kol)
 AR-910827
 CH LC_CopyBt                                  Kopier kolonne i brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Kopier kolonne i brukttabellen.
 CD Samtidig er det mulig å utføre logiske operasjoner mellom de to kolonnene.
 CD
-CD Parametre:
-CD Type   Navn        I/U   Forklaring
+CD Parameters:
+CD Type   Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short  fra_kol      i    Kolonne det skal kopieres fra. (Lovlig 0 - BT_MAX_BT)
 CD short  til_kol      i    Kolonne det skal kopieres til. (Lovlig 1 - BT_MAX_USER)
@@ -1271,7 +1271,7 @@ CD                           BC_INVERT   = Overskriv gammelt innhold med
 CD                                         invertert verdi.
 CD                           BC_EXCHANGE = Bytter innholdet i de to kolonnene.
 CD                                           
-CD Bruk:
+CD Usage:
 CD LC_CopyBt(fra_kol,til_kol,operasjon);
    ==========================================================================
 */
@@ -1359,15 +1359,15 @@ SK_EntPnt_FYBA void LC_CopyBt(short fra_kol,short til_kol,short operasjon)
 AR-891120
 CH LI_SaveAdm                          Skriv globale variabler til indeksfil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver globale variabler til indeksfilen.
 CD
-CD Parametre:
-CD Type   Navn        I/U   Forklaring
+CD Parameters:
+CD Type   Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD LI_SaveAdm(pFil);
    ==========================================================================
 */
@@ -1409,11 +1409,11 @@ void LI_SaveAdm(LC_FILADM *pFil)
 AR-891120
 CH LI_ReadAdm                            Les globale variabler fra indeksfil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpner Adm-filen, og henter "globale" variabler fra indeksfilen.
 CD
-CD Parametre: ingen
-CD Type       Navn   I/U   Forklaring
+CD Parameters: none
+CD Type       Name   I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil    i    Peker til FilAdm
 CD short      status  r    Status:
@@ -1424,7 +1424,7 @@ CD                         LI_FEIL_INDEKSVERSJON: Feil indeksversjon
 CD                         LI_FEIL_STORRELSE: Feil størrelse på SOSI-filen
 CD                         LI_FEIL_OPPDATTID: Feil oppdateringstid på SOSI-filen
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LI_ReadAdm(pFil);
    ==========================================================================
 */
@@ -1557,11 +1557,11 @@ static short LI_ReadAdm(LC_FILADM *pFil)
 AR-930824
 CH LI_WriteRb                                     Skriv gruppe til bufferfil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriv gruppe fra buffer i minne til buffer-fil.
 CD
-CD Parametre:
-CD Type            Navn     I/U   Forklaring
+CD Parameters:
+CD Type            Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm
 CD UT_INT64        n64FilPos i    Startposisjon i buffer-filen.
@@ -1574,7 +1574,7 @@ CD long            lNko      i    Ant koord
 CD char           *pszPi     iu   Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal skrives
 CD
-CD Bruk:
+CD Usage:
 CD LI_WriteRb(pFil,lFilPos,Sys.Ginfo.pszTx,Sys.pGrInfo->ulGiLen,
 CD            Sys.pdAust, Sys.pdNord, Sys.pInfo, Sys.pGrInfo->nko,
 CD            Sys.pszPinfo, Sys.pGrInfo->ulPiLen);
@@ -1638,11 +1638,11 @@ void LI_WriteRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
 AR-930823
 CH LI_ReadRb                                       Les gruppe fra buffer-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Les gruppe fra buffer-fil til buffer i minne.
 CD
-CD Parametre:
-CD Type            Navn     I/U   Forklaring
+CD Parameters:
+CD Type            Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm for filen det skal leses fra.
 CD UT_INT64        n64FilPos i    Startposisjon i buffer-filen.
@@ -1655,7 +1655,7 @@ CD long            lNko      i    Ant koord
 CD char           *pszPi     iu   Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal leses til buffer
 CD
-CD Bruk:
+CD Usage:
 CD LI_ReadRb(pFil,lFilPos,Sys.Ginfo.pszTx,Sys.pGrInfo->ulGiLen,
 CD           Sys.pdAust, Sys.pdNord, Sys.pInfo, Sys.pGrInfo->nko,
 CD           Sys.pszPinfo, Sys.pGrInfo->ulPiLen);
@@ -1734,11 +1734,11 @@ void LI_ReadRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
 AR-930825
 CH LI_ReadCoordRb                            Les koordinater fra buffer-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Les koordinatene for en gruppe fra buffer-fil til buffer i minne.
 CD
-CD Parametre:
-CD Type            Navn     I/U   Forklaring
+CD Parameters:
+CD Type            Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm for filen det skal leses fra.
 CD UT_INT64        n64FilPos i    Startposisjon for gruppen i buffer-filen.
@@ -1750,7 +1750,7 @@ CD long            lNko      i    Ant koord
 CD char           *pszPi     iu   Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal leses til buffer
 CD
-CD Bruk:
+CD Usage:
 CD LI_ReadCoordRb(pFil,lFilPos,Sys.pGrInfo->ulGiLen,
 CD           Sys.pdAust, Sys.pdNord, Sys.pInfo, Sys.pGrInfo->nko,
 CD           Sys.pszPinfo, Sys.pGrInfo->ulPiLen);
@@ -1807,18 +1807,18 @@ void LI_ReadCoordRb(LC_FILADM *pFil, UT_INT64 n64FilPos, unsigned long ulGiLen,
 AR-930823
 CH LI_BerBufferLen                                      Beregn bufferlengde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregn nødvendig plass for å skrive gitt gruppe til RB.
 CD
-CD Parametre:
-CD Type            Navn   I/U   Forklaring
+CD Parameters:
+CD Type            Name   I/O   Explanation
 CD --------------------------------------------------------------------------
 CD unsigned long   ulGiLen i    Ant tegn som skal leses til buffer
 CD long            lNko    i    Ant koord
 CD unsigned long   ulPiLen i    Ant tegn som skal leses til buffer
 CD long            lLen    r    Ant byte for å lagre gruppen
 CD
-CD Bruk:
+CD Usage:
 CD lLen = LI_BerBufferLen(Sys.pGrInfo->ulGiLen,Sys.pGrInfo->nko,
 CD                        Sys.pGrInfo->ulPiLen);
    ==========================================================================
@@ -1859,17 +1859,17 @@ long LI_BerBufferLen(unsigned long ulGiLen,long lNko,unsigned long ulPiLen)
 AR-910929
 CH LI_OpenRb                                         Åpne og posisjoner, Rb
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at rett Rb-fil er åpen, og posisjoner
 CD
-CD Parametre:
-CD Type       Navn     I/U   Forklaring
+CD Parameters:
+CD Type       Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil      i    Peker til FilAdm
 CD UT_INT64   n64FilPos i    Filposisjon i byte fra filstart
 CD short      sModus    i    Modus (LES / SKRIV)
 CD
-CD Bruk:
+CD Usage:
 CD void LI_OpenRb(pFil,lFilPos);
    ==========================================================================
 */
@@ -1906,18 +1906,18 @@ static void LI_OpenRb(LC_FILADM *pFil,UT_INT64 n64FilPos,short sModus)
 AR-930927
 CH LC_SetModusMerk                Setter flag for merking av referert gruppe.
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Setter flag for merking av referert gruppe.
 CD Har innvirkning for virkemåten til:
 CD LC_FAGeo, LC_FASn, og LC_FAGiQuery
 CD
-CD Parametre:
-CD Type           Navn   I/U  Forklaring
+CD Parameters:
+CD Type           Name   I/O  Explanation
 CD -----------------------------------------------------------------------
 CD unsigned short modus   i   0 = Ikke merk referert gruppe.
 CD                            1 = Merk referert gruppe.
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetModusMerk(1);
    ==========================================================================
 */
@@ -1931,19 +1931,19 @@ SK_EntPnt_FYBA void LC_SetModusMerk(unsigned short usModus)
 AR-881123
 CH LC_MerkGr                                    Merk en gruppe brukttabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CH Merk aktuell gruppe i brukttabellen. Hvis flag for merking av referert
 CD gruppe er satt, blir også eventuelle refererte grupper merket.
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short   sKolonne   i    Kolonne som skal merkes.
 CD                         (Lovlig BT_MIN_USER - BT_MAX_USER)
 CD short   sBryter    i    Bryter   1=på, 0=av
 CD long    lAntall    r    Antall grupper merket.
 CD
-CD Bruk:
+CD Usage:
 CD lAntall = LC_MerkGr(sKolonne,sBryter);
    ==========================================================================
 */
@@ -2008,17 +2008,17 @@ SK_EntPnt_FYBA long LC_MerkGr(short sKolonne,short sBryter)
 AR-931101
 CH LC_ClrPrioritet                                      Slett prioritets-bit
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Slett prioritets-bit.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pGr      i    Gruppenummer
 CD kolonne  short    i    Kolonne som skal merkes.
 CD                        (Lovlig 0 til LC_MAX_ANT_PRIOR-1)
 CD
-CD Bruk:
+CD Usage:
 CD LC_ClrPrioritet(pGr,kolonne);
    ==========================================================================
 */
@@ -2054,17 +2054,17 @@ SK_EntPnt_FYBA void LC_ClrPrioritet(LC_BGR * pGr,short kolonne)
 AR-931101
 CH LC_SetPrioritet                                      Sett prioritets-bit
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sett prioritets-bit.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pGr      i    Gruppenummer
 CD kolonne  short    i    Kolonne som skal merkes.
 CD                        (Lovlig 0 til LC_MAX_ANT_PRIOR-1)
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetPrioritet(pGr,kolonne);
    ==========================================================================
 */
@@ -2099,18 +2099,18 @@ SK_EntPnt_FYBA void LC_SetPrioritet(LC_BGR * pGr,short kolonne)
 AR-931101
 CH LC_InqPrioritet                                       Hent prioritets-bit
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hent prioritets-bit.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pGr      i    Gruppenummer
 CD kolonne  short    i    Kolonne som skal hentes.
 CD                        (Lovlig 0 til LC_MAX_ANT_PRIOR-1)
 CD short    sAvPaa   r    Av eller På  (UT_TRUE = På, UT_FALSE = Av)
 CD
-CD Bruk:
+CD Usage:
 CD sAvPaa = LC_InqPrioritet(pGr,kolonne);
    ==========================================================================
 */
@@ -2147,15 +2147,15 @@ SK_EntPnt_FYBA short LC_InqPrioritet(LC_BGR * pGr,short kolonne)
 AR-931101
 CH LC_ErasePrioritet                                 Blank ut prioritets-bit
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Blank ut prioritets-bit.
 CD
-CD Parametre:
-CD Navn     Type    I/U   Forklaring
+CD Parameters:
+CD Name     Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pGr      i    Gruppenummer
 CD
-CD Bruk:
+CD Usage:
 CD LC_ErasePrioritet(pGr);
    ==========================================================================
 */
@@ -2188,15 +2188,15 @@ SK_EntPnt_FYBA void LC_ErasePrioritet(LC_BGR * pGr)
 AR-931101
 CH LC_EraseAllPrioritet                        Blank ut ALLE prioritets-bit
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Blank ut alle prioritets-bit på alle gruppene i denne filen.
 CD
-CD Parametre:
-CD Navn        Type    I/U   Forklaring
+CD Parameters:
+CD Name        Type    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil     i    Filpeker
 CD
-CD Bruk:
+CD Usage:
 CD LC_EraseAllPrioritet(pFil);
    ==========================================================================
 */
@@ -2224,14 +2224,14 @@ SK_EntPnt_FYBA void LC_EraseAllPrioritet(LC_FILADM *pFil)
 AR:2005-06-20
 CH LC_DumpBt                                   Dump brukttabellen til stderr
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Dump brukttabellen til stderr
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LC_DumpBt();
    =============================================================================
 */

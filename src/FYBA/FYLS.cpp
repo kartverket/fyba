@@ -17,12 +17,12 @@ extern LC_SYSTEMADM    Sys;
 AR-910930
 CH LS_Indx                                              Oppdater indekstabellen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Oppdater søketabellen for serienummer.
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD
-CD Bruk:
+CD Usage:
 CD LS_Indx();
 ================================================================================
 */
@@ -39,18 +39,18 @@ void LS_Indx(void)
 AR-910930
 CH LC_SBSn                                   Sett søkegrense for serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Setter søkegrenser for serienummersøk.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD LC_FILADM * pFil     i     Peker til FilAdm
 CD long        lMinSnr  i     Fra og med serienummer
 CD long        lMaxSnr  i     Til og med serienummer
 CD
-CD Bruk:
+CD Usage:
 CD LC_SNR_ADM SnrAdm;
 CD LC_SBSn(&SnrAdm,pFil,lMinSnr,lMaxSnr);
 =============================================================================
@@ -70,19 +70,19 @@ SK_EntPnt_FYBA void LC_SBSn(LC_SNR_ADM * pSnrAdm,LC_FILADM *pFil,long lMinSnr,lo
 AR-911118
 CH LC_FiSn                              Finn gruppenummer for et serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn gruppenummer for et gitt serienummer i søkeområdet for serienummer.
 CD Endrer IKKE "current gruppe".
 CD
-CD Parametre:
-CD Type        Navn    I/U    Forklaring
+CD Parameters:
+CD Type        Name    I/O    Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM * pFil     i     Peker til FilAdm
 CD long        lSnr     i     Serienummer som skal finnes
 CD LC_BGR *     pBgr     u     Gruppenummer i basen
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FiSn(pFil,lSnr,&Bgr);
 ================================================================================
 */
@@ -105,21 +105,21 @@ SK_EntPnt_FYBA short LC_FiSn(LC_FILADM *pFil,long lSnr,LC_BGR * pBgr)
 AR-91118
 CH LC_MoveSn                       Flytt til gruppenummer for et serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn gruppenummer for et gitt serienummer i søkeområdet for serienummer.
 CD Intern "aktuellt serienummer" blir endret, slik at videre søk med
 CD neste/forrige nå tar utgangspunkt i dette serienummer.
 CD (Bare hvis snr er funnet).
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD long        lSnr     i     Serienummer som skal finnes
 CD LC_BGR *     pBgr     u     Gruppenummer i basen
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_MoveSn(pSnrAdm,snr,&Bgr);
 ================================================================================
 */
@@ -144,14 +144,14 @@ SK_EntPnt_FYBA short LC_MoveSn(LC_SNR_ADM * pSnrAdm,long lSnr,LC_BGR * pBgr)
 AR-910930
 CH LC_FiArraySn                      Finn gruppenummer for flere serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner gruppenummer for tabell med serienummer.
 CD Endrer IKKE "current gruppe".
 CD Serienummertabellen kan være "rå" slik den kommer fra GetRef. Linjer med
 CD start øy og slutt øy overses.
 CD
-CD Parametre:
-CD Type       Navn     I/U   Forklaring
+CD Parameters:
+CD Type       Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM *pFil     i     Peker til FilAdm
 CD short      antall   i     Antall linjer brukt i serienummertabellen
@@ -159,7 +159,7 @@ CD long      *snr      i     Tabell med serienummer som skal finnes
 CD long      *bgr      u     Tabell med gruppenummer funnet
 CD                             (INGEN_GRUPPE = ikke funnet)
 CD
-CD Bruk:
+CD Usage:
 CD LC_FiArraySn(pFil,antall,snr,bgr);
 ================================================================================
 */
@@ -185,17 +185,17 @@ SK_EntPnt_FYBA void LC_FiArraySn(LC_FILADM *pFil,short antall,long *snr,long *bg
 AR-911022
 CH LC_FASn                                             Finn alle serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner alle grupper i fil/serienummer søkeområdet og merker i kolonne
 CD BT_SNRSOK i brukttabellen.
 CD
-CD Parametre:
-CD Type        Navn    I/U   Forklaring
+CD Parameters:
+CD Type        Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  i    Peker til statusblokk for serienummersøk
 CD long        antall   r    Antall grupper funnet.
 CD
-CD Bruk:
+CD Usage:
 CD antall_funnet = LC_FASn(&SnrAdm);
 =============================================================================
 */
@@ -242,17 +242,17 @@ SK_EntPnt_FYBA long LC_FASn(LC_SNR_ADM * pSnrAdm)
 AR-911022
 CH LC_FFSn                                              Finn første serienummer
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Finner første gruppe i fil/serienummer søkeområdet.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD LC_BGR *     pBgr     u     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FFSn(&SnrAdm,&Bgr);
 ================================================================================
 */
@@ -290,18 +290,18 @@ SK_EntPnt_FYBA short LC_FFSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 AR-911022
 CH LC_FFSnBt                        Finn første serienummer med tilleggskrav
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner første gruppe som er merka i gitt kolonne i brukttabellen.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 CD LC_BGR *     pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FFSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 =============================================================================
 */
@@ -339,17 +339,17 @@ SK_EntPnt_FYBA short LC_FFSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 AR-911022
 CH LC_FNSn                                            Finn neste serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner neste gruppe i fil/serienummer søkeområdet.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD LC_BGR *     pBgr     u     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FNSn(&SnrAdm,&Bgr);
 ================================================================================
 */
@@ -382,18 +382,18 @@ SK_EntPnt_FYBA short LC_FNSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 AR-911022
 CH LC_FNSnBt                         Finn neste serienummer med tilleggskrav
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner neste gruppe også er merka i gitt kolonne i brukttabellen.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 CD LC_BGR *     pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FNSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
 */
@@ -431,17 +431,17 @@ SK_EntPnt_FYBA short LC_FNSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 AR-911022
 CH LC_FPSn                                              Finn forige serienummer
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Finner forrige gruppe i fil/serienummer søkeområdet.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD LC_BGR *     pBgr     u     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FPSn(&SnrAdm,&Bgr);
 ================================================================================
 */
@@ -471,19 +471,19 @@ SK_EntPnt_FYBA short LC_FPSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 AR-910930
 CH LC_FPSnBt                         Finn forige serienummer med tilleggskrav
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner forrige gruppe i fil/serienummer søkeområdet, som også er merka i
 CD gitt kolonne i brukttabellen.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 CD LC_BGR *     pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FPSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
 */
@@ -518,17 +518,17 @@ SK_EntPnt_FYBA short LC_FPSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 AR-910930
 CH LC_FLSn                                              Finn siste serienummer
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Finner siste gruppe i fil/serienummer søkeområdet.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD LC_BGR *     pBgr     u     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FLSn(&SnrAdm,&Bgr);
 ================================================================================
 */
@@ -561,19 +561,19 @@ SK_EntPnt_FYBA short LC_FLSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 AR-910930
 CH LC_FLSnBt                         Finn siste serienummer med tilleggskrav
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner siste gruppe i fil/serienummer søkeområdet som også er merka i
 CD gitt kolonne i brukttabellen.
 CD
-CD Parametre:
-CD Type        Navn     I/U   Forklaring
+CD Parameters:
+CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 CD LC_BGR *     pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD sstat = LC_FLSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
 */
@@ -611,17 +611,17 @@ SK_EntPnt_FYBA short LC_FLSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 AR-910930
 CH LS_PutSn                                             Legg inn serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legg inn snr i tabellen  og oppdaterer max snr for filen
 CD
-CD Parametre:
-CD Type     Navn   I/U  Forklaring
+CD Parameters:
+CD Type     Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil  i   Peker til FilAdm
 CD long       lGrNr i   Gruppenummer
 CD long       lSnr  i   Serienummer
 CD
-CD Bruk:
+CD Usage:
 CD LS_PutSn(pFil,lGrNr,lSnr);
 =============================================================================
 */
@@ -650,17 +650,17 @@ void LS_PutSn(LC_FILADM *pFil,long lGrNr,long lSnr)
 AR-891104
 CH LS_VisSn                                            Vis serienummer-tabellen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter en linje fra serienummer-tabellen som formatert streng.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD long       lin    i    Linjenummer i SN-tab som skal hentes
 CD char      *tx     r    Peker til streng med formatert SN-linje
 CD
-CD Bruk:
+CD Usage:
 CD UT_FPRINTF(stderr,"\nSerienummertabell:\n");
 CD for (lin=0L; lin<100L; lin++) {
 CD     UT_FPRINTF(stderr,"%s\n",LS_VisSn(BlaFile,lin));

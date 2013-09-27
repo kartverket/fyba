@@ -30,10 +30,10 @@
 AR-971118
 CH UT_CopyFile                                            Kopier fil
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Kopierer en eksisterende fil til en ny fil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type   Navn               I/U Merknad
 CD ------------------------------------------------------------------
 CD char  *pszFraFilnavn       i  Kopier fra denne filen
@@ -45,7 +45,7 @@ CD short  sStatus             r  Status:
 CD                                  UT_TRUE = OK
 CD                                  UT_FALSE = Feil.
 CD
-CD Bruk:  sStatus = UT_CopyFile(pszFraFilnavn,pszTilFilnavn,UT_TRUE);
+CD Usage:  sStatus = UT_CopyFile(pszFraFilnavn,pszTilFilnavn,UT_TRUE);
    ==================================================================
 */
 SK_EntPnt_UT short UT_CopyFile(char *pszFraFilnavn,char *pszTilFilnavn,short sFeilHvisEksisterer)

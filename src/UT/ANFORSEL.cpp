@@ -20,12 +20,12 @@ OJ-2003-12-03
 ÅE-950401
 CH UT_PutAnfTegn           Legg inn / fjern anførseltegn forran og bak streng
 CD ===========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn eller fjerner anførseltegn forran eller bak parameter-streng.
 CD Ved rydding av anførseltegn ryddes også tegn inni strengen.
 CD Ved rydding må parameterstrengen bestå av mer enn ett tegn.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type   Navn       I/U   Merknad
 CD --------------------------------------------------------------------------
 CD char  *pszTx       iu   Tekststreng som skal behandles
@@ -37,7 +37,7 @@ CD short  sMaksLen    i    Makslimal lengde på streng inklusiv null-termiantor
 CD short  sOk         r    Feilstatus. UT_OK hvis ok, UT_ERROR hvis strengen er
 CD                         for kort til å føye på anførselstegn.
 CD
-CD Bruk:
+CD Usage:
 CD bOk = UT_PutAnfTegn(pszTx,cTegn, sMaksLen);
 CD =============================================================================
 */

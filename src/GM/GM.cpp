@@ -28,7 +28,7 @@
 AR-890723
 CH GM_wtstBue                               Sjekk om en bue berører et vindu
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om en bue berører et vindu.
 CD                                    wmax
 CD                       !--------------!
@@ -39,8 +39,8 @@ CD               ...     !              !   x (p2)
 CD        (p1)  x        !--------------!
 CD                     wmin
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   as       i    Koordinat i sentrumspunktet
 CD double   ns       i
@@ -53,7 +53,7 @@ CD double   wmaxa    i     !
 CD double   wmaxn    i    -!
 CD short    kryss    r    0=ikke skjæring, 1=skjæring eller inni
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_wtstBue(as,ns,radius,fi,dfi,wmina,wminn,wmaxa,wmaxn);
    ==========================================================================
 */
@@ -103,7 +103,7 @@ SK_EntPnt_GM short GM_wtstBue(double as,double ns,double radius,double fi,double
 AR-881018
 CH GM_wtst                                Sjekk om en linje berører et vindu
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om en linje berører et vindu.
 CD                                    wmax
 CD                       !--------------!
@@ -114,8 +114,8 @@ CD        p1             !              !
 CD                       !--------------!
 CD                     wmin
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   p1a      i    Koordinat i første punkt
 CD double   p1n      i
@@ -127,7 +127,7 @@ CD double   wmaxa    i     !
 CD double   wmaxn    i    -!
 CD short    kryss    r    0=ikke skjæring, 1=skjæring eller inni
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_wtst(pa1,p1n,p2a,p2n,wmina,wminn,wmaxa,wmaxn);
    ==========================================================================
 */
@@ -183,10 +183,10 @@ SK_EntPnt_GM short GM_wtst(double p1a, double p1n, double p2a, double p2n,
 PG-030815
 CH GM_wtstPunkt       Sjekker om et punkt ligger inni  - eller i kanten av - vindu
 CD ===============================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om et punkt ligger inni et vindu - gjerne rotert vindu.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD -------------------------------------------------------------------------------
 CD PktA      double       i   Øst-koordinat for sjekkpunkt
@@ -201,7 +201,7 @@ CD wa4       double       i   Øst-koordinat for 4.pkt i vindu
 CD wn4       double       i   Nord-koordinat for 4.pkt i vindu
 CD inni      short        r   Er punktet innenfor vinduet
 CD 
-CD Bruk:  inni = GM_wtstPunkt(PktA, PktN, wa1, wn1, wa2, wn2, wa3, wn3, wa4, wn4);
+CD Usage:  inni = GM_wtstPunkt(PktA, PktN, wa1, wn1, wa2, wn2, wa3, wn3, wa4, wn4);
    ===============================================================================
 */
 SK_EntPnt_GM short GM_wtstPunkt(double PktA, double PktN, double wa1, double wn1, double wa2, double wn2, double wa3, double wn3,
@@ -240,7 +240,7 @@ SK_EntPnt_GM short GM_wtstPunkt(double PktA, double PktN, double wa1, double wn1
 AR-881018
 CH GM_sver                            Skjæring mellom vertikal- og skrålinje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom en vertikal linje (M-N) og en skrålinje (K-L)
 CD
 CD                               M*     *L
@@ -251,8 +251,8 @@ CD                              / !
 CD                            /   !
 CD                         K*     *N
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   ka       i    Koordinat i K
 CD double   kn       i
@@ -266,7 +266,7 @@ CD double  *sa       u    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_sver(ka,kn,la,ln,na,nn,ma,mn,&sa,&sn);
    ==========================================================================
 */
@@ -298,7 +298,7 @@ SK_EntPnt_GM short GM_sver(double ka,double kn,double la,double ln,double na,dou
 AR-881018
 CH GM_shor                          Skjæring mellom horisontal- og skrålinje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom en horisontal linje (M-N)
 CD og en skrålinje (K-L)
 CD
@@ -310,8 +310,8 @@ CD                             /
 CD                           /
 CD                        K*
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   ka       i    Koordinat i K
 CD double   kn       i
@@ -325,7 +325,7 @@ CD double  *sa       u    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_shor(ka,kn,la,ln,na,nn,ma,mn,&sa,&sn);
    ==========================================================================
 */
@@ -357,7 +357,7 @@ SK_EntPnt_GM short GM_shor(double ka,double kn,double la,double ln,double na,dou
 AR-901209
 CH GM_sLinLin                                 Skjæringspunkt mellom 2 linjer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom 2 linjer (M-N) og (K-L)
 CD
 CD                         M*           *L
@@ -368,8 +368,8 @@ CD                             /   \
 CD                           /       \
 CD                        K*           *N
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   ka       i    Koordinat i K
 CD double   kn       i
@@ -383,7 +383,7 @@ CD double  *sa       u    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_sLinLin(ka,kn,la,ln,ma,mn,na,nn,&sa,&sn);
    ==========================================================================
 */
@@ -448,7 +448,7 @@ SK_EntPnt_GM short GM_sLinLin(double ka,double kn,double la,double ln,double ma,
 AR-901209
 CH GM_Overlapp                                      Overlapp mellom 2 linjer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om to linjer overlapper hverandre helt eller delevis.
 CD
 CD                         M*     
@@ -462,8 +462,8 @@ CD                                   \
 CD                                    \
 CD                                     *L
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   ka       i    Koordinat i K
 CD double   kn       i
@@ -479,7 +479,7 @@ CD short    overlapp r    0=ikke overlapp
 CD                        1=tangerer (likt endepunkt)
 CD                        2=delevis overlapp
 CD                        3=linjene er like
-CD Bruk:
+CD Usage:
 CD kryss = GM_Overlapp(ka,kn,la,ln,ma,mn,na,nn);
    ==========================================================================
 */
@@ -550,7 +550,7 @@ SK_EntPnt_GM short GM_Overlapp(double ka,double kn,double la,double ln,double ma
 AR-901209
 CH GM_sVektVekt                     Skjæringspunkt mellom 2 uendelige linjer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom uendelige 2 linjer (M-N) og (K-L)
 CD   
 CD                         M*           *L
@@ -561,8 +561,8 @@ CD                             /   \
 CD                           /       \
 CD                        K*           *N
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   ka       i    Koordinat i K
 CD double   kn       i
@@ -576,7 +576,7 @@ CD double  *sa       u    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_sVektVekt(ka,kn,la,ln,ma,mn,na,nn,&sa,&sn);
    ==========================================================================
 */
@@ -642,11 +642,11 @@ SK_EntPnt_GM short GM_sVektVekt(double ka,double kn,double la,double ln,double m
 AR-890722
 CH GM_sLinBue                                   Skjæring mellom linje og bue
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom en linje (K-L) og en bue.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   sa       i    Koordinat i buens sentrum.
 CD double   sn       i
@@ -663,7 +663,7 @@ CD double  *a2       u    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_sLinBue(sa,sn,radius,fi,dfi,ka,kn,la,ln,&a1,&n1,&a2,&n2);
    ==========================================================================
 */
@@ -730,11 +730,11 @@ SK_EntPnt_GM short GM_sLinBue(double sa,double sn,double radius,double fi,double
 AR-901209
 CH GM_sVektSirk                     Skjæring mellom uendelig linje og sirkel
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom en uendelig linje (K-L) og en sirkel.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   sa       i    Koordinat i sirkelens sentrum.
 CD double   sn       i
@@ -749,7 +749,7 @@ CD double  *a2       u    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_sVektSirk(sa,sn,radius,ka,kn,la,ln,&a1,&n1,&a2,&n2);
    ==========================================================================
 */
@@ -803,14 +803,14 @@ SK_EntPnt_GM short GM_sVektSirk(double sa,double sn,double radius,
 AR-901209
 CH GM_sBueBue                                   Skjæringspunkt mellom 2 buer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom 2 buer.
 CD NB! Retningen oppgis i radianer, med retning 0 i øst-aksen, og med positiv
 CD omløpsretning mot urviseren. Alle vinkler er i området 0 - 2PI.
 CD Metode: Se Bowyer and Woodwark: AProgrammer's Geometry, side 27-28.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   sa1      i    Koordinat i buens sentrum.
 CD double   sn1      i
@@ -828,7 +828,7 @@ CD double  *a2       u    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_sBueBue(as1,ns1,fi1,dfi1,as2,ns2,fi2,dfi2,&a1,&n1,&a2,&n2);
    ==========================================================================
 */
@@ -894,12 +894,12 @@ SK_EntPnt_GM short GM_sBueBue(double as1,double ns1,double radius1,double fi1,do
 AR-901209
 CH GM_sSirkSirk                              Skjæringspunkt mellom 2 sirkler
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner skjæringspunkt mellom 2 sirkler.
 CD Metode: Se Bowyer and Woodwark: AProgrammer's Geometry, side 27-28.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   sa1      i    Koordinat i sirklens sentrum.
 CD double   sn1      i
@@ -913,7 +913,7 @@ CD double  *a2       u    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_sSirkSirk(as1,ns1,as2,ns2,&a1,&n1,&a2,&n2);
    ==========================================================================
 */
@@ -976,7 +976,7 @@ AR-890904
 JAØ-1999-02-03
 CH GM_fotp                                       Fotpunkt på linje fra punkt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner fotpunktet  på linjen 1-2 fra punktet P.
 CD
 CD                               *P
@@ -985,8 +985,8 @@ CD                               !
 CD                     1*--------*---------*2
 CD                               F
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   a1       i    Koordinat i 1
 CD double   n1       i
@@ -1000,7 +1000,7 @@ CD short    kryss    r    0=ikke beregnet (brukes ikke)
 CD                        1=beregnet, men punktet er utenfor linjen
 CD                        2=bregnet, ok
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_fotp(a1,n1,a2,n2,ap,np,&af,&nf);
    ==========================================================================
 */
@@ -1090,7 +1090,7 @@ SK_EntPnt_GM short GM_fotp(double a1,double n1,double a2,double n2,double ap,dou
 IR-2011-05-05
 CH GM_fotp                                       Fotpunkt på line frå punkt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Bereknar fotpunktet  på lina 1-2 frå punktet P (i 2D).
 CD (Ein kan bruke same metoden i 3D, ved å ta med z-koordinatane i tillegg.)
 CD Sjå http://paulbourke.net/geometry/sphereline  for dokumentasjon.
@@ -1116,7 +1116,7 @@ CD short    kryss    r    0=ikkje berekna (blir ikkje brukt)
 CD                        1=berekna, men punktet er utanfor lina
 CD                        2=berekna, ok
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_fotp(a1,n1,a2,n2,ap,np,&af,&nf);
    ==========================================================================
 */
@@ -1233,7 +1233,7 @@ SK_EntPnt_GM short GM_fotp_ny(double a1, double n1, double a2, double n2, double
 AR-991012
 CH GM_Parallell                                       Parallellforskyver linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD  Parallellforskyver linjen K-L gitt avstand normalt til siden. 
 CD
 CD
@@ -1254,8 +1254,8 @@ CD               avstand < 0            avstand > 0
 CD
 CD
 CD
-CD Parametre:
-CD Type     Navn       I/U   Forklaring
+CD Parameters:
+CD Type     Name       I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   ka          i    Koordinat i K
 CD double   kn          i
@@ -1269,7 +1269,7 @@ CD double  *ln1         u
 CD bool     status s    r    UT_FALSE = ikke beregnet (K og L har like koordinater)
 CD                           UT_TRUE = bregnet, ok
 CD
-CD Bruk:
+CD Usage:
 CD status = GM_Parallell(ka,kn,la,ln,avstand,&ka1,&kn1,&la1,&ln1);
    ==========================================================================
 */
@@ -1324,7 +1324,7 @@ SK_EntPnt_GM short GM_Parallell(double ka,double kn,double la,double ln,double a
 AR-890723
 CH GM_KonvBue                             Omregning til intern bue-angivelse
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Omregning til intern bue-angivelse med sirkelsentrum, radius og retning
 CD til buens start samt delta for sluttpunktet.
 CD NB! Retningen oppgis i radianer, med retning 0 i øst-aksen, og med positiv
@@ -1332,8 +1332,8 @@ CD omløpsretning mot urviseren. Alle vinkler er i området 0 - 2PI.
 CD Metode: Se Bowyer and Woodwark: AProgrammer's Geometry,
 CD         side 27-28 og 35-36.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   a1       i    Koordinat i P1
 CD double   n1       i
@@ -1347,7 +1347,7 @@ CD double  *fi       u    "Retning" sentrum - punkt 1.
 CD double  *dfi      u    Vinkel mellom fi og retning  sentrum - punkt 2.
 CD short    beregnet r    0=kan ikke beregne,  1=bregnet ok.
 CD
-CD Bruk:
+CD Usage:
 CD ok = GM_KonvBue(a1,n1,a2,n2,radius,storbue,&as,&ns,&fi,&dfi);
    ==========================================================================
 */
@@ -1417,7 +1417,7 @@ SK_EntPnt_GM short GM_KonvBue(double a1,double n1,double a2,double n2,double rad
 AR-890723
 CH GM_KonvBuep                            Omregning til intern bue-angivelse
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Omregning til intern bue-angivelse med sirkelsentrum, radius og retning
 CD til buens start samt delta for sluttpunktet.
 CD NB! Retningen oppgis i radianer, med retning 0 i øst-aksen, og med positiv
@@ -1425,8 +1425,8 @@ CD omløpsretning mot urviseren. Alle vinkler er i området 0 - 2PI.
 CD Metode: Se Bowyer and Woodwark: AProgrammer's Geometry,
 CD         side 27-28 og 35-36.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   a1       i    Koordinat i P1  (startpunkt)
 CD double   n1       i
@@ -1441,7 +1441,7 @@ CD double  *fi       u    "Retning" sentrum - punkt 1.
 CD double  *dfi      u    Vinkel mellom fi og retning  sentrum - punkt 3.
 CD short    beregnet r    0=kan ikke beregne,  1=bregnet ok.
 CD
-CD Bruk:
+CD Usage:
 CD ok = GM_KonvBuep(a1,n1,a2,n2,a3,n3,&as,&ns,&radius,&fi,&dfi);
    ==========================================================================
 */
@@ -1511,7 +1511,7 @@ SK_EntPnt_GM short GM_KonvBuep(double a1,double n1,double a2,double n2,double a3
 AR-911029
 CH GM_KonvSirkel                         Omregning til intern bue-angivelse
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Omregning til intern bue-angivelse med sirkelsentrum, radius og retning
 CD til buens start samt delta for sluttpunktet.
 CD NB! Retningen oppgis i radianer, med retning 0 i øst-aksen, og med positiv
@@ -1519,8 +1519,8 @@ CD omløpsretning mot urviseren. Alle vinkler er i området 0 - 2PI.
 CD Metode: Se Bowyer and Woodwark: AProgrammer's Geometry,
 CD         side 27-28 og 35-36.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  *as       iu   Koordinat i sentrumspunktet
 CD double  *ns       iu
@@ -1529,7 +1529,7 @@ CD double  *fi       u    "Startretning"  sentrum - punkt 1.
 CD double  *dfi      u    "Åpningsvinkel" (2PI).
 CD short    ist      r    1 = OK, 0 = ikke beregnet.
 CD
-CD Bruk:
+CD Usage:
 CD ist = GM_KonvSirkel(&as,&ns,&radius,&fi,&dfi);
    ==========================================================================
 */
@@ -1547,7 +1547,7 @@ SK_EntPnt_GM short GM_KonvSirkel(double *fi,double *dfi)
 AR-911029
 CH GM_KonvSirkelp                         Omregning til intern bue-angivelse
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Omregning til intern bue-angivelse med sirkelsentrum, radius og retning
 CD til buens start samt delta for sluttpunktet.
 CD NB! Retningen oppgis i radianer, med retning 0 i øst-aksen, og med positiv
@@ -1555,8 +1555,8 @@ CD omløpsretning mot urviseren. Alle vinkler er i området 0 - 2PI.
 CD Metode: Se Bowyer and Woodwark: AProgrammer's Geometry,
 CD         side 27-28 og 35-36.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   a1       i    Koordinat i P1  (punkt på buen)
 CD double   n1       i
@@ -1571,7 +1571,7 @@ CD double  *fi       u    "Retning" sentrum - start av buen (0)
 CD double  *dfi      u    Åpningsvinkel (2*PI)
 CD short    beregnet r    1 = OK; 0 = kan ikke beregne.
 CD
-CD Bruk:
+CD Usage:
 CD ist = GM_KonvSirkelp(a1,n1,a2,n2,a3,n3,&as,&ns,&radius,&fi,&dfi);
    ==========================================================================
 */
@@ -1625,12 +1625,12 @@ SK_EntPnt_GM short GM_KonvSirkelp(double a1,double n1,double a2,double n2,double
 AR-881018
 CH GM_bepa                                                    Linjeparametre
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner parametrene for linjen gjennom 1 og 2.
 CD Ligningen for linjen er: (AX+BY+C=0).
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   a1       i    Koordinat i 1
 CD double   n1       i
@@ -1641,7 +1641,7 @@ CD double  *pb       u
 CD double  *pc       u
 CD short    ist      r    1=beregnet, 0=ikke beregnet (1 og 2 er samme punkt)
 CD
-CD Bruk:
+CD Usage:
 CD ist = GM_bepa(a1,n1,a2,n2,&pa,&pb,&pc);
    ==========================================================================
 */
@@ -1687,12 +1687,12 @@ SK_EntPnt_GM short GM_bepa(double a1, double n1, double a2, double n2,
 AR-940522
 CH GM_bepa3                                                3D-Linjeparametre
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner 3D parametrene for linjen gjennom 1 og 2.
 CD Ligningen for linjen er: (AX+BY+C=0).
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   a1       i    Koordinat i 1
 CD double   n1       i
@@ -1705,7 +1705,7 @@ CD double  *pg       u
 CD double  *ph       u
 CD short    ist      r    1=beregnet, 0=ikke beregnet (1 og 2 er samme punkt)
 CD
-CD Bruk:
+CD Usage:
 CD ist = GM_bepa3(a1,n1,h1,a2,n2,h2,&pa,&pb,&pc);
    ==========================================================================
 */
@@ -1736,12 +1736,12 @@ SK_EntPnt_GM short GM_bepa3(double a1, double n1, double h1,
 AR-890717
 CH GM_cint                                         Skjæring mellom to linjer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner kryssingspunktet mellom to linjer.
 CD Linjene er gitt på implisitt form.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   pa1      i    Parametre for linje 1
 CD double   pb1      i
@@ -1753,7 +1753,7 @@ CD double  *as       u    Koordinat i skjæringspunktet
 CD double  *ns       u
 CD short    kryss    r    1=beregnet, 0=ikke beregnet (pralelle linjer)
 CD
-CD Bruk:
+CD Usage:
 CD kryss = GM_cint(pa1,pb1,pc1,pa2,pb2,pc2,&as,&ns);
    ==========================================================================
 */
@@ -1781,10 +1781,10 @@ SK_EntPnt_GM short GM_cint(double pa1, double pb1, double pc1, double pa2, doubl
 JEK-920514
 CH GM_Vinkel                     Beregner vinkel mellom to retninger
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Beregner positiv vinkel mellom to retninger fi1 og fi2.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------------------------
 CD fi1       double       i   Retningsvinkel 1
@@ -1805,16 +1805,16 @@ SK_EntPnt_GM double GM_Vinkel(double fi1, double fi2)
 JEK-920514
 CH GM_RedVinkel                Beregner en retn.vinkel i omr. 0-2*PI
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Redusere en retningsvinkel til å ligge i området 0 - 2*PI.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------------------------
 CD fi       double       i   Retningsvinkel 
 CD vinkel   double       r   Redusert vinkel
 CD
-CD Bruk:  red_vinkel = GM_RedVinkel(fi);
+CD Usage:  red_vinkel = GM_RedVinkel(fi);
    ==================================================================
 */
 SK_EntPnt_GM double GM_RedVinkel(double dFi)
@@ -1839,7 +1839,7 @@ SK_EntPnt_GM double GM_RedVinkel(double dFi)
 AR-901021
 CH GM_retning                                        Retning mellom to punkt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner retning fra et punkt til et annet (K-L).
 CD (Rutinen er spesiellt beregnet for å beregne retningsvinkler for buer.)
 CD NB! Retningen oppgis i radianer, med retning 0 i øst-aksen, og med positiv
@@ -1851,8 +1851,8 @@ CD                         /
 CD                       /
 CD                    K*
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   ak       i    Koordinat i K.
 CD double   nk       i
@@ -1860,7 +1860,7 @@ CD double   al       i    Koordinat i L.
 CD double   nl       i
 CD double   retning  r    Retning K-L.
 CD
-CD Bruk:
+CD Usage:
 CD retning = GM_retning(ak,nk,al,nl);
    ==========================================================================
 */
@@ -1931,19 +1931,19 @@ SK_EntPnt_GM void GM_RettvPol(double a1 , double n1, double a2, double n2,
 /*
 CH GM_Areal                                      Beregner areal av polygon
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner areal av polygon.
 CD Forutsetter at polygonet er lukket. (Første og siste punkt er like.)
 CD
-CD PARAMETERLISTE:
-CD Navn    Type    I/U Merknad
+CD Parameters:
+CD Name    Type    I/O Explanation
 CD --------------------------------------------------------------------------
 CD pA     *double   i   Øst-koordinater
 CD pN     *double   i   Nord-koordinater
 CD sNko    short    i   Antall koordinater
 CD dAreal  double   r   Areal m^2
 CD
-CD Bruk:  areal = GM_Areal ( pA, pN, sAnt );
+CD Usage:  areal = GM_Areal ( pA, pN, sAnt );
    ==========================================================================
 */
 SK_EntPnt_GM double GM_Areal(double *pA, double *pN, short sAnt)
@@ -1985,14 +1985,14 @@ SK_EntPnt_GM void GM_PolRettv(double *a , double *n, double gon, double avst)
 AR-890919
 CH GM_buebox                                          Omskreven boks for bue
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner omskrevet rektangel for bue.
 CD Buen går mot urviseren fra P1 til P2 rundt sirkelen.
 CD NB! Retningen oppgis i radianer, med retning 0 i øst-aksen, og med positiv
 CD omløpsretning mot urviseren.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   as       i    Koordinat i sirkelsentrum.
 CD double   ns       i
@@ -2005,7 +2005,7 @@ CD double   nvn      u
 CD double   oha      u    Øvre høyre hjørne  av omskrevet rektangel.
 CD double   ohn      u
 CD
-CD Bruk:
+CD Usage:
 CD GM_buebox(as,ns,radius,fi,dfi,&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
@@ -2573,12 +2573,12 @@ void QdiArc::computeBbox( QdiRectangle *pRectangle )
 AR-890903
 CH GM_NormVindu                                   Normaliser vindusangivelse
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Bytter om koordinatene slik at vindusangivelsen blir riktig.
 CD Sjekker også at vinduet har lengde > 0.0001 i både øst og nord retning.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  *nva        iu   Avgrensing av vinduet
 CD double  *nvn        iu
@@ -2588,7 +2588,7 @@ CD short    ist        r    status: 1 = Vinduet er OK
 CD                                  0 = Vinduet er feil definert.
 CD                                      (Lengde 0.0 i en retning.)
 CD
-CD Bruk:
+CD Usage:
 CD ist = GM_NormVindu(&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
@@ -2615,11 +2615,11 @@ SK_EntPnt_GM short GM_NormVindu(double *nva,double *nvn,double *oha,double *ohn)
 AR-890903
 CH GM_TestPktBue                  Sjekk om punkt ligger i sektor gitt av bue 
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om punkt ligger i sektor gitt av bue. 
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   as       i    Koordinat i sirkelsenter
 CD double   ns       i
@@ -2629,7 +2629,7 @@ CD double   a        i    Koordinat som skal testes
 CD double   n        i
 CD short    ok       r    1=ligger i buens sektor, 0=ikke i buens sektor
 CD
-CD Bruk:
+CD Usage:
 CD ok = GM_TestPktBue(as,ns,fi,dfi,a,n);
    ==========================================================================
 */
@@ -2661,11 +2661,11 @@ SK_EntPnt_GM short GM_TestPktBue(double as,double ns,double fi,double dfi,
 AR-890903
 CH GM_PktBue                  Beregner vinkel til punkt i sektor gitt av bue 
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner vinkel til punkt som ligger i sektor gitt av bue. 
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   as       i    Koordinat i sirkelsenter
 CD double   ns       i
@@ -2676,7 +2676,7 @@ CD double   n        i
 CD double  *dfiPkt   u    Vinkel mellom fi og retning til testpunktet
 CD short    ok       r    1=ligger i buens sektor, 0=ikke i buens sektor
 CD
-CD Bruk:
+CD Usage:
 CD ok = GM_PktBue(as,ns,fi,dfi,a,n,&dfiPkt);
    ==========================================================================
 */
@@ -2722,10 +2722,10 @@ SK_EntPnt_GM short GM_PktBue(double as,double ns,double fi,double dfi,
 JEK-920520
 CH GM_Avstand            Beregner avstand mellom to punkt
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Beregner avstand mellom to punkt.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------------------------
 CD a1        double       i   Øst-koordinat for startpunkt
@@ -2734,7 +2734,7 @@ CD a2        double       i   Øst-koordinat for endepunkt
 CD n2        double       i   Nord-koordinat for endepunkt
 CD avstand   double       r   Avstand mellom punktene
 CD
-CD Bruk:  avstand = GM_Avstand ( a1, n1, a2, n2 );
+CD Usage:  avstand = GM_Avstand ( a1, n1, a2, n2 );
    ==================================================================
 */
 SK_EntPnt_GM double GM_Avstand(double a1, double n1, double a2, double n2 )
@@ -2751,10 +2751,10 @@ SK_EntPnt_GM double GM_Avstand(double a1, double n1, double a2, double n2 )
 TOU/AR-080521
 CH GM_Avstand            Beregner kvadrert avstand mellom to punkt
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Beregner kvadrert avstand mellom to punkt.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------------------------
 CD a1        double       i   Øst-koordinat for startpunkt
@@ -2763,7 +2763,7 @@ CD a2        double       i   Øst-koordinat for endepunkt
 CD n2        double       i   Nord-koordinat for endepunkt
 CD avstand2   double      r   Kvadrert avstand mellom punktene
 CD
-CD Bruk:  avstand2 = GM_Avstand2 ( a1, n1, a2, n2 );
+CD Usage:  avstand2 = GM_Avstand2 ( a1, n1, a2, n2 );
 ==================================================================
 */
 SK_EntPnt_GM double GM_Avstand2(double a1, double n1, double a2, double n2 )
@@ -2780,11 +2780,11 @@ SK_EntPnt_GM double GM_Avstand2(double a1, double n1, double a2, double n2 )
 JEK-920520
 CH GM_BueTangent       Retnv. for tangent til punkt på bue
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Beregner retningsvinkel til tangent til punkt på en sirkelbue.
 CD
-CD PARAMETERLISTE:
-CD Navn     Type     I/U  Merknad
+CD Parameters:
+CD Name     Type     I/O  Explanation
 CD -----------------------------------------------------------------
 CD as       double    i   Øst-koordinat for sirkelsentrum
 CD an       double    i   Nord-koordinat for sirkelsentrum
@@ -2800,7 +2800,7 @@ CD ist      short     r   status:  1 = Beregning ok
 CD                                 0 = Punkt ikke på buesegment     
 CD                                     NB! Tangent beregnes uansett!
 CD
-CD Bruk:  ist = GM_BueTangent(as,ns,fi,dfi,radius,a,s,&buetan);
+CD Usage:  ist = GM_BueTangent(as,ns,fi,dfi,radius,a,s,&buetan);
    ==================================================================
 */
 SK_EntPnt_GM short GM_BueTangent ( double as, double ns, double fi, double dfi,
@@ -2827,10 +2827,10 @@ LS-900607
 AR-921001
 CH GM_BueTilKorder                        Tilnærm ein sirkelboge med korder
 CD =========================================================================
-CD Formål:
+CD Purpose:
 CD   Tilnærm ein sirkelboge med korder.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type    Navn   I/U  Merknad
 CD ------------------------------------------------------------------
 CD double  as      i  Øst-koordinat for sirkelsentrum
@@ -2845,7 +2845,7 @@ CD double *a_arr   u  Knekkpunkt før, mellom og etter kordene
 CD double *n_arr   u  
 CD short   npu     r  Tal på punkt i a_arr og n_arr
 CD
-CD Bruk:
+CD Usage:
 CD npu = GM_BueTilKorder(as,ns,r,fi,dfi,delta,mpu,a_arr,n_arr);
 CD =========================================================================
 */
@@ -2889,10 +2889,10 @@ LS-900607
 AR-921001
 CH GM_PktTilOktagon                  Beregner en åttekant rundt gitt punkt.
 CD =========================================================================
-CD Formål:
+CD Purpose:
 CD   Beregner en åttekant med gitt areal rundt gitt punkt.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type    Navn   I/U  Merknad
 CD ------------------------------------------------------------------
 CD double  dAs     i  Øst-koordinat for sentrum
@@ -2901,7 +2901,7 @@ CD double  dAreal  i  Ønsket areal
 CD double *a_arr   u  Hjørnepunkt (Må ha plass til 8 punkt.)
 CD double *n_arr   u  
 CD
-CD Bruk:
+CD Usage:
 CD GM_PktTilOktagon(dAs,dNs,dAreal,a_arr,n_arr);
 CD =========================================================================
 */
@@ -2967,15 +2967,15 @@ SK_EntPnt_GM void GM_PktTilOktagon (double dAs,double dNs,double dAreal,double *
 AR:2008-08-12
 CH GM_TynnDared
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Tynning med pilhøyde og maks avstand.
 CD Samme som SiTynnDared, men noe forenklet:
 CD - Koordinatene kommer inn i NØ buffer.
 CD - Handterer ikke høyde
 CD - Tar ikke hensyn til knutepunkt
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD double   dMaxAvst     i   Max distanse mellom punkta
 CD double   dMaxPil      i   Max pilhøyde
@@ -2983,7 +2983,7 @@ CD long    *nko         iu   Antall koordinater
 CD double  *pA          iu   Øst-koordinater
 CD double  *pN          iu   Nord-koordinater
 CD bool     bBeregnet    r   Status.
-CD Bruk:
+CD Usage:
 CD bBeregnet = GM_TynnDared(dMaxAvst,dPilhoyde,&nko,pA,pN);
 ==========================================================================
 */
@@ -3184,7 +3184,7 @@ SK_EntPnt_GM void GM_TynnDared(double dMaxAvst,double dMaxPil,long *nko, double 
 /*
 CH GM_BeregnHjelpepunkt
 CD ==============================================================
-CD Formål: 
+CD Purpose: 
 CD Beskriv funksjonaliteten her ...
 CD
 CD

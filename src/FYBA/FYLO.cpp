@@ -47,14 +47,14 @@ short (*LC_CancelAdr)(void) = NULL;
 AR-910920
 CH LC_Init                                                       Initierer FYBA
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Initierer FYBA.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LC_Init();
    =============================================================================
 */
@@ -102,14 +102,14 @@ SK_EntPnt_FYBA void LC_Init(void)
 AR-910920
 CH LC_Close                                                    Stenger ned FYBA
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Stenger ned FYBA.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LC_Close();
 	=============================================================================
 */
@@ -155,16 +155,16 @@ SK_EntPnt_FYBA void LC_Close(void)
 AR-910920
 CH LC_SetDefLpfi                                  Ledig plass mellom grupper
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn standardverdi for antall tegn ledig plass bak gruppe
 CD på .SOS-fil.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD short    ant_tegn   i    Antall tegn ledig plass.
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetDefLpfi(ant_tegn);
    =============================================================================
 */
@@ -178,16 +178,16 @@ SK_EntPnt_FYBA void LC_SetDefLpfi(short ant_tegn)
 AR-911003
 CH LC_InqDefLpfi                             Hent ledig plass mellom grupper
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut standardverdi for antall tegn ledig plass bak gruppe
 CD på .SOS-fil.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD short    ant_tegn   r    Antall tegn ledig plass.
 CD
-CD Bruk:
+CD Usage:
 CD ant_tegn = LC_InqDefLpfi();
    =============================================================================
 */
@@ -201,16 +201,16 @@ SK_EntPnt_FYBA short LC_InqDefLpfi(void)
 AR-911021
 CH LC_InqLag                          Finn hvilet lag aktuell gruppe tilhører
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn hvilket lag aktuell gruppe tilhører.
 CD
-CD Parametre:
-CD Type            Navn    I/U   Forklaring
+CD Parameters:
+CD Type            Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD unsigned short *usLag    u    "Lag":  LC_FRAMGR eller LC_BAKGR
 CD short           status   r    UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
 CD
-CD Bruk:
+CD Usage:
 CD     status = LC_InqLag(&usLag);
    ==========================================================================
 */
@@ -231,16 +231,16 @@ SK_EntPnt_FYBA short LC_InqLag(unsigned short *usLag)
 AR-920221
 CH LC_InqFilLag                              Finn hvilet lag en fil tilhører
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn hvilket lag en fil tilhører.
 CD
-CD Parametre:
-CD Type            Navn    I/U   Forklaring
+CD Parameters:
+CD Type            Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil     i    Filpeker
 CD unsigned short  usLag    r    "Lag":  LC_FRAMGR eller LC_BAKGR
 CD
-CD Bruk:
+CD Usage:
 CD     usLag = LC_InqFilLag(pFil);
    ==========================================================================
 */
@@ -256,16 +256,16 @@ SK_EntPnt_FYBA unsigned short LC_InqFilLag(LC_FILADM *pFil)
 AR-920221
 CH LC_SetFilLag                             Velg hvilet lag en fil tilhører
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Velg hvilket lag en fil tilhører.
 CD
-CD Parametre:
-CD Type            Navn    I/U   Forklaring
+CD Parameters:
+CD Type            Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil     i    Filpeker
 CD unsigned short  usLag    i    "Lag":  LC_FRAMGR eller LC_BAKGR
 CD
-CD Bruk:
+CD Usage:
 CD     LC_SetFilLag(pFil,LC_FRAMGR);
    ==========================================================================
 */
@@ -325,21 +325,21 @@ SK_EntPnt_FYBA void LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag)
 AR-971114
 CH LC_Backup                                     Lag backup av gitt SOSI-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Lag backup av gitt SOSI-fil.
 CD Kopien legges på en underkatlog med navn "Backup" under den katalogen
 CD SOSI-filen ligger på. Kopien navnes "Filnavn.nnn" der nnn er et
 CD fortløpende nummer fra 000 og oppover. Det første ledige numret blir brukt.
 CD
-CD Parametre:
-CD Type         Navn          I/U  Forklaring
+CD Parameters:
+CD Type         Name          I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM   *pFil           i   Filpeker
 CD char        *pszBackupPath  i   Katalognavn for lagring av backup.
 CD short        sStatus        r   UT_TRUE = OK
 CD                                 UT_FALSE = Feil.
 CD
-CD Bruk:
+CD Usage:
 CD     sStatus = LC_Backup(pFil, szBackupPath);
    ==========================================================================
 */
@@ -399,16 +399,16 @@ SK_EntPnt_FYBA short LC_Backup(LC_FILADM *pFil, const char *pszBackupPath)
 AR-910920
 CH LC_MaxSkriv                                         Max skriv før lagring
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Setter max antall skriv uten lagring til SOSI-filen.
 CD (0 = allt skrives direkte til SOSI-filen.)
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD long     antall     i    Max antall skriv uten lagring til SOSI-filen
 CD
-CD Bruk:
+CD Usage:
 CD LC_MaxSkriv(antall);
    =============================================================================
 */
@@ -422,16 +422,16 @@ SK_EntPnt_FYBA void LC_MaxSkriv(long antall)
 AR-910920
 CH LC_InqMaxSkriv                                       Max skriv før lagring
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Spørr etter max antall skriv uten lagring til SOSI-filen.
 CD (0 = allt skrives direkte til SOSI-filen.)
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD long     antall     i    Max antall skriv uten lagring til SOSI-filen
 CD
-CD Bruk:
+CD Usage:
 CD antall = LC_InqMaxSkriv();
    =============================================================================
 */
@@ -445,19 +445,19 @@ SK_EntPnt_FYBA long LC_InqMaxSkriv(void)
 AR-900924
 CH LC_SetNgisModus                                            Velg NGIS modus
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Velger handteringsmåte for grupper som er merket for oppdatering av NGIS.
 CD	Standardverdi fra LC_Init er NGIS_NORMAL.
 CD
-CD Parametre:
-CD Type   Navn  I/U  Forklaring
+CD Parameters:
+CD Type   Name  I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short  modus  i   Behandlingsmåte:
 CD						    NGIS_NORMAL  (0) = Vanlig handtering
 CD							 NGIS_SPESIAL (1) = Spesialmodus der det er mulig å lese
 CD                                       grupper som er merka som sletta.
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetNgisModus(NGIS_NORMAL);
    ==========================================================================
 */
@@ -475,19 +475,19 @@ SK_EntPnt_FYBA void LC_SetNgisModus(short modus)
 AR-2003-03-31
 CH LC_GetNgisModus                                            Hent NGIS modus
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter handteringsmåte for grupper som er merket for oppdatering av NGIS.
 CD	Standardverdi fra LC_Init er NGIS_NORMAL.
 CD
-CD Parametre:
-CD Type   Navn  I/U  Forklaring
+CD Parameters:
+CD Type   Name  I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short  modus  r   Behandlingsmåte:
 CD						    NGIS_NORMAL  (0) = Vanlig handtering
 CD							 NGIS_SPESIAL (1) = Spesialmodus der det er mulig å lese
 CD                                       grupper som er merka som sletta.
 CD
-CD Bruk:
+CD Usage:
 CD modus = LC_GetNgisModus();
    ==========================================================================
 */
@@ -501,14 +501,14 @@ SK_EntPnt_FYBA short LC_GetNgisModus(void)
 AR-900924
 CH LC_GetNgisLag                                               Hent NGIS-LAG 
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter NGIS-LAG for gitt fil.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk strcpy).
 CD
-CD Parametre:
-CD Type       Navn    I/U  Forklaring
+CD Parameters:
+CD Type       Name    I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i   Fil det ønskes opplsninger om.
 CD char*  pszNgisLag   r   NGIS-lag. 
@@ -516,7 +516,7 @@ CD                           Tom streng = ..NGIS-LAG er ikke funnet
 CD                           "0"  = Bare leseaksess (..NGIS-LAG 0)
 CD
 CD
-CD Bruk:
+CD Usage:
 CD pszNgisLag = LC_GetNgisLag(pFil);
    ==========================================================================
 */
@@ -534,12 +534,12 @@ SK_EntPnt_FYBA char* LC_GetNgisLag(LC_FILADM *pFil)
 AR-970109
 CH LC_SetUtvidModus                                         Velg utvis modus
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Velger handteringsmåte for utvidelse av SOSI-filer.
 CD	Standardverdi fra LC_Init er LC_UTVID_SIKKER.
 CD
-CD Parametre:
-CD Type   Navn  I/U  Forklaring
+CD Parameters:
+CD Type   Name  I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short  modus  i   Behandlingsmåte:
 CD						    LC_UTVID_SIKKER (0) = SOSI-filen stenges og filstørrelsen
@@ -550,7 +550,7 @@ CD                                          gruppe som er skrevet på slutten
 CD                                          av filen.
 CD                                          (Må bare brukes i spesielle tilfeller.)
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetUtvidModus(LC_UTVID_SIKKER);
    ==========================================================================
 */
@@ -568,11 +568,11 @@ SK_EntPnt_FYBA void LC_SetUtvidModus(short modus)
 AR-970109
 CH LC_GetUtvidModus                                         Hent utvis modus
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter valgt handteringsmåte for utvidelse av SOSI-filer.
 CD
-CD Parametre:
-CD Type   Navn  I/U  Forklaring
+CD Parameters:
+CD Type   Name  I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short  modus  r   Behandlingsmåte:
 CD						    LC_UTVID_SIKKER (0) = SOSI-filen stenges og filstørrelsen
@@ -583,7 +583,7 @@ CD                                          gruppe som er skrevet på slutten
 CD                                          av filen.
 CD                                          (Må bare brukes i spesielle tilfeller.)
 CD
-CD Bruk:
+CD Usage:
 CD short sModus = LC_GetUtvidModus();
    ==========================================================================
 */
@@ -597,17 +597,17 @@ SK_EntPnt_FYBA short LC_GetUtvidModus(void)
 AR-910922
 CH LO_AppBaseAdm                                         Legg til ny BaseAdm
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Allokerer en ny BasAdm-tabell.
 CD Legger tabellen inn i kjeden av base-adm-tabeller.
 CD Velg basen som aktuell base.
 CD
-CD Parametre:
-CD Type        Navn      I/U  Forklaring
+CD Parameters:
+CD Type        Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_BASEADM * pBase      r   Basepeker.
 CD
-CD Bruk:
+CD Usage:
 CD pBase = LO_AppBaseAdm();
    =============================================================================
 */
@@ -638,15 +638,15 @@ static LC_BASEADM * LO_AppBaseAdm(void)
 AR-931110
 CH LC_InqCurBase                                              Aktuell base
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Spørr etter aktuell base.
 CD
-CD Parametre:
-CD Type        Navn      I/U  Forklaring
+CD Parameters:
+CD Type        Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_BASEADM * pBase      r   Basepeker.
 CD
-CD Bruk:
+CD Usage:
 CD pBase = LC_InqCurBase();
    =============================================================================
 */
@@ -660,18 +660,18 @@ SK_EntPnt_FYBA LC_BASEADM * LC_InqCurBase(void)
 AR-910924
 CH LO_DelBaseAdm                                            Fjern en BaseAdm
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Fjerner tabellen fra kjeden av base-adm-tabeller og frigir minnet.
 CD OBS! All aktivitet mot basen må være avsluttet før dette kallet.
 CD (Alle sosi-filer må være stengt!)
 CD
-CD Parametre:
-CD Type        Navn     I/U  Forklaring
+CD Parameters:
+CD Type        Name     I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_BASEADM * pBase     i   Peker til baseadministrasjonsblokk.
 CD short       sStatus   r   UT_TRUE=OK, UT_FALSE=Basen har åpne filer.
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LO_DelBaseAdm(pBase);
    =============================================================================
 */
@@ -724,7 +724,7 @@ static short LO_DelBaseAdm(LC_BASEADM * pBase)
 AR-910922
 CH LC_OpenBase                                                 Åpner ny base
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpner en base, nullstiller tabellene.
 CD
 CD Hvis basen er kladdebase opprettes en SOSI-fil med en gruppe i basen,
@@ -734,8 +734,8 @@ CD Kladdebase brukes bare når alle SOSI-filer åpnes med sekvensiell les/skriv.
 CD  
 CD Den nye basen velges som aktuell base.
 CD
-CD Parametre:
-CD Type        Navn      I/U  Forklaring
+CD Parameters:
+CD Type        Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short       sBaseType  i   Basetype. Konstanter definert:
 CD                             LC_BASE  = Vanlig base.
@@ -744,7 +744,7 @@ CD                                        tilfeller hvis ingen fil åpnes
 CD                                        som LC_BASE_xx.
 CD LC_BASEADM * pBase      r   Basepeker.
 CD
-CD Bruk:
+CD Usage:
 CD pBase = LC_OpenBase(sBaseType);
 	==========================================================================
 */
@@ -805,15 +805,15 @@ SK_EntPnt_FYBA LC_BASEADM * LC_OpenBase(short sBaseType)
 AR-911003
 CH LC_SelectBase                                           Velg aktuell base
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Velger ny aktuell base.
 CD
-CD Parametre:
-CD Type        Navn      I/U  Forklaring
+CD Parameters:
+CD Type        Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_BASEADM * pBase      i   Peker til BasAdm.
 CD
-CD Bruk:
+CD Usage:
 CD LC_SelectBase(pBase);
    ==========================================================================
 */
@@ -827,19 +827,19 @@ SK_EntPnt_FYBA void LC_SelectBase(LC_BASEADM * pBase)
 AR-910922
 CH LO_OpenKladd                                              Åpne kladdebase
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Initierer en base for bruk som kladdebase for bare sekvensielle filer,
 CD Nullstiller tabellene.
 CD Oppretter en gruppe i basen, denne brukes som buffer for les / skriv.
 CD Kladdefilen legges på samme directory som indeksfilene.
 CD
-CD Parametre:
-CD Type        Navn      I/U   Forklaring
+CD Parameters:
+CD Type        Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BASEADM * pBase      i    Basepeker.
 CD short       status     r    Status. UT_TRUE=OK, UT_FALSE=Feil ved åpning
 CD
-CD Bruk:
+CD Usage:
 CD status = LO_OpenKladd(pBase);
    ==========================================================================
 */
@@ -900,13 +900,13 @@ static short LO_OpenKladd(LC_BASEADM * pBase)
 AR-891204
 CH LC_CloseBase                                                   Steng base
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Stenger alle filer i basen, og frigir baseadministrasjonsblokken.
 CD Hvis aktuell base blir stengt blir første base i systemet valgt som ny
 CD aktuell base.
 CD
-CD Parametre:
-CD Type       Navn   I/U Forklaring
+CD Parameters:
+CD Type       Name   I/O Explanation
 CD --------------------------------------------------------------------------
 CD PLCBASEADM pBase   i  Peker tilBaseAdm
 CD short      s_stat  i  Slutt-status
@@ -915,7 +915,7 @@ CD                       SAVE_IDX  = Lagrer indeksfilene.
 CD                       ABORT     = Fjerner indeksfilene (ved avbrutt
 CD                                   indeks oppbygging).  
 CD
-CD Bruk:
+CD Usage:
 CD LC_CloseBase(pBase,s_stat);
    ==========================================================================
 */
@@ -958,17 +958,17 @@ SK_EntPnt_FYBA void LC_CloseBase(LC_BASEADM * pBase,short s_stat)
 AR-910922
 CH LO_AppFilAdm                                           Legg til ny FilAdm
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Allokerer en ny FilAdm-tabell.
 CD Legger tabellen inn i kjeden av fil-adm-tabeller.
 CD
-CD Parametre:
-CD Type        Navn     I/U  Forklaring
+CD Parameters:
+CD Type        Name     I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_BASEADM * pBase     i   Base der filen skal ligge.
 CD LC_FILADM  *pFil      r   Peker til filadministrasjonsblokk.
 CD
-CD Bruk:
+CD Usage:
 CD pFil = LO_AppFilAdm();
    =============================================================================
 */
@@ -1007,19 +1007,19 @@ static LC_FILADM *LO_AppFilAdm(LC_BASEADM * pBase)
 AR-910924
 CH LO_DelFilAdm                                              Fjern en FilAdm
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Fjerner en fil fra kjeden av fil-adm-tabeller og frigir minnet.
 CD OBS! All aktivitet mot filen og indeksfilene må være avsluttet før dette
 CD kallet.
 CD szBaseVer settes til '\0', slik at dette kan brukes for å sjekke om en
 CD filpeker er lovlig.
 CD
-CD Parametre:
-CD Type        Navn     I/U  Forklaring
+CD Parameters:
+CD Type        Name     I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil      i   Peker til filadministrasjonsblokk.
 CD
-CD Bruk:
+CD Usage:
 CD LO_DelFilAdm(pFil);
    =============================================================================
 */
@@ -1082,7 +1082,7 @@ static void LO_DelFilAdm(LC_FILADM *pFil)
 AR-920508
 CH LC_OpenSos                                      Åpner og sjekker SOSI-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpner en ny fil i aktuell base.
 CD Allokerer minne til ny filadministrasjonsblokk og initierer denne.
 CD Åpner SOSI-filen og legger navn mm. inn i fil-adm.
@@ -1091,8 +1091,8 @@ CD Hode blir ikke generert for nye filer. Dette kan lages med LC_PutGi, eller
 CD LC_NyttHode eller kopieres fra annen fil, og skrives med LC_WsGr
 CD eller LC_WxGr.
 CD
-CD Parametre:
-CD Type    Navn   I/U  Forklaring
+CD Parameters:
+CD Type    Name   I/O  Explanation
 CD --------------------------------------------------------------------
 CD char   *fil        i   Filnavn inkl. sti og fil-type
 CD                        (Hvis fil-type mangler forutsettes  .SOS)
@@ -1123,7 +1123,7 @@ CD                         -5: (LC_OPPTATT): Filen er åpen i annet program
 CD short   status     r  Åpningsstatus: UT_TRUE = OK
 CD                                      UT_FALSE = Feil, (o_stat gir detalj)
 CD
-CD Bruk:
+CD Usage:
 CD ist=LC_OpenSos(fil,LC_BASE_FRAMGR,LC_NY_IDX,LC_VIS_STATUS,&pFil,&o_stat);
 CD ist=LC_OpenSos(fil,LC_SEKV_LES,LC_NY_IDX,LC_INGEN_STATUS,&pFil,&o_stat);
    ==========================================================================
@@ -1444,15 +1444,15 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
 AR-910925
 CH LO_ReopenSos                                              Reåpne SOSI-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Åpner på nytt en av filene i filtabellen.
 CD
-CD Parametre:
-CD Type         Navn    I/U   Forklaring
+CD Parameters:
+CD Type         Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM   *pFil     i    Peker til FilAdm-blokk
 CD
-CD Bruk:
+CD Usage:
 CD LO_ReopenSos(pFil);
    ==========================================================================
 */
@@ -1484,18 +1484,18 @@ void LO_ReopenSos(LC_FILADM *pFil)
 AR-881027
 CH LC_CloseSos                                                Steng SOSI-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Stenger en SOSI-fil, og fjerner den fra basen.
 CD
-CD Parametre:
-CD Type        Navn   I/U  Forklaring
+CD Parameters:
+CD Type        Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil     i   Peker til FilAdm-blokk
 CD short       s_stat  i   Slutt-status
 CD                         RESET_IDX = Fjern indeksfilene
 CD                         SAVE_IDX  = Lagrer indeksfilene.
 CD
-CD Bruk:
+CD Usage:
 CD LC_CloseSos(pFil,SAVE_IDX);
    ==========================================================================
 */
@@ -1608,7 +1608,7 @@ SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
 AR:2009-03-20
 CH LC_FcloseSos                             Steng åpen SOSI-fil i filsystemet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Denne rutinen brukes til å sikre at en fil er oppdatert og stengt i filsystemet,
 CD slik at SOSI-filen kan leses fra andre program.
 CD 
@@ -1617,12 +1617,12 @@ CD Stenger bare filen i filsystemet.
 CD Filen er fortsatt åpen i basen.
 CD FYBA åpner automatisk filen på nytt når det er behov for dette.
 CD
-CD Parametre:
-CD Type        Navn    I/U   Forklaring
+CD Parameters:
+CD Type        Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil     i   Peker til FilAdm-blokk
 CD
-CD Bruk:
+CD Usage:
 CD LC_FcloseSos(pFil);
 ==========================================================================
 */
@@ -1648,15 +1648,15 @@ SK_EntPnt_FYBA void LC_FcloseSos(LC_FILADM *pFil)
 AR-911001
 CH LO_CloseSos                                        Steng current SOSI-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Stenger current SOSI-fil i basen.
 CD
-CD Parametre:
-CD Type         Navn    I/U   Forklaring
+CD Parameters:
+CD Type         Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BASEADM *  pBase    i    Peker til BaseAdm-blokk
 CD
-CD Bruk:
+CD Usage:
 CD LO_CloseSos(pBase);
 	==========================================================================
 */
@@ -1673,16 +1673,16 @@ void LO_CloseSos(LC_BASEADM * pBase)
 AR-890510
 CH LO_BeFt                                       Beregn omregnings-parametre
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Oppdaterer filtabellen med hodeinformasjoner fra aktuell gruppe,
 CD som må være SOSI-filens hode.
 CD
-CD Parametre:
-CD Type         Navn    I/U   Forklaring
+CD Parameters:
+CD Type         Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM   *pFil     i    Peker til FilAdm-blokk
 CD
-CD Bruk:
+CD Usage:
 CD LO_BeFt(pFil);
    ==========================================================================
 */
@@ -1747,12 +1747,12 @@ void LO_BeFt(LC_FILADM *pFil)
 AR-911003
 CH LC_GetBaOm                                                Hent baseområde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter baseområdet for aktuell base (Sum av filhodene).
 CD Sekvensielle filer regnes ikke med.
 CD
-CD Parametre:
-CD Type           Navn    I/U   Forklaring
+CD Parameters:
+CD Type           Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
 CD                               LC_FRAMGR og /eller LC_BAKGR
@@ -1763,7 +1763,7 @@ CD double        *oha      u    Øvre høyre øst
 CD double        *ohn      u    Øvre høyre nord
 CD short          sStatus  r    UT_TRUE=OK, UT_FALSE=ingen fil
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_GetBaOm(LC_FRAMGR,&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
@@ -1798,12 +1798,12 @@ SK_EntPnt_FYBA short LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,dou
 AR-910928
 CH LC_GetFiOm                                       Hent område fra fil-hode
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hent område for en SOSI-fil i basen.
 CD Fungerer ikke mot sekvensielle filer.
 CD
-CD Parametre:
-CD Type       Navn  I/U  Forklaring
+CD Parameters:
+CD Type       Name  I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i   Peker til FilAdm
 CD double     nva    u   Nedre venstre øst
@@ -1812,7 +1812,7 @@ CD double     oha    u   Øvre høyre øst
 CD double     ohn    u   Øvre høyre nord
 CD short      ist    r   Status (UT_TRUE=OK, UT_FALSE=sekvensiell fil)
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_GetFiOm(pFil,&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
@@ -1837,15 +1837,15 @@ SK_EntPnt_FYBA short LC_GetFiOm(LC_FILADM *pFil,double *nva,double *nvn,double *
 AR-911001
 CH LO_InklSos                                       Inkluder SOSI-fil i base
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hjelperutine for LC_OpenSos.
 CD Bygger indeks og klargjør filen for basen.
 CD Prosessen kan avbrytes med <ESC>, og rutinen returnerer da UT_FALSE.
 CD Aktuell gruppe blir brukt under prosessen, og etterpå er det ingen
 CD aktuell gruppe tilgjengelig.
 CD
-CD Parametre:
-CD Type       Navn      I/U   Forklaring
+CD Parameters:
+CD Type       Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil        i   Peker til FilAdm
 CD short      sVisStatus  i   Vis indeksoppbygging
@@ -1853,7 +1853,7 @@ CD                               LC_VIS_STATUS   = Vis status
 CD                               LC_INGEN_STATUS = Ikke vis status
 CD short      sStatus     r   Status: UT_TRUE=OK, UT_FALSE=avbrutt eller feil 
 CD
-CD Bruk:
+CD Usage:
 CD ant_bgr = LO_InklSos(pFil,LC_VIS_STATUS);
    ==========================================================================
 */
@@ -2056,16 +2056,16 @@ static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
 AR-911001
 CH LC_GetFiNr                                                 Get fil nummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker alle filer i aktuell base om noen av den har det gitte filnavnet.
 CD
-CD Parametre:
-CD Type        Navn     I/U  Forklaring
+CD Parameters:
+CD Type        Name     I/O  Explanation
 CD --------------------------------------------------------------------------
 CD char        fil_navn  i   Filnavn
 CD LC_FILADM  *pFil      r   Peker til FilAdm for filen. (NULL = ukjent fil)
 CD
-CD Bruk:
+CD Usage:
 CD pFil = LC_GetFiNr(fil_navn);
    ==========================================================================
 */
@@ -2097,19 +2097,19 @@ SK_EntPnt_FYBA LC_FILADM *LC_GetFiNr(const char *fil_navn)
 AR-911001
 CH LC_GetFiNa                                                   Hent filnavn
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter filnavnet for en fil i basen. Fungerer både for basefiler
 CD og for sekvensielle filer.
 CD OBS! Hvis du skal endre på filnavnet må du først kopiere det 
 CD      til en lokale varialel.
 CD
-CD Parametre:
-CD Type        Navn      I/U   Forklaring
+CD Parameters:
+CD Type        Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil       i    Peker til FilAdm
 CD char       *fil_navn   r    Peker til filnavn 
 CD
-CD Bruk:
+CD Usage:
 CD fil_navn = LC_GetFiNa(pFil);
    ==========================================================================
 */
@@ -2126,16 +2126,16 @@ SK_EntPnt_FYBA char *LC_GetFiNa(LC_FILADM *pFil)
 AR-920729
 CH LO_TestFilpeker                            Sjekk at en filpeker er gyldig
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk at en filpeker er gyldig.
 CD
-CD Parametre:
-CD Type        Navn         I/U   Forklaring
+CD Parameters:
+CD Type        Name         I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil          i    Peker til FilAdm
 CD char       *pszRutineNavn i    Melding (rutinenavnet for kallende rutine)
 CD
-CD Bruk:
+CD Usage:
 CD LO_TestFilpeker(pFil,"LC_OpenBase");
    ==========================================================================
 */
@@ -2156,18 +2156,18 @@ void LO_TestFilpeker(LC_FILADM *pFil,char *pszRutineNavn)
 AR-921008
 CH LC_ErFilBase                                 Sjekker om en fil er i basen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om en fil er i basen.
 CD
-CD Parametre:
-CD Type    Navn   I/U  Forklaring
+CD Parameters:
+CD Type    Name   I/O  Explanation
 CD --------------------------------------------------------------------
 CD char   *fil     i   Filnavn inkl. sti og fil-type
 CD                     (Hvis fil-type mangler forutsettes  .SOS)
 CD short   status  r   Status: UT_TRUE = Filen er med i basen.
 CD                             UT_FALSE = Filen er IKKE med i basen.
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_ErFilBase(fil);
    ==========================================================================
 */
@@ -2196,16 +2196,16 @@ SK_EntPnt_FYBA short LC_ErFilBase(const char *fil)
 AR-940923
 CH LC_ErKoordsysLik                                      Sjekker KOORDSYS
 CD =======================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk at alle filene i basen har samme koordinatsystem.
 CD
-CD Parametre:
-CD Type    Navn   I/U  Forklaring
+CD Parameters:
+CD Type    Name   I/O  Explanation
 CD -----------------------------------------------------------------------
 CD short   status  r   Status: UT_TRUE = KOORDSYS er lik.
 CD                             UT_FALSE = KOORDSYS er IKKE lik.
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_ErKoordsysLik();
 	=======================================================================
 */
@@ -2252,16 +2252,16 @@ SK_EntPnt_FYBA short LC_ErKoordsysLik(void)
 AR-940923
 CH LC_ErVertdatumLik                                   Sjekker VERT-DATUM
 CD =======================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk at alle filene i basen har samme VERT-DATUM.
 CD
-CD Parametre:
-CD Type    Navn   I/U  Forklaring
+CD Parameters:
+CD Type    Name   I/O  Explanation
 CD -----------------------------------------------------------------------
 CD short   status  r   Status: UT_TRUE = VERT-DATUM er lik.
 CD                             UT_FALSE = VERT-DATUM er IKKE lik.
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_ErVertdatumLik();
 	=======================================================================
 */
@@ -2327,21 +2327,21 @@ SK_EntPnt_FYBA short LC_ErVertdatumLik(void)
 AR:2000-11-30
 CH LC_SetEndringsstatus             Setter endringsstatus for aktuell gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Setter endringsstatus for aktuell gruppe.
 CD
 CD NB! Denne rutinen bør normalt ikke brukes av vanlige klient-program!
 CD
 CD
-CD Parametre:
-CD Type   Navn      I/U  Forklaring
+CD Parameters:
+CD Type   Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short  sStatus    i   Kode for endring:
 CD                         END_UENDRA  0   Ikke endra
 CD                         END_KOPI    1   Endra ved totalkopi fra annen gruppe
 CD                         END_ENDRA   2   Endra ved normal Put fra program
 CD
-CD Bruk:
+CD Usage:
 CD LC_dg_SetEndringsstatus(END_KOPI);
 =============================================================================
 */
@@ -2354,14 +2354,14 @@ SK_EntPnt_FYBA void LC_SetEndringsstatus(short sStatus)
 JAØ:2001-03-06
 CH LC_SetFilType								Setter filtype for en sosifil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Setter filtype for en fil.
 CD
 CD Denne rutinen er primært tenkt brukt i GabEdit hvor det er behov for å 
 CD definere flere typer arbeidsfil.
 CD
-CD Parametre:
-CD Type         Navn   I/U  Forklaring
+CD Parameters:
+CD Type         Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *  pFil	   i   Peker til filen
 CD short        type    i   Filtypen som skal settes
@@ -2380,7 +2380,7 @@ CD                             LC_FILTYPE_KIRKESOGN
 CD                             LC_FILTYPE_TETTSTED
 CD                             LC_FILTYPE_VALGKRETS
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetFilType(pFil,type);
 =============================================================================
 */
@@ -2394,11 +2394,11 @@ SK_EntPnt_FYBA void LC_SetFilType(LC_FILADM *pFil, short sType)
 JAØ:2001-03-06
 CH LC_GetFilType                               Henter filtype for en sosifil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner filtypen for en fil.
 CD
-CD Parametre:
-CD Type         Navn   I/U  Forklaring
+CD Parameters:
+CD Type         Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *  pFil	   i   Peker til filen
 CD short        type    r   Filtypen som skal settes
@@ -2417,7 +2417,7 @@ CD                             LC_FILTYPE_KIRKESOGN
 CD                             LC_FILTYPE_TETTSTED
 CD                             LC_FILTYPE_VALGKRETS
 CD
-CD Bruk:
+CD Usage:
 CD type = LC_GetFilType(pFil);
 =============================================================================
 */
@@ -2432,15 +2432,15 @@ SK_EntPnt_FYBA short LC_GetFilType(LC_FILADM *pFil)
 AR:2004-05-03
 CH LC_GetIdxPath                               Hent katalog for ny indeksfil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hent katalognavn for ny indeks. For detaljer se under LC_SetIdxPath.
 CD
-CD Parametre:
-CD Type         Navn        I/U   Forklaring
+CD Parameters:
+CD Type         Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD const char  *pszIdxPath   r    Katalog for indeks
 CD
-CD Bruk:
+CD Usage:
 CD const char *pszIdxPath = LC_GetIdxPath();
    ==========================================================================
 */
@@ -2454,15 +2454,15 @@ SK_EntPnt_FYBA const char *LC_GetIdxPath(void)
 AR:2011-05-31
 CH LC_SetIdxPath                               Velg katalog for ny indeksfil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Velg katalognavn for ny indeks. Indeksfilene for en SOSI-fil legges som
 CD en underkatalog under den gitte katalogen. Underkatalogen har samme navn
 CD som SOSI-filen. Hvis det er valgt spesiell plassering av indeksfilene blir
 CD disse alltid slettet når SOSI-filen stenges.
 CD OBS! Ingen SOSI-filer kan være åpne når indekskatalog velges.
 CD
-CD Parametre:
-CD Type        Navn       I/U Forklaring
+CD Parameters:
+CD Type        Name       I/O Explanation
 CD --------------------------------------------------------------------------
 CD const char *pszIdxPath  i  Katalog for indeks
 CD                            "" = Tom streng betyr at indeksfilene legges på en
@@ -2473,7 +2473,7 @@ CD                                            underkatalog under denne katalogen
 CD short       status      r  Status: UT_TRUE = OK
 CD                                    UT_FALSE = Feil, feilmelding er gitt.
 CD
-CD Bruk:
+CD Usage:
 CD status = LC_SetIdxPath("C:\\kart\\test");
    ==========================================================================
 */

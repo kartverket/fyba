@@ -19,12 +19,12 @@ extern LC_SYSTEMADM Sys;             /* Systemadministrasjon */
 AR-970929
 CH LC_POL_LeggTilGruppeOmkrets                       Legg til eit element
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_POL_OMKR  YtrePolygon;
 CD pElement = LC_POL_LeggTilGruppeOmkrets(YtrePolygon,pBgr,sRetning,lSnr);
 CD
-CD parametere:
-CD Type            Navn     I/U    Forklaring
+CD parameters:
+CD Type            Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *    pPO      I/U    Peikar til polygonadministrasjonsblokka
 CD LC_BGR *         pBgr      I     Gruppenummer
@@ -65,12 +65,12 @@ SK_EntPnt_FYBA LC_POL_ELEMENT * LC_POL_LeggTilGruppeOmkrets(LC_POL_OMKR *pPO,LC_
 SJM-930921
 CH LC_POL_FjernSisteGruppeOmkrets                   Fjernar siste element
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_POL_OMKR  YtrePolygon;
 CD LC_POL_FjernSisteGruppeOmkrets(&YtrePolygon);
 CD
-CD parametere:
-CD Type         Navn     I/U    Forklaring
+CD parameters:
+CD Type         Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *  pPO      I/U    Peikar til polygonadministrasjonsblokka
 CD
@@ -98,12 +98,12 @@ SK_EntPnt_FYBA void LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO)
 AR-971112
 CH LC_POL_FjernGruppeOmkrets                              Fjernar element
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_POL_OMKR  YtrePolygon;
 CD LC_POL_FjernGruppeOmkrets(&YtrePolygon,);
 CD
-CD parametere:
-CD Type            Navn     I/U    Forklaring
+CD parameters:
+CD Type            Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR    *pPO      I/U    Peikar til polygonadministrasjonsblokka
 CD LC_POL_ELEMENT *pPE       I      Peker til element som skal fjernes
@@ -138,12 +138,12 @@ SK_EntPnt_FYBA void LC_POL_FjernGruppeOmkrets(LC_POL_OMKR *pPO, LC_POL_ELEMENT *
 SJM-930921
 CH LC_POL_FrigiAlleOyer    Frigjer minne som er allokert til kjede av øyelement
 CD =======================================================================
-CD Bruk:                           
+CD Usage:                           
 CD LC_OY_ADM  OyKjede;
 CD LC_POL_FrigiAlleOyer(OyKjede);
 CD
-CD parametere:
-CD Type       Navn     I/U    Forklaring
+CD parameters:
+CD Type       Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_OY_ADM *pOA      I/U    Peikar til øyadministrasjonsblokka
 CD
@@ -172,12 +172,12 @@ SK_EntPnt_FYBA void LC_POL_FrigiAlleOyer(LC_OY_ADM *pOA)
 SJM-931003
 CH LC_POL_FjernOy                    Fjernar ei oy frå kjede av øyelement
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_OY_ADM  OyKjede;
 CD LC_POL_FjernOy(OyKjede,OyElement);
 CD
-CD parametere:
-CD Type           Navn     I/U    Forklaring
+CD parameters:
+CD Type           Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_OY_ADM     *pOA      I/U    Peikar til øyadministrasjonsblokka
 CD LC_OY_ELEMENT *pOE      I/U    Peikar til kjede av oyar
@@ -210,12 +210,12 @@ SK_EntPnt_FYBA void LC_POL_FjernOy(LC_OY_ADM *pOA,LC_OY_ELEMENT *pOE)
 SJM-930921
 CH LC_POL_LeggTilOy                                  Legg til eit element
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_OY_ADM  OyKjede;
 CD LC_POL_LeggTilOy(&OyKjede,pPO);
 CD
-CD Parametere:
-CD Type         Navn     I/U    Forklaring
+CD Parameters:
+CD Type         Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_OY_ADM   *pOyKjede I/U    Peikar til kjede av øyelement
 CD LC_POL_OMKR *pPO       I     Peikar til polygonadministrasjonsblokka
@@ -253,10 +253,10 @@ SK_EntPnt_FYBA void LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO)
 SJM-930921
 CH LC_POL_FrigiOmkrets     Frigjer minne som er allokert til kjede av polygonelement
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD parametere:
-CD Type         Navn     I/U    Forklaring
+CD parameters:
+CD Type         Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *pPO      I/U    Peikar til polygonadministrasjonsblokka
 CD
@@ -284,15 +284,15 @@ SK_EntPnt_FYBA void LC_POL_FrigiOmkrets(LC_POL_OMKR *pPO)
 AR-931208
 CH LC_POL_FrigiPolygon            Frigi minne som er allokert til polygon
 CD =======================================================================
-CD Formål:
+CD Purpose:
 CD Frigir minne som er allokert til polygon. (Både omkrets og hull.)
 CD
-CD Parametere:
-CD Type        Navn     I/U    Forklaring
+CD Parameters:
+CD Type        Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POLYGON *pPolygon  I     Peikar til polygonbeskrivelse
 CD
-CD Bruk:
+CD Usage:
 CD LC_POLYGON  Polygon;
 CD LC_POL_FrigiPolygon(&Polygon);
 CD =======================================================================
@@ -311,12 +311,12 @@ SK_EntPnt_FYBA void LC_POL_FrigiPolygon(LC_POLYGON *pPolygon)
 SJM-930921  
 CH LC_POL_InitOmkrets                           Initierer polygon-omkrets
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD POL_OMKR  YtrePolygon;
 CD LC_POL_InitOmkrets(YtrePolygon);
 CD
-CD parametere:
-CD Type         Navn     I/U    Forklaring
+CD parameters:
+CD Type         Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *pPO      I/U    Peikar til polygonadministrasjonsblokka
 CD
@@ -334,12 +334,12 @@ SK_EntPnt_FYBA void LC_POL_InitOmkrets(LC_POL_OMKR *pPO)
 SJM-930921 
 CH LC_POL_InitOy                                      Initierer øy-kjeden
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_OY_ADM  OyKjede;
 CD LC_POL_InitOy(OyKjede);
 CD
-CD parametere:
-CD Type       Navn     I/U    Forklaring
+CD parameters:
+CD Type       Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_OY_ADM *pOA      I/U    Peikar til øyadministrasjonsblokka
 CD
@@ -357,15 +357,15 @@ SK_EntPnt_FYBA void LC_POL_InitOy(LC_OY_ADM *pOA)
 AR-931208
 CH LC_POL_InitPolygon                          Initierer polygon-struktur
 CD =======================================================================
-CD Formål:
+CD Purpose:
 CD Initierer polygon-struktur.
 CD
-CD Parametere:
-CD Type        Navn     I/U    Forklaring
+CD Parameters:
+CD Type        Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POLYGON *pPolygon  I     Peikar til polygonbeskrivelse
 CD
-CD Bruk:
+CD Usage:
 CD LC_POLYGON  Polygon;
 CD LC_POL_InitPolygon(&Polygon);
 CD =======================================================================
@@ -381,16 +381,16 @@ SK_EntPnt_FYBA void LC_POL_InitPolygon(LC_POLYGON *pPolygon)
 AR-931208
 CH LC_POL_PutRef                            Legger inn referanser i GINFO
 CD =======================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn referanser i GINFO, ut fra beskrivelse i struktur.
 CD
-CD Parametere:
-CD Type        Navn     I/U    Forklaring
+CD Parameters:
+CD Type        Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POLYGON *pPolygon  I     Polygonbeskrivelse
 CD short       ngi       r     Antall linjer GINFO
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_POL_PutRef(pPolygon);
 CD =======================================================================
 */
@@ -593,16 +593,16 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
 AR-931212
 CH LC_POL_GetRef                        Hent referanser for flate fra GINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter referanser fra GINFO til struktur.
 CD
-CD Parametre:
-CD Type         Navn      I/U  Forklaring
+CD Parameters:
+CD Type         Name      I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_POLYGON  *pPolygon   I   Peker til adm. for polygonbeskrivelse
 CD
 CD
-CD Bruk:
+CD Usage:
 CD    short ngi;
 CD    long nko;
 CD    unsigned short info;
@@ -758,17 +758,17 @@ SK_EntPnt_FYBA void LC_POL_GetRef(LC_POLYGON *pPolygon)
 AR-931212
 CH LC_POL_GetRefOmkrets               Hent referanser for omkretsen av flate
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter referanser fra GINFO til struktur.
 CD Rutinen initierer strukturen pPO, men frigir ikke eventuellt gammelt innhold.
 CD
 CD
-CD Parametre:
-CD Type          Navn    I/U  Forklaring
+CD Parameters:
+CD Type          Name    I/O  Explanation
 CD -------------------------------------------------------------------------
 CD LC_POL_OMKR  *pPO;     IU  Peker til kjede som beskriver omkretsen.
 CD
-CD Bruk:
+CD Usage:
 CD    LC_POL_GetRefOmkrets(&OyPO);
 CD ==========================================================================
 */
@@ -843,11 +843,11 @@ SK_EntPnt_FYBA void LC_POL_GetRefOmkrets(LC_POL_OMKR *pPO)
 SJM-930928
 CH LC_POL_TestBrukt              Testar om ei gruppe er brukt i polygonet
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_POL_TestBrukt(pPolygon,&Bgr);
 CD
-CD parametere:
-CD Type        Navn     I/U    Forklaring
+CD parameters:
+CD Type        Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POLYGON *pPolygon  I     Peker til polygonbeskrivelse.
 CD LC_BGR     *pBgr      I     Peikar til gruppe
@@ -886,20 +886,20 @@ SK_EntPnt_FYBA short LC_POL_TestBrukt(LC_POLYGON *pPolygon,LC_BGR *pBgr)
 AR:2009-03-04
 CH LC_POL_PTst                                                   Polygontest
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om gitt punkt ligger innenfor polygon angitt av pPolygon.
 CD Forutsetter at pPolygon danner et lukket polygon.
 CD Skifter ikke aktuell gruppe.
 CD
-CD Parametre:
-CD Type    Navn    I/U   Forklaring
+CD Parameters:
+CD Type    Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  a        i    Punkt som skal sjekkes
 CD double  n        i
 CD short   ist      r    status: UT_FALSE = punktet er utenfor flaten
 CD                               UT_TRUE = punktet ligger inne på flaten
 CD
-CD Bruk:
+CD Usage:
 CD .
 ==========================================================================
 */
@@ -958,14 +958,14 @@ SK_EntPnt_FYBA short LC_POL_PTst(LC_POLYGON *pPolygon,double a,double n)
 AR-931213
 CH LC_POL_PTstOmkrets              Sjekk om punkt ligger inni polygonomkrets
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om gitt punkt ligger innenfor yttergrensen for polygon angitt
 CD av struktur.
 CD Forutsetter at tabellen danner et lukket polygon
 CD Skifter ikke aktuell gruppe.
 CD
-CD Parametre:
-CD Type          Navn  I/U   Forklaring
+CD Parameters:
+CD Type          Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_POL_OMKR  *pPO    I/U  Peker til beskrivelse av omkretsen
 CD double        a      i    Punkt som skal sjekkes
@@ -973,7 +973,7 @@ CD double        n      i
 CD short         ist    r    status: UT_FALSE = punktet er utenfor flaten
 CD                                   UT_TRUE  = punktet ligger inne på flaten
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_POL_PTstOmkrets(pPO,a,n);
    ==========================================================================
 */
@@ -1022,22 +1022,22 @@ SK_EntPnt_FYBA short LC_POL_PTstOmkrets(LC_POL_OMKR *pPO,double a,double n)
 JAØ-20061130
 CH LC_POL_OmkretsSkjaering        Finner antall skjæringer med polygonomkrets
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om gitt punkt ligger innenfor yttergrensen for polygon angitt
 CD av struktur. Egentlig kopi av LC_POL_PTstOmkrets, men returnerer antall 
 CD skjæringer istedet for inni/utenfor. 
 CD Forutsetter at tabellen danner et lukket polygon
 CD Skifter ikke aktuell gruppe.
 CD
-CD Parametre:
-CD Type          Navn  I/U   Forklaring
+CD Parameters:
+CD Type          Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_POL_OMKR  *pPO    I/U  Peker til beskrivelse av omkretsen
 CD double        a      i    Punkt som skal sjekkes
 CD double        n      i
 CD short         ist    r    Antall skjæringer med omkrets fra pkt til "uendelig" øst
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_POL_PTstOmkrets(pPO,a,n);
    ==========================================================================
 */
@@ -1082,11 +1082,11 @@ SK_EntPnt_FYBA short LC_POL_OmkretsSkjaering(LC_POL_OMKR *pPO,double a,double n)
 AR-950421
 CH LC_POL_Box                                  Henter omskreven boks
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD LC_POL_Box(pPA,&nva,&nvn,&oha,&ohn);
 CD
-CD parametere:
-CD Type          Navn     I/U    Forklaring
+CD parameters:
+CD Type          Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR  *pPO       I     Peikar til polygonadministrasjonsblokka
 CD double       *nva       U
@@ -1128,11 +1128,11 @@ SK_EntPnt_FYBA void LC_POL_Box(LC_POL_OMKR *pPO,double *nva,double *nvn, double 
 AR-950421
 CH LC_ErLinjeRefLin                  Sjekk om linje inneholder referanser
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD sRefLin = LC_ErLinjeRefLin(gp,sRefLin);
 CD
-CD parametere:
-CD Type    Navn        I/U  Forklaring
+CD parameters:
+CD Type    Name        I/O  Explanation
 CD -----------------------------------------------------------------------
 CD char   *pszGinfoLin  i   Peikar til GINFO-linje
 CD short   sRefLin      i   Flagg som viser om forrige linje inneholdt referanser

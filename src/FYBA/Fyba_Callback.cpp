@@ -66,17 +66,17 @@
 AR-930907
 CH LC_ErrorHandler                                             Feilmelding
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Feilmelding.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short    feil_nr      i   Feilmeldingsnummer
 CD char    *logtx        u   Peker til feilmeldingstekst avslutta med '\0'.
 CD char    *vartx        u   Peker til feilmeldingstekst avslutta med '\0'.
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetErrorHandler(LC_ErrorHandler);
    ==========================================================================
 */
@@ -113,7 +113,7 @@ void LC_ErrorHandler (short feil_nr, const char logtx[], const char vartx[])
 AR-900609
 CH LC_StartMessageHandler                                    Starte meldingsvisning
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Starter vising av melding om baseoppbygging.
 CD
 CD Her skal brukerprogrammet legge inn sin egen initiering av visning av framdrift
@@ -124,12 +124,12 @@ CD ikke kalles fra brukerprogramvaren.
 CD
 CD
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char    *cfil         i   Ekstra meldingstekst  (filnavn)
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetStartMessageHandler(LC_StartMessageHandler);
    =============================================================================
 */
@@ -147,7 +147,7 @@ void LC_StartMessageHandler(const char *fnam)
 AR-900609
 CH LC_ShowMessageHandler                                          Vise melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Vising av melding om baseoppbygging.
 CD
 CD Her skal brukerprogrammet legge inn sin egen av visnig av framdrift
@@ -156,12 +156,12 @@ CD
 CD Denne rutinen blir kalt fra FYBA under indeksoppbygging, og den skal
 CD ikke kalles fra brukerprogramvaren.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD double   prosent      i   Prosent ferdig (0.0 - 100.0)
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetShowMessageHandler(LC_ShowMessageHandler);
    =============================================================================
 */
@@ -178,7 +178,7 @@ void LC_ShowMessageHandler(double prosent)
 AR-900609
 CH LC_EndMessageHandler                                          Avslutt melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Avslutt melding om baseoppbygging.
 CD
 CD Her skal brukerprogrammet legge inn sin egen avslutning av visning av framdrift
@@ -187,11 +187,11 @@ CD
 CD Denne rutinen blir kalt fra FYBA under indeksoppbygging, og den skal
 CD ikke kalles fra brukerprogramvaren.
 CD
-CD Parametre:
+CD Parameters:
 Dette CD Type     Navn        I/U  Forklaring
 CD -----------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetEndMessageHandler(LC_EndMessageHandler);
    =============================================================================
 */
@@ -208,16 +208,16 @@ void LC_EndMessageHandler(void)
 AR-910402
 CH LC_CancelHandler                                  Sjekk om Esc er trykket
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om det er trykt på Esc (Avbryte indeksoppbygging).
 CD
-CD Parametre:
-CD Type   Navn      I/U   Forklaring
+CD Parameters:
+CD Type   Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short  sAvbrutt   r    UT_TRUE  = Cancel
 CD                        UT_FALSE = ikke avbrudd
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetCancelHandler(LC_CancelHandler);
    ==========================================================================
 */

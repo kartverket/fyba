@@ -34,16 +34,16 @@ static void LR_TestEndreBuepTilKurve(double dDeltaFi);
 AR-911011
 CH LC_GetGrFi                                              Hent gruppe-filnr
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter peker til FilAdm for aktuell gruppe.
 CD
-CD Parametre:
-CD Type         Navn    I/U   Forklaring
+CD Parameters:
+CD Type         Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM * *ppFil    u   Peker til FilAdm-peker
 CD short        status   r   UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
 CD
-CD Bruk:
+CD Usage:
 CD     status = LC_GetGrFi(&pFil);
    =============================================================================
 */
@@ -65,15 +65,15 @@ SK_EntPnt_FYBA short LC_GetGrFi(LC_FILADM **ppFil)
 AR-911008
 CH LC_InitNextFil                                     Initier finn neste fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Initierer pFil for bruk i finn neste fil.
 CD
-CD Parametre:
-CD Type           Navn   I/U  Forklaring
+CD Parameters:
+CD Type           Name   I/O  Explanation
 CD ------------------------------------------------------------------------
 CD LC_FILADM    **ppFil    u   Peker til FilAdm-peker
 CD
-CD Bruk:
+CD Usage:
 CD     LC_InitNextFil(&pFil)
    ==========================================================================
 */
@@ -87,11 +87,11 @@ SK_EntPnt_FYBA void LC_InitNextFil(LC_FILADM **ppFil)
 AR-911008
 CH LC_NextFil                                                 Finn neste fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn neste fil i aktuell base.
 CD
-CD Parametre:
-CD Type           Navn    I/U   Forklaring
+CD Parameters:
+CD Type           Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM    **ppFil   iu   Peker til FilAdm-peker
 CD unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
@@ -99,7 +99,7 @@ CD                               LC_FRAMGR, LC_BAKGR og /eller LC_SEKV
 CD                               (Bruk "|" for å kombinere.)
 CD short          sStatus  r   Status  UT_TRUE=OK, UT_FALSE=ingen flere funnet
 CD
-CD Bruk:
+CD Usage:
 CD     LC_FILADM *pFil;
 CD               Denne løkka går gjennom alle framgrunns-filene i basen
 CD     LC_InitNextFil(&pFil)
@@ -146,15 +146,15 @@ SK_EntPnt_FYBA short LC_NextFil(LC_FILADM **ppFil,unsigned short usLag)
 AR-911001
 CH LC_InitNextBgr                                  Initier finn neste gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Initierer Bgr for bruk i finn neste gruppe.
 CD
-CD Parametre:
-CD Type           Navn   I/U  Forklaring
+CD Parameters:
+CD Type           Name   I/O  Explanation
 CD ------------------------------------------------------------------------
 CD LC_BGR *        pBgr    iu  Peker til gruppestruktur
 CD
-CD Bruk:
+CD Usage:
 CD     LC_InitNextBgr(&Bgr)
    ==========================================================================
 */
@@ -169,12 +169,12 @@ SK_EntPnt_FYBA void LC_InitNextBgr(LC_BGR * pBgr)
 AR-911003
 CH LC_NextBgr                                              Finn neste gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn neste gruppe i aktuell base.
 CD Sekvensielle filer blir ikke håndtert.
 CD
-CD Parametre:
-CD Type           Navn    I/U   Forklaring
+CD Parameters:
+CD Type           Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *        pBgr    iu   Peker til gruppestruktur der gruppenummer lagres
 CD unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
@@ -182,7 +182,7 @@ CD                               LC_FRAMGR og /eller LC_BAKGR
 CD                               (Bruk "|" for å kombinere.)
 CD short          sStatus  r   Status  UT_TRUE=OK, UT_FALSE=ingen flere grupper
 CD
-CD Bruk:
+CD Usage:
 CD     LC_BGR Bgr;
 CD               Denne løkka går gjennom alle framgrunns-gruppene i basen
 CD     LC_InitNextBgr(&Bgr);
@@ -239,18 +239,18 @@ SK_EntPnt_FYBA short LC_NextBgr(LC_BGR * pBgr,unsigned short usLag)
 AR-911003
 CH LC_InqAntFiler                                  Finn antall filer i basen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn antall filer i aktuell base.
 CD
-CD Parametre:
-CD Type           Navn    I/U  Forklaring
+CD Parameters:
+CD Type           Name    I/O  Explanation
 CD -------------------------------------------------------------------
 CD unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
 CD                               LC_FRAMGR og /eller LC_BAKGR
 CD                               (Bruk "|" for å kombinere.)
 CD short          sAntall  r   Antall filer i aktuell base.
 CD
-CD Bruk:
+CD Usage:
 CD    Finner antall framgrunnsfiler i basen
 CD    sAntall = LC_InqAntFiler(LC_FRAMGR);
    ==========================================================================
@@ -276,16 +276,16 @@ SK_EntPnt_FYBA short LC_InqAntFiler(unsigned short usLag)
 AR-911001
 CH LC_GetGrNr                                             Hent gruppe-nummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter gruppenummer for aktuell gruppe.
 CD
-CD Parametre:
-CD Type    Navn     I/U   Forklaring
+CD Parameters:
+CD Type    Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR * pBgr      iu   Peker til gruppestruktur der gruppenummer lagres
 CD short   status    r    Status  UT_TRUE=OK, UT_FALSE=ingen aktuell gruppe
 CD
-CD Bruk:
+CD Usage:
 CD     status = LC_GetGrNr(&Bgr)
    ==========================================================================
 */
@@ -306,11 +306,11 @@ SK_EntPnt_FYBA short LC_GetGrNr(LC_BGR * pBgr)
 AR-911001
 CH LC_GetGrPara                                        Hent gruppe-parametre
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter diverse opplysninger om aktuell gruppe.
 CD
-CD Parametre:
-CD Type    Navn   I/U   Forklaring
+CD Parameters:
+CD Type    Name   I/O   Explanation
 CD-------------------------------------------------------------------------
 CD short   *ngi    u    Antall linjer GINFO
 CD long    *nko    u    Antall koordinater
@@ -327,7 +327,7 @@ CD                        GI_READ_ONLY = gruppen kan ikke endres.
 CD
 CD short   gnavn   r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD
-CD Bruk:
+CD Usage:
 CD     gnavn = LC_GetGrPara(&ngi,&nko,&info);
    ==========================================================================
 */
@@ -354,11 +354,11 @@ SK_EntPnt_FYBA short LC_GetGrPara(short *ngi,long *nko,unsigned short *info)
 AR-900107
 CH LC_GetGrParaBgr                           Hent gruppe-parametre for gruppe
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter diverse opplysninger om gitt gruppenummer.
 CD
-CD Parametre:
-CD Type            Navn I/U  Forklaring
+CD Parameters:
+CD Type            Name I/O  Explanation
 CD------------------------------------------------------------------------------
 CD LC_BGR *         pBgr  i   Gruppenummer det ønskes opplysninger om.
 CD short          *ngi   u   Antall linjer GINFO  (0=sletta eller ulovlig nummer)
@@ -375,7 +375,7 @@ CD                           GI_SLETTA    = gruppen er sletta (merka som sletta)
 CD                           GI_READ_ONLY = gruppen kan ikke endres.
 CD short           gnavn r   Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD
-CD Bruk:
+CD Usage:
 CD     gnavn = LC_GetGrParaBgr(pBgr,&ngi,&nko,&info,&snr);
    =============================================================================
 */
@@ -418,17 +418,17 @@ SK_EntPnt_FYBA short LC_GetGrParaBgr(LC_BGR * pBgr,short *ngi,long *nko,unsigned
 AR-900107
 CH LC_GetObjtypeBgr                                             Hent objekttype
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter objekttype for gitt gruppenummer.
 CD
-CD Parametre:
-CD Type    Navn       I/U  Forklaring
+CD Parameters:
+CD Type    Name       I/O  Explanation
 CD------------------------------------------------------------------------------
 CD LC_BGR *pBgr        i   Gruppenummer det ønskes opplysninger om.
 CD char   *pszObjtype  r   OBJTYPE
 CD                         NULL hvis gruppen ikke finnes
 CD
-CD Bruk:
+CD Usage:
 CD pszObjtype = LC_GetObjtypeBgr(pBgr);
 =============================================================================
 */
@@ -461,7 +461,7 @@ SK_EntPnt_FYBA const char *LC_GetObjtypeBgr(LC_BGR * pBgr)
 AR-911001
 CH LC_RsGr                                           Les gruppe sekvensielt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Leser en datagruppe fra ekstern SOSI-fil inn i aktuell gruppe i ringbuffer.
 CD Rutinen tilsvarer put fra brukerprogram inn i ringbufferet, men rutinen
 CD tildeler selv nødvendig plass..
@@ -469,8 +469,8 @@ CD Gruppen beholder serienummer tildelt i LC_NyGr.
 CD Brukerindeks og geografisk-indeks blir ikke oppdatert.
 CD (Dette skjer først når gruppen skrives til basen.)
 CD
-CD Parametre:
-CD Type             Navn   I/U  Forklaring
+CD Parameters:
+CD Type             Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short           *rstat  iu   Lesestatus
 CD                                Inn: 1=Les fra starten, 0=Les neste
@@ -491,7 +491,7 @@ CD                          GI_READ_ONLY = gruppen kan ikke endres.
 CD long             gml_snr u    Serienummer gruppen hadde på ekstern fil
 CD short            gnavn   r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD
-CD Bruk:
+CD Usage:
 CD     gnavn = LC_RsGr(&rstat,pFil,&ngi,&nko,&info,&gml_snr);
 CD     if (info & GI_PINFO)        (gruppen har PINFO)
 CD         ;
@@ -557,7 +557,7 @@ SK_EntPnt_FYBA short LC_RsGr(short *rstat,LC_FILADM *pFil,short *ngi,long *nko,
 AR-911001
 CH LC_RsHode                                        Les filhode sekvensiellt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Leser et filhode fra ekstern SOSI-fil inn i aktuell gruppe i ringbuffer.
 CD Rutinen tilsvarer put fra brukerprogram inn i ringbufret, men rutinen
 CD tildeler selv nødvendig plass i RB.
@@ -565,8 +565,8 @@ CD Denne rutinen er stort sett lik LC_RsGr, men LC_RsHode forandrer
 CD ikke aktuell filposisjon på den sekvensielle filen.
 CD Gruppen beholder serienummer hodet hadde på SOSI-filen.
 CD
-CD Parametre:
-CD Type             Navn   I/U  Forklaring
+CD Parameters:
+CD Type             Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM       *pFil    i   Peker til FilAdm
 CD short           *ngi     u   Antall linjer GINFO
@@ -580,7 +580,7 @@ CD                          GI_REF   = gruppen har referanser (.. :n)
 CD                          GI_OY_REF= gruppen har referanser med øy
 CD short            gnavn   r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD
-CD Bruk:
+CD Usage:
 CD     gnavn = LC_RsHode(pFil,&ngi,&nko,&info);
    =============================================================================
 */
@@ -620,15 +620,15 @@ short LC_RsHode(LC_FILADM *pFil,short *ngi,long *nko,unsigned short *info)
 AR-930610
 CH LC_WsGr                                            Skriv gruppe sekvensiellt
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Skriver aktuell gruppe til ekstern, sekvensiell SOSI-fil.
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD LC_WsGr(pFil);
    =============================================================================
 */
@@ -674,11 +674,11 @@ SK_EntPnt_FYBA void LC_WsGr(LC_FILADM *pFil)
 AR-930610
 CH LC_WsGrPart                              Skriv del av gruppe sekvensiellt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver en del av aktuell gruppe til ekstern, sekvensiell SOSI-fil.
 CD
-CD Parametre:
-CD Type       Navn     I/U   Forklaring
+CD Parameters:
+CD Type       Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil      i    Peker til FilAdm
 CD long       fra_punkt i    Punktnummer for første koordinat som skal skrives.
@@ -686,7 +686,7 @@ CD                           (Lovlig:  1  <=  fra_punkt  <=  nko)
 CD long       antall    i    Antall koordinatlinjer som skal skrives.
 CD                           (Lovlig:  0  <=  antall  <=  nko)
 CD
-CD Bruk:
+CD Usage:
 CD LC_WsGrPart(pFil,fra_punkt,antall);
    ==========================================================================
 */
@@ -732,7 +732,7 @@ SK_EntPnt_FYBA void LC_WsGrPart(LC_FILADM *pFil,long fra_punkt,long antall)
 AR:2000-10-17
 CH LC_EndreHode                            Endre hodet på eksisterende SOSI-fil
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Skriver aktuell gruppe til starten av sekvensiell SOSI-fil.
 CD Det er en forutsetning at aktuell gruppe er et filhode.
 CD Denne rutinen er stort sett lik LC_WsGr, men LC_EndreHode forandrer ikke
@@ -742,14 +742,14 @@ CD Det må være nok ledig plass før neste gruppe for tilbakeskrivingen.
 CD Det er ikke mulig å forandre koordinatsystem, enhet eller origo på fil
 CD som inneholder data.
 CD
-CD Parametre:
-CD Type       Navn      I/U   Forklaring
+CD Parameters:
+CD Type       Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM *pFil       i    Peker til FilAdm
 CD short      oppdatert  r    Skrivestatus (1=OK, 0=Det er ikke plass
 CD                                          til å skrive hodet)
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_EndreHode(pFil);
    =============================================================================
 */
@@ -830,14 +830,14 @@ SK_EntPnt_FYBA short LC_EndreHode(LC_FILADM *pFil)
 AR-920810
 CH LC_RxGr                                               Les gruppe fra base
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Velger en gruppe som aktiv gruppe, og leser den fra SOSI-filen hvis den
 CD ikke er i RB fra før. (Styres også av les_sosi.)
 CD Hvis gruppen ikke finnes (sletta eller ulovlig gruppenummer) returneres
 CD ngi=0 og nko=0.
 CD
-CD Parametre:
-CD Type    Navn    I/U  Forklaring
+CD Parameters:
+CD Type    Name    I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR * pBgr     i   Peker til fil- og gruppenummer.
 CD short   les_sosi i   Lesemetode: Følgende konstanter er definert:
@@ -881,7 +881,7 @@ CD                                      L_SYMBOL   =   (.SYMBOL)
 CD                                      L_HODE     =   (.HODE)       
 CD                                      
 CD
-CD Bruk:
+CD Usage:
 CD     gnavn = LC_RxGr(&Bgr,LES_OPTIMALT,&ngi,&nko,&info);
 CD     if (info & GI_PINFO)        (gruppen har PINFO)
 CD         ;
@@ -973,14 +973,14 @@ SK_EntPnt_FYBA short LC_RxGr(LC_BGR * pBgr,short les_sosi,short *ngi,long *nko,u
 AR-911001
 CH LC_WxGr                                             Skriv gruppe til base
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver aktuell gruppe til tilhørende SOSI-fil.
 CD Brukerindeks og geografisk indeks oppdateres straks, uavhengig av kø.
 CD Ledig plass fram til neste gruppe blir blanket.
 CD Filhode blir ALLTID skrevet direkte til SOSI-filen.
 CD
-CD Parametre:
-CD Type  Navn    I/U  Forklaring
+CD Parameters:
+CD Type  Name    I/O  Explanation
 CD ------------------------------------------------------------------------
 CD short k_stat   i   Skrivemetode:  Følgende konstanter er definert:
 CD                      SKRIV_OPTIMALT = Skriv mest effektivt kø/SOSI
@@ -988,7 +988,7 @@ CD                      SKRIV_SOSI     = Skriv direkte til SOSI-filen
 CD short status   r   Status: UT_TRUE = OK
 CD                            UT_FALSE = Ikke utført, pga. feil.
 CD
-CD Bruk:
+CD Usage:
 CD LC_WxGr(k_stat)
    ==========================================================================
 */
@@ -1101,12 +1101,12 @@ SK_EntPnt_FYBA short LC_WxGr(short k_stat)
 AR-930907
 CH LB_WriteRb                           Skriv aktuell gruppe til buffer-filen
 CD ===========================================================================
-CD Formål:
+CD Purpose:
 CD Skriv aktuell gruppe til buffer-filen.
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD
-CD Bruk:
+CD Usage:
 CD LB_WriteRb();
 ==============================================================================
 */
@@ -1173,13 +1173,13 @@ static void LB_WriteRb(void)
 AR-930608
 CH LC_RoundKoord                 Endre koordinatene i buffer til riktig enhet
 CD ===========================================================================
-CD Formål:
+CD Purpose:
 CD Endrer koordinatene i aktuell gruppe i buffer til valgt enhet.
 CD (Rutinen blir utført fra LC_WxGr.)
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD
-CD Bruk:
+CD Usage:
 CD LC_RoundKoord();
 ==============================================================================
 */
@@ -1233,20 +1233,20 @@ SK_EntPnt_FYBA void LC_RoundKoord(void)
 AR-911001
 CH LC_OppdaterEndret                                    Oppdater ..NGIS-FLAGG
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Oppdaterer ..NGIS-FLAGG i GINFO og ajourfører interne tabeller.
 CD Hvis endring = O_GINFO oppateres tabellene i forhold til
 CD eksisterende GINFO.
 CD
-CD Parametre:
-CD Navn     Type   I/U  Forklaring
+CD Parameters:
+CD Name     Type   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD endring  short   i   Kode for endring:
 CD                       O_GINFO   (0) = Oppdater interne tabeller i fht. GINFO
 CD                       O_ENDRET  (1) = Merk for endret og oppdat. tab.
 CD                       O_SLETTET (2) = Merk for slettet og oppdat. tab.
 CD
-CD Bruk:
+CD Usage:
 CD LC_OppdaterEndret(O_ENDRET);
 =============================================================================
 */
@@ -1315,16 +1315,16 @@ SK_EntPnt_FYBA void LC_OppdaterEndret(short endring)
 AR-911001
 CH LC_FiLastGr                                     Finn siste gruppe i filen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner gruppenummer for siste gruppe i filen.
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD bgr        long   r    Gruppenummer
 CD
-CD Bruk:
+CD Usage:
 CD bgr = LC_FiLastGr(pFil);
    ==========================================================================
 */
@@ -1341,7 +1341,7 @@ SK_EntPnt_FYBA long LC_FiLastGr(LC_FILADM *pFil)
 AR-930608
 CH LC_CopyGr                                                   Kopier gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Kopierer fra en annen gruppe inn i aktuell gruppe i buffer.
 CD Rutinen tilsvarer put fra brukerprogram inn i bufret, men rutinen
 CD tildeler selv nødvendig plass.
@@ -1352,8 +1352,8 @@ CD legges det inn ..ENHET i GINFO.
 CD Kvalitet og dato blir oppdatert hvis SOSI-VERSJON < 4.00.
 CD Hvis det er filhode som kopieres skjer det ingen endring av egenskaper.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR  *pBgr     i    Gruppenummer det skal kopieres fra.
 CD short    ngis     i    Behandling for ..NGIS-FLAGG:
@@ -1365,7 +1365,7 @@ CD long     nko      u    Antall koordinater
 CD unsigned short    info     u    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
 CD short    gnavn    r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD
-CD Bruk:
+CD Usage:
 CD     gnavn = LC_CopyGr(&Bgr,ngis,&ngi,&nko,&info)
    ==========================================================================
 */
@@ -1536,7 +1536,7 @@ SK_EntPnt_FYBA short LC_CopyGr (LC_BGR * pBgr,short ngis,short *ngi,long *nko,un
 AR-930707
 CH LC_CopyCoord                           Kopier koordinater fra annen gruppe
 CD ===========================================================================
-CD Formål:
+CD Purpose:
 CD Kopierer koordinater fra en annen gruppe inn i aktuell gruppe i ringbuffer.
 CD De kopierte koordinatene kommer som en utvidelse av gruppen.
 CD Rutinen tilsvarer put fra brukerprogram inn i ringbufret, men rutinen
@@ -1545,8 +1545,8 @@ CD Geografisk-indeks blir ikke oppdatert før gruppen skrives til basen.
 CD Kvalitet og enhet blir automatisk oppdatert slik at gruppene ikke 
 CD mister informasjon.
 CD
-CD Parametre:
-CD Type    Navn     I/U   Forklaring
+CD Parameters:
+CD Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_BGR *pBgr      i    Gruppenummer det skal kopieres fra.
 CD short   retning   i    Buffer-retning:
@@ -1559,7 +1559,7 @@ CD long    nko       u    Antall koordinater
 CD short   info      u    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
 CD short   sStatus   r    Status: UT_TRUE=OK, UT_FALSE=ikke utført.
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_CopyCoord(bgr,retning,til_linje,&ngi,&nko,&info);
    =============================================================================
 */
@@ -1705,18 +1705,18 @@ SK_EntPnt_FYBA short LC_CopyCoord(LC_BGR * pBgr,short retning,long til_linje,sho
 AR-940208
 CH LC_SnuGr                                                        Snu gruppe
 CD ===========================================================================
-CD Formål:
+CD Purpose:
 CD Snur en gruppe.
 CD Rutinen tilsvarer put fra brukerprogram inn i ringbufret.
 CD Både koordinater, høyde, KP og PINFO blir behandlet.
 CD For .BUE blir fortegnet på radius endret.
 CD Fortegnet på referanser til gruppen blir oppdatert.
 CD
-CD Parametre:
-CD Type    Navn     I/U   Forklaring
+CD Parameters:
+CD Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD    LC_SnuGr();
    =============================================================================
 */
@@ -1862,7 +1862,7 @@ SK_EntPnt_FYBA void LC_SnuGr(void)
 AR-911001
 CH LC_DelGr                                                     Slett gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Fjerner aktuell gruppe fra basen.
 CD Grupper som er tatt ut fra NGIS for oppdatering blir ikke sletta fra
 CD SOSI-filen, men de blir merka som sletta. (LC_SetNgisModus avgjør da om
@@ -1870,13 +1870,13 @@ CD disse kan leses.)
 CD Det er ikke mulig å slette grupper fra sekvensielle filer, eller grupper
 CD som er brukt i flater.
 CD
-CD Parametre:
-CD Type   Navn    I/U   Forklaring
+CD Parameters:
+CD Type   Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short  sStatus  r    Status:  UT_TRUE  = OK
 CD                               UT_FALSE = feil, ikke sletta
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_DelGr();
    ==========================================================================
 */
@@ -2018,7 +2018,7 @@ SK_EntPnt_FYBA short LC_DelGr(void)
 AR-920129
 CH LC_SplittGr                                                 Splitt gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Splitter aktuell gruppe i to deler.
 CD Første del av gruppen beholdes som aktuell gruppe. Denne blir ikke
 CD skrevet til SOSI-filen, men buffer er oppdatert.
@@ -2029,8 +2029,8 @@ CD
 CD Hvis gruppen er BUEP og en av delene får bare to koordinater
 CD blir det lagt inn et nytt punkt midt på buen.
 CD
-CD Parametre:
-CD Type     Navn   I/U   Forklaring
+CD Parameters:
+CD Type     Name   I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    sP1     i    Punktnummer 1.   (Må være større enn 1)
 CD long    sP2     i    Punktnummer 2.   (Må være mindre enn nko)
@@ -2038,7 +2038,7 @@ CD LC_BGR *  pBgr2   u    Nytt gruppenummer for siste del av gruppen.
 CD short    sStatus r    Status: UT_TRUE  = OK
 CD                               UT_FALSE = feil, ikke splittet
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_SplittGr(sP1,sP2,&Bgr2);
    ==========================================================================
 */
@@ -2265,16 +2265,16 @@ SK_EntPnt_FYBA short LC_SplittGr (long sP1,long sP2,LC_BGR * pBgr2)
 AR-930803
 CH LR_TestEndreBuepTilKurve                               Sammenføy grupper
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om BUEP blir ugyldeig etter splitting. 
 CD Konverterer eventuellt til .KURVE
 CD
-CD Parametre:
-CD Type    Navn      I/U  Forklaring
+CD Parameters:
+CD Type    Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD double  dDeltaFi   i   Åpningsvinkel for opprinnelig BUEP
 CD
-CD Bruk:
+CD Usage:
 CD LR_TestEndreBuepTilKurve(dDeltaFi);
    =============================================================================
 */
@@ -2320,7 +2320,7 @@ static void LR_TestEndreBuepTilKurve(double dDeltaFi)
 AR-930803
 CH LC_SammenfoyGr                                          Sammenføy grupper
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sammenføye to grupper.
 CD Kopierer koordinater fra gitt gruppe inn i aktuell gruppe.
 CD De kopierte koordinatene kommer som en utvidelse av gruppen.
@@ -2331,8 +2331,8 @@ CD Gruppen det kopieres fra blir slettet.
 CD Eventuelle referanser til gruppene blir oppdatert.
 CD
 CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
+CD Parameters:
+CD Type    Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_BGR * pFraBgr     i    Gruppenummer det skal kopieres fra.
 CD short   retning     i    Buffer-retning:
@@ -2352,7 +2352,7 @@ CD long    nko         u    Antall koordinater
 CD unsigned short info u    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
 CD short   sStatus     r    Status: UT_TRUE=OK, UT_FALSE=ikke utført.
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_SammenfoyGr(bgr,retning,plassering,metode,&ngi,&nko,&info);
    =============================================================================
 */
@@ -2468,16 +2468,16 @@ SK_EntPnt_FYBA short LC_SammenfoyGr(LC_BGR * pFraBgr,short retning,short plasser
 AR-930803
 CH LB_RensOmkrets                             Fjerner overflødige referanser
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD  Fjerner overflødige referanser ved sammenføining av to grupper.
 CD
-CD Parametre:
-CD Type    Navn     I/U   Forklaring
+CD Parameters:
+CD Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD
 CD
 CD
-CD Bruk:
+CD Usage:
 CD Endret = LB_RensOmkrets(&Pol.HovedPO,lAktSnr,lFraSnr);
    =============================================================================
 */
@@ -2529,7 +2529,7 @@ static short LB_RensOmkrets(LC_POL_OMKR * pPO,long lAktSnr,long lFraSnr)
 AR:2000-07-28
 CH LC_NyGr                                                 Ny gruppe i basen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Lager en ny gruppe i basen, og tildeler serienummer.
 CD Sjekker at gruppenavnet er lovlig i denne versjon av FYBA.
 CD Ved feil navn vil ".LINJE" bli valgt.
@@ -2537,8 +2537,8 @@ CD Legger inn gruppenavn i buffer.
 CD Gruppen blir "aktuell" gruppe.
 CD Sjekker ledig plass både for indeks-fil og sosi-fil.
 CD
-CD Parametre:
-CD Type       Navn    I/U   Forklaring
+CD Parameters:
+CD Type       Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM  *pFil    i    Peker til FilAdm
 CD char       *sosi    i    Gruppenavn (Eks. ".KURVE")
@@ -2548,7 +2548,7 @@ CD long        snr     u    Tildelt serienummer
 CD gnavn       short   r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD                          INGEN_GRUPPE hvis det ikke er opprettet noen ny gruppe.
 CD
-CD Bruk:
+CD Usage:
 CD gnavn = LC_NyGr (pFil,sosi,&Bgr,&snr);
    =============================================================================
 */
@@ -2720,18 +2720,18 @@ SK_EntPnt_FYBA short LC_NyGr (LC_FILADM *pFil,char *sosi,LC_BGR * pBgr,long *snr
 AR-911001
 CH LB_FormaterEnhet                                         Lag GINFO for enhet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn enhet med høvelig antall siffer.
 CD
-CD Parametre:
-CD Type     Navn   I/U   Forklaring
+CD Parameters:
+CD Type     Name   I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char   *streng    i    Peker til streng hvor ginfo skal legges
 CD char   *sosi     i    SOSI-navn som skal legges først i strengen
 CD double  enhet    i    Aktuell enhet
 CD char   *ginfo    r    Peker til oppbygd streng
 CD
-CD Bruk:
+CD Usage:
 CD LB_FormaterEnhet(streng,sStrengMaxLen,"..ENHET",enhet);
    =============================================================================
 */
@@ -2759,18 +2759,18 @@ char *LB_FormaterEnhet(char *streng,short sStrengMaxLen,char *SosiNavn,double en
 AR-930611
 CH LC_InsGiL                                              Skyt inn GINFO-linjer
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Skyter inn linjer GINFO-delen i en gruppe.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD short    linje    i    Linjenummer linjen skal skytes inn forran.
 CD                        (Lovlig: 1  til  ngi+1)
 CD short    antall   i    Antall linjer som skal skytest inn.
 CD short    ngi      r    Antall GINFO-linjer i gruppen etter innskuddet.
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_InsGiL(linje, antall);
    =============================================================================
 */
@@ -2840,16 +2840,16 @@ SK_EntPnt_FYBA short LC_InsGiL(short linje, short antall)
 AR-930610
 CH LC_AppGiL                                             Heng på en GINFO-linje
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henger på en linje i GINFO-delen i en gruppe.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD short    ngi      r    Antall GINFO-linjer i gruppen etter utvidelsen.
 CD                        (Linjenumret på den tilføyde linjen.)
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_AppGiL();
    =============================================================================
 */
@@ -2876,18 +2876,18 @@ SK_EntPnt_FYBA short LC_AppGiL()
 AR-930611
 CH LC_InsKoL                                        Skyt inn koordinatlinjer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skyter inn linjer koordinatdelen i en gruppe.
 CD
-CD Parametre:
-CD Type    Navn    I/U   Forklaring
+CD Parameters:
+CD Type    Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    linje    i    Linjenummer linjen skal skytes inn forran.
 CD                        (Lovlig: 1  til  nko+1)
 CD long    antall   i    Antall linjer som skal skytest inn.
 CD long    nko      r    Antall koordinater i gruppen etter innskuddet.
 CD
-CD Bruk:
+CD Usage:
 CD nko = LC_InsKoL(linje, antall);
    ==========================================================================
 */
@@ -2946,15 +2946,15 @@ SK_EntPnt_FYBA long LC_InsKoL(long linje, long antall)
 AR-911001
 CH LC_AppKoL                                       Heng på en koordinatlinje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henger på en linje i koordinatdelen i en gruppe.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    nko      r    Antall koordinater i gruppen etter utvidelsen.
 CD
-CD Bruk:
+CD Usage:
 CD nko = LC_AppKoL();
    ==========================================================================
 */
@@ -2990,18 +2990,18 @@ SK_EntPnt_FYBA long LC_AppKoL()
 AR-930611
 CH LC_DelGiL                                                 Fjern GINFO-linjer
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Fjerner linjer i GINFO-delen i en gruppe.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD short    linje    i    Første linjenummer som skal fjernes.
 CD                        (Lovlig: 2  til  ngi)
 CD short    antall   i    Antall linjer som skal fjernes.
 CD short    ngi      r    Antall GINFO-linjer i gruppen etter setting.
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_DelGiL(linje, antall);
    =============================================================================
 */
@@ -3058,16 +3058,16 @@ SK_EntPnt_FYBA short LC_DelGiL(short linje, short antall)
 AR:2008-04-09
 CH LC_DelGiNavn                                   Fjerner egenskap fra GINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Fjerner alle forekomster av gitt egenskap (SOSI-navn) fra GINFO.
 CD
-CD Parametre:
-CD Type     Navn             I/U   Forklaring
+CD Parameters:
+CD Type     Name             I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char    *pszEgenskapNavn   i    SOSI-navn som skal slettes
 CD short    ngi               r    Antall GINFO-linjer i gruppen etter setting
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_DelGiNavn("..RADIUS");
    ==========================================================================
 */
@@ -3087,18 +3087,18 @@ SK_EntPnt_FYBA short LC_DelGiNavn(char *pszEgenskapNavn)
 AR-930611
 CH LC_DelKoL                                              Fjern koordinatlinjer
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Fjerner linjer koordinatdelen i en gruppe.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD long    linje    i    Første linje som skal fjernes.
 CD                        (Lovlig: 1  til  nko)
 CD long    antall   i    Antall linjer som skal fjernes.(Max resten av gruppen)
 CD long    nko      r    Antall koordinater i gruppen etter blanking.
 CD
-CD Bruk:
+CD Usage:
 CD nko = LC_DelKoL(linje, antall);
    =============================================================================
 */
@@ -3200,14 +3200,14 @@ SK_EntPnt_FYBA long LC_DelKoL(long linje, long antall)
 AR-930803
 CH LB_ClGr                                          Nullstill aktuell gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Nullstill aktuell gruppe.
 CD
-CD Parametre:
-CD Type             Navn      I/U   Forklaring
+CD Parameters:
+CD Type             Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LB_ClGr ();
    =============================================================================
 */
@@ -3226,19 +3226,19 @@ void LB_ClGr (void)
 AR-930610
 CH LB_RGru                                                        Les gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Leser en datagruppe fra SOSI-fil inn i aktuell gruppe.
 CD Eventuelle gamle pekere må være frgitt utenfor denne rutinen.
 CD
-CD Parametre:
-CD Type       Navn    I/U  Forklaring
+CD Parameters:
+CD Type       Name    I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i   Peker til FilAdm
 CD UT_INT64   start    i   Startposisjon på SOSI-filen
 CD UT_INT64   slutt    u   Sluttposisjon på SOSI-filen
 CD short      siste_gr r   Siste gruppe (0=ikke siste, 1=siste på filen)
 CD
-CD Bruk:
+CD Usage:
 CD siste_gr = LB_RGru(pFil,start,&slutt);
    ==========================================================================
 */
@@ -3581,15 +3581,15 @@ short LB_RGru(LC_FILADM *pFil,UT_INT64 start,UT_INT64 *slutt)
 AR-911001
 CH LB_Save                                           Tøm skrivekøa for 1 fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver gruppene som ligger i skrivekø ut til SOSI-fil.
 CD
-CD Parametre:
-CD Type       Navn  I/U   Forklaring
+CD Parameters:
+CD Type       Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD
-CD Bruk:
+CD Usage:
 CD LB_Save(pFil);
    ==========================================================================
 */
@@ -3625,12 +3625,12 @@ void LB_Save(LC_FILADM *pFil)
 AR-911001
 CH LC_Save                                                     Tøm skrivekøa
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver gruppene som ligger i skrivekø ut til SOSI-fil.
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD
-CD Bruk:
+CD Usage:
 CD LC_Save();
    ==========================================================================
 */
@@ -3657,14 +3657,14 @@ SK_EntPnt_FYBA void LC_Save(void)
 AR-930610
 CH LB_Swap                                  Dump gruppe fra buffer til SOSI
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver en gruppe fra buffer tilbake til SOSI-fil. Ledig plass fram til
 CD neste gruppe blir blanket. Hvis det ikke er plass blir gruppen flyttet
 CD til slutten av filen. Fjerner gruppen fra skrivekøa.
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD
-CD Bruk:
+CD Usage:
 CD LB_Swap()
    ==========================================================================
 */
@@ -3718,12 +3718,12 @@ void LB_Swap(void)
 AR-930610
 CH LB_WGru                                         Skriv gruppe til SOSI-fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skriver aktuell gruppe fra buffer til en SOSI-fil.
 CD Sjekker ikke om buffer er endret i fht. SOSI. (Skriver alltid.)
 CD
-CD Parametre:
-CD Type       Navn     I/U  Forklaring
+CD Parameters:
+CD Type       Name     I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short      strategi  i   Skrivestrategi: Følgende konstanter er definert:
 CD                          KONTROLLER_PLASS = Bare kontroller plass,
@@ -3744,7 +3744,7 @@ CD                          ut : Første pos etter gruppen (etter event. utrop.)
 CD short      ist       r   Status: 1 = Skrevet OK
 CD                               0 = Ikke plass, må flyttes til slutten
 CD
-CD Bruk:
+CD Usage:
 CD ok = LB_WGru (strategi,fra_punkt,antall,pFil,ffipos,&lfipos);
 =============================================================================
 */
@@ -4043,11 +4043,11 @@ short LB_WGru (short strategi,long fra_punkt,long antall,
 AR-920309
 CH LB_FlyttGrTilSlutt                      Flytt gruppe til slutten av filen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Flytt gruppe til slutten av filen
 CD
-CD Parametre:
-CD Type       Navn    I/U   Forklaring
+CD Parameters:
+CD Type       Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i    Peker til FilAdm
 CD UT_INT64   start    i    Startposisjon på SOSI-filen (første pos. i gr.)
@@ -4055,7 +4055,7 @@ CD UT_INT64  *neste    u    Startposisjon i neste gruppe (første pos. etter gr.)
 CD short      status   r    Status:  UT_FALSE = Feil
 CD                                   UT_TRUE = OK
 CD
-CD Bruk:
+CD Usage:
 CD status = LB_FlyttGrTilSlutt(forste,&neste)
    ==========================================================================
 */
@@ -4115,12 +4115,12 @@ static short LB_FlyttGrTilSlutt(LC_FILADM *pFil, UT_INT64 start, UT_INT64 *neste
 AR-920309
 CH LB_Plass                                          Finn tilgjengelig plass
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Scanner SOSI-filen og finner hvor mye plass som er tilgjengelig for
 CD gruppen. (Uten flytting.)
 CD
-CD Parametre:
-CD Type       Navn    I/U   Forklaring
+CD Parameters:
+CD Type       Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i    Peker til FilAdm
 CD UT_INT64      start    i    Startposisjon på SOSI-filen (første pos. i gr.)
@@ -4128,7 +4128,7 @@ CD UT_INT64     *neste    u    Startposisjon i neste gruppe (første pos. etter g
 CD short      siste    r    Siste gruppe:  UT_FALSE = Ikke siste gruppe
 CD                                         UT_TRUE = Siste gruppe
 CD
-CD Bruk:
+CD Usage:
 CD siste = LB_Plass (pFil,start,&neste)
    ==========================================================================
 */
@@ -4160,7 +4160,7 @@ GL-880119
 AR-911001
 CH LB_WriteBlank                                        Fyller inn "!!!!!!!"
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Fyller området FRA-OG-MED current-posisjon og fram TIL,
 CD (men ikke inklusiv) , ltilpos med !!!!!.
 CD Rutina takler fra 1 til mange posisjoner.
@@ -4169,14 +4169,14 @@ CD        curr-pos                       ltilpos
 CD          +------------------------------+
 CD          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD FILE    *fil       i    Filpeker
 CD short    sTegnsett i    Tegnsett (Def fra fyut.h)
 CD long     ltilpos   i    Posisjon det skal blankes fram til
 CD
-CD Bruk:
+CD Usage:
 CD LB_WriteBlank(fil,sTegnsett,ltilpos);
    ===================================================================
 */
@@ -4219,18 +4219,18 @@ static void LB_WriteBlank (FILE *fil,short sTegnsett,UT_INT64 ltilpos)
 AR-911001
 CH LB_WriteLine                                    Lavnivå skriv tekst linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Lavnivå overbygning ove write i C-biblioteket for å skrive en linje.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD FILE    *fil       i    Filpeker
 CD short    sTegnsett i    Tegnsett (Spesifisert i UT)
 CD char    *tx        i    Tekststreng som skal skrives.
 CD short    antall    r    Antall tegn skrevet, eller -1 ved feil.
 CD
-CD Bruk:
+CD Usage:
 CD antall = LB_WriteLine(fil,sTegnsett,tx);
    ==========================================================================
 */
@@ -4245,17 +4245,17 @@ short LB_WriteLine (FILE *fil,short sTegnsett,char *tx)
 AR-920909
 CH LB_FyllBuffer                         Oppdater lesebuffer fra SOSI-filen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Les neste linje fra SOSI-filen inn i lesebuffer.
 CD Konverterer til rett internt tegnsett.
 CD
-CD Parametre:
-CD Type            Navn   I/U   Forklaring
+CD Parameters:
+CD Type            Name   I/O   Explanation
 CD --------------------------------------------------------------------------
 CD FILE           *fil     i    Filpeker
 CD LB_LESEBUFFER  *plb     i    Peker til bufferstruktur
 CD
-CD Bruk:
+CD Usage:
 CD LB_FyllBuffer(fil,&lb);
    ===================================================================
 */
@@ -4300,13 +4300,13 @@ void LB_FyllBuffer (FILE *fil,LB_LESEBUFFER *plb)
 AR-920909
 CH LB_GetSet                               Hent SOSI-navn og verdi fra buffer
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Hen ett SOSI-navn og tilhørende verdi fra lesebuffer.
 CD Inn: Hvis buffer har gyldig innhold peker "plb->np" til posisjon
 CD      der tolking skal starte.
 CD
-CD Parametre:
-CD Type            Navn   I/U   Forklaring
+CD Parameters:
+CD Type            Name   I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE           *fil     i    Filpeker
 CD LB_LESEBUFFER  *plb     i    Peker til bufferstruktur
@@ -4318,7 +4318,7 @@ CD                                  LEST_BLANK (-2): Fyll-linje
 CD                                  LEST_GINFO (-3): Annen GINFO
 CD                                  LEST_KOM   (-4): Kommentarlinje
 CD
-CD Bruk:
+CD Usage:
 CD type = LB_GetSet(fil,&lb,pNavn);
    =============================================================================
 */
@@ -4444,18 +4444,18 @@ short LB_GetSet(FILE *fil,LB_LESEBUFFER *plb,LC_NAVNETABELL * pNavn)
 AR-920909
 CH LB_GetParameter                                 Hent parameter fra buffer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hent parameter fra lesebuffer.
 CD Forutsetter at det ikke er blanke forran parameteren.
 CD Inn: "plb->np" peker til første posisjon i parameteren. (Der tolking
 CD skal starte.
 CD
-CD Parametre:
-CD Type            Navn   I/U   Forklaring
+CD Parameters:
+CD Type            Name   I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LB_LESEBUFFER  *plb     i    Peker til bufferstruktur
 CD
-CD Bruk:
+CD Usage:
 CD param = LB_GetParameter(&lb)
    ==========================================================================
 */
@@ -4536,12 +4536,12 @@ static short LB_TestFyll(const char *pszTx)
 AR/TU:2008-09-11
 CH LC_ErstattReferanse                                     Erstatt referanse 
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Erstatt referanse i alle grupper i gitt fil.
 CD 
 CD
-CD Parametre:
-CD Type       Navn          I/U  Forklaring
+CD Parameters:
+CD Type       Name          I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil           i   Fil som skal behandles
 CD long       lGmlSnr        i   Gruppe som skal byttes ut
@@ -4550,7 +4550,7 @@ CD                               Verdien 0 fører til gammelt serienummer
 CD                               fjernes uten at det legges inn noe nytt.
 CD bool       bSammeRetning  i   Gruppene er digitalisert i samme retning
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_ErstattReferanse(pFil, lGmlSnr, lNyttSnr, bSammeRetning);
 ==========================================================================
 */

@@ -15,15 +15,15 @@
 AR-890616
 CH LN_InitTab                                           Klargjør navnetabell
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Initierer navnetabellen med kjente navn.
 CD
-CD Parametre:
-CD Type             Navn I/U  Forklaring
+CD Parameters:
+CD Type             Name I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn   i   Peker til navnetabell
 CD
-CD Bruk:
+CD Usage:
 CD LN_InitTab(pLn);
    ==========================================================================
 */
@@ -242,17 +242,17 @@ void LN_InitTab(LC_NAVNETABELL * pLn)
 AR-910919
 CH LN_Enhet                                          Sjekk om det er ..ENHET
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om denne ginfo-linjen er ..ENHET.
 CD
-CD Parametre:
-CD Type             Navn        I/U  Forklaring
+CD Parameters:
+CD Type             Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn          i   Peker til navnetabell
 CD char            *ginfo_linje  i   Første pos i linjen
 CD short            ok           r   1=linjen er ..ENHET, 0=ikke ..ENHET
 CD
-CD Bruk:
+CD Usage:
 CD ok = LN_Enhet(pLn,ginfo_linje);
   ===========================================================================
 */
@@ -274,17 +274,17 @@ short LN_Enhet(LC_NAVNETABELL * pLn,char *ginfo_linje)
 AR-940704
 CH LN_EnhetHoyde                                   Sjekk om det er ..ENHET-H
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om denne ginfo-linjen er ..ENHET-H.
 CD
-CD Parametre:
-CD Type             Navn        I/U  Forklaring
+CD Parameters:
+CD Type             Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn          i   Peker til navnetabell
 CD char            *ginfo_linje  i   Første pos i linjen
 CD short            ok           r   1=linjen er ..ENHET-H, 0=ikke ..ENHET-H
 CD
-CD Bruk:
+CD Usage:
 CD ok = LN_EnhetHoyde(pLn,ginfo_linje);
   ===========================================================================
 */
@@ -305,17 +305,17 @@ short LN_EnhetHoyde(LC_NAVNETABELL * pLn,char *ginfo_linje)
 AR-940704
 CH LN_EnhetDybde                                    Sjekk om det er ..ENHET-D
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om denne ginfo-linjen er ..ENHET-D.
 CD
-CD Parametre:
-CD Type             Navn        I/U  Forklaring
+CD Parameters:
+CD Type             Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn          i   Peker til navnetabell
 CD char            *ginfo_linje  i   Første pos i linjen
 CD short            ok           r   1=linjen er ..ENHET-D, 0=ikke ..ENHET-D
 CD
-CD Bruk:
+CD Usage:
 CD ok = LN_EnhetDybde(pLn,ginfo_linje);
   ===========================================================================
 */
@@ -336,17 +336,17 @@ short LN_EnhetDybde(LC_NAVNETABELL * pLn,char *ginfo_linje)
 AR-910315
 CH LN_TestOy                               Sjekk om referansen inneholder øy
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om denne ginfo-linjen inneholder referanse med ØY.
 CD Forutsetter at aktuell linje inneholder referanser. 
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------
 CD char    *ginfo_linje  i   Første pos i linjen
 CD short    ok           r   1=linjen har øy-flate, 0=ikke øy
 CD
-CD Bruk:
+CD Usage:
 CD ok = LN_TestOy(char *ginfo_linje);
   ===========================================================================
 */
@@ -362,19 +362,19 @@ short LN_TestOy(char *ginfo_linje)
 AR-910918
 CH LN_FinnNavn                          Søk etter et SOSI-navn i navnetabelen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Søker etter navnet i navnetabellen.
 CD (Ukjent navn blir ikke lagt inn i navnetabellen.)
 CD
-CD Parametre:
-CD Type             Navn    I/U   Forklaring
+CD Parameters:
+CD Type             Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn      i    Peker til navnetabell
 CD char            *streng   i    Peker til SOSI-navn. Avslutta av '\0'.
 CD short           *navn_nr  u    Navnets linjenummer i navnetabellen
 CD short            nivo     r    Antall prikker (0=ukjent navn, 1=gruppenavn, osv.)
 CD
-CD Bruk:
+CD Usage:
 CD nivo = LN_FinnNavn(pLn,streng,&neste,&navn_nr);
    =============================================================================
 */
@@ -404,12 +404,12 @@ short LN_FinnNavn(LC_NAVNETABELL * pLn,char *navn,short *navn_nr)
 AR-910710
 CH LN_PakkNavn                          Søk etter navn, legg inn ukjent navn
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner et SOSI-navn i navnetabellen.  (Max LC_MAX_SOSINAVN_LEN tegn.)
 CD Hvis navnet er ukjent, blir det lagt inn i tabellen.
 CD
-CD Parametre:
-CD Type            Navn    I/U Forklaring
+CD Parameters:
+CD Type            Name    I/O Explanation
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn     i   Peker til navnetabell
 CD char            *navn    i  SOSI-navn.
@@ -418,7 +418,7 @@ CD                             LC_ANT_PAR_UKJENT (-1) = Ant. param. er ukjent.
 CD short           *navn_nr u  Navnenummer.
 CD short            nivo    r  Antall prikker i navnet (1=gruppenavn, osv.)
 CD
-CD Bruk:
+CD Usage:
 CD type = LN_PakkNavn(pLn,navn,&navn_nr,&ant_par);
    =============================================================================
 */
@@ -485,17 +485,17 @@ short LN_PakkNavn (LC_NAVNETABELL * pLn,char *navn,short *navn_nr,short *ant_par
 AR-910819
 CH LN_GetNavn                               Hent en linje fra  navnetabellen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter et navn fra navnetabellen.
 CD
-CD Parametre:
-CD Type             Navn  I/U   Forklaring
+CD Parameters:
+CD Type             Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn    i    Peker til navnetabell
 CD long             navn   i    Linjenummer i navnetabellen
 CD char            *tx     r    Peker til SOSI-navn, NULL=ukjent linje
 CD
-CD Bruk:
+CD Usage:
 CD cp = LN_GetNavn(pLn,navn_nr);
    =============================================================================
 */
@@ -516,7 +516,7 @@ char *LN_GetNavn(LC_NAVNETABELL * pLn,short navn)
 AR:2009-05-05
 CH LC_GetElementNavn                                        Hent elementnavn
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Hent et elementnavn fra den interne navnetabellen i FYBA.
 CD Denne tabellen inneholder både gruppenavn (.LINJE, .KURVE, ...) og
 CD egenskapsnavn (..OBJTYPE, ..LTEMA, ...)
@@ -530,8 +530,8 @@ CD
 CD Selv om egenskapen blir fjernet fra SOSI-filen blir navnet fortsatt
 CD liggende i navnetabellen
 CD
-CD Parametre:
-CD Type        Navn    I/U  Forklaring
+CD Parameters:
+CD Type        Name    I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil     i   Peker til FilAdm
 CD short       sNavnNr  i   Linjenummer i navnetabellen (0 - n)
@@ -542,7 +542,7 @@ CD const char *pszNavn  r   Peker til elementnavn,
 CD                          NULL = ukjent fil eller ulovlig linjenummer
 CD
 CD
-CD Bruk:
+CD Usage:
 CD // Går gjennom alle navnene ut over de forhåndsdefinerte navnene.
 CD short sNavnNr = L_KP+1; 
 CD while ((pszNavn = LC_GetElementNavn(pFil,sNavnNr)) != NULL)
@@ -576,17 +576,17 @@ SK_EntPnt_FYBA const char *LC_GetElementNavn(LC_FILADM *pFil,short sNavnNr,bool 
 AR-910819
 CH LN_VisNavn                                Hent en linje fra  navnetabellen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter en linje fra navnetabellen som formatert streng.
 CD
-CD Parametre:
-CD Type             Navn  I/U   Forklaring
+CD Parameters:
+CD Type             Name  I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn    i    Peker til navnetabell
 CD long             navn   i    Linjenummer i navnetabellen som skall vises
 CD char            *tx     r    Peker til streng med formatert linje
 CD
-CD Bruk:
+CD Usage:
 CD for (navn=0,linje=10; navn<10; navn++,linje++){
 CD     SH_OutTx(linje,1,LN_VisNavn(pLn,navn));
 CD }
@@ -611,11 +611,11 @@ char *LN_VisNavn(LC_NAVNETABELL * pLn,short navn)
 AR-940413
 CH LN_TolkKvalitet                                             Tolk KVALITET
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Tolk parameterstrengen for KVALITET.
 CD
-CD Parametre:
-CD Type    Navn         I/U   Forklaring
+CD Parameters:
+CD Type    Name         I/O   Explanation
 CD -------------------------------------------------------------------------
 CD char   *pszParameter       i  Peker til '\0'-avslutta streng, eller
 CD                                 NULL hvis KVALITET mangler.
@@ -636,7 +636,7 @@ CD long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD                                 KVAL_NOY_STD    standard nøyaktighet fra nivå over.
 CD
-CD Bruk:
+CD Usage:
 CD   ist = LN_TolkKvalitet(pszParameter,&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                         &sHoydeMetode,&lHoydeNoyaktighet);
 CD =============================================================================
@@ -729,13 +729,13 @@ void LN_TolkKvalitet(char *pszParameter,short *psMetode,long *plNoyaktighet,
 AR-940413
 CH LC_FormatterKvalitet                                   Formatter KVALITET
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Formater parameterstrengen for KVALITET.
 CD Resultatet legges i en intern streng, og må kopieres over til andre
 CD variabler før endring.
 CD
-CD Parametre:
-CD Type    Navn         I/U   Forklaring
+CD Parameters:
+CD Type    Name         I/O   Explanation
 CD -------------------------------------------------------------------------
 CD short   sMetode           i Hvordan data er registrert.
 CD                               KVAL_MET_UNDEF  metode er udefinert.
@@ -755,7 +755,7 @@ CD                               KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD                               KVAL_NOY_STD    standard nøyaktighet fra nivå over 
 CD char   *pszParameter      r Peker til '\0'-avslutta streng.
 CD
-CD Bruk:
+CD Usage:
 CD  pszParameter = LC_FormatterKvalitet(sMetode,lNoyaktighet,sSynbarhet,
 CD                                      sHoydeMetode,lHoydeNoyaktighet);
 CD =============================================================================
@@ -844,16 +844,16 @@ SK_EntPnt_FYBA char *LC_FormatterKvalitet(short sMetode,long lNoyaktighet,short 
 AR: 2000-01-19
 CH LC_FinnNivo                                     Beregn nivå
 CD ==============================================================
-CD Formål:
+CD Purpose:
 CD Teller antall prikker i starten på egenskapsnavn.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type     Navn      I/U   Merknad
 CD -------------------------------------------------------------
 CD char    *pszGinfo   i    Streng med egenskapsnavn i starten
 CD short    sNivo      r    Antall prikker 
 CD
-CD Bruk:
+CD Usage:
 CD sNivo = LC_FinnNivo(pszGinfo);
   ================================================================
 */

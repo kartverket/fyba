@@ -63,14 +63,14 @@ Return value    None
 AR-930423
 CH UT_makepath                                    Slå sammen filnavn
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD UT_makepath bygger opp et fullstendig filnavn ut fra dets deler.
 CD Det nye filnavnet blir:  X:\DIR\SUBDIR\NAME.EXT
 CD hvor:                    X er drive
 CD                          \DIR\SUBDIR\ er gitt av dir
 CD                          NAME.EXT er gitt av name og ext
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type         Navn       I/U  Merknad
 CD --------------------------------------------------------------
 CD char        *pszPath   u   Komplett filnavn
@@ -79,7 +79,7 @@ CD const char  *pszDir    i   Katalog
 CD const char  *pszNavn   i   Navn
 CD const char  *pszExt    i   Extension
 CD
-CD Bruk:  UT_makepath(szPath,szDrive,szDir,szNavn,szExt);
+CD Usage:  UT_makepath(szPath,szDrive,szDir,szNavn,szExt);
    ==================================================================
 */
 SK_EntPnt_UT void  UT_makepath(char *pathP, const char *driveP, const char *dirP,

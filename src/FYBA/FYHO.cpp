@@ -30,11 +30,11 @@ static short ho_TestFyllKommentar(const char *pszTx);
 AR:2000-10-07
 CH HO_GetTransEx                                       Finner .TRANSPAR i hodet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut innholdet under ..TRANSPAR fra fra filhodet.
 CD
-CD Parametre:
-CD Type            Navn      I/U  Forklaring
+CD Parameters:
+CD Type            Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD char           *pszFil     i   Fullstendig filnavn
 CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
@@ -56,7 +56,7 @@ CD
 CD LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
 CD short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
 CD
-CD Bruk:
+CD Usage:
 CD unsigned short usMaske = LC_TR_ALLT;
 CD LC_TRANSPAR Trans;
 CD ist = HO_GetTransEx("Test.sos",&usMaske,&Trans);
@@ -98,8 +98,8 @@ CH ho_GetTransEx                                         Finner .TRANSPAR i hode
 CD =============================================================================
 CD Henter ut innholdet under ..TRANSPAR fra fra filhodet.
 CD
-CD Parametre:
-CD Type            Navn      I/U  Forklaring
+CD Parameters:
+CD Type            Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD FILE           *pFil       i   Filpeker til sosi-fil.
 CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
@@ -121,7 +121,7 @@ CD
 CD LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
 CD short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
 CD
-CD Bruk:
+CD Usage:
 CD unsigned short usMaske = LC_TR_ALLT;
 CD LC_TRANSPAR Trans;
 CD ist = ho_GetTransEx(pFil,&usMaske,&Trans);
@@ -321,15 +321,15 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
 AR:1999-07-12
 CH HO_GetTrans                                         Finner .TRANSPAR i hodet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter transformasjonsparametrene fra filhodet.
 CD
 CD OBS! Denne rutinen opprettholdes bare for bakoverkompatibilitet.
 CD      For nye programmer bør HO_GetTransEx benyttes. HO_GetTransEx er
 CD      kompatibel med nye versjoner av SOSI.
 CD
-CD Parametre:
-CD Type     Navn       I/U   Forklaring
+CD Parameters:
+CD Type     Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFil      i   Fullstendig filnavn
 CD short   *koosys      u   Koordinatsystem
@@ -340,7 +340,7 @@ CD double  *enhet_h     u   ...ENHET-H
 CD double  *enhet_d     u   ...ENHET-D
 CD short    sStatus     r   UT_TRUE, eller UT_FALSE.
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = HO_GetTrans(fil,&koosys,&origo_a,&origo_n,&enhet,&enhet_h,&enhet_d);
    =============================================================================
 */
@@ -377,11 +377,11 @@ GL-880427
 AR-900314
 CH ho_GetTrans                                         Finner .TRANSPAR i hodet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter transformasjonsparametrene fra filhodet.
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE    *pFil         i   Filpeker til sosi-fil.
 CD short   *koosys       u   Koordinatsystem
@@ -392,7 +392,7 @@ CD double  *enhet_h      u   ...ENHET-H
 CD double  *enhet_d      u   ...ENHET-D
 CD short    sStatus      r   UT_TRUE, eller UT_FALSE.
 CD
-CD Bruk:
+CD Usage:
 CD ho_GetTrans(pFil,&koosys,&origo_a,&origo_n,&enhet,&enhet_h,&enhet_d);
    =============================================================================
 */
@@ -465,11 +465,11 @@ short ho_GetTrans(FILE *pFil,short *koosys,double *origo_a,
 AR-890823
 CH HO_GetOmr                                            Finner ..OMRÅDE i hodet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter områdeangivelsen fra filhodet.
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFil      i   Fullstendig filnavn
 CD double  *nv_a        u
@@ -478,7 +478,7 @@ CD double  *oh_a        u
 CD double  *oh_n        u
 CD short    sStatus     r   UT_TRUE, eller UT_FALSE.
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = HO_GetOmr(pszFil,&nv_a,&nv_n,&oh_a,&oh_n);
 	=============================================================================
 */
@@ -514,11 +514,11 @@ SK_EntPnt_FYBA short HO_GetOmr(const char * pszFil,double *nv_a,double *nv_n,dou
 AR-890823
 CH ho_GetOmr                                            Finner ..OMRÅDE i hodet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter områdeangivelsen fra filhodet.
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE    *fil          i    Filpeker til sosi-fil.
 CD double  *nv_a         u
@@ -527,7 +527,7 @@ CD double  *oh_a         u
 CD double  *oh_n         u
 CD short    sStatus      r    UT_TRUE, eller UT_FALSE.
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = ho_GetOmr(fil,&nv_a,&nv_n,&oh_a,&oh_n);
 	=============================================================================
 */
@@ -599,12 +599,12 @@ short ho_GetOmr(FILE *fil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
 AR:1999-07-12
 CH HO_GetKvalitet                                 Finner kvalitetsopplysninger
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Finne kvalitetsopplysninger i filhode.
 CD (Ikke aktuellt etter SOSI v. 4.00.)
 CD
-CD Parametre:
-CD Type    Navn              I/U  Forklaring
+CD Parameters:
+CD Type    Name              I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char   *pszFil             i  Fullstendig filnavn
 CD short  *psMetode           u  Hvordan data er registrert.
@@ -620,7 +620,7 @@ CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
 CD short   ist                r  Statusvariabel: UT_TRUE  - OK, ..KVALITET er funnet
 CD                                               UT_FALSE - ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD      ist = HO_GetKvalitet(fil,&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                           &sHoydeMetode,&lHoydeNoyaktighet);
 CD =============================================================================
@@ -658,12 +658,12 @@ SK_EntPnt_FYBA short HO_GetKvalitet(const char *pszFil,short *psMetode,long *plN
 OJ-891123
 CH ho_GetKvalitet                                 Finner kvalitetsopplysninger
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Finne kvalitetsopplysninger i filhode.
 CD (Ikke aktuellt etter SOSI v. 4.00.)
 CD
-CD Parametre:
-CD Type    Navn              I/U  Forklaring
+CD Parameters:
+CD Type    Name              I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD FILE   *pFil               i  Filpeker til sosi-fil.
 CD short  *psMetode           u  Hvordan data er registrert.
@@ -679,7 +679,7 @@ CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
 CD short   ist                r  Statusvariabel: UT_TRUE  - OK, ..KVALITET er funnet
 CD                                               UT_FALSE - ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD      ist = ho_GetKvalitet(fil,&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                           &sHoydeMetode,&lHoydeNoyaktighet);
 CD =============================================================================
@@ -718,11 +718,11 @@ short ho_GetKvalitet(FILE *pFil,short *psMetode,long *plNoyaktighet,
 AR-920331
 CH HO_GetTegnsett                                            Finner tegnsett
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finne tegnsett i filhodet.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD char   *pszFil      i   Fullstendig filnavn
 CD short  *psTegnsett  u   Tegnsett, konstanter definert:
@@ -734,7 +734,7 @@ CD                            TS_DECN7   = DEC norsk 7-bits
 CD short   sStatus     r   Status: UT_TRUE  = Funnet
 CD                                 UT_FALSE = Ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD      sStatus = HO_GetTegnsett(pszFil,&sTegnsett);
 CD ==========================================================================
 */
@@ -769,11 +769,11 @@ SK_EntPnt_FYBA short HO_GetTegnsett(const char *pszFil,short *psTegnsett)
 AR-920331
 CH ho_GetTegnsett                                            Finner tegnsett
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finne tegnsett i filhodet.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD FILE    *fil        i   Filpeker til sosi-fil.
 CD short  *psTegnsett  u   Tegnsett, konstanter definert:
@@ -785,7 +785,7 @@ CD                            TS_DECN7   = DEC norsk 7-bits
 CD short   sStatus     r   Status: UT_TRUE  = Funnet
 CD                                 UT_FALSE = Ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD      sStatus = ho_GetTegnsett(fil,&sTegnsett);
 CD ==========================================================================
 */
@@ -829,14 +829,14 @@ short ho_GetTegnsett(FILE *pFil,short *psTegnsett)
 AR:1999-07-14
 CH HO_GetVal                                      Finn verdien til et SOSI-navn
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter parametrene til et SOSI-navn.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk strcpy).
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFil       i   Fullstendig filnavn
 CD char    *sosi_navn    i   SOSI-navn det skal finnes verdi til
@@ -846,7 +846,7 @@ CD                              tilslaget.
 CD char    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
 CD                           Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
-CD Bruk:
+CD Usage:
 CD para_peker = HO_GetVal(fil,sosi_navn,&sett_nr);
 	=============================================================================
 */
@@ -884,14 +884,14 @@ GL:1988-04-27
 AR:1989-08-23
 CH ho_GetVal                                      Finn verdien til et SOSI-navn
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter parametrene til et SOSI-navn.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk strcpy).
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE    *pFil         i   Filpeker til sosi-fil.
 CD char    *sosi_navn    i   SOSI-navn det skal finnes verdi til
@@ -901,7 +901,7 @@ CD                              tilslaget.
 CD char    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
 CD                           Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
-CD Bruk:
+CD Usage:
 CD para_peker = ho_GetVal(pFil,sosi_navn,&sett_nr);
 	=============================================================================
 */
@@ -959,13 +959,13 @@ GL-880303
 AR-891124
 CH  HO_New                                                   Lager nytt hode
 CD  =========================================================================
-CD Formål:
+CD Purpose:
 CD Genererer et nytt SOSI-filhode.
 CD Hvis område ikke har noen utstrekning justeres
 CD dette med 1 meter i hver retning. 
 CD
-CD Parametre:
-CD Type     Navn         I/U    Forklaring
+CD Parameters:
+CD Type     Name         I/O    Explanation
 CD --------------------------------------------------------------------------
 CD char    *pszFil        i    Fullstendig filnavn
 CD short    koosys        i    Koordinatsystem
@@ -981,7 +981,7 @@ CD double   oh_n          i
 CD short    sStatus       r    Status: UT_TRUE  = Funnet
 CD                                     UT_FALSE = Ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = HO_New(fil,koosys,origo_a,origo_n,enhet,enhet_h-enhet_d,
 CD                  nv_a,nv_n,oh_a,oh_n);
 CD =============================================================================
@@ -1025,13 +1025,13 @@ GL-880303
 AR-891124
 CH  ho_New                                                   Lager nytt hode
 CD  =========================================================================
-CD Formål:
+CD Purpose:
 CD Genererer et nytt SOSI-filhode.
 CD Hvis område ikke har noen utstrekning justeres
 CD dette med 1 meter i hver retning. 
 CD
-CD Parametre:
-CD Type     Navn         I/U    Forklaring
+CD Parameters:
+CD Type     Name         I/O    Explanation
 CD --------------------------------------------------------------------------
 CD FILE    *fil           i   Filpeker til sosi-fil.
 CD short    koosys        i    Koordinatsystem
@@ -1045,7 +1045,7 @@ CD double   nv_n          i
 CD double   oh_a          i             Øvre høyre hjørne
 CD double   oh_n          i
 CD
-CD Bruk:
+CD Usage:
 CD     ho_New(fil,koosys,origo_a,origo_n,enhet,enhet_h-enhet_d,
 CD            nv_a,nv_n,oh_a,oh_n);
 CD =============================================================================
@@ -1118,18 +1118,18 @@ void ho_New(FILE *fil,short koosys,double origo_a,double origo_n,
 AR:1999-07-14
 CH HO_TestSOSI                                              Tester SOSI-filen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at filen er en SOSI-fil, og finner posisjonen for .SLUTT.
 CD
-CD Parametre:
-CD Type      Navn       I/U   Forklaring
+CD Parameters:
+CD Type      Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char     *pszFil      i    Fullstendig filnavn
 CD UT_INT64 *sluttpos    u    Posisjon for .SLUTT
 CD short     ist         r    Status: UT_TRUE  = OK
 CD                                  UT_FALSE = feil
 CD
-CD Bruk:
+CD Usage:
 CD     ist = HO_TestSOSI(pszFil,&sluttpos);
 CD =============================================================================
 */
@@ -1165,18 +1165,18 @@ SK_EntPnt_FYBA short HO_TestSOSI(const char *pszFil,UT_INT64 *sluttpos)
 AR-891205
 CH ho_TestSOSI                                              Tester SOSI-filen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at filen er en SOSI-fil, og finner posisjonen for .SLUTT.
 CD
-CD Parametre:
-CD Type      Navn      I/U   Forklaring
+CD Parameters:
+CD Type      Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE     *pFil       i    Filpeker til sosi-fil.
 CD UT_INT64 *sluttpos   u    Posisjon for .SLUTT
 CD short     ist        r    Status: UT_TRUE  = OK
 CD                                 UT_FALSE = feil
 CD
-CD Bruk:
+CD Usage:
 CD     ist = ho_TestSOSI(pFil,&sluttpos);
 CD =============================================================================
 */
@@ -1250,11 +1250,11 @@ short ho_TestSOSI(FILE *pFil,UT_INT64 *sluttpos)
 HT:1998-05-19
 CH HO_SjekkTegnsett                              Sjekker tegnsett på SOSI-filen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker faktisk tegnsett i .HODE.
 CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
+CD Parameters:
+CD Type    Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char   *pszFil      i   Fullstendig filnavn
 CD short  *psTegnsett  u   Tegnsett, konstanter definert:
@@ -1267,7 +1267,7 @@ CD                            TS_DECN7   = DEC norsk 7-bits
 CD short   sStatus     r   Status:  0  = Ikke funnet
 CD                                  1  = Ett tegnsett funnet
 CD                                  2  = Flere tegnsett funnet
-CD Bruk:
+CD Usage:
 CD     sStatus = HO_SjekkTegnsett(fpek,tegnsett);
 CD =============================================================================
 */
@@ -1303,11 +1303,11 @@ SK_EntPnt_FYBA short HO_SjekkTegnsett(const char *pszFil,short *psTegnsett)
 HT-980519
 CH ho_SjekkTegnsett                              Sjekker tegnsett på SOSI-filen
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker faktisk tegnsett i .HODE.
 CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
+CD Parameters:
+CD Type    Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE   *fil         i   Filpeker til sosi-fil.
 CD short  *psTegnsett  u   Tegnsett, konstanter definert:
@@ -1320,7 +1320,7 @@ CD                            TS_DECN7   = DEC norsk 7-bits
 CD short   sStatus     r   Status:  0  = Ikke funnet
 CD                                  1  = Ett tegnsett funnet
 CD                                  2  = Flere tegnsett funnet
-CD Bruk:
+CD Usage:
 CD     sStatus = ho_SjekkTegnsett(fpek,tegnsett);
 CD =============================================================================
 */

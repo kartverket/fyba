@@ -26,7 +26,7 @@ extern LC_SYSTEMADM Sys;
 AR:2000-10-07
 CH LC_PutTransEx                                 Legger inn ..TRANSPAR i hodet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn innholdet under ..TRANSPAR i ginfo i aktuell gruppe.
 CD OBS! Forutsetter at aktuell gruppe er et SOSI-filhode versjon 3.x.
 CD
@@ -54,8 +54,8 @@ CD     ...VERT-INT <H-REF-INT> <D-REF-INT> <F-REF-INT>
 CD     ...VERT-DELTA <V-DELTA-MIN> <V-DELTA-MAX>
 CD
 CD
-CD Parametre:
-CD Type           Navn    I/U  Forklaring
+CD Parameters:
+CD Type           Name    I/O  Explanation
 CD --------------------------------------------------------------------------
 CD unsigned short usMaske  i   Maske som styrer hvilke deler av TRANSPAR som brukt
 CD                             Følgende konstanter er definert:       
@@ -74,7 +74,7 @@ CD
 CD LC_TRANSPAR *   pTrans   i   Peker til struktur med ..TRANSPAR informasjonen.
 CD short          ngi      r   Antall GINFO-linjer etter oppdateringen.
 CD
-CD Bruk:
+CD Usage:
 CD LC_TRANSPAR Trans;
 CD unsigned short usMaske = LC_TR_KOORDSYS | LC_TR_ORIGO | LC_TR_ENHET;
 CD Trans.sKoordsys = 32;
@@ -220,7 +220,7 @@ SK_EntPnt_FYBA short LC_PutTransEx(unsigned short usMaske, LC_TRANSPAR * pTrans)
 AR-910920
 CH LC_PutTrans                                 Legger inn ..TRANSPAR i hodet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn transformasjonsparametrene i ginfo i aktuell gruppe.
 CD Forutsetter at aktuell gruppe er et SOSI-filhode versjon 3.x.
 CD
@@ -228,8 +228,8 @@ CD OBS! Denne rutinen opprettholdes bare for bakoverkompatibilitet.
 CD      For nye programmer bør LC_PutTransEx benyttes. LC_PutTransEx er
 CD      kompatibel med nye versjoner av SOSI.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short    koosys     i    Koordinatsystem
 CD double   origo_a    i    Origo øst
@@ -239,7 +239,7 @@ CD double   enhet_h    i    Enhet-H
 CD double   enhet_d    i    Enhet-D
 CD short    ngi        r    Antall GINFO-linjer etter oppdateringen.
 CD
-CD Bruk:
+CD Usage:
 CD     ngi = LC_PutTrans(koosys,origo_a,origo_n,enhet,enhet_h,enhet_d);
 CD ==========================================================================
 */
@@ -318,7 +318,7 @@ SK_EntPnt_FYBA short LC_PutTrans(short koosys,double origo_a,double origo_n,
 AR:2000-10-07
 CH LC_GetTransEx                                 Henter ..TRANSPAR fra hodet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut innholdet under ..TRANSPAR fra ginfo i aktuell gruppe.
 CD OBS! Forutsetter at aktuell gruppe er et SOSI-filhode.
 CD
@@ -331,8 +331,8 @@ CD Må velge mellom VERT-DATUM eller VERT-INT.
 CD VERT-DATUM er den mest vanlige beskrivelsesmåten. 
 CD
 
-CD Parametre:
-CD Type            Navn      I/U   Forklaring
+CD Parameters:
+CD Type            Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
 CD                                [Ut]  Viser hvilke deler av TRANSPAR som er funnet/hentet.
@@ -353,7 +353,7 @@ CD
 CD LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
 CD short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
 CD
-CD Bruk:
+CD Usage:
 CD unsigned short usMaske = LC_TR_ALLT;
 CD LC_TRANSPAR Trans;
 CD ist = LC_GetTransEx(&usMaske,&Trans);
@@ -568,7 +568,7 @@ GL-880427
 AR-910920
 CH LC_GetTrans                                     Finner ..TRANSPAR i hodet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut transformasjonsparametrene fra ginfo i aktuell gruppe.
 CD Forutsetter at aktuell gruppe er et SOSI-filhode.
 CD
@@ -577,8 +577,8 @@ CD      For nye programmer bør LC_GetTransEx benyttes. LC_GetTransEx er
 CD      kompatibel med nye versjoner av SOSI.
 CD
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short   *koosys     u    Koordinatsystem
 CD double  *origo_a    u    Origo øst
@@ -588,7 +588,7 @@ CD double  *enhet_h    u    ...ENHET-H
 CD double  *enhet_d    u    ...ENHET-D
 CD short    ist        r    status: UT_TRUE=OK, UT_FALSE=feil (navn er ikke funnet)
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_GetTrans(&koosys,&origo_a,&origo_n,&enhet,&enhet_h,&enhet_d);
 CD ==========================================================================
 */
@@ -678,12 +678,12 @@ SK_EntPnt_FYBA short LC_GetTrans(short *koosys,double *origo_a,double *origo_n,d
 AR-920401
 CH LC_GetTegnsett                                            Finner tegnsett
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finne tegnsett i ginfo i aktuell gruppe.
 CD OBS! Forutsetter at aktuell gruppe er et SOSI-filhode.
 CD
-CD Parametre:
-CD Type    Navn       I/U  Forklaring
+CD Parameters:
+CD Type    Name       I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short  *psTegnsett  u   Tegnsett, konstanter definert:
 CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
@@ -694,7 +694,7 @@ CD                            TS_DECN7   = DEC norsk 7-bits
 CD short   sStatus     r   Status: UT_TRUE  = Funnet
 CD                                  UT_FALSE = Ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD      sStatus = LC_GetTegnsett(&sTegnsett);
 CD ==========================================================================
 */
@@ -753,18 +753,18 @@ SK_EntPnt_FYBA short LC_GetTegnsett(short *psTegnsett)
 AR-920401
 CH LH_GetNgisLag                                           Finner NGIS-LAG
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finne NGIS-LAG i ginfo i aktuell gruppe.
 CD OBS! Forutsetter at aktuell gruppe er et SOSI-filhode.
 CD
-CD Parametre:
-CD Type   Navn        I/U  Forklaring
+CD Parameters:
+CD Type   Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD char*  pszNgisLag   r   NGIS-lag. 
 CD                           Tom streng = ..NGIS-LAG er ikke funnet eller parameter mangler
 CD                           ..NGIS-LAG 0 = Bare leseaksess
 CD
-CD Bruk:
+CD Usage:
 CD      pszNgisLag = LH_GetNgisLag();
 CD ==========================================================================
 */
@@ -798,14 +798,14 @@ char* LH_GetNgisLag(void)
 AR-910920
 CH LC_PutOmr                                     Legger inn ..OMRÅDE i hodet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn område i ginfo i aktuell gruppe.
 CD Hvis område ikke har noen utstrekning justeres
 CD dette med 1 meter i hver retning. 
 CD OBS! Forutsetter at aktuell gruppe er et SOSI-filhode av ny type.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   nv_a       i    Område
 CD double   nv_n       i
@@ -813,7 +813,7 @@ CD double   oh_a       i
 CD double   oh_n       i
 CD short    ist        r    status: UT_TRUE=OK, UT_FALSE=feil
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_PutOmr(nv_a,nv_n,oh_a,oh_n);
 CD ==========================================================================
 */
@@ -870,12 +870,12 @@ SK_EntPnt_FYBA short LC_PutOmr(double nv_a,double nv_n,double oh_a,double oh_n)
 AR-910920
 CH LC_GetOmr                                         Finner ..OMRÅDE i hodet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut område fra ginfo i aktuell gruppe.
 CD OBS! Forutsetter at aktuell gruppe er et SOSI-filhode.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  *nv_a       u    Område
 CD double  *nv_n       u
@@ -883,7 +883,7 @@ CD double  *oh_a       u
 CD double  *oh_n       u
 CD short    ist        r    status: UT_TRUE=OK, UT_FALSE=feil (navn er ikke funnet)
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_GetOmr(&nv_a,&nv_n,&oh_a,&oh_n);
 CD ==========================================================================
 */
@@ -952,13 +952,13 @@ SK_EntPnt_FYBA short LC_GetOmr(double *nv_a,double *nv_n,double *oh_a,double *oh
 AR-910920
 CH LC_NyttHode                                               Lager nytt hode
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn et standard SOSI-filhode i ginfo i aktuell gruppe.
 CD
-CD Parametre:
+CD Parameters:
 CD     ingen
 CD
-CD Bruk:
+CD Usage:
 CD     LC_NyttHode();
 CD ==========================================================================
 */
@@ -1004,15 +1004,15 @@ SK_EntPnt_FYBA void LC_NyttHode(void)
 AR-910920
 CH LC_TestHode                                             Tester SOSI-hodet
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker at ginfo i aktuell gruppe er et lovlig SOSI-filhode.
 CD
-CD Parametre:
+CD Parameters:
 CD  Type    Navn    I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD  short   ist      r    status: UT_TRUE=OK, UT_FALSE=feil
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_TestHode();
 CD ==========================================================================
 */

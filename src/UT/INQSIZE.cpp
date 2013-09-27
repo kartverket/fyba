@@ -42,17 +42,17 @@
 AR-921013
 CH UT_InqPathSize                                  Finn filstørrelse
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Henter filstørrelsen for gitt fil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD long     *plSize    u   Filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_InqPathSize(szPath,&lSize);
+CD Usage:  sStatus = UT_InqPathSize(szPath,&lSize);
    ==================================================================
 */
 SK_EntPnt_UT short UT_InqPathSize(char *pszPath,long *plSize)
@@ -135,17 +135,17 @@ SK_EntPnt_UT short UT_InqPathSize(char *pszPath,long *plSize)
 AR-921013
 CH UT_InqPathSize_i64                              Finn filstørrelse
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Henter filstørrelsen for gitt fil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD UT_INT64 *n64Size   u   Filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_InqPathSize_i64(szPath,&n64Size);
+CD Usage:  sStatus = UT_InqPathSize_i64(szPath,&n64Size);
    ==================================================================
 */
 SK_EntPnt_UT short UT_InqPathSize_i64(char *pszPath,UT_INT64 *n64Size)

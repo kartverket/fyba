@@ -49,17 +49,17 @@
 AR-921013
 CH UT_InqPathTid                                Finn oppdateringstid
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Henter oppdateringstidspunktet for gitt fil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD PFTID     pFilTid   u   Oppdateringstid
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_InqPathTid(szPath,&FilTid);
+CD Usage:  sStatus = UT_InqPathTid(szPath,&FilTid);
    ==================================================================
 */
 SK_EntPnt_UT short UT_InqPathTid(char *pszPath,PFTID pFilTid)

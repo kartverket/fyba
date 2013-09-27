@@ -45,12 +45,12 @@ static void LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, doubl
 AR:2000-07-25
 CH LC_GetGrWin                           Hent omskrevet rektangel for gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter omskrevet rektangel for gitt gruppe.
 CD For flater er refererte grupper medregnet.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pBgr      i    Gruppenummer
 CD double  *nva       u    Omskrevet rektangel for gruppen. Avrundet utover
@@ -59,7 +59,7 @@ CD double  *oha       u
 CD double  *ohn       u    
 CD short    ist       r    Status. UT_TRUE=OK, UT_FALSE=ulovlig gruppenummer.
 CD
-CD Bruk:
+CD Usage:
 CD    ist = LC_GetGrWin(&Bgr,&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
@@ -98,12 +98,12 @@ SK_EntPnt_FYBA short LC_GetGrWin(LC_BGR * pBgr,double *nva,double *nvn,double *o
 AR-930608
 CH LR_Indx                               Beregn geografiske ruter for gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner og lagrer omskrevet boks for koordinatene på aktuell gruppe.
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD
-CD Bruk:
+CD Usage:
 CD LR_Indx();
    ==========================================================================
 */
@@ -341,13 +341,13 @@ static void LR_R_DumpLov(LC_R_LEAF * pRL, LC_FILADM *pDumpFil, int iNivo, double
 AR-900214
 CH LR_IndxFlate                            Beregn geografisk indeks for flate
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Utvider omskrevet boks for aktuell gruppe, slik at den tar hensyn til
 CD referanser.
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD
-CD Bruk:
+CD Usage:
 CD LR_IndxFlate();
    =============================================================================
 */
@@ -451,11 +451,11 @@ void LR_IndxFlate(void)
 AR-911003
 CH LC_SBGeo                             Sett søkegrense for grov geografisk søk
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Definerer geografisk område for geografisk søk.
 CD
-CD Parametre:
-CD Type           Navn      I/U  Forklaring
+CD Parameters:
+CD Type           Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus.
 CD unsigned short usLag      i   Velg hvilke "lag" det skal søkes i.
@@ -465,7 +465,7 @@ CD double         nv_n       i
 CD double         oh_a       i   Koordinat øvre høyre hjørne.
 CD double         oh_n       i
 CD
-CD Bruk:
+CD Usage:
 CD LC_GEO_STATUS GeoStat;
 CD .
 CD LC_SBGeo(&GeoStat,LC_FRAMGR | LC_BAKGR,nv_a,nv_n,oh_a,oh_n);
@@ -515,17 +515,17 @@ SK_EntPnt_FYBA void LC_SBGeo(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
 AR-911003
 CH LC_FFGeo                                   Finn første ved geografisk søk
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner første gruppe i det definerte området for kombinert geografisk søk.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD LC_BGR *        pBgr       u   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
@@ -592,20 +592,20 @@ SK_EntPnt_FYBA short LC_FFGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 AR-911003
 CH LR_R_SjekkNode                          Sjekker node om overlappende boks
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker en node og underliggende noder om de har lagret bokser
 CD som overlapper søkerektanglet. De gruppene som blir funnet blir hengt på
 CD kjeden med søkeresultat i pGeoStat.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat   i   Peker til struktur for søkestatus
 CD LC_BOKS *       pB         i   Søkeboks
 CD LC_FILADM *    pFil       i   Filpeker
 CD LC_R_NODE *     pRN        i   Peker til node som skal sjekkes
 CD
-CD Bruk:
+CD Usage:
 CD LR_R_SjekkNode(pGeoStat,pB,pFil,pRN->pSon[i]);
    ==========================================================================
 */
@@ -643,17 +643,17 @@ static void LR_R_SjekkNode(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil
 AR-911003
 CH LR_R_BoksTestIntersect             Sjekker om to bokser "berører" hverandre
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om to bokser "berører" hverandre.
 CD
-CD Parametre:
-CD Type     Navn     I/U  Forklaring
+CD Parameters:
+CD Type     Name     I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_BOKS *  pB1      i   Rektangel 1
 CD LC_BOKS *  pB2      i   Rektangel 2
 CD short     sStatus  r   UT_TRUE=Berører,  UT_FALSE=Ikke berøring 
 CD
-CD Bruk:
+CD Usage:
 CD LR_R_BoksTestIntersect(...);
    ==========================================================================
 */
@@ -676,17 +676,17 @@ static short LR_R_BoksTestIntersect(LC_BOKS * pB1,LC_BOKS * pB2)
 AR-911003
 CH LC_FNGeo                                    Finn neste ved geografisk søk
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner neste gruppe i det definerte området for geografisk søk.
 CD
-CD Parametre:
-CD Type           Navn      I/U  Forklaring
+CD Parameters:
+CD Type           Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD LC_BGR *        pBgr       u   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
@@ -734,19 +734,19 @@ SK_EntPnt_FYBA short LC_FNGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 AR-911003
 CH LC_FFGeoFil                       Finn første ved geografisk søk i en fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner første gruppe i det definerte området for kombinert geografisk søk.
 CD Søker bare i en gitt fil.
 CD
-CD Parametre:
-CD Type           Navn       I/U  Forklaring
+CD Parameters:
+CD Type           Name       I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat   iu   Peker til struktur for søkestatus
 CD LC_FILADM *    pOnsketFil  i   Filpeker til den filen det skal søkes i.
 CD LC_BGR *        pBgr        u   Funnet gruppe
 CD short          sstat       r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
@@ -814,19 +814,19 @@ SK_EntPnt_FYBA short LC_FFGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pOnsketFil,
 AR-911003
 CH LC_FNGeoFil                        Finn neste ved geografisk søk i en fil
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner neste gruppe i det definerte området for geografisk søk.
 CD Søker bare i en gitt fil.
 CD
-CD Parametre:
-CD Type           Navn      I/U  Forklaring
+CD Parameters:
+CD Type           Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD LC_FILADM *    pFil      i    Filpeker til den filen det skal søkes i.
 CD LC_BGR *        pBgr       u   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
@@ -876,17 +876,17 @@ SK_EntPnt_FYBA short LC_FNGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,LC_BGR
 AR-911002
 CH LC_FAGeo                                     Finn alle ved geografisk søk
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finn alle i geografisk søkeområde.
 CD Tilslag merkes i brukttabellen kolonne BT_GEOSOK (15).
 CD
-CD Parametre:
-CD Type           Navn      I/U  Forklaring
+CD Parameters:
+CD Type           Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD long           lAntall    r   Antall funnet.
 CD
-CD Bruk:
+CD Usage:
 CD .
 CD LC_SBGeo(&GeoStat,LC_FRAMGR | LC_BAKGR,nv_a,nv_n,oh_a,oh_n);
 CD antall = LC_FAGeo(&Bgr);
@@ -930,11 +930,11 @@ SK_EntPnt_FYBA long LC_FAGeo(LC_GEO_STATUS * pGeoStat)
 AR-911003
 CH LC_SBFlate                     Sett søkegrense for geografisk søk på flate
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Definerer punkt for geografisk søk på flate.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD unsigned short usLag      i   Velg hvilke "lag" det skal søkes i.
@@ -944,7 +944,7 @@ CD double         nv_n       i
 CD double         oh_a       i   Koordinat øvre høyre hjørne
 CD double         oh_n       i
 CD
-CD Bruk:
+CD Usage:
 CD LC_GEO_STATUS GeoStat;
 CD .
 CD LC_SBFlate(&GeoStat,LC_FRAMGR | LC_BAKGR,nv_a,nv_n,oh_a,oh_n);
@@ -989,17 +989,17 @@ SK_EntPnt_FYBA void LC_SBFlate(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
 AR-911003
 CH LC_FFFlate                                        Finn første ved flatesøk
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Finner første gruppe i det definerte området for flatesøk.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD LC_BGR *        pBgr       u   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD Se under LC_SBFlate.
    =============================================================================
 */
@@ -1071,21 +1071,21 @@ SK_EntPnt_FYBA short LC_FFFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 AR-980205
 CH LR_R_SjekkNodeFlate            Sjekker node om overlappende boks (flate)
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker en node og underliggende noder om de har lagret bokser
 CD som overlapper søkerektanglet. De gruppene som blir funnet blir hengt på
 CD kjeden med søkeresultat i pGeoStat. Finner bare grupper der det er brukt
 CD referanser for oppbygging av geografisk boks.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat   i   Peker til struktur for søkestatus
 CD LC_BOKS *       pB         i   Søkeboks
 CD LC_FILADM *    pFil       i   Filpeker
 CD LC_R_NODE *     pRN        i   Peker til node som skal sjekkes
 CD
-CD Bruk:
+CD Usage:
 CD LR_R_SjekkNodeFlate(pGeoStat,pB,pFil,pRN->pSon[i]);
    ==========================================================================
 */
@@ -1126,17 +1126,17 @@ static void LR_R_SjekkNodeFlate(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM 
 AR-911002
 CH LC_FNFlate                                        Finn neste ved flatesøk
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finner neste gruppe i det definerte området for flatesøk.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD LC_BGR *        pBgr       u   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
-CD Bruk:
+CD Usage:
 CD Se under LC_SBFlate.
    ==========================================================================
 */
@@ -1185,13 +1185,13 @@ SK_EntPnt_FYBA short LC_FNFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 AR-890824
 CH LC_WTst                                                        Vindustest
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om aktuell gruppe berører gitt vindu.
 CD Tar hensyn til gruppenavnet. Handterer (PUNKT, LINJE, KURVE, BUE,
 CD BUEP, SIRKEL, SIRKELP, SVERM, TRASE ).
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  nva        i    Avgrensing av vinduet
 CD double  nvn        i
@@ -1200,7 +1200,7 @@ CD double  ohn        i
 CD short   ist        r    status: 0 = ikke berøring
 CD                                 1 = skjæring
 CD
-CD Bruk:
+CD Usage:
 CD .
 CD LC_SBGeo(&GeoStat,nv_a,nv_n,oh_a,oh_n);
 CD if (LC_FFGeo(&GeoStat,&Bgr)){
@@ -1333,19 +1333,19 @@ SK_EntPnt_FYBA short LC_WTst(double nva,double nvn,double oha,double ohn)
 AR-890824
 CH LC_PTst                                                        Polygontest
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om gitt punkt ligger innenfor polygon angitt av aktuell gruppe.
 CD Forutsetter at tabellen danner et lukket polygon
 CD
-CD Parametre:
-CD Type    Navn    I/U   Forklaring
+CD Parameters:
+CD Type    Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  a        i    Punkt som skal sjekkes
 CD double  n        i
 CD short   ist      r    status: 0 = punktet er utenfor flaten
 CD                               1 = punktet ligger inne på flaten
 CD
-CD Bruk:
+CD Usage:
 CD .
 CD LC_SBFlate(&GeoStat,a-d,n-d,a+d,n+d);
 CD if (LC_FFFlate(&GeoStat,&Bgr)) {
@@ -1388,20 +1388,20 @@ SK_EntPnt_FYBA short LC_PTst(double a,double n)
 AR-911002
 CH LC_PTstOmkrets                         Sjekk om punkt ligger inni polygon
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om gitt punkt ligger innenfor yttergrensen for polygon angitt
 CD av aktuell gruppe.
 CD Forutsetter at tabellen danner et lukket polygon
 CD
-CD Parametre:
-CD Type    Navn    I/U   Forklaring
+CD Parameters:
+CD Type    Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  a        i    Punkt som skal sjekkes
 CD double  n        i
 CD short   ist      r    status: 0 = punktet er utenfor flaten
 CD                               1 = punktet ligger inne på flaten
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_PTstOmkrets(a,n);
    ==========================================================================
 */
@@ -1456,19 +1456,19 @@ SK_EntPnt_FYBA short LC_PTstOmkrets(double a,double n)
 AR-921028
 CH LR_PTstGruppe                  Sjekk om punkt ligger inni polygon
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker antall skjæringer mellom gitt gruppe og linje fra gitt punkt
 CD til "uendelig" øst.
 CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
+CD Parameters:
+CD Type    Name       I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR * pBgr        i    Peker til datagruppe
 CD double  a           i    Punkt som skal sjekkes
 CD double  n           i
 CD short   sAntSkjaer  r    Antall skjæringer
 CD
-CD Bruk:
+CD Usage:
 CD ist = LR_PTstOmkrets(&Bgr,a,n);
    ==========================================================================
 */
@@ -1542,17 +1542,17 @@ short LR_PTstGruppe(LC_BGR * pBgr,double a,double n)
 AR-980108
 CH LR_InsertGeo                     Legg gruppen inn i geografisk indeks
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD Parametere:
-CD Type          Navn  I/U  Forklaring
+CD Parameters:
+CD Type          Name  I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_FILADM *   pFil   i   Filpeker
 CD long          lNr    i   Gruppenummer i filen
 CD LC_BOKS *      pB     i   Boks som skal legges inn i treet
 CD LC_R_LEAF *    pRL    r   Peker inn i geografisk søketre
 CD
-CD Formål:
+CD Purpose:
 CD Legg gruppen inn i geografisk indeks.
 CD Forutsetter at grupen ikke ligger i søketreet fra før.
 CD =======================================================================
@@ -1598,10 +1598,10 @@ LC_R_LEAF * LR_InsertGeo(LC_FILADM *pFil,long lNr,LC_BOKS * pB)
 AR-980108
 CH LR_R_Insert                                             Insert i R-tre
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD Parametere:
-CD Type         Navn  I/U  Forklaring
+CD Parameters:
+CD Type         Name  I/O  Explanation
 CD -----------------------------------------------------------------------
 CD long         lGrNr  i   Gruppenummer i filen
 CD LC_BOKS     *pB     i   Boks som skal legges inn i treet
@@ -1610,7 +1610,7 @@ CD LC_R_NODE   *pRN    i   Peker til node i R-treet
 CD LC_R_NODE  **ppNyRN u   Peker til peker til nyopprettet node i R-treet
 CD LC_R_LEAF   *pRL    r   Peker til forekomst i R-treet
 CD
-CD Formål:
+CD Purpose:
 CD Leger inn et rektangl i R-treet med rot i node pRN.
 CD Hvis pRN == NULL (Tomt tre) settes *ppNyRN til å peke til et nyt tre.
 CD =======================================================================
@@ -1844,12 +1844,12 @@ static LC_R_LEAF * LR_R_Insert(long lGrNr,LC_BOKS *pB,LC_R_NODE *pFar,LC_R_NODE 
 AR-980108
 CH LR_R_BoksSum                                        Summerer to bokser
 CD =======================================================================
-CD Formål:
+CD Purpose:
 CD Summerer to bokser ved at boks1 blir utvidet slik at den også dekker 
 CD boks2.
 CD
-CD Parametere:
-CD Type       Navn  I/U  Forklaring
+CD Parameters:
+CD Type       Name  I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_BOKS *   pB1   iu   Boks1 som skal utvides
 CD LC_BOKS *   pB2   i    Boks2 som skal legges til boks1
@@ -1868,12 +1868,12 @@ static void LR_R_BoksSum(LC_BOKS * pB1,LC_BOKS * pB2)
 AR-980108
 CH LR_BoksDeltaArealSum                   Bereg arealendring ved sumering
 CD =======================================================================
-CD Formål:
+CD Purpose:
 CD Beregner hvor mye arealet av boks1 blir utvidet hvis den blir
 CD summert med boks2.
 CD
-CD Parametere:
-CD Type       Navn       I/U  Forklaring
+CD Parameters:
+CD Type       Name       I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_BOKS *   pB1         i   Boks1
 CD LC_BOKS *   pB2         i   Boks2
@@ -1897,14 +1897,14 @@ static double LR_BoksDeltaArealSum(LC_BOKS * pB1,LC_BOKS * pB2)
 AR-980108
 CH LR_R_Delete                                       Fjern fra "søketreet"
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD Parametere:
-CD Type        Navn  I/U  Forklaring
+CD Parameters:
+CD Type        Name  I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_R_LEAF *  pRL    i   Peker til forekomst i R-treet
 CD
-CD Formål:
+CD Purpose:
 CD Fjern et gitt element fra R-treet for geografisk søk.
 CD =======================================================================
 */
@@ -2027,16 +2027,16 @@ void LR_R_Delete(LC_R_LEAF * pRL)
 AR-980204
 CH LR_R_CreateRNode                         Alloker og initier R-tre-node
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD Parametere:
-CD Type          Navn  I/U  Forklaring
+CD Parameters:
+CD Type          Name  I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_R_NODE *  pFar     i  Peker til far i R-treet
 CD short       sSonType i  Hvilken type sønner har denne noden LC_NODE / LC_LEAF
 CD LC_R_NODE *  pRN      r  Peker til ny node i R-tre
 CD
-CD Formål:
+CD Purpose:
 CD Alloker og initier node i R-tre.
 CD =======================================================================
 */
@@ -2071,17 +2071,17 @@ static LC_R_NODE * LR_R_CreateRNode( LC_R_NODE * pFar,short sSonType)
 AR-980204
 CH LR_R_CreateRLeaf                         Alloker og initier R-tre-løv
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD Parametere:
-CD Type        Navn   I/U  Forklaring
+CD Parameters:
+CD Type        Name   I/O  Explanation
 CD -----------------------------------------------------------------------
 CD long        lGrNr   i  Gruppenummer i filen
 CD LC_BOKS *    pB      i  Boks som skal legges inn i treet
 CD LC_R_NODE *  pFar    i  Peker til far i R-treet
 CD LC_R_LEAF *  pCL     r  Peker til ny forekomst
 CD
-CD Formål:
+CD Purpose:
 CD Alloker og initier løv R-tre.
 CD =======================================================================
 */
@@ -2101,16 +2101,16 @@ static LC_R_LEAF * LR_R_CreateRLeaf(long lGrNr, LC_BOKS * pB,LC_R_NODE * pFar)
 AR-980113
 CH LR_LeggTilKB                         Legg til Bgr i søkeresultat-kjede
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD parametere:
-CD Type            Navn     I/U   Forklaring
+CD parameters:
+CD Type            Name     I/O   Explanation
 CD -----------------------------------------------------------------------
 CD LC_GEO_STATUS *  pGeoStat  i    Peker til struktur for søkestatus
 CD LC_FILADM *     pFil      i    Filpeker
 CD long            lNr       i    Gruppenummer i filen
 CD
-CD Formål:
+CD Purpose:
 CD Legg til Bgr i kjede med søkeresultat.
 CD =======================================================================
 */
@@ -2142,14 +2142,14 @@ static void LR_LeggTilKB(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,long lNr)
 AR-980113
 CH LC_AvsluttSok                                 Avslutter geografisk søk
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD parametere:
-CD Type            Navn     I/U   Forklaring
+CD parameters:
+CD Type            Name     I/O   Explanation
 CD -----------------------------------------------------------------------
 CD LC_GEO_STATUS *  pGeoStat  i    Peker til struktur for søkestatus
 CD
-CD Formål:
+CD Purpose:
 CD Avslutter geografisk søk, og frigir kjede med søkeresultat.
 CD =======================================================================
 */
@@ -2176,12 +2176,12 @@ SK_EntPnt_FYBA void LC_AvsluttSok(LC_GEO_STATUS * pGeoStat)
 AR-980209
 CH LR_VelgMetode                         Velg søkemetode for geografisk søk
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Velg søkemetode for geografisk søk. Bruker R-tre hvis utstrekningen av
 CD søkeområdet er mindre enn 10% av baseområdet i nord eller øst retning.
 CD
-CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Parameters:
+CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD
@@ -2205,14 +2205,14 @@ static void LR_VelgMetode(LC_GEO_STATUS * pGeoStat)
 AR-980108
 CH LR_R_FrigiGren                           Frigir en gren fra "søketreet"
 CD =======================================================================
-CD Bruk:
+CD Usage:
 CD
-CD Parametere:
-CD Type        Navn  I/U  Forklaring
+CD Parameters:
+CD Type        Name  I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_R_NODE *  pRN    i   Peker til node i R-treet
 CD
-CD Formål:
+CD Purpose:
 CD Frigir en gren fra R-treet for geografisk søk.
 CD =======================================================================
 */

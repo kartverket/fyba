@@ -77,11 +77,11 @@ GL-890215
 AR-911006
 CH UT_OpenFile                                          Åpner og sjekker fil
 CD ==========================================================================
-CD Bruk:
+CD Usage:
 CD  fp = UT_OpenFile("TULLFILA","DAT",READ,OLD,&ierr);
 CD
-CD Parametre:
-CD Type        Navn      I/U   Forklaring
+CD Parameters:
+CD Type        Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD const char *fnam       i    Filnavn inkl. type (Max 46 tegn inkl. '\0')
 CD const char *ftyp       i    Filtype (extention) (Max 4 tegn inkl. '\0')
@@ -90,7 +90,7 @@ CD short   exist       i    Åpningstatus (0=UT_UNKNOWN,1=UT_OLD,2=UT_NEW)
 CD short   &ierr       u    (UT_OK,UT_ERROR eller skriv printf(strerror(ierr));
 CD FILE    filpeker    r    filpeker.
 CD
-CD Formål:
+CD Purpose:
 CD     Åpner en fil med angitt aksess og åpningstatus.
 CD     returnerer status som kan benyttes videre eller utskrives
 	==========================================================================
@@ -431,7 +431,7 @@ _SH_SECURE : Sets secure mode (shared read, exclusive write access).
 GL-890105
 CH UT_ReadLineCrlf                     Leser en linje inkl cl/lf
 CD ==================================================================
-CD Formål......:  Leser en linje inkl. Crlf fra current posisjon.
+CD Purpose......:  Leser en linje inkl. Crlf fra current posisjon.
 CD
 CD Aktivisering:  ist = UT_ReadLineCrlf(fil,llin,clin);
 CD
@@ -439,7 +439,7 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_EOF - Du har lest End Of File
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type    i/U Merknad
 CD --------------------------------------------------------------
 CD pfil      FILE     i   Peker til filstruktur (def i stdio.h)
@@ -510,7 +510,7 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_EOF - Du har lest End Of File
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn    Type   i/U Merknad
 CD -----------------------------------------------------------
 CD pfil    FILE    i   Peker til filstruktur (def i stdio.h)
@@ -597,14 +597,14 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_EOF - Du har lest End Of File
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type     Navn    i/U Merknad
 CD ------------------------------------------------------------------
 CD FILE     fi       i   Peker til filstruktur (def i stdio.h)
 CD short    llin     i   Max lengde på clin inkl \r\n\0.(cr+lf)
 CD char    *clin     u   Streng lest. (Uten \r\n. (cr+lf))
 CD
-CD Formål:
+CD Purpose:
 CD Leser en linje fra filen, og fjerner CrLf. Hvis linjen er blank
 CD eller første "ikke-blanke-tegn" er utropstegn leses påfølgende linje(r).
 	==================================================================
@@ -636,14 +636,14 @@ SK_EntPnt_UT short UT_ReadLineNoComm(FILE *pfil,short llin, char *clin)
 GL-890107
 CH UT_WriteLineCrlf                      Skriver en linje incl crlf
 CD ==================================================================
-CD Formål......:  Skriver en linje som alt HAR Crlf på slutten .
+CD Purpose......:  Skriver en linje som alt HAR Crlf på slutten .
 CD
 CD Aktivisering:  ist = UT_WriteLineCrlf(fil,clin);
 CD
 CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type    i/U Merknad
 CD --------------------------------------------
 CD pfil      FILE     i   Peker til filstruktur (def i stdio.h)
@@ -662,14 +662,14 @@ SK_EntPnt_UT short UT_WriteLineCrlf(FILE *pfil,char clin[])
 GL-890107
 CH UT_WriteLine                           Skriver en linje uten crlf
 CD ==================================================================
-CD Formål......:  Skriver en linje og legger på Crlf etterpå .
+CD Purpose......:  Skriver en linje og legger på Crlf etterpå .
 CD
 CD Aktivisering:  ist = UT_WriteLine(fil,clin);
 CD
 CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type    i/U Merknad
 CD --------------------------------------------
 CD pfil      FILE     i   Peker til filstruktur (def i stdio.h)
@@ -689,7 +689,7 @@ SK_EntPnt_UT short UT_WriteLine(FILE *pfil,char clin[])
 GL-880809
 CH UT_Save                             Berger diskbuffer ut på disk.
 CD ==================================================================
-CD Formål......:  Sikre at at operativsystemets filbuffer
+CD Purpose......:  Sikre at at operativsystemets filbuffer
 CD                blir disklagret. (Sikre mot strømstans etc.)
 CD
 CD Aktivisering:  UT_Save(fil);
@@ -697,7 +697,7 @@ CD
 CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil ved flushingen
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------------------------
 CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
@@ -715,14 +715,14 @@ SK_EntPnt_UT short UT_Save (FILE *pfil)
 GL-871127
 CH UT_SetPos                               Sette current filposisjon
 CD ==================================================================
-CD Formål......:  Setter filposisjon hvor det skal begynnes å lese fra
+CD Purpose......:  Setter filposisjon hvor det skal begynnes å lese fra
 CD
 CD Aktivisering:  ist = UT_SetPos(fil,lpos);
 CD
 CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------------------------
 CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
@@ -739,14 +739,14 @@ SK_EntPnt_UT short UT_SetPos  (FILE *fi,long lpos)
 /*
 CH UT_SetPos_i64                             Sette current filposisjon
 CD ==================================================================
-CD Formål......:  Setter filposisjon hvor det skal begynnes å lese fra
+CD Purpose......:  Setter filposisjon hvor det skal begynnes å lese fra
 CD
 CD Aktivisering:  ist = UT_SetPos_i64(fil,pos);
 CD
 CD Retur-verdier: short  UT_OK  - Utført OK.
 CD                short  UT_ERROR - Du har fått feil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type      Navn      i/U  Merknad
 CD ------------------------------------------------------------------
 CD FILE      pfil       i   Peker til filstruktur (def i stdio.h)
@@ -764,7 +764,7 @@ SK_EntPnt_UT short UT_SetPos_i64 (FILE *fi,UT_INT64 n64FilPos)
 GL-871127
 CH UT_GetPos                                Finner neste filposisjon
 CD ==================================================================
-CD Formål......:  Finner NESTE posisjon på filen.
+CD Purpose......:  Finner NESTE posisjon på filen.
 CD                Dette vil bli neste linje etter UT_Readxxx og,
 CD                UT_Writexxxx.
 CD
@@ -773,7 +773,7 @@ CD
 CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------
 CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
@@ -791,7 +791,7 @@ SK_EntPnt_UT short UT_GetPos(FILE *fi,long *lpos)
 /*
 CH UT_GetPos_i64                            Finner neste filposisjon
 CD ==================================================================
-CD Formål......:  Finner NESTE posisjon på filen.
+CD Purpose......:  Finner NESTE posisjon på filen.
 CD                Dette vil bli neste linje etter UT_Readxxx og,
 CD                UT_Writexxxx.
 CD
@@ -800,7 +800,7 @@ CD
 CD Retur-verdier: short  UT_OK  - Utført OK
 CD                short  UT_ERROR - Du har fått feil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type  Navn        i/U Merknad
 CD ------------------------------------------------
 CD FILE  pfil              i   Peker til filstruktur (def i stdio.h)

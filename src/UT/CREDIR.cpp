@@ -42,16 +42,16 @@
 AR-921013
 CH UT_CreateDir                                Oppretter et directory
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Sletter et directory.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Directory-navn
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_CreateDir(szPath);
+CD Usage:  sStatus = UT_CreateDir(szPath);
 	==================================================================
 */
 SK_EntPnt_UT short UT_CreateDir(char *pszPath)

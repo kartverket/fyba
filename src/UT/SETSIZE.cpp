@@ -42,17 +42,17 @@
 AR-921013
 CH UT_SetPathSize                                  Sett filstørrelse
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Setter filstørrelsen for gitt fil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD long      lSize     i   Ønsket filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_SetPathSize(szPath,lSize);
+CD Usage:  sStatus = UT_SetPathSize(szPath,lSize);
    ==================================================================
 */
 
@@ -155,17 +155,17 @@ SK_EntPnt_UT short UT_SetPathSize(char *pszPath,long lSize)
 AR-921013
 CH UT_SetPathSize_i64                              Sett filstørrelse
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Setter filstørrelsen for gitt fil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD UT_INT64  n64Size   i   Ønsket filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_SetPathSize_i64(szPath,lSize);
+CD Usage:  sStatus = UT_SetPathSize_i64(szPath,lSize);
    ==================================================================
 */
 SK_EntPnt_UT short UT_SetPathSize_i64(char *pszPath, UT_INT64 n64Size)

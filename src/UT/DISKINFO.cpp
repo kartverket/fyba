@@ -46,17 +46,17 @@
 AR-930623
 CH UT_InqAvailSize                       Finn ledig plass på disken
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Finner hvor mye plass som er ledig for utvidelse av gitt fil.
 CD
-CD PARAMETERLISTE:
+CD Parameters:
 CD Type          Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char           *pszPath        i   Filnavn inkl. full sti.
 CD unsigned long  *pulLedigPlass  u   Ledig plass på disken
 CD short           sStatus        r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_InqAvailSize(pszPath,&ulLedigPLass);
+CD Usage:  sStatus = UT_InqAvailSize(pszPath,&ulLedigPLass);
    ==================================================================
 */
 SK_EntPnt_UT short UT_InqAvailSize(char *pszPath,unsigned long *pulLedigPlass)

@@ -32,15 +32,15 @@ static void LX_PutGi(short lin_nr, const char *szGinfo);
 AR-920921
 CH LC_InitGetRefFlate                       Initierer status for GetRefFlate
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Initierer status for GetRefFlate.
 CD
-CD Parametre:
-CD Type           Navn     I/U   Forklaring
+CD Parameters:
+CD Type           Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_GRF_STATUS * pRefStat  iu   Struktur med statusopplysninger.
 CD
-CD Bruk:
+CD Usage:
 CD     LC_InitGetRefFlate(pGrfStat,pBgr);
 CD ==========================================================================
 */
@@ -61,11 +61,11 @@ SK_EntPnt_FYBA void LC_InitGetRefFlate(LC_GRF_STATUS * pGS)
 AR-920930
 CH LC_GetRefFlate                        Hent referanser for flate fra GINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut et array med referanser for flate fra GINFO i aktuell gruppe.
 CD
-CD Parametre:
-CD Type            Navn      I/U  Forklaring
+CD Parameters:
+CD Type            Name      I/O  Explanation
 CD -------------------------------------------------------------------------
 CD LC_GRF_STATUS *  GrfStat    iu  Struktur med statusopplysninger.
 CD unsigned short  usHent     i   Hva skal hentes:
@@ -82,7 +82,7 @@ CD long            max_ref    i   Max antall linjer i ref_array og ref_status.
 CD long           ant_ref    r   Antall linjer brukt i ref_array.
 CD                                0 viser at hele flata er behandla.
 CD
-CD Bruk:
+CD Usage:
 CD    #define  MAX_REF  20
 CD    long ref_arr[MAX_REF];
 CD    char ref_status[MAX_REF];
@@ -152,12 +152,12 @@ SK_EntPnt_FYBA long LC_GetRefFlate(LC_GRF_STATUS * GrfStat,unsigned short usHent
 AR-920930
 CH LX_GetRefOmkrets                            Hent referanser for omkretsen
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut et array med referanser for omkretsen av flate.
 CD ant_ref == 0 eller ant_ref < max_ref viser at hele omkretsen er behandla.
 CD
-CD Parametre:
-CD Type            Navn       I/U   Forklaring
+CD Parameters:
+CD Type            Name       I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_GR_STATUS   *pGRS       iu   Struktur med statusopplysninger.
 CD long           *ref_array   u    GRUPPENUMMER for refererte grupper.
@@ -167,7 +167,7 @@ CD                                  LC_MOT_DIG  = Brukes MOT dig retning
 CD long            max_ref     i    Max antall linjer i ref_array.
 CD short           ant_ref     r    Antall linjer brukt i ref_array.
 CD
-CD Bruk:
+CD Usage:
 CD     ant_ref = LX_GetRefOmkrets(&OmkrStat,ref_array,ref_status,max_ref);
 CD ==========================================================================
 */
@@ -245,12 +245,12 @@ static long LX_GetRefOmkrets(LC_GR_STATUS *pGRS,long *ref_array,
 AR-920930
 CH LX_GetRefOy                                      Hent referanser for øyer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut et array med referanser for omkretsen av øy.
 CD ant_ref == 0 eller ant_ref < max_ref viser at hele omkretsen er behandla.
 CD
-CD Parametre:
-CD Type            Navn       I/U  Forklaring
+CD Parameters:
+CD Type            Name       I/O  Explanation
 CD -------------------------------------------------------------------------
 CD LC_GRF_STATUS *  pGS        iu  Struktur med statusopplysninger.
 CD long           *ref_array   u   GRUPPENUMMER for refererte grupper.
@@ -262,7 +262,7 @@ CD                                  GRF_SLUTT_OY     = Siste gruppe i øy
 CD long            max_ref     i   Max antall linjer i ref_array.
 CD short           ant_ref     r   Antall linjer brukt i ref_array.
 CD
-CD Bruk:
+CD Usage:
 CD     ant_ref = LX_GetRefOy(&GS,ref_array,ref_status,max_ref);
 CD ==========================================================================
 */
@@ -403,19 +403,19 @@ static long LX_GetRefOy(LC_GRF_STATUS * pGS,long *ref_array,
 AR-921012
 CH LC_InqAntRef                                   Spørr om antall referanser
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Spørr om antall referanser i GINFO i aktuell gruppe.
 CD Dette kallet kan brukes til å finne hvor stor array som må allokeres før
 CD kall til LC_GetRef.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    ant_ref     r    Antall referanser i GINFO.
 CD                            OBS! Start- og sluttparantes for øy blir regnet
 CD                            som egne referanser.
 CD
-CD Bruk:
+CD Usage:
 CD     long lAntRef;
 CD     short sGiLin,sRefPos;
 CD     long *plRefArray;
@@ -478,11 +478,11 @@ AR-900213
 OJ-900213
 CH LC_GetRef                                        Hent referanser fra GINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut et array med referanser fra GINFO i aktuell gruppe.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    *ref_array  u    Serienr. for refererte grupper.
 CD                          Start øy, og slutt øy angis ved fiktive gruppenr.
@@ -494,7 +494,7 @@ CD short   *gilin      i/u  linje for start referanselesing
 CD short   *refpos     i/u  posisjon i linja for neste innlegging i array.
 CD long     ant_ref    r    Antall linjer brukt i ref_array.
 CD
-CD Bruk:
+CD Usage:
 CD     ant_ref = LC_GetRef(ref_array,max_ref,&gilin,&refpos);
 CD ==========================================================================
 */
@@ -556,11 +556,11 @@ OJ-901016
 AR-930930
 CH LC_PutRef                                    Legger inn referanser i GINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn et array med referanser til GINFO i aktuell gruppe.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long     ref_array  i    Gruppenummer for refererte grupper.
 CD                          Start øy, og slutt øy angis ved fiktive gruppenr.
@@ -570,7 +570,7 @@ CD                             SLUTT_OY = -9999999L = Slutt øy.
 CD long     ant_ref    i    Antall linjer i ref_array.
 CD short    *ngi       r    Antall linjer GINFO
 CD
-CD Bruk:
+CD Usage:
 CD     ngi = LC_PutRef(ref_array,ant_ref);
 CD ==========================================================================
 */
@@ -708,12 +708,12 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
 JEK-920918
 CH LC_SirkelTilBuep                        Konverterer en "sirkel" til to BUEP
 CD ============================================================================
-CD Formål:                                                   fi
+CD Purpose:                                                   fi
 CD Konverterer en SIRKEL/SIRKELP til to BUEP.
 CD Forutsetter at aktuell gruppe er SIRKEL eller SIRKELP.
 CD
-CD Parametre:                                               
-CD Type     Navn        I/U   Forklaring
+CD Parameters:                                               
+CD Type     Name        I/O   Explanation
 CD ----------------------------------------------------------------------------
 CD short    buff_retning i    Buffer-retning (kun for BUE og BUEP)
 CD                                  HENT_FORRFRA  (1) =  Vanlig
@@ -725,7 +725,7 @@ CD short    ist          r    Returstatus
 CD                                    UT_TRUE  = Alt OK
 CD                                    UT_FALSE = Feil, se returvariabel sfeil
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_SirkelTilBuep(buff_retning, &as, &ns, &radius, &fi, &dfi, &sfeil )
    ============================================================================
 */
@@ -868,7 +868,7 @@ SK_EntPnt_FYBA short LC_SirkelTilBuep(short antDelingspunkt,double a1,double n1,
 JEK-920918
 CH LC_GetBuePar                    Beregner parametre som definerer sirkelbue
 CD ============================================================================
-CD Formål:                                                   fi
+CD Purpose:                                                   fi
 CD Sirkelbue defineres i SOSI ved en av                     /
 CD geometrielementene .SIRKEL, .SIRKELP,                  /
 CD .BUE, .BUEP.                                         /       \
@@ -881,8 +881,8 @@ CD
 CD NB! Alle retninger i radianer, 0-retning i øst-aksen og positiv
 CD omløpsretning mot urviseren.
 CD
-CD Parametre:                                               
-CD Type     Navn        I/U   Forklaring
+CD Parameters:                                               
+CD Type     Name        I/O   Explanation
 CD ----------------------------------------------------------------------------
 CD short    buff_retning i    Buffer-retning (kun for BUE og BUEP)
 CD                                  HENT_FORRFRA  (1) =  Vanlig
@@ -901,7 +901,7 @@ CD short    ist          r    Returstatus
 CD                                    UT_TRUE  = Alt OK
 CD                                    UT_FALSE = Feil, se returvariabel sfeil
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_GetBuePar(buff_retning, &as, &ns, &radius, &fi, &dfi, &sfeil )
    ============================================================================
 */
@@ -983,11 +983,11 @@ SK_EntPnt_FYBA short LC_GetBuePar(short buff_retning, double *as, double *ns, do
 AR-890824
 CH LC_GetBue                                                        Hent bue
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut nødvendige opplysninger om en bue.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short   retning     i    Buffer-retning:
 CD                                HENT_FORRFRA ( 1) = vanlig,
@@ -1001,7 +1001,7 @@ CD short   *storbue    u    0=vanlig bue, 1=storbue
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = feil (Gruppen er ikke OK bue)
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_GetBue(retning,&a1,&n1,&a2,&n2,&radius,&storbue);
 CD ==========================================================================
 */
@@ -1055,11 +1055,11 @@ SK_EntPnt_FYBA short LC_GetBue(short retning,double *a1,double *n1,double *a2,do
 AR-911029
 CH LC_GetBuep                                                      Hent buep
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut nødvendige opplysninger om en buep.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short   retning     i    Buffer-retning:
 CD                                HENT_FORRFRA ( 1) = vanlig,
@@ -1073,7 +1073,7 @@ CD double  *n3         u
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = feil (Gruppen er ikke OK buep)
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_GetBuep(retning,&a1,&n1,&a2,&n2,&a3,&n3);
 CD ==========================================================================
 */
@@ -1110,11 +1110,11 @@ SK_EntPnt_FYBA short LC_GetBuep(short retning,double *a1,double *n1,double *a2,d
 AR-911029
 CH LC_GetSirkel                                                  Hent silkel
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut nødvendige opplysninger om en sirkel.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  *as         u    Koordinat i sentrum
 CD double  *ns         u
@@ -1122,7 +1122,7 @@ CD double  *radius     u    Radius
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = Feil (Gruppen er ikke OK sirkel)
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_GetSirkel(&as,&ns,&radius);
 CD ==========================================================================
 */
@@ -1162,11 +1162,11 @@ SK_EntPnt_FYBA short LC_GetSirkel(double *as,double *ns,double *radius)
 AR-911029
 CH LC_GetSirkelp                                               Hent silkelp
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut nødvendige opplysninger om en sirkelp.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double  *a1         u    Koordinat i P1
 CD double  *n1         u
@@ -1177,7 +1177,7 @@ CD double  *n3         u
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = Feil (Gruppen er ikke OK sirkelp)
 CD
-CD Bruk:
+CD Usage:
 CD     ist = LC_GetSirkelp(&a1,&n1,&a2,&n2,&a3,&n3);
 CD ==========================================================================
 */
@@ -1209,11 +1209,11 @@ SK_EntPnt_FYBA short LC_GetSirkelp(double *a1,double *n1,double *a2,double *n2,
 OJ-891126
 CH LC_GetCurEnhet                                  Hent enhet på angitt nivå
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter ut enhet fra filhode eller GINFO
 CD
-CD Parametre:
-CD Type        Navn    I/U   Forklaring
+CD Parameters:
+CD Type        Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil     i    Peker til FilAdm
 CD short      *nivaa    iu   angir nivå for henting, returnerer aktuelt nivå
@@ -1223,7 +1223,7 @@ CD double     *enhet    u    Aktuell enhet
 CD double     *enhet_h  u    Aktuell enhet-H
 CD double     *enhet_d  u    Aktuell enhet-D
 CD
-CD Bruk:
+CD Usage:
 CD     LC_GetCurEnhet(pFil,&nivaa,&enhet,&enhet_h,&enhet_d);
 CD ==========================================================================
 */
@@ -1272,7 +1272,7 @@ SK_EntPnt_FYBA void LC_GetCurEnhet(LC_FILADM * pFil,short *nivaa, double *enhet,
 AR-890515
 CH LC_UpdateGiEnhet                                  Oppdater ..ENHET i GINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Setter koordinat-enhet for gruppen.
 CD Oppdaterer ..ENHET / ..ENHET-H / ..ENHET-D i GINFO.
 CD Rutinen handterer selv tildeling eller sletting av GINFO-linje.
@@ -1280,8 +1280,8 @@ CD Hvis verdien er lik filhodets verdi blir det ikke lagt inn verdi i GINFO.
 CD Enhet = 0.0 = bruk filhodets enhet, og fører til at det ikke legges inn
 CD i GINFO. Eventuell eksisterende linje jgernes.
 CD
-CD Parametre:
-CD Type        Navn    I/U   Forklaring
+CD Parameters:
+CD Type        Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil     i    Peker til FilAdm
 CD double      enhet    i    Grunnriss-enhet
@@ -1289,7 +1289,7 @@ CD double      enhet_h  i    Høyde-enhet
 CD double      enhet_d  i    Dybde-enhet
 CD ngi         short    r    Antall GINFO-linjer etter oppdatering
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_UpdateGiEnhet(pFil,enhet,enhet_h,enhet_d);
    ==========================================================================
 */
@@ -1377,12 +1377,12 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
 OJ-891123
 CH LC_GetKvalitet                               Finner kvalitetsopplysninger
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finne kvalitetsopplysninger i filhode eller vanlig gruppe.
 CD (Tolker aktuell gruppe.)
 CD
-CD Parametre:
-CD Type     Navn       I/U   Forklaring
+CD Parameters:
+CD Type     Name       I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short  *psMetode           u  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
@@ -1402,7 +1402,7 @@ CD                                 KVAL_NOY_STD    standard nøyaktighet fra nivå
 CD short    ist               r  Status: UT_TRUE  = OK, ..KVALITET er funnet
 CD                                       UT_FALSE = ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD      ist = LC_GetKvalitet(&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                           &sHoydeMetode,&lHoydeNoyaktighet);
 CD ==========================================================================
@@ -1433,11 +1433,11 @@ SK_EntPnt_FYBA short LC_GetKvalitet(short *psMetode,long *plNoyaktighet,short *p
 OJ-900103
 CH LC_GetCurKvalitet             Finner kvalitetsopplysninger på angitt nivå
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Finne kvalitetsopplysninger på angitt nivå, hode ginfo eller pinfo.
 CD
-CD Parametre:
-CD Type        Navn          I/U  Forklaring
+CD Parameters:
+CD Type        Name          I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil           i   Peker til FilAdm
 CD short      *nivaa         iu   Hvor skal det letes.
@@ -1461,7 +1461,7 @@ CD short   ist                r   Statusvariabel:
 CD                                 UT_TRUE = OK, KVALITET er funnet
 CD                                 UT_FALSE = KVALITET er ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD  ist = LC_GetCurKvalitet(pFil,&nivaa,pnr,&sMetode,&lNoyaktighet,
 CD                          &sSynbarhet,&sHoydeMetode,&lHoydeNoyaktighet);
 CD ==========================================================================
@@ -1556,13 +1556,13 @@ SK_EntPnt_FYBA short LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
 CH OJ-891205
 CH LC_UpdateGiKvalitet                         Oppdaterer ..KVALITET i Ginfo
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Oppdaterer GINFO med ..KVALITET
 CD
-CD Parametre:
-CD Type       Navn            I/U  Forklaring
+CD Parameters:
+CD Type       Name            I/O  Explanation
 CD --------------------------------------------------------------------------
-CD Parametre:
+CD Parameters:
 CD LC_FILADM *pFil              i  Peker til FilAdm for sosifil kvalitet skal
 CD                                 testes mot.
 CD short      sMetode           i  Metode i ..KVALITET
@@ -1572,7 +1572,7 @@ CD short      sHoydeMetode      i  HøydeMetode i ..KVALITET
 CD long       lHoydeNoyaktighet i  HøydeNøyaktighet i ..KVALITET
 CD short      ngi               r  Antall linjer i ginfo.
 CD
-CD Bruk:
+CD Usage:
 CD      ngi = LC_UpdateGiKvalitet(pFil,sMetode,lNoyaktighet,sSynbarhet,
 CD                                sHoydeMetode,lHoydeNoyaktighet);
 CD
@@ -1630,11 +1630,11 @@ OJ-891208
 AR-920312
 CH LC_UpdatePiKvalitet                        Oppdaterer ...KVALITET i Pinfo
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Oppdaterer PINFO med ...KVALITET
 CD
-CD Parametre:
-CD Type        Navn             I/U   Forklaring
+CD Parameters:
+CD Type        Name             I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil              i  Peker til FilAdm for sosifil kvalitet
 CD                                  skal testes mot.
@@ -1647,7 +1647,7 @@ CD long        lHoydeNoyaktighet i  HøydeNøyaktighet i ..KVALITET
 CD short       sStatus           r  UT_TRUE = OK,
 CD                                  UT_FALSE = ikke utført (for lite plass tilgjengelig)
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_UpdatePiKvalitet(pFil,pnr,sMetode,lNoyaktighet,sSynbarhet,
 CD                               sHoydeMetode,lHoydeNoyaktighet)
 CD ==========================================================================
@@ -1720,7 +1720,7 @@ SK_EntPnt_FYBA short LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,
 AR-930609
 CH LC_GetGP                                               Get GINFO-parameter
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter parametrene til et SOSI-navn.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
@@ -1754,8 +1754,8 @@ CD Disse tilleggene kan kombineres, slik at  ..GID#2[1:2] betyr at det er
 CD tegn nummer 1 og 2 i det andre leddet (bruksnumret) som skal brukes.
 CD
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char     sosi_navn    i    SOSI-navn det skal finnes verdi til.
 CD                            Leddnummer, posisjon, skilletegn
@@ -1770,7 +1770,7 @@ CD short    siste_linje  i    Siste GINFO-linje det skal søkes i.
 CD char    *para_peker   r    Peker til parameter-streng avslutta med '\0'.
 CD                            Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
-CD Bruk:
+CD Usage:
 CD para_peker = LC_GetGP(sosi_navn,&forste_linje,siste_linje);
    ==========================================================================
 */
@@ -2145,7 +2145,7 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
 AR-920615
 CH LC_GetPiVerdi                                             Get PINFO-verdi
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter parametrene til et SOSI-navn.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
@@ -2170,8 +2170,8 @@ CD det er tegn nummer 1 og 2 i det andre leddet (nøyaktigheten) som skal
 CD brukes.
 CD
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char     pszSosiNavn  i    SOSI-navn det skal finnes verdi til.
 CD                            Leddnummer posisjon og formateringskode kan
@@ -2187,7 +2187,7 @@ CD                            Ved tilslag returneres settnummer for tilslaget.
 CD char    *pszVerdi     r    Peker til verdien avslutta med '\0'.
 CD                            Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
-CD Bruk:
+CD Usage:
 CD pszVerdi = LC_GetPiVerdi(pszSosiNavn,lPnr,&sSettNr);
    ==========================================================================
 */
@@ -2370,17 +2370,17 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
 AR-920614
 CH LX_CreatePibuf                                       Generer PINFO-buffer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter PINFO for gitt punkt og legger den inn i et buffer.
 CD Det bygges opp en tabell med pekere til starten av hvert SOSI-navn og
 CD hver verdi.
 CD
-CD Parametre:
-CD Type    Navn  I/U   Forklaring
+CD Parameters:
+CD Type    Name  I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long   lPnr   i    Punktnummer.
 CD
-CD Bruk:
+CD Usage:
 CD LX_CreatePibuf(lPnr);
    ==========================================================================
 */
@@ -2472,20 +2472,20 @@ static void LX_CreatePibuf(long lPnr)
 AR-891001
 CH LC_PutGP                                               Put GINFO-parameter
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn et SOSI-navn med verdi.
 CD Denne rutinen kan brukes til å legge inn ginfo med nytt SOSI-navn.
 CD Rutinen kan endre antall ginfo-linjer.
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 CD char     verdi        i    Streng som skal legges inn.
 CD short   *linje_nr     u    Linjenummer for endringen.
 CD short    ngi          r    Ant. ginfo-linjer etter  endringen.
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_PutGP(sosi_navn,verdi,&linje_nr);
    ==========================================================================
 */
@@ -2635,19 +2635,19 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
 AR:2010-02-09
 CH LC_AppGP                                         Legg til GINFO-parameter
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger til et SOSI-navn med verdi i GINFO.
 CD Lik LC_PutGP, men legger alltid til ny linje i ginfo.
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 CD char     verdi        i    Streng som skal legges inn.
 CD short   *linje_nr     u    Linjenummer for endringen.
 CD short    ngi          r    Ant. ginfo-linjer etter  endringen.
 CD
-CD Bruk:
+CD Usage:
 CD ngi = LC_AppGP(sosi_navn,verdi,&linje_nr);
    ==========================================================================
 */
@@ -2675,20 +2675,20 @@ SK_EntPnt_FYBA short LC_AppGP(const char *sosi_navn,const char *verdi,short *lin
 AR-891001
 CH LC_UpdateGP                                          Endre GINFO-parameter
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn parametren til et SOSI-navn.
 CD Rutinen handterer at det er flere SOSI-navn på samme linje.
 CD OBS! Denne rutinen kan ikke brukes til å legge inn nytt SOSI-navn.
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short    linje_nr     i    Linjenummer som skal endres.
 CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 CD char     verdi        i    Streng som skall legges inn
 CD short    ist          r    1=ok, 0=navnet er ikke funnet
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_UpdateGP(linje_nr,sosi_navn,verdi);
    ==========================================================================
 */
@@ -2758,11 +2758,11 @@ SK_EntPnt_FYBA short LC_UpdateGP(short linje_nr,const char *sosi_navn,const char
 AR-881113
 CH LC_InitPP                                                Initier PINFO-søk
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Initierer søk etter PINFO.
 CD
-CD Parametre:
-CD Type            Navn        I/U  Forklaring
+CD Parameters:
+CD Type            Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD char            sosi_navn    i   Sosi-navn det skal finnes verdi til
 CD long            forste_punkt i   Første punkt. (1 er første pkt i gr)
@@ -2770,7 +2770,7 @@ CD long            siste_punkt  i   Siste punkt det skal søkes i
 CD LC_GETPP_STATUS pp_stat      iu  Struktur med statusvariabler. Denne er
 CD                                  bare for intern bruk i InitPP / GetPP.
 CD
-CD Bruk:
+CD Usage:
 CD   Se under LC_GetPP.
    ==========================================================================
 */
@@ -2814,14 +2814,14 @@ SK_EntPnt_FYBA void LC_InitPP(char *sosi_navn,long forste_punkt,long siste_punkt
 AR-890511
 CH LC_GetPP                                                   Utfør PINFO-søk
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter parametrene til et SOSI-navn definert i LC_InitPP.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk strcpy).
 CD
-CD Parametre:
-CD Type     Navn               I/U   Forklaring
+CD Parameters:
+CD Type     Name               I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    *punkt             u  Ved tilslag returneres punktnummer for
 CD                               tilslaget.
@@ -2830,7 +2830,7 @@ CD                               bare for intern bruk i InitPP / GetPP.
 CD char    *para_peker        r  Peker til para.-streng avslutta med '\0'.
 CD                               Hvis ingenting er funnet returneres NULL.
 CD
-CD Bruk:
+CD Usage:
 CD .
 CD   LC_GETPP_STATUS pp_stat;
 CD .
@@ -2977,11 +2977,11 @@ SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
 AR-930609
 CH LC_FinnKp                                                  Finn knutepunkt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Skanner gruppe, og finner punkt som er knutepunkt.
 CD
-CD Parametre:
-CD Type     Navn        I/U   Forklaring
+CD Parameters:
+CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    *forste_punkt iu   Punktnummer for start søking.
 CD                            (1 er første punkt i gruppen.)
@@ -2990,7 +2990,7 @@ CD long     siste_punkt  i    Siste punkt det skal søkes i.
 CD short   *kp           u    Knutepunkt.
 CD short    status       r    Søkestatus (1=funnet, 0=ikke funnet)
 CD
-CD Bruk:
+CD Usage:
 CD status = LC_FinnKp(&forste_punkt,siste_punkt,kp);
    ==========================================================================
 */
@@ -3022,15 +3022,15 @@ short LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp)
 AR-890520
 CH LC_PutSn                                                   Put Serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn nytt serienummer på aktuell gruppe.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long     snr      i    Serienummer
 CD
-CD Bruk:
+CD Usage:
 CD LC_PutSn(snr);
    ==========================================================================
 */
@@ -3051,16 +3051,16 @@ SK_EntPnt_FYBA void LC_PutSn(long snr)
 AR-930609
 CH LX_PutSn                                           Lavnivå Put Serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn nytt serienummer på aktuell gruppe, uten å sette flagg for at
 CD aktuell gruppe er oppdatert. Sjekker ikke om det er noen aktuell gruppe.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long     snr      i    Serienummer
 CD
-CD Bruk:
+CD Usage:
 CD LX_PutSn(snr);
    ==========================================================================
 */
@@ -3096,15 +3096,15 @@ void LX_PutSn(long snr)
 AR-930609
 CH LC_GetSn                                                  Get serienummer
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter serienummer for aktuell gruppe.
 CD
-CD Parametre:
-CD Type  Navn  I/U  Forklaring
+CD Parameters:
+CD Type  Name  I/O  Explanation
 CD --------------------------------------------------------------------
 CD long  snr    r   Serienr.  (INGEN_GRUPPE = ingen aktuell gruppe)
 CD
-CD Bruk:
+CD Usage:
 CD snr = LC_GetSn();
    ==========================================================================
 */
@@ -3131,7 +3131,7 @@ SK_EntPnt_FYBA long LC_GetSn(void)
 AR-930609
 CH LC_PutGi                                                   Put GINFO-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn GINFO-linje rent generellt.
 CD Dette omfatter også nytt gruppenavn (GINFO-linje 1)
 CD Ønsker du å endre serienummer må LC_PutSn benyttes.
@@ -3139,13 +3139,13 @@ CD Referansenummer legges inn med LC_PutRef.
 CD Blanke på starten og slutten blir skrella vekk, og SOSI-navnet blir
 CD konvertert til "store" bokstaver, .ellers lagres det slik det er.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 CD char     *ginfo   i    GINFO-streng avslutta med '\0'
 CD
-CD Bruk:
+CD Usage:
 CD LC_PutGi(lin_nr,ginfo);
 	==========================================================================
 */
@@ -3208,19 +3208,19 @@ SK_EntPnt_FYBA void LC_PutGi(short lin_nr, const char *pszGinfo)
 AR-930609
 CH LX_PutGi                                          Lavnivå put GINFO-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Lavnivå innlegging GINFO-linje rent generellt.
 CD Blanke på starten og slutten blir skrella vekk, og SOSI-navnet blir
 CD konvertert til "store" bokstaver, ellers lagres det slik det er.
 CD Sjekker også at det aktuelle SOSI-navnet er lovlig å oppdatere.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 CD char     *ginfo   i    GINFO-streng avslutta med '\0'
 CD
-CD Bruk:
+CD Usage:
 CD LX_PutGi(lin_nr,ginfo);
    ==========================================================================
 */
@@ -3417,16 +3417,16 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
 AR-930609
 CH LX_CreGiPeker                              Bygg opp pekertabell til GINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CH Bygg opp pekertabell til GINFO buffer.
 CD
-CD Parametre:
-CD Type            Navn      I/U   Forklaring
+CD Parameters:
+CD Type            Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_GINFO       *pGinfo     i    Peker til GINFO struktur
 CD short           ngi        i    Ant. GINFO linjer
 CD
-CD Bruk:
+CD Usage:
 CD LX_CreGiPeker(&Sys.Ginfo,Sys.pGrInfo->ngi);
    ==========================================================================
 */
@@ -3451,18 +3451,18 @@ void LX_CreGiPeker(LC_GINFO_BUFFER * pGinfo,short ngi)
 AR-930609
 CH LX_GetGi                                           Intern get GINFO-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter en GINFO-linje som en streng rent generellt.
 CD Dette omfatter også serienummer og referansenummer.
 CD Returnerer peker til den aktuelle strengen i GINFO-buffer.
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 CD char    *ginfo    r    Peker til GINFO-streng avslutta med '\0'
 CD
-CD Bruk:
+CD Usage:
 CD ginfo = LX_GetGi(lin_nr);
    ==========================================================================
 */
@@ -3476,20 +3476,20 @@ char *LX_GetGi(short lin_nr)
 AR-930609
 CH LC_GetGi                                                  Get GINFO-linje
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter en GINFO-linje som en streng rent generellt.
 CD Dette omfatter også serienummer og referansenummer.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk strcpy).
 CD
-CD Parametre:
-CD Type     Navn    I/U   Forklaring
+CD Parameters:
+CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 CD char    *ginfo    r    Peker til GINFO-streng avslutta med '\0'
 CD
-CD Bruk:
+CD Usage:
 CD ginfo = LC_GetGi(lin_nr);
    ==========================================================================
 */
@@ -3518,17 +3518,17 @@ SK_EntPnt_FYBA char *LC_GetGi(short lin_nr)
 AR-910219
 CH LC_PutTK                                                     Put koordinat
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn et punkts koordinater (n,ø) i meter i terreng
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long   punkt_nr   i    Punktnummer (1 er første punkt)
 CD double  aust       i    Øst-koordinat i meter i terreng
 CD double  nord       i    Nord-koordinat i meter i terreng
 CD
-CD Bruk:
+CD Usage:
 CD LC_PutTK(punkt_nr,aust,nord);
    ==========================================================================
 */
@@ -3558,17 +3558,17 @@ SK_EntPnt_FYBA void LC_PutTK(long punkt_nr,double aust,double nord)
 AR-930609
 CH LC_GetTK                                                     Get koordinat
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter et punkts koordinater (ø,n) i meter i terreng
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long   punkt_nr   i    Punktnummer (1 er første punkt)
 CD double  *aust      u    Øst-koordinat i meter i terreng
 CD double  *nord      u    Nord-koordinat i meter i terreng
 CD
-CD Bruk:
+CD Usage:
 CD LC_GetTK(punkt_nr,&aust,&nord);
    ==========================================================================
 */
@@ -3594,11 +3594,11 @@ SK_EntPnt_FYBA void LC_GetTK(long punkt_nr,double *aust,double *nord)
 AR-930617
 CH LC_GetArrayTK                                  Hent tabell med koordinater
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter tabell med koordinater (ø,n) i meter i terreng
 CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
+CD Parameters:
+CD Type    Name       I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short   retning     i    Buffer-retning:
 CD                                HENT_FORRFRA ( 1) = vanlig,
@@ -3609,7 +3609,7 @@ CD double  *aust       u    Peker til tab. for øst-koordinater
 CD double  *nord       u    Peker til tab. for nord-koordinater
 CD long    *antall     u    Antall punkt hentet
 CD
-CD Bruk:
+CD Usage:
 CD LC_GetArrayTK(retning,max_antall,fra_punkt,aust,nord,&lest);
    ==========================================================================
 */
@@ -3658,11 +3658,11 @@ SK_EntPnt_FYBA void LC_GetArrayTK(short retning,long max_antall,long fra_punkt,
 AR-940630
 CH LC_GetArrayTH                                  Hent tabell med høyder
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter tabell med høyder
 CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
+CD Parameters:
+CD Type    Name       I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short   retning     i    Buffer-retning:
 CD                                HENT_FORRFRA ( 1) = vanlig,
@@ -3672,7 +3672,7 @@ CD long    fra_punkt   i    Fra punktnummer (1 eller nko  er første punkt)
 CD double  *aust       u    Peker til tab. for høyder
 CD long   *antall     u    Antall punkt hentet
 CD
-CD Bruk:
+CD Usage:
 CD LC_GetArrayTH(retning,max_antall,fra_punkt,hoyde,&lest);
    ==========================================================================
 */
@@ -3746,18 +3746,18 @@ SK_EntPnt_FYBA void LC_GetArrayTH(short retning,long max_antall,long fra_punkt,
 AR-940630
 CH LC_PutTH                                                        Put høyde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn et punkts høyde i meter i terreng
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD double  hoyde      i    Høyde i meter i terreng. Konstanten
 CD                         HOYDE_MANGLER (-999.999) angir at punktet ikke
 CD                         har høydeverdi.
 CD
-CD Bruk:
+CD Usage:
 CD LC_PutTH(punkt_nr,hoyde);
    ==========================================================================
 */
@@ -3793,18 +3793,18 @@ SK_EntPnt_FYBA void LC_PutTH(long punkt_nr, double hoyde)
 AR-9930609
 CH LC_GetTH                                                        Get høyde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter et punkts høyde i meter i terreng. (Henter BARE FRA PUNKTET.)
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD double *hoyde      r    Høyde i meter i terreng. Konstanten
 CD                         HOYDE_MANGLER (-999.999) angir at punktet ikke
 CD                         har høydeverdi.
 CD
-CD Bruk:
+CD Usage:
 CD hoyde = LC_GetTH(punkt_nr);
    ==========================================================================
 */
@@ -3831,19 +3831,19 @@ SK_EntPnt_FYBA double LC_GetTH(long punkt_nr)
 AR-940630
 CH LC_GetHoyde                                                     Get høyde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter et punkts høyde i meter i terreng. (Henter fra punktet eller fra
 CD GINFO.)
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD double *hoyde      r    Høyde i meter i terreng. Konstanten
 CD                         HOYDE_MANGLER (-999.999) angir at punktet ikke
 CD                         har høydeverdi.
 CD
-CD Bruk:
+CD Usage:
 CD hoyde = LC_GetHoyde(punkt_nr);
    ==========================================================================
 */
@@ -3884,18 +3884,18 @@ SK_EntPnt_FYBA double LC_GetHoyde(long punkt_nr)
 AR-940630
 CH LC_PutTD                                                        Put dybde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn et punkts dybde i meter i terreng
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD double  hoyde      i    Dybde i meter i terreng. Konstanten
 CD                         HOYDE_MANGLER (-999.999) angir at punktet ikke
 CD                         har dybdeverdi.
 CD
-CD Bruk:
+CD Usage:
 CD LC_PutTD(punkt_nr,dybde);
    ==========================================================================
 */
@@ -3931,18 +3931,18 @@ SK_EntPnt_FYBA void LC_PutTD(long punkt_nr, double dybde)
 AR-940630
 CH LC_GetTD                                                        Get dybde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter et punkts dybde i meter i terreng. (Henter BARE FRA PUNKTET.)
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD double *dybde      r    Dybde i meter i terreng. Konstanten
 CD                         HOYDE_MANGLER (-999.999) angir at punktet ikke
 CD                         har dybdeverdi.
 CD
-CD Bruk:
+CD Usage:
 CD dybde = LC_GetTD(punkt_nr);
    ==========================================================================
 */
@@ -3969,19 +3969,19 @@ SK_EntPnt_FYBA double LC_GetTD(long punkt_nr)
 AR-940630
 CH LC_GetDybde                                                     Get dybde
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter et punkts dybde i meter i terreng. (Henter fra punktet eller fra
 CD GINFO.)
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD double *hoyde      r    Dybde i meter i terreng. Konstanten
 CD                         HOYDE_MANGLER (-999.999) angir at punktet ikke
 CD                         har høydeverdi.
 CD
-CD Bruk:
+CD Usage:
 CD dybde = LC_GetHoyde(punkt_nr);
    ==========================================================================
 */
@@ -4022,19 +4022,19 @@ SK_EntPnt_FYBA double LC_GetDybde(long punkt_nr)
 AR-930609
 CH LC_GetPi                                                        Get PINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter punktinformasjon i angitte punkt som en streng.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk strcpy).
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long   punkt_nr   i    Punktnummer (1 er første punkt)
 CD char   *pinfo      r    Peker til punktinformasjon eksklusiv knutepunkt
 CD
-CD Bruk:
+CD Usage:
 CD pinfo = LC_GetPi(punkt_nr);
    ==========================================================================
 */
@@ -4068,14 +4068,14 @@ SK_EntPnt_FYBA char *LC_GetPi(long punkt_nr)
 AR-930609
 CH LC_PutPi                                                         Put PINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn hele punktinformasjonen på angitte punkt
 CD Ny verdi skriver over eksisterende verdi.
 CD Verdi "" fjerner eksisterende PINFO.
 CD Knutepunkt legges inn med LC_PutKp.
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD char   *pinfo      i    PINFO-streng som skal legges inn
@@ -4083,7 +4083,7 @@ CD                         (Knutepunkt regnes ikke som pinfo)
 CD short   sStatus    r    UT_TRUE = OK,
 CD                         UT_FALSE = ikke utført (for lite plass tilgjengelig)
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_PutPi(punkt_nr,pinfo);
    ==========================================================================
 */
@@ -4253,19 +4253,19 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
 AR-930609
 CH LC_TestPi                                        Sjekk om punkt har PINFO
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om et punkt har PINFO i en eller annen form.
 CD (PINFO, KP, høyde.)
 CD Høyde handteres ikke foreløpig.
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
 CD short   sTestHoyde i    Bryter for å si om høyde skal regnes med i sjekken.
 CD short   sStatus    r    UT_TRUE=har "pinfo", UT_FALSE=har ikke "pinfo"
 CD
-CD Bruk:
+CD Usage:
 CD sStatus = LC_TestPi(punkt_nr,UT_TRUE);
    ==========================================================================
 */
@@ -4304,17 +4304,17 @@ SK_EntPnt_FYBA short LC_TestPi(long punkt_nr,short sTestHoyde)
 AR-930609
 CH LC_GetKp                                                    Get knutepunkt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter knutepunktverdi i punktet.
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long   punkt_nr   i    Punktnummer (1 er første punkt)
 CD short   kp_type    r    Knutepunkttype (1-4095)
 CD                         (0 = punktet har ikke knutepunkt)
 CD
-CD Bruk:
+CD Usage:
 CD kp = LC_GetKp(punkt_nr);
    ==========================================================================
 */
@@ -4339,18 +4339,18 @@ SK_EntPnt_FYBA short LC_GetKp(long punkt_nr)
 AR-930609
 CH LC_PutKp                                                    Put knutepunkt
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Legger inn knutepunktverdi i punktet. Ny verdi skrives over eksisterende
 CD verdi. (Multiple KP er ikke mulig.)
 CD
-CD Parametre:
-CD Type    Navn      I/U   Forklaring
+CD Parameters:
+CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long   punkt_nr   i    Punktnummer (1 er første punkt)
 CD short   kp         i    Knutepunkt (lovlig verdi 0 - SHRT_MAX)
 CD                         kp == 0 fjerner knutepunkt.
 CD
-CD Bruk:
+CD Usage:
 CD LC_PutKp(punkt_nr,kp);
    ==========================================================================
 */
@@ -4393,17 +4393,17 @@ SK_EntPnt_FYBA void LC_PutKp(long punkt_nr, short kp)
 AR-911106
 CH LC_BerAreal                                 Beregn areal av aktuell FLATE
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner arealet av aktuell gruppe hvis denne er flate.
 CD Referansene brukes for arealberegningen.
 CD Tar hensyn til fradrag for øyer.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   areal     u    Beregnet areal
 CD
-CD Bruk:
+CD Usage:
 CD areal = LC_BerAreal();
    =============================================================================
 */
@@ -4485,18 +4485,18 @@ SK_EntPnt_FYBA double LC_BerAreal(void)
 AR-900731
 CH LX_BerArealGruppe             Beregn areal "arealandel" av aktuell gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregner areal av polygon angitt av yttergrensen av aktuell gruppe.
 CD Forutsetter .FLATE og det er referansene som brukes i arealberegningen.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pBgr      i    Gruppepeker
 CD short    retning   i    HENT_FORRFRA eller HENT_BAKFRA 
 CD double   areal     u    Beregnet areal
 CD
-CD Bruk:
+CD Usage:
 CD areal = LX_ArealGruppe(&Bgr,retning);
    =============================================================================
 */
@@ -4591,17 +4591,17 @@ static double LX_ArealGruppe(LC_BGR * pBgr,short retning)
 AR-911106
 CH LC_BerLengde                   Beregn horisontal lengde av aktuell gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregn horisontal lengde av aktuell gruppe.
 CD Tar ikke hensyn til høyde/dybde.
 CD Referansene brukes IKKE i beregningen.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   lengde    u    Beregnet lengde
 CD
-CD Bruk:
+CD Usage:
 CD areal = LC_BerLengde();
 =============================================================================
 */
@@ -4638,19 +4638,19 @@ SK_EntPnt_FYBA double LC_BerLengde(void)
 AR-911106
 CH LC_BerLengde3D                       Beregn skrå lengde av aktuell gruppe
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregn skrå lengde av aktuell gruppe.
 CD Krever at det finnes høyde/dybde i alle punkt.
 CD Referansene brukes IKKE i beregningen.
 CD Beregner bare for LINJE og KURVE.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   lengde    u    Beregnet lengde
 CD bool     beregnet  r    Status som viser om lengde er beregnet
 CD
-CD Bruk:
+CD Usage:
 CD beregnet = LC_BerLengde3D(&skraa_lengde);
 =============================================================================
 */
@@ -4719,16 +4719,16 @@ SK_EntPnt_FYBA bool LC_BerLengde3D(double *skraa_lengde)
 AR:2009-04-28
 CH LC_BerAvgrensLengde                Beregn lengden av avgrensning av FLATE
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregn lengden av avgrensningen av aktuell gruppe hvis denne er flate.
 CD Både indre og ytre avgrensning beregnes.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   lengde     u    Beregnet areal
 CD
-CD Bruk:
+CD Usage:
 CD lengde = LC_BerAvgrensLengde();
 =============================================================================
 */
@@ -4780,16 +4780,16 @@ SK_EntPnt_FYBA double LC_BerAvgrensLengde(void)
 AR:2009-04-28
 CH LC_BerIndreAvgrensLengde      Beregn lengden av indre avgrensning av FLATE
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregn lengden av indre avgrensningen av aktuell gruppe hvis denne er flate.
 CD Bare indre avgrensning beregnes.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   lengde     u    Beregnet lengde
 CD
-CD Bruk:
+CD Usage:
 CD lengde = LC_BerIndreAvgrensLengde();
 =============================================================================
 */
@@ -4836,16 +4836,16 @@ SK_EntPnt_FYBA double LC_BerIndreAvgrensLengde(void)
 AR:2009-04-28
 CH LC_BerYtreAvgrensLengde      Beregn lengden av ytre avgrensning av FLATE
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Beregn lengden av ytre avgrensningen av aktuell gruppe hvis denne er flate.
 CD Bare ytre avgrensning beregnes.
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD double   lengde     u    Beregnet lengde
 CD
-CD Bruk:
+CD Usage:
 CD lengde = LC_BerYtreAvgrensLengde();
 =============================================================================
 */
@@ -4888,14 +4888,14 @@ SK_EntPnt_FYBA double LC_BerYtreAvgrensLengde(void)
 AR-911106
 CH LC_DumpTab                               Dump interne tabeller til stderr
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Dump interne tabeller til stderr
 CD
-CD Parametre:
-CD Type     Navn     I/U   Forklaring
+CD Parameters:
+CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LC_DumpTab();
    =============================================================================
 */

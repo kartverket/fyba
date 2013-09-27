@@ -5,14 +5,14 @@
 AR-940110
 CH LC_StrError                                             Feilmeldingstekst
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Henter feilmeldingstekst og nivå for et feilmeldingsnummer.
 CD Strengen legges i en egen feilmeldingsstruktur for feil-rutiner i fyba.
 CD Dette blir ødelagt ved neste kall til en "feil-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk UT_StrCopy).
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short    feil_nr      i   Feilmeldingsnummer
 CD char   **feilmelding  u   Peker til feilmeldingstekst avslutta med '\0'.
@@ -23,7 +23,7 @@ CD                           2 = Normal feilmelding. Vises ca. 1 sekund.
 CD                           3 = Alvorlig. Krev tastetrykk for å fortsette.
 CD                           4 = Svært alvorlig. Programmet bør avbrytes.
 CD
-CD Bruk:
+CD Usage:
 CD strategi = LC_StrError(ckap,feil_nr,&feilmeldingspeker);
    ==========================================================================
 */
