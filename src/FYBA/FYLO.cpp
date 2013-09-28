@@ -207,7 +207,7 @@ CD
 CD Parameters:
 CD Type            Name    I/O   Explanation
 CD --------------------------------------------------------------------------
-CD unsigned short *usLag    u    "Lag":  LC_FRAMGR eller LC_BAKGR
+CD unsigned short *usLag    o    "Lag":  LC_FRAMGR eller LC_BAKGR
 CD short           status   r    UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
 CD
 CD Usage:
@@ -1108,8 +1108,8 @@ CD                        LC_GML_IDX = Bruk gammel .idx hvis den er OK
 CD short   sVisStatus i  Vis indeksoppbygging
 CD                        LC_VIS_STATUS   = Vis status
 CD                        LC_INGEN_STATUS = Ikke vis status
-CD LC_FILADM **pFil   u  Peker til FilAdm blokk. 
-CD short  *o_stat     u  Detaljert åpningsstatus:
+CD LC_FILADM **pFil   o  Peker til FilAdm blokk. 
+CD short  *o_stat     o  Detaljert åpningsstatus:
 CD                          0: Åpning og hode OK
 CD                         >0: Åpningsfeil feilmelding
 CD                         -1: Åpning OK, tom fil / ikke SOSI-fil
@@ -1757,10 +1757,10 @@ CD --------------------------------------------------------------------------
 CD unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
 CD                               LC_FRAMGR og /eller LC_BAKGR
 CD                               (Bruk "|" for å kombinere.)
-CD double        *nva      u    Nedre venstre øst
-CD double        *nvn      u    Nedre venstre nord
-CD double        *oha      u    Øvre høyre øst
-CD double        *ohn      u    Øvre høyre nord
+CD double        *nva      o    Nedre venstre øst
+CD double        *nvn      o    Nedre venstre nord
+CD double        *oha      o    Øvre høyre øst
+CD double        *ohn      o    Øvre høyre nord
 CD short          sStatus  r    UT_TRUE=OK, UT_FALSE=ingen fil
 CD
 CD Usage:
@@ -1806,10 +1806,10 @@ CD Parameters:
 CD Type       Name  I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil   i   Peker til FilAdm
-CD double     nva    u   Nedre venstre øst
-CD double     nvn    u   Nedre venstre nord
-CD double     oha    u   Øvre høyre øst
-CD double     ohn    u   Øvre høyre nord
+CD double     nva    o   Nedre venstre øst
+CD double     nvn    o   Nedre venstre nord
+CD double     oha    o   Øvre høyre øst
+CD double     ohn    o   Øvre høyre nord
 CD short      ist    r   Status (UT_TRUE=OK, UT_FALSE=sekvensiell fil)
 CD
 CD Usage:

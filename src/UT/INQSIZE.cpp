@@ -49,7 +49,7 @@ CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
-CD long     *plSize    u   Filstørrelse
+CD long     *plSize    o   Filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Usage:  sStatus = UT_InqPathSize(szPath,&lSize);
@@ -142,7 +142,7 @@ CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
-CD UT_INT64 *n64Size   u   Filstørrelse
+CD UT_INT64 *n64Size   o   Filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Usage:  sStatus = UT_InqPathSize_i64(szPath,&n64Size);

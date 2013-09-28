@@ -371,7 +371,7 @@ CD Type             Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn      i    Peker til navnetabell
 CD char            *streng   i    Peker til SOSI-navn. Avslutta av '\0'.
-CD short           *navn_nr  u    Navnets linjenummer i navnetabellen
+CD short           *navn_nr  o    Navnets linjenummer i navnetabellen
 CD short            nivo     r    Antall prikker (0=ukjent navn, 1=gruppenavn, osv.)
 CD
 CD Usage:
@@ -413,9 +413,9 @@ CD Type            Name    I/O Explanation
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn     i   Peker til navnetabell
 CD char            *navn    i  SOSI-navn.
-CD short           *ant_par u  Antall parametre til dette navnet.
+CD short           *ant_par o  Antall parametre til dette navnet.
 CD                             LC_ANT_PAR_UKJENT (-1) = Ant. param. er ukjent.
-CD short           *navn_nr u  Navnenummer.
+CD short           *navn_nr o  Navnenummer.
 CD short            nivo    r  Antall prikker i navnet (1=gruppenavn, osv.)
 CD
 CD Usage:
@@ -619,20 +619,20 @@ CD Type    Name         I/O   Explanation
 CD -------------------------------------------------------------------------
 CD char   *pszParameter       i  Peker til '\0'-avslutta streng, eller
 CD                                 NULL hvis KVALITET mangler.
-CD short  *psMetode           u  Hvordan data er registrert.
+CD short  *psMetode           o  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
 CD                                 KVAL_MET_STD    standard metode fra nivå over.
-CD long   *plNoyaktighet      u  Registreringsnøyaktighet
+CD long   *plNoyaktighet      o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD                                 KVAL_NOY_STD    standard nøyaktighet fra nivå over.
-CD short  *psSynbarhet        u  Synbarhet i bilde
+CD short  *psSynbarhet        o  Synbarhet i bilde
 CD                                 KVAL_SYN_GOD    godt synlig.
 CD                                 KVAL_SYN_UNDEF  synbarhet er udefinert.
 CD                                 KVAL_SYN_STD    standard metode fra nivå over.
-CD short  *psHoydeMetode      u  Hvordan høyden er registrert.
+CD short  *psHoydeMetode      o  Hvordan høyden er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
 CD                                 KVAL_MET_STD    standard metode fra nivå over.
-CD long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
+CD long   *plHoydeNoyaktighet o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD                                 KVAL_NOY_STD    standard nøyaktighet fra nivå over.
 CD

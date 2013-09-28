@@ -304,7 +304,7 @@ CD
 CD Parameters:
 CD Type    Navn             I/U  Merknad
 CD -------------------------------------------------------------
-CD void   *dest              iu  Buffer det skal kopieres til.
+CD void   *dest              i/o Buffer det skal kopieres til.
 CD size_t  numberOfElements  i   Size of the destination buffer.
 CD void   *src               i   Buffer det kopieres fra.
 CD size_t  count             i   Number of characters to copy.
@@ -331,7 +331,7 @@ CD
 CD Parameters:
 CD Type    Navn             I/U  Merknad
 CD -------------------------------------------------------------
-CD char   *buffer            iu  Buffer to hold error string.
+CD char   *buffer            i/o Buffer to hold error string.
 CD size_t  numberOfElements  i   Size of buffer.
 CD int     errnum            i   Error number.
 CD int     status            r   Zero if successful; an error code on failure.
@@ -358,9 +358,9 @@ CD
 CD Parameters:
 CD Type    Navn             I/U  Merknad
 CD -------------------------------------------------------------
-CD char       *strToken      iu  String containing token or tokens.
+CD char       *strToken      i/o String containing token or tokens.
 CD const char *strDelimit    i   Set of delimiter characters.
-CD char      **context       iu  Used to store position information between calls to UT_strtok
+CD char      **context       i/o Used to store position information between calls to UT_strtok
 CD char       *token         r   Returns a pointer to the next token found in strToken. 
 CD                               They return NULL when no more tokens are found. 
 CD
@@ -386,7 +386,7 @@ CD  PARAMETERLISTE:
 CD  Name
 ype       I/O  Explanation
 CD  -------------------------------------------------------------
-CD  dst     *char       u   streng det skal kopieres til.
+CD  dst     *char       o   streng det skal kopieres til.
 CD  src     const *char i   streng det skal kopieres fra.
 CD  maxlen  int         i   max antall tegn som skal kopieres
 CD                          (Inkludert null-terminator.)
@@ -412,7 +412,7 @@ CD  PARAMETERLISTE:
 CD  Name
 ype    I/O  Explanation
 CD  -------------------------------------------------------------
-CD  dst     *char     u   streng det skal kopieres til.
+CD  dst     *char     o   streng det skal kopieres til.
 CD  src     *char     i   streng det skal kopieres fra.
 CD  maxlen   int      i   Max lengde av dst, inkl. null-terminator.
 CD  retur    short    r   1 = OK, 0 = feil.
@@ -1385,7 +1385,7 @@ CD                                TS_ND7     = Norsk Data 7-bits
 CD                                TS_DECM8   = DEC multinasjonal 8-bits
 CD                                TS_DECN7   = DEC norsk 7-bits
 CD                                TS_ISO8859 = ISO8859-10
-CD  char   *pszTx         iu   Peker til streng som skal konverteres
+CD  char   *pszTx         i/o  Peker til streng som skal konverteres
 CD                             (avsluttet med '\0').
 CD  char   *pszTx         r    Peker til konvertert streng.
 CD

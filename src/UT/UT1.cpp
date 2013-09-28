@@ -87,7 +87,7 @@ CD const char *fnam       i    Filnavn inkl. type (Max 46 tegn inkl. '\0')
 CD const char *ftyp       i    Filtype (extention) (Max 4 tegn inkl. '\0')
 CD short   facc        i    Aksess (0=UT_READ,1=UT_WRITE,2=UT_UPDATE)
 CD short   exist       i    Åpningstatus (0=UT_UNKNOWN,1=UT_OLD,2=UT_NEW)
-CD short   &ierr       u    (UT_OK,UT_ERROR eller skriv printf(strerror(ierr));
+CD short   &ierr       o    (UT_OK,UT_ERROR eller skriv printf(strerror(ierr));
 CD FILE    filpeker    r    filpeker.
 CD
 CD Purpose:
@@ -444,7 +444,7 @@ CD Navn      Type    i/U Merknad
 CD --------------------------------------------------------------
 CD pfil      FILE     i   Peker til filstruktur (def i stdio.h)
 CD llin      short    i   Max lengde på clin inkl (\r\n\0)
-CD clin      *char    u   Streng les. Må være 3 større enn behov.
+CD clin      *char    o   Streng les. Må være 3 større enn behov.
 	==================================================================
 */
 SK_EntPnt_UT short UT_ReadLineCrlf(FILE *pfil,short llin, char *clin)
@@ -515,7 +515,7 @@ CD Navn    Type   i/U Merknad
 CD -----------------------------------------------------------
 CD pfil    FILE    i   Peker til filstruktur (def i stdio.h)
 CD llin    short   i   Max lengde på clin inkl '\0'
-CD clin    *char   u   Streng lest. Må være 3 større enn faktisk.
+CD clin    *char   o   Streng lest. Må være 3 større enn faktisk.
 	==================================================================
 */
 SK_EntPnt_UT short UT_ReadLine(FILE *pfil,short llin, char *clin)
@@ -602,7 +602,7 @@ CD Type     Navn    i/U Merknad
 CD ------------------------------------------------------------------
 CD FILE     fi       i   Peker til filstruktur (def i stdio.h)
 CD short    llin     i   Max lengde på clin inkl \r\n\0.(cr+lf)
-CD char    *clin     u   Streng lest. (Uten \r\n. (cr+lf))
+CD char    *clin     o   Streng lest. (Uten \r\n. (cr+lf))
 CD
 CD Purpose:
 CD Leser en linje fra filen, og fjerner CrLf. Hvis linjen er blank
@@ -777,7 +777,7 @@ CD Parameters:
 CD Navn      Type  Array i/U Merknad
 CD ------------------------------------------------
 CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
-CD lpos      long         u   Peker til filposisjon
+CD lpos      long         o   Peker til filposisjon
    ==================================================================
 */
 SK_EntPnt_UT short UT_GetPos(FILE *fi,long *lpos)
@@ -804,7 +804,7 @@ CD Parameters:
 CD Type  Navn        i/U Merknad
 CD ------------------------------------------------
 CD FILE  pfil              i   Peker til filstruktur (def i stdio.h)
-CD long  n64FilPos         u   Peker til filposisjon
+CD long  n64FilPos         o   Peker til filposisjon
    ==================================================================
 */
 SK_EntPnt_UT short UT_GetPos_i64(FILE *fi,UT_INT64 *n64FilPos)

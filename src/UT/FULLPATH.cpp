@@ -234,7 +234,7 @@ CD
 CD Parameters:
 CD Type             Navn       I/U  Merknad
 CD ------------------------------------------------------------------
-CD char            *pszBuffer u   Komplett filnavn
+CD char            *pszBuffer o   Komplett filnavn
 CD const char      *pszPath   i   Forkortet filnavn
 CD size_t           maxlen    i   Max lengde av pszBuffer
 CD short            sStatus   r   Status; 0=OK, annen verdi er feil.

@@ -1565,13 +1565,13 @@ CD Type            Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm
 CD UT_INT64        n64FilPos i    Startposisjon i buffer-filen.
-CD char           *pszGi     iu   Ginfo-buffer
+CD char           *pszGi     i/o  Ginfo-buffer
 CD unsigned long   ulGiLen   i    Ant tegn som skal skrives
-CD double         *pdAust    iu   Koord
-CD double         *pdNord    iu   Koord
-CD LB_INFO *        pInfo     iu   Høyde, KP og PINFO-ofsett
+CD double         *pdAust    i/o  Koord
+CD double         *pdNord    i/o  Koord
+CD LB_INFO *        pInfo     i/o  Høyde, KP og PINFO-ofsett
 CD long            lNko      i    Ant koord
-CD char           *pszPi     iu   Pinfo-buffer
+CD char           *pszPi     i/o  Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal skrives
 CD
 CD Usage:
@@ -1646,13 +1646,13 @@ CD Type            Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm for filen det skal leses fra.
 CD UT_INT64        n64FilPos i    Startposisjon i buffer-filen.
-CD char           *pszGi     iu   Ginfo-buffer
+CD char           *pszGi     i/o  Ginfo-buffer
 CD unsigned long   ulGiLen   i    Ant tegn som skal leses til buffer
-CD double         *pdAust    iu   Koord
-CD double         *pdNord    iu   Koord
-CD LB_INFO *        pInfo     iu   Høyde, KP og PINFO-ofsett
+CD double         *pdAust    i/o  Koord
+CD double         *pdNord    i/o  Koord
+CD LB_INFO *        pInfo     i/o  Høyde, KP og PINFO-ofsett
 CD long            lNko      i    Ant koord
-CD char           *pszPi     iu   Pinfo-buffer
+CD char           *pszPi     i/o  Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal leses til buffer
 CD
 CD Usage:
@@ -1743,11 +1743,11 @@ CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm for filen det skal leses fra.
 CD UT_INT64        n64FilPos i    Startposisjon for gruppen i buffer-filen.
 CD unsigned long   ulGiLen   i    Ant tegn GINFO
-CD double         *pdAust    iu   Koord
-CD double         *pdNord    iu   Koord
-CD LB_INFO *        pInfo     iu   Høyde, KP og PINFO-ofsett
+CD double         *pdAust    i/o  Koord
+CD double         *pdNord    i/o  Koord
+CD LB_INFO *        pInfo     i/o  Høyde, KP og PINFO-ofsett
 CD long            lNko      i    Ant koord
-CD char           *pszPi     iu   Pinfo-buffer
+CD char           *pszPi     i/o  Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal leses til buffer
 CD
 CD Usage:

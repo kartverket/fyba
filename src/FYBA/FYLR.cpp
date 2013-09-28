@@ -53,10 +53,10 @@ CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pBgr      i    Gruppenummer
-CD double  *nva       u    Omskrevet rektangel for gruppen. Avrundet utover
-CD double  *nvn       u    en enhet.
-CD double  *oha       u    
-CD double  *ohn       u    
+CD double  *nva       o    Omskrevet rektangel for gruppen. Avrundet utover
+CD double  *nvn       o    en enhet.
+CD double  *oha       o    
+CD double  *ohn       o    
 CD short    ist       r    Status. UT_TRUE=OK, UT_FALSE=ulovlig gruppenummer.
 CD
 CD Usage:
@@ -457,7 +457,7 @@ CD
 CD Parameters:
 CD Type           Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus.
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus.
 CD unsigned short usLag      i   Velg hvilke "lag" det skal søkes i.
 CD                               LC_FRAMGR og /eller LC_BAKGR
 CD double         nv_a       i   Koordinat nedre venstre hjørne.
@@ -521,8 +521,8 @@ CD
 CD Parameters:
 CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
-CD LC_BGR *        pBgr       u   Funnet gruppe
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
+CD LC_BGR *        pBgr       o   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -682,8 +682,8 @@ CD
 CD Parameters:
 CD Type           Name      I/O  Explanation
 CD --------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
-CD LC_BGR *        pBgr       u   Funnet gruppe
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
+CD LC_BGR *        pBgr       o   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -741,9 +741,9 @@ CD
 CD Parameters:
 CD Type           Name       I/O  Explanation
 CD --------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat   iu   Peker til struktur for søkestatus
+CD LC_GEO_STATUS * pGeoStat   i/o  Peker til struktur for søkestatus
 CD LC_FILADM *    pOnsketFil  i   Filpeker til den filen det skal søkes i.
-CD LC_BGR *        pBgr        u   Funnet gruppe
+CD LC_BGR *        pBgr        o   Funnet gruppe
 CD short          sstat       r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -821,9 +821,9 @@ CD
 CD Parameters:
 CD Type           Name      I/O  Explanation
 CD --------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
 CD LC_FILADM *    pFil      i    Filpeker til den filen det skal søkes i.
-CD LC_BGR *        pBgr       u   Funnet gruppe
+CD LC_BGR *        pBgr       o   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -883,7 +883,7 @@ CD
 CD Parameters:
 CD Type           Name      I/O  Explanation
 CD --------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
 CD long           lAntall    r   Antall funnet.
 CD
 CD Usage:
@@ -936,7 +936,7 @@ CD
 CD Parameters:
 CD Type     Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
 CD unsigned short usLag      i   Velg hvilke "lag" det skal søkes i.
 CD                               LC_FRAMGR og /eller LC_BAKGR
 CD double         nv_a       i   Koordinat nedre venstre hjørne
@@ -995,8 +995,8 @@ CD
 CD Parameters:
 CD Type     Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
-CD LC_BGR *        pBgr       u   Funnet gruppe
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
+CD LC_BGR *        pBgr       o   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -1132,8 +1132,8 @@ CD
 CD Parameters:
 CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
-CD LC_BGR *        pBgr       u   Funnet gruppe
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
+CD LC_BGR *        pBgr       o   Funnet gruppe
 CD short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -1607,7 +1607,7 @@ CD long         lGrNr  i   Gruppenummer i filen
 CD LC_BOKS     *pB     i   Boks som skal legges inn i treet
 CD LC_R_NODE   *pFar   i   Peker til far i quad-treet
 CD LC_R_NODE   *pRN    i   Peker til node i R-treet
-CD LC_R_NODE  **ppNyRN u   Peker til peker til nyopprettet node i R-treet
+CD LC_R_NODE  **ppNyRN o   Peker til peker til nyopprettet node i R-treet
 CD LC_R_LEAF   *pRL    r   Peker til forekomst i R-treet
 CD
 CD Purpose:
@@ -1851,7 +1851,7 @@ CD
 CD Parameters:
 CD Type       Name  I/O  Explanation
 CD -----------------------------------------------------------------------
-CD LC_BOKS *   pB1   iu   Boks1 som skal utvides
+CD LC_BOKS *   pB1   i/o  Boks1 som skal utvides
 CD LC_BOKS *   pB2   i    Boks2 som skal legges til boks1
 CD =======================================================================
 */
@@ -2183,7 +2183,7 @@ CD
 CD Parameters:
 CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
-CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
+CD LC_GEO_STATUS * pGeoStat  i/o  Peker til struktur for søkestatus
 CD
    ==========================================================================
 */

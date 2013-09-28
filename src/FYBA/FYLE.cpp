@@ -15,7 +15,7 @@ CD Parameters:
 CD Type     Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short    feil_nr      i   Feilmeldingsnummer
-CD char   **feilmelding  u   Peker til feilmeldingstekst avslutta med '\0'.
+CD char   **feilmelding  o   Peker til feilmeldingstekst avslutta med '\0'.
 CD short   *strategi     r   Feilnivå (0-4)
 CD                           0 = Ikke i bruk. (Utkoblet, testmeldinger mm.)
 CD                           1 = Lite alvorlig. Vises kort.

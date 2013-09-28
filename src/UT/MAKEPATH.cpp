@@ -73,7 +73,7 @@ CD
 CD Parameters:
 CD Type         Navn       I/U  Merknad
 CD --------------------------------------------------------------
-CD char        *pszPath   u   Komplett filnavn
+CD char        *pszPath   o   Komplett filnavn
 CD const char  *pszDrive  i   Disk
 CD const char  *pszDir    i   Katalog
 CD const char  *pszNavn   i   Navn

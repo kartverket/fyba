@@ -841,7 +841,7 @@ CD Type      Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char     *pszVerdi    i    Verdi
 CD char     szMetode     i    Utvalgsmetode
-CD short    *psType      iu   Type, Inn=foreløpig type, Ut=beregnet type
+CD short    *psType      i/o  Type, Inn=foreløpig type, Ut=beregnet type
 CD
 CD Usage:
 CD LU_SjekkDatatype(pszVerdi,szMetode,sType);
@@ -920,7 +920,7 @@ CD Parameters:
 CD Type                         Name I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_UT_ADM *pUtAdm     i     Peker til administrasjonsblokk for utvalg.
-CD short   *ist          iu    Status (Inn: 1=start,  0=neste)
+CD short   *ist          i/o   Status (Inn: 1=start,  0=neste)
 CD                                    (Ut:  0=OK,    -1=ferdig);
 CD char    *regelpeker   r     Peker til utvalgsnavn.
 CD
@@ -1020,10 +1020,10 @@ CD Type       Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_UT_ADM * pUtAdm      i    Peker til administrasjonsblokk for utvalg.
 CD short      sPrior      i    Prioritet.
-CD short     *psStat     iu    Søkestatus, Inn: 1=start søk, 0=fortsett søk
+CD short     *psStat     i/o   Søkestatus, Inn: 1=start søk, 0=fortsett søk
 CD                                         Ut : 0=tilslag, -1=ikke tilslag
 CD long       lPnr        i    Punktnummer som skal sjekkes.
-CD char     **ppszRegel   u    Peker til regelnavn
+CD char     **ppszRegel   o    Peker til regelnavn
 CD
 CD Usage:
 CD LC_PunktUtvalg(pUtAdm,sPrior,&psStat,lPnr,&ppszRegel);
@@ -1309,10 +1309,10 @@ CD -----------------------------------------------------------------------------
 CD LC_UT_ADM *pUtAdm    i    Peker til administrasjonsblokk for utvalg.
 CD short      sPrior    i    Prioritet.
 CD                           LC_OVERSE_PRIORITET = Tar ikke hensyn til prioritet.
-CD short     *sstat     iu   Søkestatus, Inn: 1=start søk, 0=fortsett søk
+CD short     *sstat     i/o  Søkestatus, Inn: 1=start søk, 0=fortsett søk
 CD                                       Ut : 0=tilslag, -1=ikke tilslag
-CD char     **regelnavn  u   Peker til regelnavn
-CD char      *regelnavn  u   Peker til utvalgsnavn
+CD char     **regelnavn  o   Peker til regelnavn
+CD char      *regelnavn  o   Peker til utvalgsnavn
 CD
 CD Usage:
 CD pszUtvalgsNavn = LC_GruppeUtvalg(pUtAdm.sPrior,&sstat,&regel);
@@ -1788,8 +1788,8 @@ CD Type                Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_UT_ADM *          pUtAdm  i   Peker til administrasjonsblokk for utvalg.
 CD LC_UTVALG_ELEMENT * pUE     i   Peker til administrasjonsblokk for utvalg.
-CD char               *gilin   u   GINFO-linje for funnet tilslag.
-CD char              **apara   u   Peker til aktuell del av parameterstreng.
+CD char               *gilin   o   GINFO-linje for funnet tilslag.
+CD char              **apara   o   Peker til aktuell del av parameterstreng.
 CD short               tilslag r   Status: 1=tilslag, 0=ikke tilslag.
 CD
 CD Usage:
@@ -2076,7 +2076,7 @@ CD char      *para     i    Parameterstreng som skal behandles
 CD short      ledd     i    Leddnummer
 CD short      start    i    Startposisjon i strengen (0=hele strengen)
 CD short      slutt    i    Sluttposisjon i strengen (0=resten)
-CD char      *akt_para iu   Ny behandla parameterstreng
+CD char      *akt_para i/o  Ny behandla parameterstreng
 CD short      max_len  i    Max lengde på akt_para
 CD
 CD Usage:
@@ -2127,10 +2127,10 @@ CD                             sammen med "|".
 CD                             LC_GINFO = søk i GINFO på aktuell gruppe
 CD                             LC_HODE = søk i filhodet
 CD                             Hvis begge er brukt søkes det først i GINFO.
-CD unsigned short   *univ    u    Nivå: LC_GINFO = parameter er fra GINFO
+CD unsigned short   *univ    o    Nivå: LC_GINFO = parameter er fra GINFO
 CD                             LC_HODE = parameter er fra filhodet
-CD short   *ulin    u    GINFO-linjenummer for tilslaget.
-CD char   **para    u    Funnet parameter.
+CD short   *ulin    o    GINFO-linjenummer for tilslaget.
+CD char   **para    o    Funnet parameter.
 CD short     funnet  r    Status: UT_TRUE=funnet, UT_FALSE=ikke funnet
 CD
 CD Usage:
@@ -2203,7 +2203,7 @@ CD ----------------------------------------------------------------
 CD FILE    *pKomFil   i   Filpeker for beskrivelsesfil
 CD short    sMaxTxLen i   Max lengde av pszTx
 CD char    *pszTx     i   Lest linje
-CD short   *psNiv     u   Nivå (antall prikker forran navnet)
+CD short   *psNiv     o   Nivå (antall prikker forran navnet)
 CD short    lesefeil  r   Lesefeil fra UT_ReadLine.
 CD
 CD Usage:
@@ -2481,8 +2481,8 @@ CD
 CD Parameters:
 CD Type        Name   I/O   Explanation
 CD --------------------------------------------------------------------------
-CD short *NyPrior     iu   Tabell over nye prioriteter
-CD short *sAntPrior   iu   Antall brukt i NyPrior
+CD short *NyPrior     i/o  Tabell over nye prioriteter
+CD short *sAntPrior   i/o  Antall brukt i NyPrior
 CD short  sPrior      i    Prioritet som skal legges inn.
 CD
 CD

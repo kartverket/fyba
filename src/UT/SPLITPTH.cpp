@@ -129,10 +129,10 @@ CD Parameters:
 CD Type         Navn       I/U  Merknad
 CD --------------------------------------------------------------
 CD char        *pszPath   i   Komplett filnavn
-CD const char  *pszDrive  u   Disk
-CD const char  *pszDir    u   Katalog
-CD const char  *pszNavn   u   Navn
-CD const char  *pszExt    u   Extension
+CD const char  *pszDrive  o   Disk
+CD const char  *pszDir    o   Katalog
+CD const char  *pszNavn   o   Navn
+CD const char  *pszExt    o   Extension
 CD
 CD Usage:  UT_splitpath(szPath,szDrive,szDir,szNavn,szExt);
    ==================================================================

@@ -40,7 +40,7 @@ CD
 CD Parameters:
 CD Type         Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
-CD LC_FILADM * *ppFil    u   Peker til FilAdm-peker
+CD LC_FILADM * *ppFil    o   Peker til FilAdm-peker
 CD short        status   r   UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
 CD
 CD Usage:
@@ -71,7 +71,7 @@ CD
 CD Parameters:
 CD Type           Name   I/O  Explanation
 CD ------------------------------------------------------------------------
-CD LC_FILADM    **ppFil    u   Peker til FilAdm-peker
+CD LC_FILADM    **ppFil    o   Peker til FilAdm-peker
 CD
 CD Usage:
 CD     LC_InitNextFil(&pFil)
@@ -93,7 +93,7 @@ CD
 CD Parameters:
 CD Type           Name    I/O   Explanation
 CD --------------------------------------------------------------------------
-CD LC_FILADM    **ppFil   iu   Peker til FilAdm-peker
+CD LC_FILADM    **ppFil   i/o  Peker til FilAdm-peker
 CD unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
 CD                               LC_FRAMGR, LC_BAKGR og /eller LC_SEKV
 CD                               (Bruk "|" for å kombinere.)
@@ -152,7 +152,7 @@ CD
 CD Parameters:
 CD Type           Name   I/O  Explanation
 CD ------------------------------------------------------------------------
-CD LC_BGR *        pBgr    iu  Peker til gruppestruktur
+CD LC_BGR *        pBgr    i/o Peker til gruppestruktur
 CD
 CD Usage:
 CD     LC_InitNextBgr(&Bgr)
@@ -176,7 +176,7 @@ CD
 CD Parameters:
 CD Type           Name    I/O   Explanation
 CD --------------------------------------------------------------------------
-CD LC_BGR *        pBgr    iu   Peker til gruppestruktur der gruppenummer lagres
+CD LC_BGR *        pBgr    i/o  Peker til gruppestruktur der gruppenummer lagres
 CD unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
 CD                               LC_FRAMGR og /eller LC_BAKGR
 CD                               (Bruk "|" for å kombinere.)
@@ -282,7 +282,7 @@ CD
 CD Parameters:
 CD Type    Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD LC_BGR * pBgr      iu   Peker til gruppestruktur der gruppenummer lagres
+CD LC_BGR * pBgr      i/o  Peker til gruppestruktur der gruppenummer lagres
 CD short   status    r    Status  UT_TRUE=OK, UT_FALSE=ingen aktuell gruppe
 CD
 CD Usage:
@@ -312,9 +312,9 @@ CD
 CD Parameters:
 CD Type    Name   I/O   Explanation
 CD-------------------------------------------------------------------------
-CD short   *ngi    u    Antall linjer GINFO
-CD long    *nko    u    Antall koordinater
-CD short   *info   u    Diverse informasjon. En sum av følgende:
+CD short   *ngi    o    Antall linjer GINFO
+CD long    *nko    o    Antall koordinater
+CD short   *info   o    Diverse informasjon. En sum av følgende:
 CD                        GI_PINFO = gruppen har PINFO
 CD                        GI_NAH   = gruppen har høyde informasjon (..NØH)
 CD                        GI_NAD   = gruppen har dybde informasjon (..NØD)
@@ -361,9 +361,9 @@ CD Parameters:
 CD Type            Name I/O  Explanation
 CD------------------------------------------------------------------------------
 CD LC_BGR *         pBgr  i   Gruppenummer det ønskes opplysninger om.
-CD short          *ngi   u   Antall linjer GINFO  (0=sletta eller ulovlig nummer)
-CD long           *nko   u   Antall koordinater
-CD unsigned short *info  u   Diverse informasjon. En sum av følgende:
+CD short          *ngi   o   Antall linjer GINFO  (0=sletta eller ulovlig nummer)
+CD long           *nko   o   Antall koordinater
+CD unsigned short *info  o   Diverse informasjon. En sum av følgende:
 CD                           GI_PINFO = gruppen har PINFO
 CD                           GI_NAH   = gruppen har høyde informasjon (..NØH)
 CD                           GI_NAD   = gruppen har døbde informasjon (..NØD)
@@ -472,13 +472,13 @@ CD
 CD Parameters:
 CD Type             Name   I/O  Explanation
 CD --------------------------------------------------------------------------
-CD short           *rstat  iu   Lesestatus
+CD short           *rstat  i/o  Lesestatus
 CD                                Inn: 1=Les fra starten, 0=Les neste
 CD                                Ut:  0=OK, -1=slutten av filen er nådd
 CD LC_FILADM       *pFil    i   Peker til FilAdm
-CD short           *ngi     u   Antall linjer GINFO
-CD long            *nko     u   Antall koordinater
-CD unsigned short  *info    u   Diverse informasjon. En "sum" av følgende:
+CD short           *ngi     o   Antall linjer GINFO
+CD long            *nko     o   Antall koordinater
+CD unsigned short  *info    o   Diverse informasjon. En "sum" av følgende:
 CD                          GI_PINFO     = gruppen har PINFO
 CD                          GI_NAH       = gruppen har høyde informasjon (..NØH)
 CD                          GI_NAD       = gruppen har dybde informasjon (..NØD)
@@ -488,7 +488,7 @@ CD                          GI_OY_REF    = gruppen har referanser med øy
 CD                          GI_NGIS      = gruppen er tatt ut fra NGIS for oppdat.
 CD                          GI_SLETTA    = gruppen er sletta (merka som sletta)
 CD                          GI_READ_ONLY = gruppen kan ikke endres.
-CD long             gml_snr u    Serienummer gruppen hadde på ekstern fil
+CD long             gml_snr o    Serienummer gruppen hadde på ekstern fil
 CD short            gnavn   r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD
 CD Usage:
@@ -569,9 +569,9 @@ CD Parameters:
 CD Type             Name   I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM       *pFil    i   Peker til FilAdm
-CD short           *ngi     u   Antall linjer GINFO
-CD long            *nko     u   Antall koordinater
-CD unsigned short  *info    u   Diverse informasjon. En "sum" av følgende:
+CD short           *ngi     o   Antall linjer GINFO
+CD long            *nko     o   Antall koordinater
+CD unsigned short  *info    o   Diverse informasjon. En "sum" av følgende:
 CD                          GI_PINFO = gruppen har PINFO
 CD                          GI_NAH   = gruppen har høyde informasjon (..NØH)
 CD                          GI_NAD   = gruppen har dybde informasjon (..NØD)
@@ -843,9 +843,9 @@ CD LC_BGR * pBgr     i   Peker til fil- og gruppenummer.
 CD short   les_sosi i   Lesemetode: Følgende konstanter er definert:
 CD                         LES_OPTIMALT   (0 = Les mest effektivt base/SOSI)
 CD                         LES_SOSI       (1 = Les alltid fra SOSI-filen)
-CD short  *ngi      u   Antall linjer GINFO
-CD long   *nko      u   Antall koordinater
-CD unsigned short *info      u   Diverse informasjon. En sum av følgende:
+CD short  *ngi      o   Antall linjer GINFO
+CD long   *nko      o   Antall koordinater
+CD unsigned short *info      o   Diverse informasjon. En sum av følgende:
 CD                       GI_PINFO     = gruppen har PINFO
 CD                       GI_NAH       = gruppen har høyde informasjon (..NØH)
 CD                       GI_NAD       = gruppen har dybde informasjon (..NØD)
@@ -1360,9 +1360,9 @@ CD short    ngis     i    Behandling for ..NGIS-FLAGG:
 CD                          OPPDATER_NGIS (0) = ..NGIS-FLAGG oppdateres i henhold
 CD                                              til hodet i filen det kopieres til.
 CD                          BEVAR_NGIS (1) = ..NGIS-FLAGG bevares uforandret i kopien
-CD short    ngi      u    Antall linjer GINFO
-CD long     nko      u    Antall koordinater
-CD unsigned short    info     u    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
+CD short    ngi      o    Antall linjer GINFO
+CD long     nko      o    Antall koordinater
+CD unsigned short    info     o    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
 CD short    gnavn    r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD
 CD Usage:
@@ -1554,9 +1554,9 @@ CD                                HENT_FORRFRA ( 1) = vanlig,
 CD                                HENT_BAKFRA  (-1) = buffer skal snues.
 CD long   til_linje i    Linjenummer linjen skal skytes inn forran.
 CD                        (Lovlig: 1  til  nko+1)
-CD short   ngi       u    Antall GINFO-linjer
-CD long    nko       u    Antall koordinater
-CD short   info      u    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
+CD short   ngi       o    Antall GINFO-linjer
+CD long    nko       o    Antall koordinater
+CD short   info      o    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
 CD short   sStatus   r    Status: UT_TRUE=OK, UT_FALSE=ikke utført.
 CD
 CD Usage:
@@ -2034,7 +2034,7 @@ CD Type     Name   I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long    sP1     i    Punktnummer 1.   (Må være større enn 1)
 CD long    sP2     i    Punktnummer 2.   (Må være mindre enn nko)
-CD LC_BGR *  pBgr2   u    Nytt gruppenummer for siste del av gruppen.
+CD LC_BGR *  pBgr2   o    Nytt gruppenummer for siste del av gruppen.
 CD short    sStatus r    Status: UT_TRUE  = OK
 CD                               UT_FALSE = feil, ikke splittet
 CD
@@ -2347,9 +2347,9 @@ CD                                            etter siste koordinat.
 CD short   metode      i    Forteller hva som skal skje med sammenføingspunktene.
 CD                             LC_SG_BEHOLD = Begge punktene beholdes.
 CD                             LC_SG_FJERN  = Bare det ene av punktene beholdes.
-CD short   ngi         u    Antall GINFO-linjer
-CD long    nko         u    Antall koordinater
-CD unsigned short info u    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
+CD short   ngi         o    Antall GINFO-linjer
+CD long    nko         o    Antall koordinater
+CD unsigned short info o    Diverse informasjon. (Se under $LENKE<LC_RxGr>)
 CD short   sStatus     r    Status: UT_TRUE=OK, UT_FALSE=ikke utført.
 CD
 CD Usage:
@@ -2542,9 +2542,9 @@ CD Type       Name    I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM  *pFil    i    Peker til FilAdm
 CD char       *sosi    i    Gruppenavn (Eks. ".KURVE")
-CD LC_BGR *     pBgr    iu   Tildelt gruppenummer i basen
+CD LC_BGR *     pBgr    i/o  Tildelt gruppenummer i basen
 CD                          (Bgr.lNr=INGEN_GRUPPE = Feil, ikke oppretta)
-CD long        snr     u    Tildelt serienummer
+CD long        snr     o    Tildelt serienummer
 CD gnavn       short   r    Gruppenavn. (Se under $LENKE<LC_RxGr>)
 CD                          INGEN_GRUPPE hvis det ikke er opprettet noen ny gruppe.
 CD
@@ -3235,7 +3235,7 @@ CD Type       Name    I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i   Peker til FilAdm
 CD UT_INT64   start    i   Startposisjon på SOSI-filen
-CD UT_INT64   slutt    u   Sluttposisjon på SOSI-filen
+CD UT_INT64   slutt    o   Sluttposisjon på SOSI-filen
 CD short      siste_gr r   Siste gruppe (0=ikke siste, 1=siste på filen)
 CD
 CD Usage:
@@ -3739,7 +3739,7 @@ CD                          (Ved skriv av annet enn aktuell gruppe skrives
 CD                          alltid hele gruppen.)
 CD LC_FILADM *pFil      i   Peker til FilAdm for fil det skal skrives til
 CD UT_INT64   ffipos    i   Startposisjon på SOSI-filen
-CD UT_INT64  *lfipos   iu   inn: Første pos i neste gruppe (må ikke overskrives)
+CD UT_INT64  *lfipos   i/o  inn: Første pos i neste gruppe (må ikke overskrives)
 CD                          ut : Første pos etter gruppen (etter event. utrop.)
 CD short      ist       r   Status: 1 = Skrevet OK
 CD                               0 = Ikke plass, må flyttes til slutten
@@ -4051,7 +4051,7 @@ CD Type       Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i    Peker til FilAdm
 CD UT_INT64   start    i    Startposisjon på SOSI-filen (første pos. i gr.)
-CD UT_INT64  *neste    u    Startposisjon i neste gruppe (første pos. etter gr.)
+CD UT_INT64  *neste    o    Startposisjon i neste gruppe (første pos. etter gr.)
 CD short      status   r    Status:  UT_FALSE = Feil
 CD                                   UT_TRUE = OK
 CD
@@ -4124,7 +4124,7 @@ CD Type       Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i    Peker til FilAdm
 CD UT_INT64      start    i    Startposisjon på SOSI-filen (første pos. i gr.)
-CD UT_INT64     *neste    u    Startposisjon i neste gruppe (første pos. etter gr.)
+CD UT_INT64     *neste    o    Startposisjon i neste gruppe (første pos. etter gr.)
 CD short      siste    r    Siste gruppe:  UT_FALSE = Ikke siste gruppe
 CD                                         UT_TRUE = Siste gruppe
 CD

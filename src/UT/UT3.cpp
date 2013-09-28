@@ -525,7 +525,7 @@ CD
 CD Parameters:
 CD Name      Type  Array I/O  Explanation
 CD ------------------------------------------------------------------
-CD *db_arr   double       i/u Tabell som skal sorteres
+CD *db_arr   double       i/o Tabell som skal sorteres
 CD size      short        i   Ant elementer i tabell
 CD
 CD Usage:  UT_SortD(db_arr, size)

@@ -38,7 +38,7 @@ CD
 CD Parameters:
 CD Type           Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD LC_GRF_STATUS * pRefStat  iu   Struktur med statusopplysninger.
+CD LC_GRF_STATUS * pRefStat  i/o  Struktur med statusopplysninger.
 CD
 CD Usage:
 CD     LC_InitGetRefFlate(pGrfStat,pBgr);
@@ -67,13 +67,13 @@ CD
 CD Parameters:
 CD Type            Name      I/O  Explanation
 CD -------------------------------------------------------------------------
-CD LC_GRF_STATUS *  GrfStat    iu  Struktur med statusopplysninger.
+CD LC_GRF_STATUS *  GrfStat    i/o Struktur med statusopplysninger.
 CD unsigned short  usHent     i   Hva skal hentes:
 CD                                 GRF_YTRE  = Ytre avgrensing
 CD                                 GRF_INDRE = Indre avgrensing, øyer
 CD                                     (kan kombineres med | (or).)
-CD long           *ref_array  u   GRUPPENUMMER for refererte grupper.
-CD unsigned char  *ref_status u   Status for gruppene i ref_array.
+CD long           *ref_array  o   GRUPPENUMMER for refererte grupper.
+CD unsigned char  *ref_status o   Status for gruppene i ref_array.
 CD                                 LC_MED_DIG = Brukes MED dig retning.
 CD                                 LC_MOT_DIG  = Brukes MOT dig retning.
 CD                                 GRF_START_OY     = Første gruppe i øy
@@ -159,9 +159,9 @@ CD
 CD Parameters:
 CD Type            Name       I/O   Explanation
 CD --------------------------------------------------------------------------
-CD LC_GR_STATUS   *pGRS       iu   Struktur med statusopplysninger.
-CD long           *ref_array   u    GRUPPENUMMER for refererte grupper.
-CD unsigned char  *ref_status  u    Status for gruppene i ref_array.
+CD LC_GR_STATUS   *pGRS       i/o  Struktur med statusopplysninger.
+CD long           *ref_array   o    GRUPPENUMMER for refererte grupper.
+CD unsigned char  *ref_status  o    Status for gruppene i ref_array.
 CD                                  LC_MED_DIG = Brukes MED dig retning
 CD                                  LC_MOT_DIG  = Brukes MOT dig retning
 CD long            max_ref     i    Max antall linjer i ref_array.
@@ -252,9 +252,9 @@ CD
 CD Parameters:
 CD Type            Name       I/O  Explanation
 CD -------------------------------------------------------------------------
-CD LC_GRF_STATUS *  pGS        iu  Struktur med statusopplysninger.
-CD long           *ref_array   u   GRUPPENUMMER for refererte grupper.
-CD unsigned char  *ref_status  u   Status for gruppene i ref_array.
+CD LC_GRF_STATUS *  pGS        i/o Struktur med statusopplysninger.
+CD long           *ref_array   o   GRUPPENUMMER for refererte grupper.
+CD unsigned char  *ref_status  o   Status for gruppene i ref_array.
 CD                                  LC_MED_DIG = Brukes MED dig retning
 CD                                  LC_MOT_DIG  = Brukes MOT dig retning
 CD                                  GRF_START_OY     = Første gruppe i øy
@@ -484,14 +484,14 @@ CD
 CD Parameters:
 CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
-CD long    *ref_array  u    Serienr. for refererte grupper.
+CD long    *ref_array  o    Serienr. for refererte grupper.
 CD                          Start øy, og slutt øy angis ved fiktive gruppenr.
 CD                          Følgende konstanter er definert:
 CD                             START_OY =  9999999L = Start øy.
 CD                             SLUTT_OY = -9999999L = Slutt øy.
 CD long     max_ref    i    Max antall linjer i ref_array.
-CD short   *gilin      i/u  linje for start referanselesing
-CD short   *refpos     i/u  posisjon i linja for neste innlegging i array.
+CD short   *gilin      i/o  linje for start referanselesing
+CD short   *refpos     i/o  posisjon i linja for neste innlegging i array.
 CD long     ant_ref    r    Antall linjer brukt i ref_array.
 CD
 CD Usage:
@@ -718,7 +718,7 @@ CD ----------------------------------------------------------------------------
 CD short    buff_retning i    Buffer-retning (kun for BUE og BUEP)
 CD                                  HENT_FORRFRA  (1) =  Vanlig
 CD                                  HENT_BAKFRA  (-1) =  Buffer skal snues
-CD short    *sfeil       u    Feilstatus, definert dersom ist = 0
+CD short    *sfeil       o    Feilstatus, definert dersom ist = 0
 CD                                    1 = Ulovlig geometritype(ikke bue)
 CD                                    2 = Feil ved beregning av bueparametre
 CD short    ist          r    Returstatus
@@ -887,14 +887,14 @@ CD ----------------------------------------------------------------------------
 CD short    buff_retning i    Buffer-retning (kun for BUE og BUEP)
 CD                                  HENT_FORRFRA  (1) =  Vanlig
 CD                                  HENT_BAKFRA  (-1) =  Buffer skal snues
-CD double   *as          u    Øst-koordinat sentrum sirkelbue
-CD double   *an          u    Nord-koordinat sentrum sirkelbue
-CD double   *radius      u    Radius i sirkelbue.
-CD double   *fi          u    Retningsvinkel sentrum -> startpunkt bue
-CD double   *dfi         u    Vinkel mellom fi og sentrum -> sluttpunkt bue
+CD double   *as          o    Øst-koordinat sentrum sirkelbue
+CD double   *an          o    Nord-koordinat sentrum sirkelbue
+CD double   *radius      o    Radius i sirkelbue.
+CD double   *fi          o    Retningsvinkel sentrum -> startpunkt bue
+CD double   *dfi         o    Vinkel mellom fi og sentrum -> sluttpunkt bue
 CD                            dfi > 0  = Positiv omløpsretning(mot klokka)
 CD                            dfi < 0  = Negativ omløpsretning(med klokka)
-CD short    *sfeil       u    Feilstatus, definert dersom ist = 0
+CD short    *sfeil       o    Feilstatus, definert dersom ist = 0
 CD                                    1 = Ulovlig geometritype(ikke bue)
 CD                                    2 = Feil ved beregning av bueparametre
 CD short    ist          r    Returstatus
@@ -992,12 +992,12 @@ CD --------------------------------------------------------------------------
 CD short   retning     i    Buffer-retning:
 CD                                HENT_FORRFRA ( 1) = vanlig,
 CD                                HENT_BAKFRA  (-1) = buffer skal snues.
-CD double  *a1         u    Koordinat i første punkt
+CD double  *a1         o    Koordinat i første punkt
 CD double  *n1         u
-CD double  *a2         u    Koordinat i siste punkt
+CD double  *a2         o    Koordinat i siste punkt
 CD double  *n2         u
-CD double  *radius     u    Radius
-CD short   *storbue    u    0=vanlig bue, 1=storbue
+CD double  *radius     o    Radius
+CD short   *storbue    o    0=vanlig bue, 1=storbue
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = feil (Gruppen er ikke OK bue)
 CD
@@ -1064,11 +1064,11 @@ CD --------------------------------------------------------------------------
 CD short   retning     i    Buffer-retning:
 CD                                HENT_FORRFRA ( 1) = vanlig,
 CD                                HENT_BAKFRA  (-1) = buffer skal snues.
-CD double  *a1         u    Koordinat i første punkt
+CD double  *a1         o    Koordinat i første punkt
 CD double  *n1         u
-CD double  *a2         u    Koordinat i midtre punkt
+CD double  *a2         o    Koordinat i midtre punkt
 CD double  *n2         u
-CD double  *a3         u    Koordinat i siste punkt
+CD double  *a3         o    Koordinat i siste punkt
 CD double  *n3         u
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = feil (Gruppen er ikke OK buep)
@@ -1116,9 +1116,9 @@ CD
 CD Parameters:
 CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double  *as         u    Koordinat i sentrum
+CD double  *as         o    Koordinat i sentrum
 CD double  *ns         u
-CD double  *radius     u    Radius
+CD double  *radius     o    Radius
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = Feil (Gruppen er ikke OK sirkel)
 CD
@@ -1168,11 +1168,11 @@ CD
 CD Parameters:
 CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double  *a1         u    Koordinat i P1
+CD double  *a1         o    Koordinat i P1
 CD double  *n1         u
-CD double  *a2         u    Koordinat i P2
+CD double  *a2         o    Koordinat i P2
 CD double  *n2         u
-CD double  *a3         u    Koordinat i P3
+CD double  *a3         o    Koordinat i P3
 CD double  *n3         u
 CD short    ist        r    status: UT_TRUE = OK,
 CD                                  UT_FALSE = Feil (Gruppen er ikke OK sirkelp)
@@ -1216,12 +1216,12 @@ CD Parameters:
 CD Type        Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil     i    Peker til FilAdm
-CD short      *nivaa    iu   angir nivå for henting, returnerer aktuelt nivå
+CD short      *nivaa    i/o  angir nivå for henting, returnerer aktuelt nivå
 CD                             1 = filhode
 CD                             2 = GINFO
-CD double     *enhet    u    Aktuell enhet
-CD double     *enhet_h  u    Aktuell enhet-H
-CD double     *enhet_d  u    Aktuell enhet-D
+CD double     *enhet    o    Aktuell enhet
+CD double     *enhet_h  o    Aktuell enhet-H
+CD double     *enhet_d  o    Aktuell enhet-D
 CD
 CD Usage:
 CD     LC_GetCurEnhet(pFil,&nivaa,&enhet,&enhet_h,&enhet_d);
@@ -1384,19 +1384,19 @@ CD
 CD Parameters:
 CD Type     Name       I/O   Explanation
 CD --------------------------------------------------------------------------
-CD short  *psMetode           u  Hvordan data er registrert.
+CD short  *psMetode           o  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
 CD                                 KVAL_MET_STD    standard metode fra nivå over.
-CD long   *pLNnoyaktighet     u  Registreringsnøyaktighet
+CD long   *pLNnoyaktighet     o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD                                 KVAL_NOY_STD    standard nøyaktighet fra nivå over
-CD short  *psSynbarhet        u  Synbarhet i bilde
+CD short  *psSynbarhet        o  Synbarhet i bilde
 CD                                 KVAL_SYN_UNDEF  synbarhet er udefinert.
 CD                                 KVAL_SYN_STD    standard metode fra nivå over.
-CD short  *psHoydeMetode      u  Hvordan høyden er registrert.
+CD short  *psHoydeMetode      o  Hvordan høyden er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
 CD                                 KVAL_MET_STD    standard metode fra nivå over.
-CD long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
+CD long   *plHoydeNoyaktighet o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD                                 KVAL_NOY_STD    standard nøyaktighet fra nivå over
 CD short    ist               r  Status: UT_TRUE  = OK, ..KVALITET er funnet
@@ -1440,22 +1440,22 @@ CD Parameters:
 CD Type        Name          I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil           i   Peker til FilAdm
-CD short      *nivaa         iu   Hvor skal det letes.
+CD short      *nivaa         i/o  Hvor skal det letes.
 CD                                 0 = ikke funnet
 CD                                 1 = hode
 CD                                 2 = ginfo
 CD                                 3 = pinfo
 CD                                 Returnerer aktuelt nivå.
 CD long        pnr            i    punktnr. ved spørring på pinfo
-CD short  *psMetode           u   Hvordan data er registrert.
+CD short  *psMetode           o   Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *pLNnoyaktighet     u   Registreringsnøyaktighet
+CD long   *pLNnoyaktighet     o   Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT nøyaktighet er ukjent.
-CD short  *psSynbarhet        u   Synbarhet i bilde
+CD short  *psSynbarhet        o   Synbarhet i bilde
 CD                                 KVAL_SYN_UNDEF  synbarhet er udefinert.
-CD short  *psHoydeMetode      u   Hvordan høyden er registrert.
+CD short  *psHoydeMetode      o   Hvordan høyden er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *plHoydeNoyaktighet u   Registreringsnøyaktighet
+CD long   *plHoydeNoyaktighet o   Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD short   ist                r   Statusvariabel:
 CD                                 UT_TRUE = OK, KVALITET er funnet
@@ -1763,7 +1763,7 @@ CD                            og formateringskode kan inngå
 CD                            som forlengelse av navnet.
 CD                            OBS! Store og små bokstaver er signifikante.
 CD
-CD short   *forste_linje iu   GINFO-linjenummer for start søking
+CD short   *forste_linje i/o  GINFO-linjenummer for start søking
 CD                            (1 er første linje i GINFO.)
 CD                            Ved tilslag returneres linjenummer for tilslaget.
 CD short    siste_linje  i    Siste GINFO-linje det skal søkes i.
@@ -2182,7 +2182,7 @@ CD                            høyde fra punktet eller GINFO.
 CD                            KVALITET er spesialverdi som henter formatert
 CD                            kvalitet fra punktet, GINFO eller hode.
 CD long     lPnr         i    Punktnummer
-CD short   *sSettNr      iu   PINFO-nummer   (1 er første sett i PINFO.)
+CD short   *sSettNr      i/o  PINFO-nummer   (1 er første sett i PINFO.)
 CD                            Ved tilslag returneres settnummer for tilslaget.
 CD char    *pszVerdi     r    Peker til verdien avslutta med '\0'.
 CD                            Hvis SOSI-navnet ikke er funnet returneres NULL.
@@ -2482,7 +2482,7 @@ CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 CD char     verdi        i    Streng som skal legges inn.
-CD short   *linje_nr     u    Linjenummer for endringen.
+CD short   *linje_nr     o    Linjenummer for endringen.
 CD short    ngi          r    Ant. ginfo-linjer etter  endringen.
 CD
 CD Usage:
@@ -2644,7 +2644,7 @@ CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 CD char     verdi        i    Streng som skal legges inn.
-CD short   *linje_nr     u    Linjenummer for endringen.
+CD short   *linje_nr     o    Linjenummer for endringen.
 CD short    ngi          r    Ant. ginfo-linjer etter  endringen.
 CD
 CD Usage:
@@ -2767,7 +2767,7 @@ CD --------------------------------------------------------------------------
 CD char            sosi_navn    i   Sosi-navn det skal finnes verdi til
 CD long            forste_punkt i   Første punkt. (1 er første pkt i gr)
 CD long            siste_punkt  i   Siste punkt det skal søkes i
-CD LC_GETPP_STATUS pp_stat      iu  Struktur med statusvariabler. Denne er
+CD LC_GETPP_STATUS pp_stat      i/o Struktur med statusvariabler. Denne er
 CD                                  bare for intern bruk i InitPP / GetPP.
 CD
 CD Usage:
@@ -2823,9 +2823,9 @@ CD
 CD Parameters:
 CD Type     Name               I/O   Explanation
 CD --------------------------------------------------------------------------
-CD long    *punkt             u  Ved tilslag returneres punktnummer for
+CD long    *punkt             o  Ved tilslag returneres punktnummer for
 CD                               tilslaget.
-CD LC_GETPP_STATUS pp_stat iu  Struktur med statusvariabler. Denne er
+CD LC_GETPP_STATUS pp_stat i/o Struktur med statusvariabler. Denne er
 CD                               bare for intern bruk i InitPP / GetPP.
 CD char    *para_peker        r  Peker til para.-streng avslutta med '\0'.
 CD                               Hvis ingenting er funnet returneres NULL.
@@ -2983,11 +2983,11 @@ CD
 CD Parameters:
 CD Type     Name        I/O   Explanation
 CD --------------------------------------------------------------------------
-CD long    *forste_punkt iu   Punktnummer for start søking.
+CD long    *forste_punkt i/o  Punktnummer for start søking.
 CD                            (1 er første punkt i gruppen.)
 CD                            Ved tilslag returneres punktnummer for tilslaget.
 CD long     siste_punkt  i    Siste punkt det skal søkes i.
-CD short   *kp           u    Knutepunkt.
+CD short   *kp           o    Knutepunkt.
 CD short    status       r    Søkestatus (1=funnet, 0=ikke funnet)
 CD
 CD Usage:
@@ -3565,8 +3565,8 @@ CD Parameters:
 CD Type    Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD long   punkt_nr   i    Punktnummer (1 er første punkt)
-CD double  *aust      u    Øst-koordinat i meter i terreng
-CD double  *nord      u    Nord-koordinat i meter i terreng
+CD double  *aust      o    Øst-koordinat i meter i terreng
+CD double  *nord      o    Nord-koordinat i meter i terreng
 CD
 CD Usage:
 CD LC_GetTK(punkt_nr,&aust,&nord);
@@ -3605,9 +3605,9 @@ CD                                HENT_FORRFRA ( 1) = vanlig,
 CD                                HENT_BAKFRA  (-1) = buffer skal snues.
 CD long    max_antall  i    Max antall punkt som kan hentes
 CD long    fra_punkt   i    Fra punktnummer (1 eller nko  er første punkt)
-CD double  *aust       u    Peker til tab. for øst-koordinater
-CD double  *nord       u    Peker til tab. for nord-koordinater
-CD long    *antall     u    Antall punkt hentet
+CD double  *aust       o    Peker til tab. for øst-koordinater
+CD double  *nord       o    Peker til tab. for nord-koordinater
+CD long    *antall     o    Antall punkt hentet
 CD
 CD Usage:
 CD LC_GetArrayTK(retning,max_antall,fra_punkt,aust,nord,&lest);
@@ -3669,8 +3669,8 @@ CD                                HENT_FORRFRA ( 1) = vanlig,
 CD                                HENT_BAKFRA  (-1) = buffer skal snues.
 CD long    max_antall  i    Max antall punkt som kan hentes
 CD long    fra_punkt   i    Fra punktnummer (1 eller nko  er første punkt)
-CD double  *aust       u    Peker til tab. for høyder
-CD long   *antall     u    Antall punkt hentet
+CD double  *aust       o    Peker til tab. for høyder
+CD long   *antall     o    Antall punkt hentet
 CD
 CD Usage:
 CD LC_GetArrayTH(retning,max_antall,fra_punkt,hoyde,&lest);
@@ -4401,7 +4401,7 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double   areal     u    Beregnet areal
+CD double   areal     o    Beregnet areal
 CD
 CD Usage:
 CD areal = LC_BerAreal();
@@ -4494,7 +4494,7 @@ CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_BGR *  pBgr      i    Gruppepeker
 CD short    retning   i    HENT_FORRFRA eller HENT_BAKFRA 
-CD double   areal     u    Beregnet areal
+CD double   areal     o    Beregnet areal
 CD
 CD Usage:
 CD areal = LX_ArealGruppe(&Bgr,retning);
@@ -4599,7 +4599,7 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double   lengde    u    Beregnet lengde
+CD double   lengde    o    Beregnet lengde
 CD
 CD Usage:
 CD areal = LC_BerLengde();
@@ -4647,7 +4647,7 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double   lengde    u    Beregnet lengde
+CD double   lengde    o    Beregnet lengde
 CD bool     beregnet  r    Status som viser om lengde er beregnet
 CD
 CD Usage:
@@ -4726,7 +4726,7 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double   lengde     u    Beregnet areal
+CD double   lengde     o    Beregnet areal
 CD
 CD Usage:
 CD lengde = LC_BerAvgrensLengde();
@@ -4787,7 +4787,7 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double   lengde     u    Beregnet lengde
+CD double   lengde     o    Beregnet lengde
 CD
 CD Usage:
 CD lengde = LC_BerIndreAvgrensLengde();
@@ -4843,7 +4843,7 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double   lengde     u    Beregnet lengde
+CD double   lengde     o    Beregnet lengde
 CD
 CD Usage:
 CD lengde = LC_BerYtreAvgrensLengde();

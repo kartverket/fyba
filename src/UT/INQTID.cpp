@@ -56,7 +56,7 @@ CD Parameters:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
-CD PFTID     pFilTid   u   Oppdateringstid
+CD PFTID     pFilTid   o   Oppdateringstid
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Usage:  sStatus = UT_InqPathTid(szPath,&FilTid);

@@ -334,7 +334,7 @@ CD
 CD Parameters:
 CD Type            Name      I/O   Explanation
 CD --------------------------------------------------------------------------
-CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
+CD unsigned short *pusMaske  i/o  [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
 CD                                [Ut]  Viser hvilke deler av TRANSPAR som er funnet/hentet.
 CD                                Følgende konstanter er definert:
 CD                                  LC_TR_ALLT - Alle deler av ..TRANSPAR hentes
@@ -350,7 +350,7 @@ CD                                  LC_TR_VERTDATUM - Vert-datum
 CD                                  LC_TR_VERTINT - Vert-int
 CD                                  LC_TR_VERTDELTA - Vert-delta
 CD
-CD LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
+CD LC_TRANSPAR *    pTrans    i/o  Peker til struktur som skal motta ..TRANSPAR informasjonen.
 CD short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
 CD
 CD Usage:
@@ -580,12 +580,12 @@ CD
 CD Parameters:
 CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
-CD short   *koosys     u    Koordinatsystem
-CD double  *origo_a    u    Origo øst
-CD double  *origo_n    u    Origo nord
-CD double  *enhet      u    Enhet
-CD double  *enhet_h    u    ...ENHET-H
-CD double  *enhet_d    u    ...ENHET-D
+CD short   *koosys     o    Koordinatsystem
+CD double  *origo_a    o    Origo øst
+CD double  *origo_n    o    Origo nord
+CD double  *enhet      o    Enhet
+CD double  *enhet_h    o    ...ENHET-H
+CD double  *enhet_d    o    ...ENHET-D
 CD short    ist        r    status: UT_TRUE=OK, UT_FALSE=feil (navn er ikke funnet)
 CD
 CD Usage:
@@ -685,7 +685,7 @@ CD
 CD Parameters:
 CD Type    Name       I/O  Explanation
 CD --------------------------------------------------------------------------
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
+CD short  *psTegnsett  o   Tegnsett, konstanter definert:
 CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
 CD                            TS_ND7     = Norsk Data 7-bits
 CD                            TS_ISO8859 = ISO8859-10 norsk/samisk
@@ -877,7 +877,7 @@ CD
 CD Parameters:
 CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double  *nv_a       u    Område
+CD double  *nv_a       o    Område
 CD double  *nv_n       u
 CD double  *oh_a       u
 CD double  *oh_n       u

@@ -37,7 +37,7 @@ CD Parameters:
 CD Type            Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD char           *pszFil     i   Fullstendig filnavn
-CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
+CD unsigned short *pusMaske  i/o  [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
 CD                                [Ut] Viser hvilke deler av TRANSPAR som er funnet/hentet.
 CD                                Følgende konstanter er definert:
 CD                                  LC_TR_ALLT - Alle deler av ..TRANSPAR hentes
@@ -53,7 +53,7 @@ CD                                  LC_TR_VERTDATUM - Vert-datum
 CD                                  LC_TR_VERTINT - Vert-int
 CD                                  LC_TR_VERTDELTA - Vert-delta
 CD
-CD LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
+CD LC_TRANSPAR *    pTrans    i/o  Peker til struktur som skal motta ..TRANSPAR informasjonen.
 CD short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
 CD
 CD Usage:
@@ -102,7 +102,7 @@ CD Parameters:
 CD Type            Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD FILE           *pFil       i   Filpeker til sosi-fil.
-CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
+CD unsigned short *pusMaske  i/o  [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
 CD                                [Ut] Viser hvilke deler av TRANSPAR som er funnet/hentet.
 CD                                Følgende konstanter er definert:
 CD                                  LC_TR_ALLT - Alle deler av ..TRANSPAR hentes
@@ -118,7 +118,7 @@ CD                                  LC_TR_VERTDATUM - Vert-datum
 CD                                  LC_TR_VERTINT - Vert-int
 CD                                  LC_TR_VERTDELTA - Vert-delta
 CD
-CD LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
+CD LC_TRANSPAR *    pTrans    i/o  Peker til struktur som skal motta ..TRANSPAR informasjonen.
 CD short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
 CD
 CD Usage:
@@ -332,12 +332,12 @@ CD Parameters:
 CD Type     Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFil      i   Fullstendig filnavn
-CD short   *koosys      u   Koordinatsystem
-CD double  *origo_a     u   ..ORIGO-AUST
-CD double  *origo_n     u   ..ORIGO-NORD
-CD double  *enhet       u   ...ENHET
-CD double  *enhet_h     u   ...ENHET-H
-CD double  *enhet_d     u   ...ENHET-D
+CD short   *koosys      o   Koordinatsystem
+CD double  *origo_a     o   ..ORIGO-AUST
+CD double  *origo_n     o   ..ORIGO-NORD
+CD double  *enhet       o   ...ENHET
+CD double  *enhet_h     o   ...ENHET-H
+CD double  *enhet_d     o   ...ENHET-D
 CD short    sStatus     r   UT_TRUE, eller UT_FALSE.
 CD
 CD Usage:
@@ -384,12 +384,12 @@ CD Parameters:
 CD Type     Name        I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE    *pFil         i   Filpeker til sosi-fil.
-CD short   *koosys       u   Koordinatsystem
-CD double  *origo_a      u   ..ORIGO-AUST
-CD double  *origo_n      u   ..ORIGO-NORD
-CD double  *enhet        u   ...ENHET
-CD double  *enhet_h      u   ...ENHET-H
-CD double  *enhet_d      u   ...ENHET-D
+CD short   *koosys       o   Koordinatsystem
+CD double  *origo_a      o   ..ORIGO-AUST
+CD double  *origo_n      o   ..ORIGO-NORD
+CD double  *enhet        o   ...ENHET
+CD double  *enhet_h      o   ...ENHET-H
+CD double  *enhet_d      o   ...ENHET-D
 CD short    sStatus      r   UT_TRUE, eller UT_FALSE.
 CD
 CD Usage:
@@ -607,15 +607,15 @@ CD Parameters:
 CD Type    Name              I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char   *pszFil             i  Fullstendig filnavn
-CD short  *psMetode           u  Hvordan data er registrert.
+CD short  *psMetode           o  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *pLNnoyaktighet     u  Registreringsnøyaktighet
+CD long   *pLNnoyaktighet     o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
-CD short  *psSynbarhet        u  Synbarhet i bilde
+CD short  *psSynbarhet        o  Synbarhet i bilde
 CD                                 KVAL_SYN_UNDEF  synbarhet er udefinert.
-CD short  *psHoydeMetode      u  Hvordan høyden er registrert.
+CD short  *psHoydeMetode      o  Hvordan høyden er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
+CD long   *plHoydeNoyaktighet o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
 CD short   ist                r  Statusvariabel: UT_TRUE  - OK, ..KVALITET er funnet
 CD                                               UT_FALSE - ikke funnet
@@ -666,15 +666,15 @@ CD Parameters:
 CD Type    Name              I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD FILE   *pFil               i  Filpeker til sosi-fil.
-CD short  *psMetode           u  Hvordan data er registrert.
+CD short  *psMetode           o  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *pLNnoyaktighet     u  Registreringsnøyaktighet
+CD long   *pLNnoyaktighet     o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
-CD short  *psSynbarhet        u  Synbarhet i bilde
+CD short  *psSynbarhet        o  Synbarhet i bilde
 CD                                 KVAL_SYN_UNDEF  synbarhet er udefinert.
-CD short  *psHoydeMetode      u  Hvordan høyden er registrert.
+CD short  *psHoydeMetode      o  Hvordan høyden er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
+CD long   *plHoydeNoyaktighet o  Registreringsnøyaktighet
 CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
 CD short   ist                r  Statusvariabel: UT_TRUE  - OK, ..KVALITET er funnet
 CD                                               UT_FALSE - ikke funnet
@@ -725,7 +725,7 @@ CD Parameters:
 CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD char   *pszFil      i   Fullstendig filnavn
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
+CD short  *psTegnsett  o   Tegnsett, konstanter definert:
 CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
 CD                            TS_ND7     = Norsk Data 7-bits
 CD                            TS_DECM8   = DEC multinasjonal 8-bits
@@ -776,7 +776,7 @@ CD Parameters:
 CD Type     Name      I/O  Explanation
 CD --------------------------------------------------------------------------
 CD FILE    *fil        i   Filpeker til sosi-fil.
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
+CD short  *psTegnsett  o   Tegnsett, konstanter definert:
 CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
 CD                            TS_ND7     = Norsk Data 7-bits
 CD                            TS_DECM8   = DEC multinasjonal 8-bits
@@ -840,7 +840,7 @@ CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFil       i   Fullstendig filnavn
 CD char    *sosi_navn    i   SOSI-navn det skal finnes verdi til
-CD short   *sett_nr     i/u  i: "Sett nummer"(linjenummer) for start søking (min 1)
+CD short   *sett_nr     i/o  i: "Sett nummer"(linjenummer) for start søking (min 1)
 CD                           u: Ved tilslag returneres "Sett nummer" for
 CD                              tilslaget.
 CD char    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
@@ -895,7 +895,7 @@ CD Type     Name        I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE    *pFil         i   Filpeker til sosi-fil.
 CD char    *sosi_navn    i   SOSI-navn det skal finnes verdi til
-CD short   *sett_nr     i/u  i: "Sett nummer"(linjenummer) for start søking (min 1)
+CD short   *sett_nr     i/o  i: "Sett nummer"(linjenummer) for start søking (min 1)
 CD                           u: Ved tilslag returneres "Sett nummer" for
 CD                              tilslaget.
 CD char    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
@@ -1125,7 +1125,7 @@ CD Parameters:
 CD Type      Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char     *pszFil      i    Fullstendig filnavn
-CD UT_INT64 *sluttpos    u    Posisjon for .SLUTT
+CD UT_INT64 *sluttpos    o    Posisjon for .SLUTT
 CD short     ist         r    Status: UT_TRUE  = OK
 CD                                  UT_FALSE = feil
 CD
@@ -1172,7 +1172,7 @@ CD Parameters:
 CD Type      Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE     *pFil       i    Filpeker til sosi-fil.
-CD UT_INT64 *sluttpos   u    Posisjon for .SLUTT
+CD UT_INT64 *sluttpos   o    Posisjon for .SLUTT
 CD short     ist        r    Status: UT_TRUE  = OK
 CD                                 UT_FALSE = feil
 CD
@@ -1257,7 +1257,7 @@ CD Parameters:
 CD Type    Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char   *pszFil      i   Fullstendig filnavn
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
+CD short  *psTegnsett  o   Tegnsett, konstanter definert:
 CD                            TS_UKJENT  = Fikk ikke sjekket tegnsett
 CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
 CD                            TS_ND7     = Norsk Data 7-bits
@@ -1310,7 +1310,7 @@ CD Parameters:
 CD Type    Name       I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD FILE   *fil         i   Filpeker til sosi-fil.
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
+CD short  *psTegnsett  o   Tegnsett, konstanter definert:
 CD                            TS_UKJENT  = Fikk ikke sjekket tegnsett
 CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
 CD                            TS_ND7     = Norsk Data 7-bits

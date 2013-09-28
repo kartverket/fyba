@@ -45,7 +45,7 @@ CD
 CD Parameters:
 CD Type        Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM * pSnrAdm  i/o   Peker til statusblokk for serienummersøk
 CD LC_FILADM * pFil     i     Peker til FilAdm
 CD long        lMinSnr  i     Fra og med serienummer
 CD long        lMaxSnr  i     Til og med serienummer
@@ -79,7 +79,7 @@ CD Type        Name    I/O    Explanation
 CD -----------------------------------------------------------------------------
 CD LC_FILADM * pFil     i     Peker til FilAdm
 CD long        lSnr     i     Serienummer som skal finnes
-CD LC_BGR *     pBgr     u     Gruppenummer i basen
+CD LC_BGR *     pBgr     o     Gruppenummer i basen
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -114,9 +114,9 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM * pSnrAdm  i/o   Peker til statusblokk for serienummersøk
 CD long        lSnr     i     Serienummer som skal finnes
-CD LC_BGR *     pBgr     u     Gruppenummer i basen
+CD LC_BGR *     pBgr     o     Gruppenummer i basen
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -156,7 +156,7 @@ CD -----------------------------------------------------------------------------
 CD LC_FILADM *pFil     i     Peker til FilAdm
 CD short      antall   i     Antall linjer brukt i serienummertabellen
 CD long      *snr      i     Tabell med serienummer som skal finnes
-CD long      *bgr      u     Tabell med gruppenummer funnet
+CD long      *bgr      o     Tabell med gruppenummer funnet
 CD                             (INGEN_GRUPPE = ikke funnet)
 CD
 CD Usage:
@@ -248,8 +248,8 @@ CD
 CD Parameters:
 CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-CD LC_BGR *     pBgr     u     Gruppenummer
+CD LC_SNR_ADM * pSnrAdm  i/o   Peker til statusblokk for serienummersøk
+CD LC_BGR *     pBgr     o     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -298,7 +298,7 @@ CD Type        Name     I/O   Explanation
 CD --------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR *     pBgr      o    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -345,8 +345,8 @@ CD
 CD Parameters:
 CD Type     Name     I/O   Explanation
 CD --------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-CD LC_BGR *     pBgr     u     Gruppenummer
+CD LC_SNR_ADM * pSnrAdm  i/o   Peker til statusblokk for serienummersøk
+CD LC_BGR *     pBgr     o     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -390,7 +390,7 @@ CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR *     pBgr      o    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -437,8 +437,8 @@ CD
 CD Parameters:
 CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-CD LC_BGR *     pBgr     u     Gruppenummer
+CD LC_SNR_ADM * pSnrAdm  i/o   Peker til statusblokk for serienummersøk
+CD LC_BGR *     pBgr     o     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -480,7 +480,7 @@ CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR *     pBgr      o    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -524,8 +524,8 @@ CD
 CD Parameters:
 CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-CD LC_BGR *     pBgr     u     Gruppenummer
+CD LC_SNR_ADM * pSnrAdm  i/o   Peker til statusblokk for serienummersøk
+CD LC_BGR *     pBgr     o     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:
@@ -570,7 +570,7 @@ CD Type        Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR *     pBgr      o    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Usage:

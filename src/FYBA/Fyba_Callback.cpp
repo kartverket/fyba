@@ -73,8 +73,8 @@ CD Parameters:
 CD Type     Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD short    feil_nr      i   Feilmeldingsnummer
-CD char    *logtx        u   Peker til feilmeldingstekst avslutta med '\0'.
-CD char    *vartx        u   Peker til feilmeldingstekst avslutta med '\0'.
+CD char    *logtx        o   Peker til feilmeldingstekst avslutta med '\0'.
+CD char    *vartx        o   Peker til feilmeldingstekst avslutta med '\0'.
 CD
 CD Usage:
 CD LC_SetErrorHandler(LC_ErrorHandler);

@@ -53,7 +53,7 @@ CD Parameters:
 CD Type          Navn     I/U  Merknad
 CD ------------------------------------------------------------------
 CD char           *pszPath        i   Filnavn inkl. full sti.
-CD unsigned long  *pulLedigPlass  u   Ledig plass på disken
+CD unsigned long  *pulLedigPlass  o   Ledig plass på disken
 CD short           sStatus        r   Status; 0=OK, annen verdi er feil.
 CD
 CD Usage:  sStatus = UT_InqAvailSize(pszPath,&ulLedigPLass);

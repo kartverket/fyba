@@ -28,7 +28,7 @@ CD
 CD Parameters:
 CD Type   Navn       I/U   Merknad
 CD --------------------------------------------------------------------------
-CD char  *pszTx       iu   Tekststreng som skal behandles
+CD char  *pszTx       i/o  Tekststreng som skal behandles
 CD char   cTegn       i    Styreparameter:
 CD                           "  = Omslutt pszTx med  ' " '
 CD                           '  = Omslutt pszTx med  " ' "

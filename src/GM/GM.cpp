@@ -262,7 +262,7 @@ CD double   na       i    Koordinat i N
 CD double   nn       i
 CD double   ma       i    Koordinat i M
 CD double   mn       i
-CD double  *sa       u    Koordinat i S
+CD double  *sa       o    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
@@ -321,7 +321,7 @@ CD double   na       i    Koordinat i N
 CD double   nn       i
 CD double   ma       i    Koordinat i M
 CD double   mn       i
-CD double  *sa       u    Koordinat i S
+CD double  *sa       o    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
@@ -379,7 +379,7 @@ CD double   ma       i    Koordinat i M
 CD double   mn       i
 CD double   na       i    Koordinat i N
 CD double   nn       i
-CD double  *sa       u    Koordinat i S
+CD double  *sa       o    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
@@ -473,7 +473,7 @@ CD double   ma       i    Koordinat i M
 CD double   mn       i
 CD double   na       i    Koordinat i N
 CD double   nn       i
-CD double  *sa       u    Koordinat i S
+CD double  *sa       o    Koordinat i S
 CD double  *sn       u
 CD short    overlapp r    0=ikke overlapp
 CD                        1=tangerer (likt endepunkt)
@@ -572,7 +572,7 @@ CD double   ma       i    Koordinat i M
 CD double   mn       i
 CD double   na       i    Koordinat i N
 CD double   nn       i
-CD double  *sa       u    Koordinat i S
+CD double  *sa       o    Koordinat i S
 CD double  *sn       u
 CD short    kryss    r    0=ikke skjæring, 1=skjæring
 CD
@@ -657,9 +657,9 @@ CD double   ka       i    Koordinat i K.
 CD double   kn       i
 CD double   la       i    Koordinat i L.
 CD double   ln       i
-CD double  *a1       u    Koordinat i skjæringspunkt 1
+CD double  *a1       o    Koordinat i skjæringspunkt 1
 CD double  *n1       u
-CD double  *a2       u    Koordinat i skjæringspunkt 2
+CD double  *a2       o    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
@@ -743,9 +743,9 @@ CD double   ka       i    Koordinat i K.
 CD double   kn       i
 CD double   la       i    Koordinat i L.
 CD double   ln       i
-CD double  *a1       u    Koordinat i skjæringspunkt 1
+CD double  *a1       o    Koordinat i skjæringspunkt 1
 CD double  *n1       u
-CD double  *a2       u    Koordinat i skjæringspunkt 2
+CD double  *a2       o    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
@@ -822,9 +822,9 @@ CD double   sn2      i
 CD double   radius2  i    Buens radius.
 CD double   fi2      i    Retning fra sentrum til buens startpunkt
 CD double   dfi2     i    Vinkel mellom retning til buens startpunkt og sluttpunkt
-CD double  *a1       u    Koordinat i skjæringspunkt 1
+CD double  *a1       o    Koordinat i skjæringspunkt 1
 CD double  *n1       u
-CD double  *a2       u    Koordinat i skjæringspunkt 2
+CD double  *a2       o    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
@@ -907,9 +907,9 @@ CD double   radius1  i    Sirklens radius.
 CD double   sa2      i    Koordinat i sirklens sentrum.
 CD double   sn2      i
 CD double   radius2  i    Sirklens radius.
-CD double  *a1       u    Koordinat i skjæringspunkt 1
+CD double  *a1       o    Koordinat i skjæringspunkt 1
 CD double  *n1       u
-CD double  *a2       u    Koordinat i skjæringspunkt 2
+CD double  *a2       o    Koordinat i skjæringspunkt 2
 CD double  *n2       u
 CD short    kryss    r    Antall skjæringspunkter (0, 1 eller 2)
 CD
@@ -994,7 +994,7 @@ CD double   a2       i    Koordinat i 2
 CD double   n2       i
 CD double   ap       i    Koordinat i P
 CD double   np       i
-CD double  *af       u    Koordinat i fotpunktet
+CD double  *af       o    Koordinat i fotpunktet
 CD double  *nf       u
 CD short    kryss    r    0=ikke beregnet (brukes ikke)
 CD                        1=beregnet, men punktet er utenfor linjen
@@ -1110,7 +1110,7 @@ CD double   a2       i    Koordinat i 2
 CD double   n2       i
 CD double   ap       i    Koordinat i P
 CD double   np       i
-CD double  *af       u    Koordinat i fotpunktet
+CD double  *af       o    Koordinat i fotpunktet
 CD double  *nf       u
 CD short    kryss    r    0=ikkje berekna (blir ikkje brukt)
 CD                        1=berekna, men punktet er utanfor lina
@@ -1146,9 +1146,9 @@ SK_EntPnt_GM short GM_fotp_ny(double a1, double n1, double a2, double n2, double
 	}
 	else 
 	{
-	  u = teljar / nemnar;
-	  *af = a1 + u * da12;
-	  *nf = n1 + u * dn12;
+	  o = teljar / nemnar;
+	  *af = a1 + o * da12;
+	  *nf = n1 + o * dn12;
 	  if ( (u >= 0) && (u <= 1)) 
 	  {
 		 godfot = 2;
@@ -1262,9 +1262,9 @@ CD double   kn          i
 CD double   la          i    Koordinat i L
 CD double   ln          i
 CD double   avstand     i    Forskyving (>0 = til høyre(K2-L2), <0 = til venstre(K1-L1))
-CD double  *ka1         u    Koordinat i K1
+CD double  *ka1         o    Koordinat i K1
 CD double  *kn1         u
-CD double  *la1         u    Koordinat i L1
+CD double  *la1         o    Koordinat i L1
 CD double  *ln1         u
 CD bool     status s    r    UT_FALSE = ikke beregnet (K og L har like koordinater)
 CD                           UT_TRUE = bregnet, ok
@@ -1341,10 +1341,10 @@ CD double   a2       i    Koordinat i P2
 CD double   n2       i
 CD double   radius   i    Buens radius (med fortegn)
 CD short    storbue  i    Storbue (1=storbue, 0=ikke storbue)
-CD double  *as       u    Koordinat i sentrumspunktet
+CD double  *as       o    Koordinat i sentrumspunktet
 CD double  *ns       u
-CD double  *fi       u    "Retning" sentrum - punkt 1.
-CD double  *dfi      u    Vinkel mellom fi og retning  sentrum - punkt 2.
+CD double  *fi       o    "Retning" sentrum - punkt 1.
+CD double  *dfi      o    Vinkel mellom fi og retning  sentrum - punkt 2.
 CD short    beregnet r    0=kan ikke beregne,  1=bregnet ok.
 CD
 CD Usage:
@@ -1434,11 +1434,11 @@ CD double   a2       i    Koordinat i P2  (punkt på buen)
 CD double   n2       i
 CD double   a3       i    Koordinat i P3  (sluttpunkt)
 CD double   n3       i
-CD double  *as       u    Koordinat i sentrumspunktet
+CD double  *as       o    Koordinat i sentrumspunktet
 CD double  *ns       u
-CD double  *radius   u    Buens radius
-CD double  *fi       u    "Retning" sentrum - punkt 1.
-CD double  *dfi      u    Vinkel mellom fi og retning  sentrum - punkt 3.
+CD double  *radius   o    Buens radius
+CD double  *fi       o    "Retning" sentrum - punkt 1.
+CD double  *dfi      o    Vinkel mellom fi og retning  sentrum - punkt 3.
 CD short    beregnet r    0=kan ikke beregne,  1=bregnet ok.
 CD
 CD Usage:
@@ -1522,11 +1522,11 @@ CD
 CD Parameters:
 CD Type     Name    I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double  *as       iu   Koordinat i sentrumspunktet
+CD double  *as       i/o  Koordinat i sentrumspunktet
 CD double  *ns       iu
-CD double  *radius   iu   Buens radius
-CD double  *fi       u    "Startretning"  sentrum - punkt 1.
-CD double  *dfi      u    "Åpningsvinkel" (2PI).
+CD double  *radius   i/o  Buens radius
+CD double  *fi       o    "Startretning"  sentrum - punkt 1.
+CD double  *dfi      o    "Åpningsvinkel" (2PI).
 CD short    ist      r    1 = OK, 0 = ikke beregnet.
 CD
 CD Usage:
@@ -1564,11 +1564,11 @@ CD double   a2       i    Koordinat i P2  (punkt på buen)
 CD double   n2       i
 CD double   a3       i    Koordinat i P3  (punkt på buen)
 CD double   n3       i
-CD double  *as       u    Koordinat i sentrumspunktet
+CD double  *as       o    Koordinat i sentrumspunktet
 CD double  *ns       u
-CD double  *radius   u    Buens radius
-CD double  *fi       u    "Retning" sentrum - start av buen (0)
-CD double  *dfi      u    Åpningsvinkel (2*PI)
+CD double  *radius   o    Buens radius
+CD double  *fi       o    "Retning" sentrum - start av buen (0)
+CD double  *dfi      o    Åpningsvinkel (2*PI)
 CD short    beregnet r    1 = OK; 0 = kan ikke beregne.
 CD
 CD Usage:
@@ -1636,7 +1636,7 @@ CD double   a1       i    Koordinat i 1
 CD double   n1       i
 CD double   a2       i    Koordinat i 2
 CD double   n2       i
-CD double  *pa       u    Parametre for linjen
+CD double  *pa       o    Parametre for linjen
 CD double  *pb       u
 CD double  *pc       u
 CD short    ist      r    1=beregnet, 0=ikke beregnet (1 og 2 er samme punkt)
@@ -1700,7 +1700,7 @@ CD double   h1       i
 CD double   a2       i    Koordinat i 2
 CD double   n2       i
 CD double   h2       i
-CD double  *pf       u    Parametre for linjen
+CD double  *pf       o    Parametre for linjen
 CD double  *pg       u
 CD double  *ph       u
 CD short    ist      r    1=beregnet, 0=ikke beregnet (1 og 2 er samme punkt)
@@ -1749,7 +1749,7 @@ CD double   pc1      i
 CD double   pa2      i    Parametre for linje 2
 CD double   pb2      i
 CD double   pc2      i
-CD double  *as       u    Koordinat i skjæringspunktet
+CD double  *as       o    Koordinat i skjæringspunktet
 CD double  *ns       u
 CD short    kryss    r    1=beregnet, 0=ikke beregnet (pralelle linjer)
 CD
@@ -2000,9 +2000,9 @@ CD double   radius   i    Aavstand fra senterpunkt til P1 og P2.
 CD                        (Fortegn blir ignorert.)
 CD double   fi       i    Retning sentrum - P1
 CD double   dfi      i    Delta retning p1 og p2
-CD double   nva      u    Nedre venstre hjørne  av omskrevet rektangel.
+CD double   nva      o    Nedre venstre hjørne  av omskrevet rektangel.
 CD double   nvn      u
-CD double   oha      u    Øvre høyre hjørne  av omskrevet rektangel.
+CD double   oha      o    Øvre høyre hjørne  av omskrevet rektangel.
 CD double   ohn      u
 CD
 CD Usage:
@@ -2580,7 +2580,7 @@ CD
 CD Parameters:
 CD Type     Name      I/O   Explanation
 CD --------------------------------------------------------------------------
-CD double  *nva        iu   Avgrensing av vinduet
+CD double  *nva        i/o  Avgrensing av vinduet
 CD double  *nvn        iu
 CD double  *oha        iu
 CD double  *ohn        iu
@@ -2673,7 +2673,7 @@ CD double   fi       i    "Retning" sentrum - buens startpunkt.
 CD double   dfi      i    Vinkel mellom fi og retning buens sluttpunkt
 CD double   a        i    Punkt som skal testes
 CD double   n        i
-CD double  *dfiPkt   u    Vinkel mellom fi og retning til testpunktet
+CD double  *dfiPkt   o    Vinkel mellom fi og retning til testpunktet
 CD short    ok       r    1=ligger i buens sektor, 0=ikke i buens sektor
 CD
 CD Usage:
@@ -2795,7 +2795,7 @@ CD radius   double    i   radius med fortegn
 CD                          +  =  med klokka,  -  = mot klokka
 CD a        double    i   Øst-koordinat for tangeringspunkt
 CD n        double    i   Nord-koordinat for tangeringspunkt
-CD *buetan  double    u   Retning i radianer(0-2PI) for buetangent
+CD *buetan  double    o   Retning i radianer(0-2PI) for buetangent
 CD ist      short     r   status:  1 = Beregning ok                 
 CD                                 0 = Punkt ikke på buesegment     
 CD                                     NB! Tangent beregnes uansett!
@@ -2841,8 +2841,8 @@ CD double  dfi     i  Retn.endring i radianer.
 CD                      + = mot klokka, - =med klokka
 CD double  delta   i  Vinkeltoleranse (max vinkel mellom korder i radianer)
 CD short   mpu     i  Max tal på punkt i a_arr og n_arr
-CD double *a_arr   u  Knekkpunkt før, mellom og etter kordene
-CD double *n_arr   u  
+CD double *a_arr   o  Knekkpunkt før, mellom og etter kordene
+CD double *n_arr   o  
 CD short   npu     r  Tal på punkt i a_arr og n_arr
 CD
 CD Usage:
@@ -2898,8 +2898,8 @@ CD ------------------------------------------------------------------
 CD double  dAs     i  Øst-koordinat for sentrum
 CD double  dNns    i  Nord-koordinat for sentrum
 CD double  dAreal  i  Ønsket areal
-CD double *a_arr   u  Hjørnepunkt (Må ha plass til 8 punkt.)
-CD double *n_arr   u  
+CD double *a_arr   o  Hjørnepunkt (Må ha plass til 8 punkt.)
+CD double *n_arr   o  
 CD
 CD Usage:
 CD GM_PktTilOktagon(dAs,dNs,dAreal,a_arr,n_arr);
@@ -2979,9 +2979,9 @@ CD Type     Name        I/O  Explanation
 CD --------------------------------------------------------------------------
 CD double   dMaxAvst     i   Max distanse mellom punkta
 CD double   dMaxPil      i   Max pilhøyde
-CD long    *nko         iu   Antall koordinater
-CD double  *pA          iu   Øst-koordinater
-CD double  *pN          iu   Nord-koordinater
+CD long    *nko         i/o  Antall koordinater
+CD double  *pA          i/o  Øst-koordinater
+CD double  *pN          i/o  Nord-koordinater
 CD bool     bBeregnet    r   Status.
 CD Usage:
 CD bBeregnet = GM_TynnDared(dMaxAvst,dPilhoyde,&nko,pA,pN);
@@ -3216,9 +3216,9 @@ CD double  dA3           i    Koordinater punkt 3
 CD double  dN3           i
 CD double  dEnhet        i    Enhet som styrer avrunding og beregning
 CD short   sMaxAntPkt    i    Max antall punkt i pdAustArr og pdNordArr
-CD double *pdAustArr     u    Peker til array som mottar beregnede koordinater(  n1 -nx
-CD double *pdNordArr     u    Peker til array som mottar beregnede koordinater
-CD short   sAntPkt       u    Antall punkt beregnet
+CD double *pdAustArr     o    Peker til array som mottar beregnede koordinater(  n1 -nx
+CD double *pdNordArr     o    Peker til array som mottar beregnede koordinater
+CD short   sAntPkt       o    Antall punkt beregnet
 CD bool    bBeregnet     r    Status: true = beregnet OK
 CD                                    false = ikke beregnet. (ikke nok plass i resultat-array, og andre feil?)
 CD
