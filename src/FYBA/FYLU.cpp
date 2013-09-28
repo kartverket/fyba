@@ -160,7 +160,7 @@ CD Purpose:
 CD Frigir et utvalg med alle underliggende utvalgselementer.
 CD
 CD Parameters:
-CD Type        Navn  I/O  Forklaring
+CD Type        Name  I/O  Explanation
 CD -------------------------------------------------------------------------
 CD LC_UTVALG *  pU     i   Peker til utvalget.
 CD
@@ -191,7 +191,7 @@ CD Frigir alle elementene (utvalgslinjene) på et nivå i kjeden av
 CD utvalgselementer for et utvalg.
 CD
 CD Parameters:
-CD Type                  Navn      I/O  Forklaring
+CD Type                  Name      I/O  Explanation
 CD -------------------------------------------------------------------------
 CD LC_UTVALG_ELEMENT *  pForsteUE  i   Start utvalgs-kjede på dette nivå.
 CD
@@ -540,7 +540,7 @@ CD Purpose:
 CD Legg til et nytt element i kjeden utvalgslinjer.
 CD
 CD Parameters:
-CD Type         Navn     I/O  Forklaring
+CD Type         Name     I/O  Explanation
 CD -----------------------------------------------------------------------
 CD LC_UTVALG   *pU        i   Aktuellt utvalg
 CD short        sNiv      i   Nivå (antall prikker forran navnet)
@@ -2248,7 +2248,7 @@ CD Purpose:
 CD Legg til et nytt utvalg i en av kjedene av utvalg.
 CD
 CD Parameters:
-CD Type              Navn     I/O  Forklaring
+CD Type              Name     I/O  Explanation
 CD --------------------------------------------------------------------------
 CD LC_UTVALG_BLOKK  *pUtBlokk  i   Toppblokk for aktuell utvalgstype.
 CD char             *pszNavn   i   Utvalgsnavn

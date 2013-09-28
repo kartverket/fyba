@@ -188,7 +188,7 @@ CD Denne rutinen blir kalt fra FYBA under indeksoppbygging, og den skal
 CD ikke kalles fra brukerprogramvaren.
 CD
 CD Parameters:
-Dette CD Type     Navn        I/U  Forklaring
+Dette CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD
 CD Usage:

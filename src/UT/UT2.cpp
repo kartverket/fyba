@@ -382,7 +382,7 @@ CH  UT_StrCopy                    Kopiere streng med overflyttest
 CD  ==============================================================
 CD  Kopierer en streng med max ant tegn. Legger på \0 på slutten.
 CD
-CD  PARAMETERLISTE:
+CD  Parameters:
 CD  Name
 ype       I/O  Explanation
 CD  -------------------------------------------------------------
@@ -408,7 +408,7 @@ CH  UT_StrCat                               Konkatinerer streng
 CD  ==============================================================
 CD  Koncatinerer en streng med max ant tegn. Legger på \0 på slutten.
 CD
-CD  PARAMETERLISTE:
+CD  Parameters:
 CD  Name
 ype    I/O  Explanation
 CD  -------------------------------------------------------------
@@ -1092,7 +1092,7 @@ CD Purpose:
 CD Konverterer en streng fra ND-7-bits norsk ASCII til PC-8-bits norsk ASCII.
 CD
 CD Parameters:
-CD  Type    Navn     I/U   Forklaring
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
@@ -1137,7 +1137,7 @@ CD Purpose:
 CD Konverterer en streng fra PC-8-bits norsk ASCII til ND-7-bits norsk ASCII.
 CD
 CD Parameters:
-CD  Type    Navn     I/U   Forklaring
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
@@ -1182,7 +1182,7 @@ CD Purpose:
 CD Konverterer en streng fra PC-8-bits norsk ASCII til ISO8859-10.
 CD
 CD Parameters:
-CD  Type    Navn     I/U   Forklaring
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
@@ -1229,7 +1229,7 @@ CD Purpose:
 CD Konverterer en streng fra ISO8859-10 til PC-8-bits norsk ASCII.
 CD
 CD Parameters:
-CD  Type    Navn     I/U   Forklaring
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
@@ -1276,7 +1276,7 @@ CD Purpose:
 CD Konverterer en streng fra norsk 7-bits ASCII til ISO8859-10.
 CD
 CD Parameters:
-CD  Type    Navn     I/U   Forklaring
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
@@ -1322,7 +1322,7 @@ CD Purpose:
 CD Konverterer en streng fra ISO8859-10 til norsk 7-bits ASCII.
 CD
 CD Parameters:
-CD  Type    Navn     I/U   Forklaring
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
@@ -1369,7 +1369,7 @@ CD Purpose:
 CD Konverterer en streng fra et tegnsett til et annet.
 CD
 CD Parameters:
-CD  Type    Navn         I/U   Forklaring
+CD  Type    Name         I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  short   sFraTegnsett  i    Fra tegnsett
 CD                                TS_UKJENT  = Ukjent tegnsett
@@ -1462,7 +1462,7 @@ CD For sortering må UT_StrColli brukes for å handtere norske bokstaver rett.
 CD UT_StrCmpi er mye raskere enn UT_StrColli.
 CD
 CD Parameters:
-CD  Type    Navn         I/U   Forklaring
+CD  Type    Name         I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *pszTx1        i    Peker til første streng (avsluttet med '\0').
 CD  char   *pszTx2        i    Peker til andre streng (avsluttet med '\0').
@@ -1512,7 +1512,7 @@ CD Fungerer for norske bokstaver. Justerer for landskode (LC_COLLATE)
 CD Hvis det er bare er likhet det sjekkes på, bør heller den raskere UT_StrCmpi brukes.
 CD
 CD Parameters:
-CD  Type    Navn         I/U   Forklaring
+CD  Type    Name         I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *pszTx1        i    Peker til første streng (avsluttet med '\0').
 CD  char   *pszTx2        i    Peker til andre streng (avsluttet med '\0').

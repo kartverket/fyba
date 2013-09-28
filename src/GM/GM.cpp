@@ -187,7 +187,7 @@ CD Purpose:
 CD Sjekker om et punkt ligger inni et vindu - gjerne rotert vindu.
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD -------------------------------------------------------------------------------
 CD PktA      double       i   Øst-koordinat for sjekkpunkt
 CD PktN      double       i   Nord-koordinat for sjekkpunkt
@@ -1785,7 +1785,7 @@ CD Purpose:
 CD Beregner positiv vinkel mellom to retninger fi1 og fi2.
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD ------------------------------------------------------------------
 CD fi1       double       i   Retningsvinkel 1
 CD fi2       double       i   retningsvinkel 2
@@ -1809,7 +1809,7 @@ CD Purpose:
 CD Redusere en retningsvinkel til å ligge i området 0 - 2*PI.
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD ------------------------------------------------------------------
 CD fi       double       i   Retningsvinkel 
 CD vinkel   double       r   Redusert vinkel
@@ -2726,7 +2726,7 @@ CD Purpose:
 CD Beregner avstand mellom to punkt.
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD ------------------------------------------------------------------
 CD a1        double       i   Øst-koordinat for startpunkt
 CD n1        double       i   Nord-koordinat for startpunkt
@@ -2755,7 +2755,7 @@ CD Purpose:
 CD Beregner kvadrert avstand mellom to punkt.
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD ------------------------------------------------------------------
 CD a1        double       i   Øst-koordinat for startpunkt
 CD n1        double       i   Nord-koordinat for startpunkt

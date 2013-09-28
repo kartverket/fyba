@@ -1008,7 +1008,7 @@ CD Purpose:
 CD Sjekker at ginfo i aktuell gruppe er et lovlig SOSI-filhode.
 CD
 CD Parameters:
-CD  Type    Navn    I/U   Forklaring
+CD  Type    Name    I/O   Explanation
 CD --------------------------------------------------------------------------
 CD  short   ist      r    status: UT_TRUE=OK, UT_FALSE=feil
 CD

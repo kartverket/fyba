@@ -440,7 +440,7 @@ CD                short  UT_EOF - Du har lest End Of File
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
 CD Parameters:
-CD Navn      Type    i/U Merknad
+CD Name      Type    I/O Explanation
 CD --------------------------------------------------------------
 CD pfil      FILE     i   Peker til filstruktur (def i stdio.h)
 CD llin      short    i   Max lengde på clin inkl (\r\n\0)
@@ -511,7 +511,7 @@ CD                short  UT_EOF - Du har lest End Of File
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
 CD Parameters:
-CD Navn    Type   i/U Merknad
+CD Name    Type   I/O Explanation
 CD -----------------------------------------------------------
 CD pfil    FILE    i   Peker til filstruktur (def i stdio.h)
 CD llin    short   i   Max lengde på clin inkl '\0'
@@ -598,7 +598,7 @@ CD                short  UT_EOF - Du har lest End Of File
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
 CD Parameters:
-CD Type     Navn    i/U Merknad
+CD Type     Name    I/O Explanation
 CD ------------------------------------------------------------------
 CD FILE     fi       i   Peker til filstruktur (def i stdio.h)
 CD short    llin     i   Max lengde på clin inkl \r\n\0.(cr+lf)
@@ -644,7 +644,7 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
 CD Parameters:
-CD Navn      Type    i/U Merknad
+CD Name      Type    I/O Explanation
 CD --------------------------------------------
 CD pfil      FILE     i   Peker til filstruktur (def i stdio.h)
 CD clin      char[]   i   Streng som skal skrives (må ha \r\n\0 )
@@ -670,7 +670,7 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil ved lesingen
 CD
 CD Parameters:
-CD Navn      Type    i/U Merknad
+CD Name      Type    I/O Explanation
 CD --------------------------------------------
 CD pfil      FILE     i   Peker til filstruktur (def i stdio.h)
 CD clin      char[]   i   Streng som skal skrives.
@@ -698,7 +698,7 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil ved flushingen
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD ------------------------------------------------------------------
 CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
    ==================================================================
@@ -723,7 +723,7 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil.
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD ------------------------------------------------------------------
 CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
 CD lpos      long         i   Fil-posisjon
@@ -747,7 +747,7 @@ CD Retur-verdier: short  UT_OK  - Utført OK.
 CD                short  UT_ERROR - Du har fått feil.
 CD
 CD Parameters:
-CD Type      Navn      i/U  Merknad
+CD Type      Name      I/O  Explanation
 CD ------------------------------------------------------------------
 CD FILE      pfil       i   Peker til filstruktur (def i stdio.h)
 CD UT_INT64  n64FilPos  i   Fil-posisjon
@@ -774,7 +774,7 @@ CD Retur-verdier: short  UT_OK  - Lesing er ok
 CD                short  UT_ERROR - Du har fått feil.
 CD
 CD Parameters:
-CD Navn      Type  Array i/U Merknad
+CD Name      Type  Array I/O Explanation
 CD ------------------------------------------------
 CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
 CD lpos      long         o   Peker til filposisjon
@@ -801,7 +801,7 @@ CD Retur-verdier: short  UT_OK  - Utført OK
 CD                short  UT_ERROR - Du har fått feil.
 CD
 CD Parameters:
-CD Type  Navn        i/U Merknad
+CD Type  Name        I/O Explanation
 CD ------------------------------------------------
 CD FILE  pfil              i   Peker til filstruktur (def i stdio.h)
 CD long  n64FilPos         o   Peker til filposisjon

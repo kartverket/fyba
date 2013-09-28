@@ -21,7 +21,7 @@ CD  ==================================================================
 CD  Formål:
 CD  Sletter en fil.
 CD
-CD  PARAMETERLISTE:
+CD  Parameters:
 CD  Type      Name     I/O  Explanation
 CD  ------------------------------------------------------------------
 CD  char     *pszPath   i   Filnavn

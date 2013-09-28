@@ -33,7 +33,7 @@ CD  ==============================================================
 CD  Formål:
 CD  Starter en ny prosess.
 CD
-CD  PARAMETERLISTE:
+CD  Parameters:
 CD  Type   Name           I/O Explanation
 CD  ------------------------------------------------------------- 
 CD  char  *pszCommandLine  i  Kommandolinje
