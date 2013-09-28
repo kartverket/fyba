@@ -848,7 +848,7 @@ CD Purpose:
 CD Teller antall prikker i starten på egenskapsnavn.
 CD
 CD Parameters:
-CD Type     Navn      I/U   Merknad
+CD Type     Name      I/O   Explanation
 CD -------------------------------------------------------------
 CD char    *pszGinfo   i    Streng med egenskapsnavn i starten
 CD short    sNivo      r    Antall prikker 

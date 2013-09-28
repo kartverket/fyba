@@ -46,7 +46,7 @@ CD Purpose:
 CD Henter filstørrelsen for gitt fil.
 CD
 CD Parameters:
-CD Type      Navn     I/U  Merknad
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD long     *plSize    o   Filstørrelse
@@ -139,7 +139,7 @@ CD Purpose:
 CD Henter filstørrelsen for gitt fil.
 CD
 CD Parameters:
-CD Type      Navn     I/U  Merknad
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD UT_INT64 *n64Size   o   Filstørrelse

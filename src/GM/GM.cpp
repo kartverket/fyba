@@ -1792,7 +1792,7 @@ CD fi2       double       i   retningsvinkel 2
 CD vinkel    double       r   Positiv vinkel i rad. mellom fi1 og fi2
 CD                            Alltid i området 0 - 2PI.
 CD
-CD Bruk : vinkel = GM_Vinkel(fi1,fi2);
+CD Usage : vinkel = GM_Vinkel(fi1,fi2);
    ==================================================================
 */
 SK_EntPnt_GM double GM_Vinkel(double fi1, double fi2)
@@ -1890,7 +1890,7 @@ SK_EntPnt_GM double GM_retning(double ak,double nk,double al,double nl)
 GL-910709
 CH GM_RetnGon                       Beregner retningsvinkel mellom 2 punkt
 CD ==========================================================================
-CD Bruk   : r = GM_RetnGon(a1,n1,a2,n2)
+CD Usage   : r = GM_RetnGon(a1,n1,a2,n2)
 CD ==========================================================================
 */
 SK_EntPnt_GM double GM_RetnGon(double a1 , double n1, double a2, double n2)
@@ -1917,7 +1917,7 @@ SK_EntPnt_GM double GM_RetnGon(double a1 , double n1, double a2, double n2)
 GL-910709
 CH GM_RettvPol               Beregner polare koord.(retnvinkel og avstand)
 CD ==========================================================================
-CD Bruk   : GM_RettvPol(a1,n1,a2,n2,&gon,&avst)
+CD Usage   : GM_RettvPol(a1,n1,a2,n2,&gon,&avst)
 CD ==========================================================================
 */
 SK_EntPnt_GM void GM_RettvPol(double a1 , double n1, double a2, double n2,
@@ -1971,7 +1971,7 @@ SK_EntPnt_GM double GM_Areal(double *pA, double *pN, short sAnt)
 GL-910704
 CH GM_PolRettv            Beregner nye rettvinkla koordinater fra gon+avst
 CD ==========================================================================
-CD Bruk   : GM_PolRettv(&a,&n,gon,avst)
+CD Usage   : GM_PolRettv(&a,&n,gon,avst)
 CD ==========================================================================
 */
 SK_EntPnt_GM void GM_PolRettv(double *a , double *n, double gon, double avst)
@@ -2831,7 +2831,7 @@ CD Purpose:
 CD   Tilnærm ein sirkelboge med korder.
 CD
 CD Parameters:
-CD Type    Navn   I/U  Merknad
+CD Type    Name   I/O  Explanation
 CD ------------------------------------------------------------------
 CD double  as      i  Øst-koordinat for sirkelsentrum
 CD double  an      i  Nord-koordinat for sirkelsentrum
@@ -2893,7 +2893,7 @@ CD Purpose:
 CD   Beregner en åttekant med gitt areal rundt gitt punkt.
 CD
 CD Parameters:
-CD Type    Navn   I/U  Merknad
+CD Type    Name   I/O  Explanation
 CD ------------------------------------------------------------------
 CD double  dAs     i  Øst-koordinat for sentrum
 CD double  dNns    i  Nord-koordinat for sentrum
@@ -3206,7 +3206,7 @@ CD           / /
 CD           *1    
 CD
 CD Parameterliste:
-CD Type    Navn         I/U   Merknad
+CD Type    Name         I/O   Explanation
 CD -------------------------------------------------------------
 CD double  dA1           i    Koordinater punkt 1
 CD double  dN1           i
@@ -3222,7 +3222,7 @@ CD short   sAntPkt       o    Antall punkt beregnet
 CD bool    bBeregnet     r    Status: true = beregnet OK
 CD                                    false = ikke beregnet. (ikke nok plass i resultat-array, og andre feil?)
 CD
-CD  Bruk:
+CD  Usage:
 CD  bStatus = GM_BeregnHjelpepunkt(dA1,dN1,dA2,dN2,dA3,dN3,dEnhet,sMaxAntPkt,&dAustArr,&pdNordArr,&sAntPkt);
 CD  ==============================================================
 */

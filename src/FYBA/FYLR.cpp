@@ -2103,7 +2103,7 @@ CH LR_LeggTilKB                         Legg til Bgr i søkeresultat-kjede
 CD =======================================================================
 CD Usage:
 CD
-CD parameters:
+CD Parameters:
 CD Type            Name     I/O   Explanation
 CD -----------------------------------------------------------------------
 CD LC_GEO_STATUS *  pGeoStat  i    Peker til struktur for søkestatus
@@ -2144,7 +2144,7 @@ CH LC_AvsluttSok                                 Avslutter geografisk søk
 CD =======================================================================
 CD Usage:
 CD
-CD parameters:
+CD Parameters:
 CD Type            Name     I/O   Explanation
 CD -----------------------------------------------------------------------
 CD LC_GEO_STATUS *  pGeoStat  i    Peker til struktur for søkestatus

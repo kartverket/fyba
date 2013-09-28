@@ -34,7 +34,7 @@ CD Purpose:
 CD Kopierer en eksisterende fil til en ny fil.
 CD
 CD Parameters:
-CD Type   Navn               I/U Merknad
+CD Type   Name               I/O Explanation
 CD ------------------------------------------------------------------
 CD char  *pszFraFilnavn       i  Kopier fra denne filen
 CD char  *pszTilFilnavn       i  Kopier til denne filen

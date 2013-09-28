@@ -26,7 +26,7 @@ CD Ved rydding av anførseltegn ryddes også tegn inni strengen.
 CD Ved rydding må parameterstrengen bestå av mer enn ett tegn.
 CD
 CD Parameters:
-CD Type   Navn       I/U   Merknad
+CD Type   Name       I/O   Explanation
 CD --------------------------------------------------------------------------
 CD char  *pszTx       i/o  Tekststreng som skal behandles
 CD char   cTegn       i    Styreparameter:

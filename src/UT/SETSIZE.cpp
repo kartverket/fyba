@@ -46,7 +46,7 @@ CD Purpose:
 CD Setter filstørrelsen for gitt fil.
 CD
 CD Parameters:
-CD Type      Navn     I/U  Merknad
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD long      lSize     i   Ønsket filstørrelse
@@ -159,7 +159,7 @@ CD Purpose:
 CD Setter filstørrelsen for gitt fil.
 CD
 CD Parameters:
-CD Type      Navn     I/U  Merknad
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD UT_INT64  n64Size   i   Ønsket filstørrelse

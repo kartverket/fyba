@@ -22,12 +22,12 @@ CD  Formål:
 CD  Sletter en fil.
 CD
 CD  PARAMETERLISTE:
-CD  Type      Navn     I/U  Merknad
+CD  Type      Name     I/O  Explanation
 CD  ------------------------------------------------------------------
 CD  char     *pszPath   i   Filnavn
 CD  short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD  Bruk:  sStatus = UT_DeleteFile(szPath);
+CD  Usage:  sStatus = UT_DeleteFile(szPath);
     ==================================================================
 */
 

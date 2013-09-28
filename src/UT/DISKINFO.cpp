@@ -50,7 +50,7 @@ CD Purpose:
 CD Finner hvor mye plass som er ledig for utvidelse av gitt fil.
 CD
 CD Parameters:
-CD Type          Navn     I/U  Merknad
+CD Type          Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char           *pszPath        i   Filnavn inkl. full sti.
 CD unsigned long  *pulLedigPlass  o   Ledig plass på disken

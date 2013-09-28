@@ -126,7 +126,7 @@ CD                \DIR\SUBDIR\ er gitt av dir
 CD                NAME.EXT er gitt av name og ext
 CD
 CD Parameters:
-CD Type         Navn       I/U  Merknad
+CD Type         Name       I/O  Explanation
 CD --------------------------------------------------------------
 CD char        *pszPath   i   Komplett filnavn
 CD const char  *pszDrive  o   Disk

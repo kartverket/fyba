@@ -302,7 +302,7 @@ CD ==============================================================
 CD For beskrivelse, se dokumentasjonen av memcpy_s.
 CD
 CD Parameters:
-CD Type    Navn             I/U  Merknad
+CD Type    Name             I/O  Explanation
 CD -------------------------------------------------------------
 CD void   *dest              i/o Buffer det skal kopieres til.
 CD size_t  numberOfElements  i   Size of the destination buffer.
@@ -329,7 +329,7 @@ CD ==============================================================
 CD For beskrivelse, se dokumentasjonen av strerror_s.
 CD
 CD Parameters:
-CD Type    Navn             I/U  Merknad
+CD Type    Name             I/O  Explanation
 CD -------------------------------------------------------------
 CD char   *buffer            i/o Buffer to hold error string.
 CD size_t  numberOfElements  i   Size of buffer.
@@ -356,7 +356,7 @@ CD Overbygning over strtok i standardbiblioteket.
 CD For beskrivelse, se dokumentasjonen av strtok_s.
 CD
 CD Parameters:
-CD Type    Navn             I/U  Merknad
+CD Type    Name             I/O  Explanation
 CD -------------------------------------------------------------
 CD char       *strToken      i/o String containing token or tokens.
 CD const char *strDelimit    i   Set of delimiter characters.

@@ -232,7 +232,7 @@ CD   Filnavnet   (FKB)\CV03851V.SOS
 CD   pakkes ut til  D:\DATA\SOSI\FKB\CV03851V.SOS
 CD
 CD Parameters:
-CD Type             Navn       I/U  Merknad
+CD Type             Name       I/O  Explanation
 CD ------------------------------------------------------------------
 CD char            *pszBuffer o   Komplett filnavn
 CD const char      *pszPath   i   Forkortet filnavn

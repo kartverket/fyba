@@ -46,7 +46,7 @@ CD Purpose:
 CD Sletter et directory.
 CD
 CD Parameters:
-CD Type      Navn     I/U  Merknad
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Directory-navn
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.

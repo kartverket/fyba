@@ -23,7 +23,7 @@ CD Sammenligner om 2 filnavn er like.
 CD Tar hensyn til om filsystemet handterer store og små bokstaver likt.
 CD
 CD Parameters:
-CD Type      Navn     I/U  Merknad
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszFil1   i   Filnavn 1
 CD char     *pszFil2   i   Filnavn 2

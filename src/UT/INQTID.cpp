@@ -53,7 +53,7 @@ CD Purpose:
 CD Henter oppdateringstidspunktet for gitt fil.
 CD
 CD Parameters:
-CD Type      Navn     I/U  Merknad
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszPath   i   Filnavn
 CD PFTID     pFilTid   o   Oppdateringstid

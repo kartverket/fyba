@@ -23,7 +23,7 @@ CD Usage:
 CD LC_POL_OMKR  YtrePolygon;
 CD pElement = LC_POL_LeggTilGruppeOmkrets(YtrePolygon,pBgr,sRetning,lSnr);
 CD
-CD parameters:
+CD Parameters:
 CD Type            Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *    pPO      I/U    Peikar til polygonadministrasjonsblokka
@@ -69,7 +69,7 @@ CD Usage:
 CD LC_POL_OMKR  YtrePolygon;
 CD LC_POL_FjernSisteGruppeOmkrets(&YtrePolygon);
 CD
-CD parameters:
+CD Parameters:
 CD Type         Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *  pPO      I/U    Peikar til polygonadministrasjonsblokka
@@ -102,7 +102,7 @@ CD Usage:
 CD LC_POL_OMKR  YtrePolygon;
 CD LC_POL_FjernGruppeOmkrets(&YtrePolygon,);
 CD
-CD parameters:
+CD Parameters:
 CD Type            Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR    *pPO      I/U    Peikar til polygonadministrasjonsblokka
@@ -142,7 +142,7 @@ CD Usage:
 CD LC_OY_ADM  OyKjede;
 CD LC_POL_FrigiAlleOyer(OyKjede);
 CD
-CD parameters:
+CD Parameters:
 CD Type       Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_OY_ADM *pOA      I/U    Peikar til øyadministrasjonsblokka
@@ -176,7 +176,7 @@ CD Usage:
 CD LC_OY_ADM  OyKjede;
 CD LC_POL_FjernOy(OyKjede,OyElement);
 CD
-CD parameters:
+CD Parameters:
 CD Type           Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_OY_ADM     *pOA      I/U    Peikar til øyadministrasjonsblokka
@@ -255,7 +255,7 @@ CH LC_POL_FrigiOmkrets     Frigjer minne som er allokert til kjede av polygonele
 CD =======================================================================
 CD Usage:
 CD
-CD parameters:
+CD Parameters:
 CD Type         Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *pPO      I/U    Peikar til polygonadministrasjonsblokka
@@ -315,7 +315,7 @@ CD Usage:
 CD POL_OMKR  YtrePolygon;
 CD LC_POL_InitOmkrets(YtrePolygon);
 CD
-CD parameters:
+CD Parameters:
 CD Type         Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR *pPO      I/U    Peikar til polygonadministrasjonsblokka
@@ -338,7 +338,7 @@ CD Usage:
 CD LC_OY_ADM  OyKjede;
 CD LC_POL_InitOy(OyKjede);
 CD
-CD parameters:
+CD Parameters:
 CD Type       Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_OY_ADM *pOA      I/U    Peikar til øyadministrasjonsblokka
@@ -846,7 +846,7 @@ CD =======================================================================
 CD Usage:
 CD LC_POL_TestBrukt(pPolygon,&Bgr);
 CD
-CD parameters:
+CD Parameters:
 CD Type        Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POLYGON *pPolygon  I     Peker til polygonbeskrivelse.
@@ -1085,7 +1085,7 @@ CD =======================================================================
 CD Usage:
 CD LC_POL_Box(pPA,&nva,&nvn,&oha,&ohn);
 CD
-CD parameters:
+CD Parameters:
 CD Type          Name     I/O    Explanation
 CD -----------------------------------------------------------------------
 CD LC_POL_OMKR  *pPO       I     Peikar til polygonadministrasjonsblokka
@@ -1131,7 +1131,7 @@ CD =======================================================================
 CD Usage:
 CD sRefLin = LC_ErLinjeRefLin(gp,sRefLin);
 CD
-CD parameters:
+CD Parameters:
 CD Type    Name        I/O  Explanation
 CD -----------------------------------------------------------------------
 CD char   *pszGinfoLin  i   Peikar til GINFO-linje

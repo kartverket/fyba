@@ -34,7 +34,7 @@ CD  Formål:
 CD  Starter en ny prosess.
 CD
 CD  PARAMETERLISTE:
-CD  Type   Navn           I/U Merknad
+CD  Type   Name           I/O Explanation
 CD  ------------------------------------------------------------- 
 CD  char  *pszCommandLine  i  Kommandolinje
 CD  short  sVent           i  UT_VENT = Vent til prosessen avsluttes
@@ -44,7 +44,7 @@ CD                              UT_TRUE = OK
 CD                              UT_FALSE = Feil.
 CD
 CD
-CD  Bruk:
+CD  Usage:
 CD  sStatus = UT_StartProsess(szKommandolinje,UT_VENT);
 CD
 CD  ==============================================================
