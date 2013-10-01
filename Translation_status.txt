@@ -1,0 +1,79 @@
+FILE                                STATUS
+./configure                         TRANSLATED
+./configure.ac                      TRANSLATED
+./Makefile.am                       TRANSLATED
+./README                            TRANSLATED
+./Translation_status.txt            TRANSLATED
+
+./doc/Makefile.am                   TRANSLATED
+./doc/en_EN/translators_needed      TRANSLATED
+./doc/no_NB/fyba1.html              NOT TRANSLATED
+./doc/no_NB/fyba2.html              NOT TRANSLATED
+./doc/no_NB/fyba.html               TRANSLATED
+
+./include/fyba.h                    NOT TRANSLATED
+./include/fygm.h                    NOT TRANSLATED
+./include/fyut.h                    NOT TRANSLATED
+
+./m4/.keep                          TRANSLATED
+
+./src/FYBA/Fyba_Callback.cpp        NOT TRANSLATED
+./src/FYBA/FYBA.cpp                 NOT TRANSLATED
+./src/FYBA/FYBA_DLL.cpp             TRANSLATED
+./src/FYBA/fyba.h                   NOT TRANSLATED
+./src/FYBA/Fyba_melding.cpp         NOT TRANSLATED
+./src/FYBA/Fyba_melding_dll.cpp.bak NOT TRANSLATED
+./src/FYBA/fyba_strings.h           TRANSLATED
+./src/FYBA/fybax.h                  NOT TRANSLATED
+./src/FYBA/FYHO.cpp                 NOT TRANSLATED
+./src/FYBA/FYLB.cpp                 NOT TRANSLATED
+./src/FYBA/FYLD.cpp                 NOT TRANSLATED
+./src/FYBA/FYLE.cpp                 NOT TRANSLATED
+./src/FYBA/FYLH.cpp                 NOT TRANSLATED
+./src/FYBA/FYLI.cpp                 NOT TRANSLATED
+./src/FYBA/fyln.cpp                 NOT TRANSLATED
+./src/FYBA/FYLO.cpp                 NOT TRANSLATED
+./src/FYBA/FYLP.cpp                 NOT TRANSLATED
+./src/FYBA/FYLR.cpp                 NOT TRANSLATED
+./src/FYBA/FYLS.cpp                 NOT TRANSLATED
+./src/FYBA/FYLU.cpp                 NOT TRANSLATED
+./src/FYBA/FYLX.cpp                 NOT TRANSLATED
+./src/FYBA/FYTA.cpp                 NOT TRANSLATED
+./src/FYBA/LICENSE                  TRANSLATED
+./src/FYBA/Makefile.am              TRANSLATED
+./src/FYBA/make.sh                  TRANSLATED
+./src/FYBA/stdafx.cpp               TRANSLATED
+./src/FYBA/stdafx.h                 TRANSLATED
+
+./src/GM/fygm.h                     NOT TRANSLATED
+./src/GM/GM.cpp                     NOT TRANSLATED
+./src/GM/LICENSE                    TRANSLATED
+./src/GM/Makefile.am                TRANSLATED
+./src/GM/make.sh                    TRANSLATED
+./src/GM/stdafx.cpp                 TRANSLATED
+./src/GM/stdafx.h                   TRANSLATED
+
+./src/UT/ANFORSEL.cpp               NOT TRANSLATED
+./src/UT/CopyFile.cpp               NOT TRANSLATED
+./src/UT/CREDIR.cpp                 NOT TRANSLATED
+./src/UT/DELDIR.cpp                 NOT TRANSLATED
+./src/UT/DELFILE.cpp                NOT TRANSLATED
+./src/UT/DISKINFO.cpp               NOT TRANSLATED
+./src/UT/FILNACMP.cpp               NOT TRANSLATED
+./src/UT/FULLPATH.cpp               NOT TRANSLATED
+./src/UT/fyut.h                     NOT TRANSLATED
+./src/UT/INQSIZE.cpp                NOT TRANSLATED
+./src/UT/INQTID.cpp                 NOT TRANSLATED
+./src/UT/LICENSE                    TRANSLATED
+./src/UT/Makefile.am                TRANSLATED
+./src/UT/MAKEPATH.cpp               NOT TRANSLATED
+./src/UT/make.sh                    TRANSLATED
+./src/UT/SETSIZE.cpp                NOT TRANSLATED
+./src/UT/SPLITPTH.cpp               NOT TRANSLATED
+./src/UT/stdafx.cpp                 TRANSLATED
+./src/UT/stdafx.h                   TRANSLATED
+./src/UT/StrtPros.cpp               NOT TRANSLATED
+./src/UT/UT1.cpp                    NOT TRANSLATED
+./src/UT/UT2.cpp                    NOT TRANSLATED
+./src/UT/UT3.cpp                    NOT TRANSLATED
+./src/UT/UT4.cpp                    NOT TRANSLATED
