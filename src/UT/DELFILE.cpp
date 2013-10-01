@@ -1,5 +1,5 @@
 /* ------------------------------ 
- * Fil: DelFile.c
+ * File: DelFile.c
  * ------------------------------ */
 
 #include "stdafx.h"
@@ -16,16 +16,16 @@
 
 /*
 AR-921013
-CH  UT_DeleteFile                                      Sletter en fil
+CH  UT_DeleteFile                                      Deletes a file
 CD  ==================================================================
-CD  Formål:
-CD  Sletter en fil.
+CD  Purpose:
+CD  Deletes a file.
 CD
 CD  Parameters:
 CD  Type      Name     I/O  Explanation
 CD  ------------------------------------------------------------------
-CD  char     *pszPath   i   Filnavn
-CD  short     sStatus   r   Status; 0=OK, annen verdi er feil.
+CD  char     *pszPath   i   Filename
+CD  short     sStatus   r   Status; 0=OK, other value on error.
 CD
 CD  Usage:  sStatus = UT_DeleteFile(szPath);
     ==================================================================
@@ -33,9 +33,9 @@ CD  Usage:  sStatus = UT_DeleteFile(szPath);
 
 SK_EntPnt_UT short UT_DeleteFile(char *pszPath)
 {
-   // Sjekk at filen finnes
+   // Check that the file exists
    if( (UT_access( pszPath, 0 )) == 0 ) {
-      /* Sletter eventuell gammel hjelpefil */
+      /* Delete file if exists */
       return remove(pszPath); 
    }
    

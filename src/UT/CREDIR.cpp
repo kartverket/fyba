@@ -40,16 +40,16 @@
 
 /*
 AR-921013
-CH UT_CreateDir                                Oppretter et directory
+CH UT_CreateDir                                 Creates a directory
 CD ==================================================================
 CD Purpose:
-CD Sletter et directory.
+CD Creates a directory.
 CD
 CD Parameters:
 CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Directory-navn
-CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
+CD char     *pszPath   i   Directory-name
+CD short     sStatus   r   Status; 0=OK, other value on error.
 CD
 CD Usage:  sStatus = UT_CreateDir(szPath);
 	==================================================================
@@ -58,7 +58,7 @@ SK_EntPnt_UT short UT_CreateDir(char *pszPath)
 {
 #ifdef UNIX
 	mode_t modus;
-	/*  Setter alle rettigheter for user ingen for andre*/
+	/* Sets all permissions for the user, none for others */
 	modus = (S_IRUSR  | S_IWUSR  | S_IXUSR);
 	return  (short)mkdir(pszPath,modus);
 #endif

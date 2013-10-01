@@ -54,12 +54,12 @@ FILE                                STATUS
 ./src/GM/stdafx.h                   TRANSLATED
 
 ./src/UT/ANFORSEL.cpp               NOT TRANSLATED
-./src/UT/CopyFile.cpp               NOT TRANSLATED
-./src/UT/CREDIR.cpp                 NOT TRANSLATED
-./src/UT/DELDIR.cpp                 NOT TRANSLATED
-./src/UT/DELFILE.cpp                NOT TRANSLATED
+./src/UT/CopyFile.cpp               TRANSLATED
+./src/UT/CREDIR.cpp                 TRANSLATED
+./src/UT/DELDIR.cpp                 TRANSLATED
+./src/UT/DELFILE.cpp                TRANSLATED
 ./src/UT/DISKINFO.cpp               NOT TRANSLATED
-./src/UT/FILNACMP.cpp               NOT TRANSLATED
+./src/UT/FILNACMP.cpp               TRANSLATED
 ./src/UT/FULLPATH.cpp               NOT TRANSLATED
 ./src/UT/fyut.h                     NOT TRANSLATED
 ./src/UT/INQSIZE.cpp                NOT TRANSLATED
@@ -72,7 +72,7 @@ FILE                                STATUS
 ./src/UT/SPLITPTH.cpp               NOT TRANSLATED
 ./src/UT/stdafx.cpp                 TRANSLATED
 ./src/UT/stdafx.h                   TRANSLATED
-./src/UT/StrtPros.cpp               NOT TRANSLATED
+./src/UT/StrtPros.cpp               TRANSLATED
 ./src/UT/UT1.cpp                    NOT TRANSLATED
 ./src/UT/UT2.cpp                    NOT TRANSLATED
 ./src/UT/UT3.cpp                    NOT TRANSLATED

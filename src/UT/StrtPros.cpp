@@ -30,26 +30,26 @@
 AR-961118
 CH  UT_StartProsess      
 CD  ==============================================================
-CD  Formål:
-CD  Starter en ny prosess.
+CD  Purpose:
+CD  Starts a new process.
 CD
 CD  Parameters:
 CD  Type   Name           I/O Explanation
 CD  ------------------------------------------------------------- 
-CD  char  *pszCommandLine  i  Kommandolinje
-CD  short  sVent           i  UT_VENT = Vent til prosessen avsluttes
-CD                            UT_FORTSETT = Ikke vent
+CD  char  *pszCommandLine  i  Command line to start
+CD  short  sWait           i  UT_VENT = Wait for the process to terminate
+CD                            UT_FORTSETT = Return immediately
 CD short  sStatus          r  Status:
 CD                              UT_TRUE = OK
-CD                              UT_FALSE = Feil.
+CD                              UT_FALSE = Error.
 CD
 CD
 CD  Usage:
-CD  sStatus = UT_StartProsess(szKommandolinje,UT_VENT);
+CD  sStatus = UT_StartProsess(szCommandLine,UT_VENT);
 CD
 CD  ==============================================================
 */
-SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
+SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sWait)
 {
 
 #ifdef WIN32
@@ -60,7 +60,7 @@ SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
    //char szShortPath[100];
 
 
-   // Setter opp oppstartinformasjon
+   // Setting up startup info
    StartupInfo.cb = sizeof(STARTUPINFO); 
    StartupInfo.lpDesktop = NULL; 
    StartupInfo.lpTitle = NULL; 
@@ -91,7 +91,7 @@ SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
    //GetCurrentDirectory(_MAX_PATH,szCurrentDir);
    //GetShortPathName(szCurrentDir,szShortPath,100);
 
-   // Utfører system-kommando
+   // Execute command
    if ( ! CreateProcess(NULL, pszCommandLine, NULL, NULL, FALSE,
                         NORMAL_PRIORITY_CLASS , 
                                   //CREATE_NEW_CONSOLE	
@@ -102,8 +102,8 @@ SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
       return UT_FALSE;
    }   
 
-   // Vent til prosessen er ferdig
-   if (sVent == UT_VENT) {
+   // Wait until the process have terminated
+   if (sWait == UT_VENT) {
       WaitForSingleObject( ProcessInfo.hProcess, INFINITE);
 
       //Retrieves the termination status of the specified process.
@@ -117,6 +117,6 @@ SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
 
 #else
 
-   return UT_FALSE;
+   return UT_FALSE; // TODO
 #endif
 }

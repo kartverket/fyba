@@ -2,7 +2,7 @@
  * Fil - makepath.c
  *
  * funksjon 
- *        UT_makepath - bygg opp filnavn
+ *        UT_makepath - build a file path
  *-----------------------------------------------------------------------*/
 
 #include "stdafx.h"
@@ -15,7 +15,7 @@
 #	include <windows.h>
 #endif
 
-static char *_stpcpy(char *til, const char *fra);
+static char *_stpcpy(char *to, const char *from);
 
 
 /*---------------------------------------------------------------------*
