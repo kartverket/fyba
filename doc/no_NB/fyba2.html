@@ -13,7 +13,7 @@
 <BR>
 <BR>
 <BR>
-<FONT SIZE="-1"><CENTER>Sist oppdatert: 2010-05-26 av rosand</CENTER></FONT>
+<FONT SIZE="-1"><CENTER>Sist oppdatert: 2013-10-09 av rosand</CENTER></FONT>
 
 
 
@@ -302,6 +302,27 @@ LC_Close();
  
 SK_EntPnt_FYBA void LC_Close(void)
 </PRE>
+<BR>
+<BR>
+<HR>
+<BR>
+<BR>
+<A ID="LC_ErInitiert"NAME="LC_ErInitiert"></A><H2>LC_ErInitiert</H2>
+<BIG><I><B>Er FYBA initiert</I></B></BIG><PRE>
+=============================================================================
+Formål:
+Sjekker om FYBA er initiert / tilgjengelig for bruk.
+Parametre:
+Type   Navn     I/U   Forklaring
+-----------------------------------------------------------------------------
+short  sStaus    r    0=ikke initiert, eller FYBA er stengt ned
+                      1=initiert
+Bruk:
+sStatus = LC_ErInitiert();
+   =============================================================================
+ 
+SK_EntPnt_FYBA short LC_ErInitiert(void)
+</PRE>
 
 <BR>
 <BR>
@@ -440,6 +461,33 @@ LC_SetUtvidModus(LC_UTVID_SIKKER);
    ==========================================================================
  
 SK_EntPnt_FYBA void LC_SetUtvidModus(short modus)
+</PRE>
+<BR>
+<BR>
+<HR>
+<BR>
+<BR>
+<A ID="LC_GetUtvidModus"NAME="LC_GetUtvidModus"></A><H2>LC_GetUtvidModus</H2>
+<BIG><I><B>Hent utvis modus</I></B></BIG><PRE>
+==========================================================================
+Formål:
+Henter valgt handteringsmåte for utvidelse av SOSI-filer.
+Parametre:
+Type   Navn  I/U  Forklaring
+--------------------------------------------------------------------------
+short  modus  r   Behandlingsmåte:
+					    LC_UTVID_SIKKER (0) = SOSI-filen stenges og filstørrelsen
+                                         oppdateres etter hver gruppe som er
+                                         skrevet på slutten av filen.
+						 LC_UTVID_RASK   (1) = SOSI-filen stenges IKKE etter hver
+                                         gruppe som er skrevet på slutten
+                                         av filen.
+                                         (Må bare brukes i spesielle tilfeller.)
+Bruk:
+short sModus = LC_GetUtvidModus();
+   ==========================================================================
+ 
+SK_EntPnt_FYBA short LC_GetUtvidModus(void)
 </PRE>
 
 <BR>
@@ -944,6 +992,27 @@ ist = LC_ErKoordsysLik();
 	=======================================================================
  
 SK_EntPnt_FYBA short LC_ErKoordsysLik(void)
+</PRE>
+<BR>
+<BR>
+<HR>
+<BR>
+<BR>
+<A ID="LC_ErVertdatumLik"NAME="LC_ErVertdatumLik"></A><H2>LC_ErVertdatumLik</H2>
+<BIG><I><B>Sjekker VERT-DATUM</I></B></BIG><PRE>
+=======================================================================
+Formål:
+Sjekk at alle filene i basen har samme VERT-DATUM.
+Parametre:
+Type    Navn   I/U  Forklaring
+-----------------------------------------------------------------------
+short   status  r   Status: UT_TRUE = VERT-DATUM er lik.
+                            UT_FALSE = VERT-DATUM er IKKE lik.
+Bruk:
+ist = LC_ErVertdatumLik();
+	=======================================================================
+ 
+SK_EntPnt_FYBA short LC_ErVertdatumLik(void)
 </PRE>
 <BR>
 <BR>
@@ -1904,21 +1973,29 @@ unsigned short *info      u   Diverse informasjon. En sum av følgende:
                       GI_READ_ONLY = gruppen kan ikke endres.
 short gnavn     r   Gruppenavn - Følgende konstanter er definert:
                                      INGEN_GRUPPE = Gruppen finnes ikke, ikke lest. 
-                                     L_PUNKT    =   (.PUNKT)
-                                     L_LINJE    =   (.LINJE)
-                                     L_KURVE    =   (.KURVE)
-                                     L_BUE      =   (.BUE)
-                                     L_SIRKEL   =   (.SIRKEL)
+                                     L_SLUTT    =   (.SLUTT) 
+                                     L_PUNKT    =   (.PUNKT) 
+                                     L_LINJE    =   (.LINJE) 
+                                     L_KURVE    =   (.KURVE) 
+                                     L_BUE      =   (.BUE) 
+                                     L_BUEP     =   (.BUEP) 
+                                     L_SIRKEL   =   (.SIRKEL) 
+                                     L_SIRKELP  =   (.SIRKELP) 
                                      L_KLOTOIDE =   (.KLOTOIDE)
-                                     L_SVERM    =   (.SVERM)
-                                     L_TEKST    =   (.TEKST)
-                                     L_TRASE    =   (.TRASE)
-                                     L_FLATE    =   (.FLATE)
-                                     L_STRUKTUR =   (.STRUKTUR)
-                                     L_RASTER   =   (.RASTER)
-                                     L_DEF      =   (.DEF)
-                                     L_OBJDEF   =   (.OBJDEF)
-                                     L_HODE     =   (.HODE)
+                                     L_SVERM    =   (.SVERM) 
+                                     L_TEKST    =   (.TEKST) 
+                                     L_TRASE    =   (.TRASE) 
+                                     L_FLATE    =   (.FLATE) 
+                                     L_BEZIER   =   (.BEZIER)
+                                     L_RASTER   =   (.RASTER) 
+                                     L_DEF      =   (.DEF) 
+                                     L_OBJDEF   =   (.OBJDEF) 
+                                     L_MLINJE   =   (.MLINJE)
+                                     L_STRUKTUR =   (.STRUKTUR)  
+                                     L_OBJEKT   =   (.OBJEKT) 
+                                     L_SYMBOL   =   (.SYMBOL) 
+                                     L_HODE     =   (.HODE)       
+                                     
 Bruk:
     gnavn = LC_RxGr(&Bgr,LES_OPTIMALT,&ngi,&nko,&info);
     if (info & GI_PINFO)        (gruppen har PINFO)
@@ -2537,21 +2614,18 @@ SK_EntPnt_FYBA short LC_UpdateGP(short linje_nr,const char *sosi_navn,const char
 ==========================================================================
 Formål:
 Setter koordinat-enhet for gruppen.
-Oppdaterer eventuellt ..ENHET i GINFO.
+Oppdaterer ..ENHET / ..ENHET-H / ..ENHET-D i GINFO.
 Rutinen handterer selv tildeling eller sletting av GINFO-linje.
+Hvis verdien er lik filhodets verdi blir det ikke lagt inn verdi i GINFO.
+Enhet = 0.0 = bruk filhodets enhet, og fører til at det ikke legges inn
+i GINFO. Eventuell eksisterende linje jgernes.
 Parametre:
 Type        Navn    I/U   Forklaring
 --------------------------------------------------------------------------
 LC_FILADM * pFil     i    Peker til FilAdm
-double      enhet    i    Koordinatenhet (Eks 0.01 gir cm nøyaktighet)
-                          Enhet = 0.0 = bruk filhodets enhet, og fører
-                          til at ..ENHET blir fjernet fra GINFO.
-double      enhet_h  i    Koordinatenhet (Eks 0.01 gir cm nøyaktighet)
-                          Hvis enhet_h er lik enhet blir ikke ..ENHET-H
-                          lagt inn i GINFO.
-double      enhet_d  i    Koordinatenhet (Eks 0.01 gir cm nøyaktighet)
-                          Hvis enhet_d er lik enhet blir ikke ..ENHET-D
-                          lagt inn i GINFO.
+double      enhet    i    Grunnriss-enhet
+double      enhet_h  i    Høyde-enhet
+double      enhet_d  i    Dybde-enhet
 ngi         short    r    Antall GINFO-linjer etter oppdatering
 Bruk:
 ngi = LC_UpdateGiEnhet(pFil,enhet,enhet_h,enhet_d);
@@ -2665,6 +2739,27 @@ ngi = LC_DelGiNavn("..RADIUS");
    ==========================================================================
  
 SK_EntPnt_FYBA short LC_DelGiNavn(char *pszEgenskapNavn)
+</PRE>
+<BR>
+<BR>
+<HR>
+<BR>
+<BR>
+<A ID="LC_FinnNivo"NAME="LC_FinnNivo"></A><H2>LC_FinnNivo</H2>
+<BIG><I><B>Beregn nivå</I></B></BIG><PRE>
+==============================================================
+Formål:
+Teller antall prikker i starten på egenskapsnavn.
+PARAMETERLISTE:
+Type     Navn      I/U   Merknad
+-------------------------------------------------------------
+char    *pszGinfo   i    Streng med egenskapsnavn i starten
+short    sNivo      r    Antall prikker 
+Bruk:
+sNivo = LC_FinnNivo(pszGinfo);
+  ================================================================
+ 
+SK_EntPnt_FYBA short LC_FinnNivo(const char * pszNavn)
 </PRE>
 
 <BR>
@@ -4420,9 +4515,9 @@ neste/forrige nå tar utgangspunkt i dette serienummer.
 Parametre:
 Type     Navn     I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
+LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 long        lSnr     i     Serienummer som skal finnes
-LC_BGR *     pBgr     u     Gruppenummer i basen
+LC_BGR     *pBgr     u     Gruppenummer i basen
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_MoveSn(pSnrAdm,snr,&Bgr);
@@ -4444,9 +4539,9 @@ Endrer IKKE "current gruppe".
 Parametre:
 Type        Navn    I/U    Forklaring
 -----------------------------------------------------------------------------
-LC_FILADM * pFil     i     Peker til FilAdm
+LC_FILADM  *pFil     i     Peker til FilAdm
 long        lSnr     i     Serienummer som skal finnes
-LC_BGR *     pBgr     u     Gruppenummer i basen
+LC_BGR     *pBgr     u     Gruppenummer i basen
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FiSn(pFil,lSnr,&Bgr);
@@ -4495,7 +4590,7 @@ BT_SNRSOK i brukttabellen.
 Parametre:
 Type        Navn    I/U   Forklaring
 --------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm  i    Peker til statusblokk for serienummersøk
+LC_SNR_ADM *pSnrAdm  i    Peker til statusblokk for serienummersøk
 long        antall   r    Antall grupper funnet.
 Bruk:
 antall_funnet = LC_FASn(&SnrAdm);
@@ -4516,8 +4611,8 @@ Finner første gruppe i fil/serienummer søkeområdet.
 Parametre:
 Type        Navn     I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-LC_BGR *     pBgr     u     Gruppenummer
+LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
+LC_BGR     *pBgr     u     Gruppenummer
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FFSn(&SnrAdm,&Bgr);
@@ -4540,7 +4635,7 @@ Type     Navn     I/U   Forklaring
 --------------------------------------------------------------------------
 LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR *     pBgr     u     Gruppenummer
-short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
+short        sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FNSn(&SnrAdm,&Bgr);
 ================================================================================
@@ -4560,8 +4655,8 @@ Finner forrige gruppe i fil/serienummer søkeområdet.
 Parametre:
 Type        Navn     I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-LC_BGR *     pBgr     u     Gruppenummer
+LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
+LC_BGR     *pBgr     u     Gruppenummer
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FPSn(&SnrAdm,&Bgr);
@@ -4582,8 +4677,8 @@ Finner siste gruppe i fil/serienummer søkeområdet.
 Parametre:
 Type        Navn     I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-LC_BGR *     pBgr     u     Gruppenummer
+LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
+LC_BGR     *pBgr     u     Gruppenummer
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FLSn(&SnrAdm,&Bgr);
@@ -4604,9 +4699,9 @@ Finner første gruppe som er merka i gitt kolonne i brukttabellen.
 Parametre:
 Type        Navn     I/U   Forklaring
 --------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-LC_BGR *     pBgr      u    Gruppenummer
+LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FFSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
@@ -4627,9 +4722,9 @@ Finner neste gruppe også er merka i gitt kolonne i brukttabellen.
 Parametre:
 Type        Navn     I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-LC_BGR *     pBgr      u    Gruppenummer
+LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FNSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
@@ -4651,9 +4746,9 @@ gitt kolonne i brukttabellen.
 Parametre:
 Type        Navn     I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-LC_BGR *     pBgr      u    Gruppenummer
+LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FPSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
@@ -4675,9 +4770,9 @@ gitt kolonne i brukttabellen.
 Parametre:
 Type        Navn     I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-LC_BGR *     pBgr      u    Gruppenummer
+LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 Bruk:
 sstat = LC_FLSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
@@ -5719,8 +5814,8 @@ Type    Navn    I/U   Forklaring
 --------------------------------------------------------------------------
 double  a        i    Punkt som skal sjekkes
 double  n        i
-short   ist      r    status: 0 = punktet er utenfor flaten
-                              1 = punktet ligger inne på flaten
+short   ist      r    status: UT_FALSE = punktet er utenfor flaten
+                              UT_TRUE = punktet ligger inne på flaten
 Bruk:
 .
 ==========================================================================
@@ -5958,14 +6053,18 @@ Rutinen tilsvarer put fra brukerprogram inn i ringbufret.
 Både koordinater, høyde, KP og PINFO blir behandlet.
 For .BUE blir fortegnet på radius endret.
 Fortegnet på referanser til gruppen blir oppdatert.
+Det er ikke mulig å snu gruppe som er referert fra grupper som
+ikke kan oppdateres. (Flate/trase som er sjekket ut av andre i NGIS.) 
 Parametre:
-Type    Navn     I/U   Forklaring
+Type    Navn    I/U   Forklaring
 -----------------------------------------------------------------------------
+short   sStatus  r    Status: UT_TRUE  = OK
+                              UT_FALSE = feil, ikke splittet
 Bruk:
-   LC_SnuGr();
+   status = LC_SnuGr();
    =============================================================================
  
-SK_EntPnt_FYBA void LC_SnuGr(void)
+SK_EntPnt_FYBA short LC_SnuGr(void)
 </PRE>
 <BR>
 <BR>
@@ -5984,17 +6083,19 @@ Kvalitet og enhet blir automatisk oppdatert slik at gruppene ikke
 mister informasjon.
 Gruppen det kopieres fra blir slettet.
 Eventuelle referanser til gruppene blir oppdatert.
+Det er ikke mulig å sammenføye hvis en av gruppene er referert fra grupper
+som ikke kan oppdateres. (Flate/trase som er sjekket ut av andre i NGIS.) 
 Parametre:
 Type    Navn       I/U   Forklaring
 -----------------------------------------------------------------------------
-LC_BGR * pFraBgr     i    Gruppenummer det skal kopieres fra.
+LC_BGR * pFraBgr    i    Gruppenummer det skal kopieres fra.
 short   retning     i    Buffer-retning:
                                HENT_FORRFRA ( 1) = vanlig,
-                               HENT_BAKFRA  (-1) = buffer skal snues.
+                               HENT_BAKFRA  (-1) = buffer skal snus.
 short   plassering  i    Forteller hvor pFraBgr skal plasseres i
                          aktuell gruppe.
                             LC_SG_FORRAN = Heng den andre gruppen inn
-                                           forran første koordinat.
+                                           foran første koordinat.
                             LC_SG_BAK    = Heng den andre gruppen inn
                                            etter siste koordinat.
 short   metode      i    Forteller hva som skal skje med sammenføingspunktene.
@@ -6028,6 +6129,8 @@ opprinnelig gruppe. Denne blir skrevet til basen.
 Den delen av gruppen som ligger mellom P1 og P2 blir fjernet.
 Hvis gruppen er BUEP og en av delene får bare to koordinater
 blir det lagt inn et nytt punkt midt på buen.
+Det er ikke mulig å splitte grupper som er referert fra grupper som
+ikke kan oppdateres. (Flate/trase som er sjekket ut av andre i NGIS.) 
 Parametre:
 Type     Navn   I/U   Forklaring
 --------------------------------------------------------------------------
@@ -6523,85 +6626,91 @@ ikke blir aktivisert.
 <BR>
 <HR>
 <BR>
-<BR>----------------------------------------------------------
-short    feil_nr      i   Feil-nummer
-char    *logtx        i   Tekst som bare skrives til logfil.
-                          Eks:"(utført i LC_RxGr)"
-char    *vartx        i   Denne tekststreng henges etter feilmeldingsteksten.
-Bruk:
-LC_Error(35,"(Kallt i LC_Xxxx)","");
+<BR>
+<A ID="LC_StartMessage"NAME="LC_StartMessage"></A><H2>LC_StartMessage</H2>
+<BIG><I><B>Vise melding</I></B></BIG><PRE>
 =============================================================================
- 
-void LC_Error(short feil_nr,const char *logtx,const char *vartx)
-</PRE>
-
-<BR>
-<BR>
-<BR>
-<A ID="O48"NAME="O48"></A><H2>22.8 Hjelperutine for meldingshandtering</H2>
-<BR>
-<BR>
-<HR>
-<BR>
-<BR>
-<A ID="LC_StrError"NAME="LC_StrError"></A><H2>LC_StrError</H2>
-<BIG><I><B>Feilmeldingstekst</I></B></BIG><PRE>
-==========================================================================
 Formål:
-Henter feilmeldingstekst og nivå for et feilmeldingsnummer.
-Strengen legges i en egen feilmeldingsstruktur for feil-rutiner i fyba.
-Dette blir ødelagt ved neste kall til en "feil-rutine". For å ta vare på
-strengen må den kopieres over til egen streng. (Bruk UT_StrCopy).
+Starter vising av melding om baseoppbygging.
 Parametre:
 Type     Navn        I/U  Forklaring
---------------------------------------------------------------------------
-short    feil_nr      i   Feilmeldingsnummer
-char   **feilmelding  u   Peker til feilmeldingstekst avslutta med '/0'.
-short   *strategi     r   Feilnivå (0-4)
-                          0 = Ikke i bruk. (Utkoblet, testmeldinger mm.)
-                          1 = Lite alvorlig. Vises kort.
-                          2 = Normal feilmelding. Vises ca. 1 sekund.
-                          3 = Alvorlig. Krev tastetrykk for å fortsette.
-                          4 = Svært alvorlig. Programmet bør avbrytes.
+-----------------------------------------------------------------------------
+char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
 Bruk:
-strategi = LC_StrError(ckap,feil_nr,&feilmeldingspeker);
-   ==========================================================================
+LC_StartMessage(pszFilnavn);
+=============================================================================
  
-SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
+void LC_StartMessage(const char *pszFilnavn)
 </PRE>
-
-<BR>
-<BR>
-<BR>
-<A ID="O49"NAME="O49"></A><H2>22.9 Feilsøking</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
-<A ID="LC_DumpTab"NAME="LC_DumpTab"></A><H2>LC_DumpTab</H2>
-<BIG><I><B>Dump interne tabeller til stderr</I></B></BIG><PRE>
+<A ID="LC_ShowMessage"NAME="LC_ShowMessage"></A><H2>LC_ShowMessage</H2>
+<BIG><I><B>Vise melding</I></B></BIG><PRE>
+=============================================================================
+Formål:
+Vising av melding om baseoppbygging.
+Parametre:
+Type     Navn        I/U  Forklaring
+-----------------------------------------------------------------------------
+double   prosent      i   Prosent ferdig (0.0 - 100.0)
+Bruk:
+LC_ShowMessage(prosent);
+=============================================================================
+ 
+void LC_ShowMessage(double prosent)
+</PRE>
+<BR>
+<BR>
+<HR>
+<BR>
+<BR>
+<A ID="LC_EndMessage"NAME="LC_EndMessage"></A><H2>LC_EndMessage</H2>
+<BIG><I><B>Avslutt melding</I></B></BIG><PRE>
+=============================================================================
+Formål:
+Avslutt melding om baseoppbygging.
+Parametre:
+Type     Navn        I/U  Forklaring
+-----------------------------------------------------------------------------
+Bruk:
+LC_EndMessage();
+=============================================================================
+ 
+void LC_EndMessage(void)
+</PRE>
+<BR>
+<BR>
+<HR>
+<BR>
+<BR>
+<A ID="LC_Cancel"NAME="LC_Cancel"></A><H2>LC_Cancel</H2>
+<BIG><I><B>Sjekk om Esc er trykket</I></B></BIG><PRE>
 ==========================================================================
 Formål:
-Dump interne tabeller til stderr
+Sjekk om det er trykkt på Esc (Avbryte indeksoppbygging).
 Parametre:
-Type     Navn     I/U   Forklaring
+Type   Navn      I/U   Forklaring
 --------------------------------------------------------------------------
+short  sAvbrutt   r    UT_TRUE  = Cancel
+                       UT_FALSE = ikke avbrudd
 Bruk:
-LC_DumpTab();
-   =============================================================================
+sAvbrutt = LC_Cancel();
+==========================================================================
  
-SK_EntPnt_FYBA void LC_DumpTab(void)
+short LC_Cancel(void)
 </PRE>
 
-
-
-
-
-
-
-</BODY></HTML>
-=========================
+<BR>
+<BR>
+<HR>
+<BR>
+<BR>
+<A ID="LC_Error"NAME="LC_Error"></A><H2>LC_Error</H2>
+<BIG><I><B>Feilmeldingsrutine</I></B></BIG><PRE>
+=============================================================================
 Formål:
 Standard feilmeldingsrutine.
 Parametre:
@@ -6675,16 +6784,6 @@ LC_DumpTab();
    =============================================================================
  
 SK_EntPnt_FYBA void LC_DumpTab(void)
-</PRE>
-
-
-
-
-
-
-
-</BODY></HTML>
- void LC_DumpTab(void)
 </PRE>
 
 
