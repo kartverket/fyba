@@ -28,11 +28,11 @@ static struct {
 AR-900105
 CH LC_InitTabel                                           Åpner tabellsystemet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Initierer tabellsystemet og åpner filen.
 CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Parameters:
+CD Type     Name      I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD long     n_rec      i    Antall reckords som skal nullstilles. Disse kan
 CD                          etterpå brukes til tilfeldig aksess. Utvidelse
@@ -42,7 +42,7 @@ CD short    rec_len    i    Reckordlengde. (Bruk sizeof for å finne lengden.)
 CD void    *buffer     i    Peker til buffer som skal brukes for nullstilling.
 CD short    ist        r    Status. (0=OK, -1=feil)
 CD
-CD Bruk:
+CD Usage:
 CD  .
 CD  struct{
 CD     long snr;
@@ -96,17 +96,17 @@ SK_EntPnt_FYBA short LC_InitTabel(long n_rec,short rec_len,void *buffer)
 AR-900106
 CH LC_GetTabel                                               Get tabell-linje
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Henter en linje fra tabellfilen.
 CD
-CD Parametre:
-CD Type      Navn   I/U   Forklaring
+CD Parameters:
+CD Type      Name   I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD long      linje   i    Linjenummer som skal hentes.  (0 er første linje)
 CD void     *buffer  i    Peker til struktur som skal ta mot lest reckord.
 CD short     ist     r    Status (0=OK, -1=feil)
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_GetTabel(linje,(void *)&buffer);
    =============================================================================
 */
@@ -137,18 +137,18 @@ SK_EntPnt_FYBA short LC_GetTabel(long linje,void *buffer)
 AR-900106
 CH LC_PutTabel                                               Put tabell-linje
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Legg inn en linje fra tabellfilen.
 CD
-CD Parametre:
-CD Type      Navn   I/U   Forklaring
+CD Parameters:
+CD Type      Name   I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD long      linje   i    Linjenummer som skal legges inn. (0 er første linje)
 CD                        (Største lovlige er 1 større enn det største hittil.)
 CD void     *buffer  i    Peker til struktur som skal legges inn.
 CD short     ist     r    Status (0=OK, -1=feil)
 CD
-CD Bruk:
+CD Usage:
 CD ist = LC_PutTabel(linje,(void *)&buffer);
    =============================================================================
 */
@@ -179,13 +179,13 @@ SK_EntPnt_FYBA short LC_PutTabel(long linje,void *buffer)
 AR-900106
 CH LC_CloseTabel                                        Stenge tabellsystemet
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Avslutter tabellsystemet og stenger og sletter filen.
 CD Tabellen kan nå åpnes på nytt for annen bruk.
 CD
-CD Parametre: ingen
+CD Parameters: none
 CD    
-CD Bruk:
+CD Usage:
 CD LC_CloseTabel();
    =============================================================================
 */

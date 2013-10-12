@@ -16,20 +16,20 @@
 
 /*
 AR-921013
-CH UT_FilnavnCmp                                   Sammenlignfilnavn
+CH UT_FilnavnCmp                                   Compare filenames
 CD ==================================================================
-CD Formål:
-CD Sammenligner om 2 filnavn er like.
-CD Tar hensyn til om filsystemet handterer store og små bokstaver likt.
+CD Purpose:
+CD Compares two file names for equality.
+CD Handles differences in the operating systems with regards to upper case letters.
 CD
-CD PARAMETERLISTE:
-CD Type      Navn     I/U  Merknad
+CD Parameters:
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
 CD char     *pszFil1   i   Filnavn 1
 CD char     *pszFil2   i   Filnavn 2
-CD short     sStatus   r   Status; 0=Navnene er like, annen verdi = ulik
+CD short     sStatus   r   Status; 0=Names are equal, other value = different
 CD
-CD Bruk:  sStatus = UT_FilnavnCmp(pszFil1,pszFil2);
+CD Usage:  sStatus = UT_FilnavnCmp(pszFil1,pszFil2);
    ==================================================================
 */
 SK_EntPnt_UT short UT_FilnavnCmp(char *pszFil1,char *pszFil2)

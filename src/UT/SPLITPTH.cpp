@@ -118,23 +118,23 @@ Return value    UT_splitpath does not return a value.
 AR-930423
 CH UT_splitpath                                       Splitt filnavn
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD UT_splitpath splitter et fullstendig filnavn i enkelte komponenter.
 CD Filnavnet:  X:\DIR\SUBDIR\NAME.EXT
 CD blir til:      X er drive
 CD                \DIR\SUBDIR\ er gitt av dir
 CD                NAME.EXT er gitt av name og ext
 CD
-CD PARAMETERLISTE:
-CD Type         Navn       I/U  Merknad
+CD Parameters:
+CD Type         Name       I/O  Explanation
 CD --------------------------------------------------------------
 CD char        *pszPath   i   Komplett filnavn
-CD const char  *pszDrive  u   Disk
-CD const char  *pszDir    u   Katalog
-CD const char  *pszNavn   u   Navn
-CD const char  *pszExt    u   Extension
+CD const char  *pszDrive  o   Disk
+CD const char  *pszDir    o   Katalog
+CD const char  *pszNavn   o   Navn
+CD const char  *pszExt    o   Extension
 CD
-CD Bruk:  UT_splitpath(szPath,szDrive,szDir,szNavn,szExt);
+CD Usage:  UT_splitpath(szPath,szDrive,szDir,szNavn,szExt);
    ==================================================================
 */
 SK_EntPnt_UT void UT_splitpath(const char *pathP, char *driveP, char *dirP,

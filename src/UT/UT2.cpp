@@ -301,10 +301,10 @@ CH UT_memcpy                                      Kopiere buffer
 CD ==============================================================
 CD For beskrivelse, se dokumentasjonen av memcpy_s.
 CD
-CD PARAMETERLISTE:
-CD Type    Navn             I/U  Merknad
+CD Parameters:
+CD Type    Name             I/O  Explanation
 CD -------------------------------------------------------------
-CD void   *dest              iu  Buffer det skal kopieres til.
+CD void   *dest              i/o Buffer det skal kopieres til.
 CD size_t  numberOfElements  i   Size of the destination buffer.
 CD void   *src               i   Buffer det kopieres fra.
 CD size_t  count             i   Number of characters to copy.
@@ -328,10 +328,10 @@ CH UT_strerror                          Henter systemfeilmelding
 CD ==============================================================
 CD For beskrivelse, se dokumentasjonen av strerror_s.
 CD
-CD PARAMETERLISTE:
-CD Type    Navn             I/U  Merknad
+CD Parameters:
+CD Type    Name             I/O  Explanation
 CD -------------------------------------------------------------
-CD char   *buffer            iu  Buffer to hold error string.
+CD char   *buffer            i/o Buffer to hold error string.
 CD size_t  numberOfElements  i   Size of buffer.
 CD int     errnum            i   Error number.
 CD int     status            r   Zero if successful; an error code on failure.
@@ -355,12 +355,12 @@ CD ==============================================================
 CD Overbygning over strtok i standardbiblioteket.
 CD For beskrivelse, se dokumentasjonen av strtok_s.
 CD
-CD PARAMETERLISTE:
-CD Type    Navn             I/U  Merknad
+CD Parameters:
+CD Type    Name             I/O  Explanation
 CD -------------------------------------------------------------
-CD char       *strToken      iu  String containing token or tokens.
+CD char       *strToken      i/o String containing token or tokens.
 CD const char *strDelimit    i   Set of delimiter characters.
-CD char      **context       iu  Used to store position information between calls to UT_strtok
+CD char      **context       i/o Used to store position information between calls to UT_strtok
 CD char       *token         r   Returns a pointer to the next token found in strToken. 
 CD                               They return NULL when no more tokens are found. 
 CD
@@ -382,10 +382,11 @@ CH  UT_StrCopy                    Kopiere streng med overflyttest
 CD  ==============================================================
 CD  Kopierer en streng med max ant tegn. Legger på \0 på slutten.
 CD
-CD  PARAMETERLISTE:
-CD  Navn     Type       I/U  Merknad
+CD  Parameters:
+CD  Name
+ype       I/O  Explanation
 CD  -------------------------------------------------------------
-CD  dst     *char       u   streng det skal kopieres til.
+CD  dst     *char       o   streng det skal kopieres til.
 CD  src     const *char i   streng det skal kopieres fra.
 CD  maxlen  int         i   max antall tegn som skal kopieres
 CD                          (Inkludert null-terminator.)
@@ -407,10 +408,11 @@ CH  UT_StrCat                               Konkatinerer streng
 CD  ==============================================================
 CD  Koncatinerer en streng med max ant tegn. Legger på \0 på slutten.
 CD
-CD  PARAMETERLISTE:
-CD  Navn     Type    I/U  Merknad
+CD  Parameters:
+CD  Name
+ype    I/O  Explanation
 CD  -------------------------------------------------------------
-CD  dst     *char     u   streng det skal kopieres til.
+CD  dst     *char     o   streng det skal kopieres til.
 CD  src     *char     i   streng det skal kopieres fra.
 CD  maxlen   int      i   Max lengde av dst, inkl. null-terminator.
 CD  retur    short    r   1 = OK, 0 = feil.
@@ -618,16 +620,16 @@ SK_EntPnt_UT char *UT_ClrExtrasp(char *str)
 AR-890312
 CH UT_IsSpace                                           Test om mellomromstegn
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Sjekker om et tegn er mellomromstegn (ascii 0x09-0x0d eller 0x20)
 CD
-CD Parametre:
-CD Type   Navn   I/U   Forklaring
+CD Parameters:
+CD Type   Name   I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD char   c       i    Tegn som skall testes.
 CD int    ist     r    1=mellomromstegn, 0=ikke mellomromstegn.
 CD
-CD Bruk:
+CD Usage:
 CD ist = UT_IsSpace(*cp);
    =============================================================================
 */
@@ -1086,17 +1088,17 @@ SK_EntPnt_UT void UT_JustStr (char justmode, char fill, short lstr, char *str)
 AR-890113 LS-890915
 CH UT_Ascii7to8                                          Konverter til PC-ASCII
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Konverterer en streng fra ND-7-bits norsk ASCII til PC-8-bits norsk ASCII.
 CD
-CD Parametre:
-CD  Type    Navn     I/U   Forklaring
+CD Parameters:
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
 CD  char   *tp        r    Peker til konvertert streng.
 CD
-CD Bruk:
+CD Usage:
 CD tp = UT_Ascii7to8(tx);
    =============================================================================
 */
@@ -1131,17 +1133,17 @@ SK_EntPnt_UT unsigned char *UT_Ascii7to8(unsigned char *tx)
 AR-890113 LS-890915
 CH UT_Ascii8to7                                          Konverter til ND-ASCII
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Konverterer en streng fra PC-8-bits norsk ASCII til ND-7-bits norsk ASCII.
 CD
-CD Parametre:
-CD  Type    Navn     I/U   Forklaring
+CD Parameters:
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
 CD  char   *tp        r    Peker til konvertert streng.
 CD
-CD Bruk:
+CD Usage:
 CD tp = UT_Ascii8to7(tx)
    =============================================================================
 */
@@ -1176,17 +1178,17 @@ SK_EntPnt_UT unsigned char *UT_Ascii8to7(unsigned char *tx)
 AR-920929
 CH UT_Ascii8toISO8859                                 Konverter til ISO8859-10
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Konverterer en streng fra PC-8-bits norsk ASCII til ISO8859-10.
 CD
-CD Parametre:
-CD  Type    Navn     I/U   Forklaring
+CD Parameters:
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
 CD  char   *tp        r    Peker til konvertert streng.
 CD
-CD Bruk:
+CD Usage:
 CD tp = UT_Ascii8toISO8859(tx)
    =============================================================================
 */
@@ -1223,17 +1225,17 @@ SK_EntPnt_UT unsigned char *UT_Ascii8toISO8859(unsigned char *tx)
 AR-920929
 CH UT_ISO8859toAscii8                                    Konverter til PC-ASCII
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Konverterer en streng fra ISO8859-10 til PC-8-bits norsk ASCII.
 CD
-CD Parametre:
-CD  Type    Navn     I/U   Forklaring
+CD Parameters:
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
 CD  char   *tp        r    Peker til konvertert streng.
 CD
-CD Bruk:
+CD Usage:
 CD tp = UT_ISO8859toAscii8(tx);
    =============================================================================
 */
@@ -1270,17 +1272,17 @@ SK_EntPnt_UT unsigned char *UT_ISO8859toAscii8(unsigned char *tx)
 AR-920929
 CH UT_Ascii7toISO8859                                 Konverter til ISO8859-10
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Konverterer en streng fra norsk 7-bits ASCII til ISO8859-10.
 CD
-CD Parametre:
-CD  Type    Navn     I/U   Forklaring
+CD Parameters:
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
 CD  char   *tp        r    Peker til konvertert streng.
 CD
-CD Bruk:
+CD Usage:
 CD tp = UT_Ascii7toISO8859(tx)
    =============================================================================
 */
@@ -1316,17 +1318,17 @@ SK_EntPnt_UT unsigned char *UT_Ascii7toISO8859(unsigned char *tx)
 AR-920929
 CH UT_ISO8859toAscii7                                    Konverter til ND-ASCII
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Konverterer en streng fra ISO8859-10 til norsk 7-bits ASCII.
 CD
-CD Parametre:
-CD  Type    Navn     I/U   Forklaring
+CD Parameters:
+CD  Type    Name     I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *tx        i    Peker til streng som skal konverteres
 CD                         (avsluttet med '\0').
 CD  char   *tp        r    Peker til konvertert streng.
 CD
-CD Bruk:
+CD Usage:
 CD tp = UT_ISO8859toAscii7(tx);
    =============================================================================
 */
@@ -1363,11 +1365,11 @@ SK_EntPnt_UT unsigned char *UT_ISO8859toAscii7(unsigned char *tx)
 AR-890113
 CH UT_KonverterTegnsett                                   Konverter tegnsett
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Konverterer en streng fra et tegnsett til et annet.
 CD
-CD Parametre:
-CD  Type    Navn         I/U   Forklaring
+CD Parameters:
+CD  Type    Name         I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  short   sFraTegnsett  i    Fra tegnsett
 CD                                TS_UKJENT  = Ukjent tegnsett
@@ -1383,11 +1385,11 @@ CD                                TS_ND7     = Norsk Data 7-bits
 CD                                TS_DECM8   = DEC multinasjonal 8-bits
 CD                                TS_DECN7   = DEC norsk 7-bits
 CD                                TS_ISO8859 = ISO8859-10
-CD  char   *pszTx         iu   Peker til streng som skal konverteres
+CD  char   *pszTx         i/o  Peker til streng som skal konverteres
 CD                             (avsluttet med '\0').
 CD  char   *pszTx         r    Peker til konvertert streng.
 CD
-CD Bruk:
+CD Usage:
 CD pszTx = UT_KonverterTegnsett(sFraTegnsett,sTilTegnsett,pszTx);
    =============================================================================
 */
@@ -1452,21 +1454,21 @@ SK_EntPnt_UT unsigned char *UT_KonverterTegnsett(short sFraTegnsett,short sTilTe
 AR:2003-10-13
 CH UT_StrCmpi                                            Sammenlign strenger
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sammenligner to strenger uavhengig av store og små bokstaver.
 CD For sammenligning der det bare sjekkes på likhet fungerer den for norske bokstaver.
 CD (Sammenligner bare karakterverdier.)
 CD For sortering må UT_StrColli brukes for å handtere norske bokstaver rett. 
 CD UT_StrCmpi er mye raskere enn UT_StrColli.
 CD
-CD Parametre:
-CD  Type    Navn         I/U   Forklaring
+CD Parameters:
+CD  Type    Name         I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *pszTx1        i    Peker til første streng (avsluttet med '\0').
 CD  char   *pszTx2        i    Peker til andre streng (avsluttet med '\0').
 CD  int     iStatus       r    Status, samme som strcmpi
 CD
-CD Bruk:
+CD Usage:
 CD iStatus = UT_StrCmpi(szTx1,szTx2);
    =============================================================================
 */
@@ -1504,19 +1506,19 @@ SK_EntPnt_UT int UT_StrCmpi(const char *pszTx1, const char *pszTx2)
 PG:2010-10-21
 CH UT_StrColli                                            Sammenlign strenger
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sammenligner to strenger uavhengig av store og små bokstaver.
 CD Fungerer for norske bokstaver. Justerer for landskode (LC_COLLATE)
 CD Hvis det er bare er likhet det sjekkes på, bør heller den raskere UT_StrCmpi brukes.
 CD
-CD Parametre:
-CD  Type    Navn         I/U   Forklaring
+CD Parameters:
+CD  Type    Name         I/O   Explanation
 CD -----------------------------------------------------------------------------
 CD  char   *pszTx1        i    Peker til første streng (avsluttet med '\0').
 CD  char   *pszTx2        i    Peker til andre streng (avsluttet med '\0').
 CD  int     iStatus       r    Status, samme som strcmpi
 CD
-CD Bruk:
+CD Usage:
 CD iStatus = UT_StrColli(szTx1,szTx2);
    =============================================================================
 */
