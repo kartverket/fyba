@@ -8,6 +8,7 @@
 
 #ifdef LINUX
 #  include <unistd.h>
+#  include <new>
 #endif
 
 #ifdef UNIX
@@ -36,127 +37,122 @@
 #define wchar_t char
 #define wcschr  strchr
 
-/////////////////////////////////////////////////////////////////////////////////////// 
-// FULLPATH.cpp
+/*
+CH _fullpath                    
+CD ==============================================================
+CD Makes a complete path from a non-complete path. Handles "..",
+CD "." and will prepend the path with current working directory
+CD if it is relative (does not start with slash)
+CD
+CD The function returns buffer, pointer to memory area containing 
+CD full path if buffer was NULL, or NULL if a error occured
+CD (e.g. full path was longer than maxlen and a buffer 
+CD was supplied.) The pointer should be free'd by calling code.
+CD
+CD Parameters:
+CD Type        Name             I/O  Explanation
+CD -------------------------------------------------------------
+CD char       *buffer           i/o  Buffer to put full path into or NULL.
+CD const char *pathname          i   Pathname to expand
+CD size_t     maxlen             i   Size of buffer.
+CD char *                        r   buffer, pointer to char[] or NULL
+CD  ==============================================================
+*/
+char * _fullpath(char *buffer, const char *pathname, size_t maxlen) {
+	if(maxlen < _MAX_PATH) {
+		return NULL;
+	}
+	char * wpath;
+	wpath = new (std::nothrow) char[_MAX_PATH];
+	if (wpath == NULL) { // could not allocate memory
+		return NULL;
+	}
+	
+	char * wpath2;
+	wpath2 = new (std::nothrow) char[_MAX_PATH];
+	if (wpath2 == NULL) {
+		delete [] wpath;
+		return NULL;
+	}
 
-///////////////////////////////////////////////////////////////////////////////////////
-// ErSlash()
-int ErSlash (int chr)
-{
-    return (chr == '\\' || chr == '/');
+	strncpy(wpath, pathname, _MAX_PATH);	
+	strncpy(wpath2, pathname, _MAX_PATH);
+
+	/* Make relativer paths of ./foo-paths */
+	if(pathname[0] == '.' && pathname[1] == UT_SLASH) {
+		strncpy(wpath, pathname+2, _MAX_PATH);
+		strncpy(wpath, pathname+2, _MAX_PATH);
+	}
+
+	char * prevPos = NULL;
+	
+	char same[4] = { UT_SLASH, '.', UT_SLASH, '\0' }; // e.g. "/./"
+    /* replace /./ with nothing */
+    while ((prevPos = strstr(wpath, same)) != NULL) {
+        prevPos[1] = '\0';
+        UT_StrCopy(wpath2, wpath, _MAX_PATH);
+        strncat(wpath2, (prevPos+strlen(same)), _MAX_PATH);
+        UT_StrCopy(wpath, wpath2, _MAX_PATH);
+    }
+	char prev[5] = { UT_SLASH, '.', '.', UT_SLASH, '\0' }; // e.g "/../"
+
+	int i = -1;
+	/* Remove /../ and parent folder */
+	while ((prevPos = strstr(wpath, prev)) != NULL) {
+		/* Walk forward in the string until first slash or start of string */
+		while((prevPos + i) >= wpath && prevPos[i] != UT_SLASH) {
+			prevPos[i--] = '\0';
+		}
+		UT_StrCopy(wpath2, wpath, _MAX_PATH);
+		strncat(wpath2, (prevPos+strlen(prev)), _MAX_PATH);
+		UT_StrCopy(wpath, wpath2, _MAX_PATH);
+		i = -1;
+	}
+	
+	/* prepend cwd on relative paths */
+	if(wpath[0] != UT_SLASH) {
+		if(getcwd(wpath2, _MAX_PATH) == NULL) {
+			delete [] wpath;
+		    delete [] wpath2;
+			return NULL;
+		}
+		/* getcwd gives ut the path w/o ending slash */
+		strncat(wpath2, UT_STR_SLASH, _MAX_PATH-(strlen(wpath2)+1));
+		strncat(wpath2, wpath, _MAX_PATH)-(strlen(wpath2)+1);
+		UT_StrCopy(wpath, wpath2, _MAX_PATH);
+	}
+
+	int endLen = strlen(wpath);
+	int startAt = 0;
+	if(wpath[0] == UT_SLASH) { 
+		endLen--;
+		startAt = 1;
+	}
+	if(wpath[endLen] == UT_SLASH) {
+		wpath[endLen] = '\0';
+		endLen--;
+	}
+	delete [] wpath2;
+	if (endLen < maxlen && buffer != NULL) { /* we have a buffer, and we have room in buffer */
+       	UT_StrCopy(buffer, (wpath+startAt), maxlen);
+		delete [] wpath;
+		return buffer;
+	} else if (buffer == NULL) { /* we have no buffer */
+		char * tempbuf;
+		if ((tempbuf = (char*)UT_MALLOC(endLen+1)) != NULL) {
+			UT_StrCopy(tempbuf, (wpath+startAt), (endLen+1));
+			delete [] wpath;
+			return tempbuf;
+		} else { /* failed to alloc memory*/
+			delete [] wpath;
+            return NULL;
+		}
+	} else { /* not room in buffer and we were supposed to use the buffer */
+		delete [] wpath;
+		return NULL;
+	}
 }
 
-///////////////////////////////////////////////////////////////////////////////////////
-// FullPath()
-wchar_t * FullPath(wchar_t *Buffer,
-                 const wchar_t *PathName,
-                 size_t nMaxlen
-                 )
-{
-	 wchar_t *TempBuf;
-    wchar_t *dst, *src;
-    int c, Drive;
-    size_t nLen;
-
-
-    /* Allocate a temporary buffer to hold the fully qualified path.
-	  */
-	 if ((TempBuf = (wchar_t*)malloc(_MAX_PATH*2+1)) == NULL)
-		  return (NULL);
-    
-    
-     Drive = 7;
-     src = (wchar_t *)PathName; 
-    
-    
-	 /* If supplied path is relative, append it to the drivename
-     * and its current directory.  Otherwise append it to the
-     * drivename only.
-     */
-    if (!ErSlash(src[0])) {              /* path is relative? */
-        /* Get drivename and its current directory.
-         */
-		  if (getcwd(TempBuf,_MAX_PATH*2+1) == NULL) {
-				free(TempBuf);
-				return (NULL);
-        }
-        dst = &TempBuf[strlen(TempBuf)];
-        if (!ErSlash(*(dst-1)))         /* if directory doesn't end in slash */
-            *dst++ = UT_SLASH;              /* append one */
-
-    } else {
-        /* Path is absolute.  Store the drivename only.*/
-        dst = TempBuf;
-    }
-    strcpy(dst,src);                    /* concatenate supplied path */
-
-    /* Scan the path, squeezing out "../" and "./", and
-     * squeezing out the previous directory when "../" is found.
-	  */
-    src = dst = TempBuf;
-    
-    for (;;) {
-        /* If this the end of the path, or end of a directory,
-         * we must check for "." or ".."
-         */
-        if ((c = *src++) == '\0' || ErSlash(c)) {
-            /* If last directory copied was "/.", back up over it.
-             * Skip test if we are still at the beginning of TempBuf.
-             */
-            if (src != (TempBuf+1)) {
-			  if (*(dst-1) == '.' && ErSlash(*(dst-2))) {
-                dst -= 2;
-
-            /* If last directory copied was "/..", back up over it
-             * AND the previous directory.
-             */
-              } else if (*(dst-1) == '.' && *(dst-2) == '.' && ErSlash(*(dst-3))) {
-                dst -= 3;                /* back up over "/.." */
-					 if (*(dst-1) == ':') {   /* can't back up over drivename */
-						  free(TempBuf);
-						  return(NULL);
-					 }
-					 while (!ErSlash(*--dst))
-                    ;                   /* back up to start of prev. dir. */
-			  }
-
-              if (c == '\0') {             /* end of path? */
-                if (ErSlash(*(dst-1)))  /* if last wchar_t is slash */
-                    dst--;              /*  back up over it */
-                if (*(dst-1) == ':')    /* if path is just a drivename */
-                    *dst++ = '/';      /*  append a slash */
-                *dst = '\0';            /* append null terminator */
-                break;
-            
-              } else {
-					 *dst++ = c;             /* copy the slash */
-              }
-		    }
-
-        } else {
-            *dst++ = c;                 /* copy the character */
-        }
-    }
-
-	 /* Copy the temp buffer to the user's buffer, if present.
-     * Otherwise shrink the temp buffer and return a pointer to it.
-     */
-    nLen = strlen(TempBuf) + 1;                  /* length of path and null */
-    if (Buffer != NULL) {
-		  if (nLen > nMaxlen) {                     /* user buffer too small? */
-				free(TempBuf);
-				return (NULL);
-
-        } else {
-				strcpy(Buffer,TempBuf);
-				free(TempBuf);
-            return (Buffer);
-        }
-
-    } else {
-        return (wchar_t*)(realloc(TempBuf,nLen));          /* shrink the buffer */
-	 }
-}
 #endif
 
 
@@ -225,7 +221,7 @@ SK_EntPnt_UT short  UT_FullPath(wchar_t *pszBuffer, const wchar_t *pszPath, size
 
 	/* Hent filopplysninger */
 #ifdef UNIX
-   return  (short)(FullPath(pszBuffer,szFilnavn,maxlen) != NULL)?  0 : 1;
+   return  (short)(_fullpath(pszBuffer,szFilnavn,maxlen) != NULL)?  0 : 1;
 #endif
 
 #ifdef OS232
