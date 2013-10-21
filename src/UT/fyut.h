@@ -78,8 +78,12 @@
 #  define _FILE_OFFSET_BITS 64
 #  include <limits.h>
 #  include <sys/types.h>
-#  include <unistd.h>
-#  include <stdio.h>
+
+#  ifdef WIN32
+#    include <io.h>
+#  else
+#    include <unistd.h>
+#  endif
 
 #  define _TRUNCATE 0
 #  define _fseeki64 fseek
