@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <memory.h>
 
-#include <../UT/fyut.h>
+#include "../UT/fyut.h"
 
 #include "fygm.h"
 
