@@ -85,8 +85,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "..\GM\fygm.h"
-#include "..\UT\fyut.h"
+#ifdef WIN32
+#	include "..\GM\fygm.h"
+#	include "..\UT\fyut.h"
+#else
+#	include <fygm.h>
+#	include <fyut.h>
+#endif
 
 
 /* ======================================================= */
