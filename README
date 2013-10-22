@@ -42,7 +42,18 @@ autoreconf --force --install
 
 ** Windows **
 
-...
+On Windows all three libs of the FYBA library (GM.lib, UT.lib, and FYBA.lib) 
+have to be build individually.
+
+For building FYBA on Windows project files for MS Visual Studio Express 2012 
+are provided in the folders fyba/src/GM, fyba/src/UT and fyba/src/FYBA.
+Using these project files the individual libs are built in a subfolder within 
+the project directory and then copied to the fyba/Lib folder.
+Therefore the fyba/Lib folder has to be created before running the build process.
+
+When GM.lib, UT.lib and FYBA.lib are built you may want to use the libs for 
+activating the SOSI-driver in GDAL. For building GDAL with SOSI-support on Windows
+see: http://trac.osgeo.org/gdal/wiki/SOSI
 
 ** Other **
 
