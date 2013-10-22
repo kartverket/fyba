@@ -1,0 +1,5 @@
+Lib/*.lib
+*Debug*
+*Release*
+*.sdf
+*.suo
