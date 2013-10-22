@@ -4,8 +4,7 @@
 //        UT_splitpath - split a full path name
 //
 
-#include <cstring>
-#include <fyut.h>
+#include "stdafx.h"
 
 void UT_splitFN(char *filename, char* name, char* ext) {
 	char* lastDot = strrchr(filename, '.');
@@ -43,13 +42,13 @@ CD char       *extP              o  extension
 CD  ==============================================================
 */
 SK_EntPnt_UT void UT_splitpath(const char *pathP, char *driveP, char *dirP, char *nameP, char *extP) {
-	char local_path[PATH_MAX]; /* Copy of pathP i case we modify it */
-	char tmp[PATH_MAX]; /* Copy of pathP i case we modify it */
-	char filename[PATH_MAX];
+	char local_path[_MAX_PATH]; /* Copy of pathP i case we modify it */
+	char tmp[_MAX_PATH]; /* Copy of pathP i case we modify it */
+	//char filename[_MAX_PATH];
 	(*driveP) = (*dirP) = (*nameP) = (*extP) = '\0';
 
-	strcpy(local_path, pathP);
-	strcpy(tmp, local_path);
+	UT_StrCopy(local_path, pathP, _MAX_PATH);
+	UT_StrCopy(tmp, local_path, _MAX_PATH);
 	/* Under linux, driveP is always \0 */
 	#ifdef WIN32
 		/* Afaik, there is only ONE : in windows filenames */
@@ -57,7 +56,7 @@ SK_EntPnt_UT void UT_splitpath(const char *pathP, char *driveP, char *dirP, char
 		if(theColon != NULL) {
 			/* We overwrite local_path here, because after this the code
 			is equal for win/lin if the drive-part is removed */
-			UT_StrCopy(local_path, theColon+1, PATH_MAX);
+			UT_StrCopy(local_path, theColon+1, _MAX_PATH);
 			(*(theColon + 1)) = '\0'; // set a \0 after the color (inside tmp!)
 			UT_StrCopy(driveP, tmp, _MAX_DRIVE);
 			if (strlen(tmp) > _MAX_DRIVE) { // how would this even happen?
@@ -66,15 +65,15 @@ SK_EntPnt_UT void UT_splitpath(const char *pathP, char *driveP, char *dirP, char
 		}
 	#endif
 
-	strcpy(tmp, local_path);
+	UT_StrCopy(tmp, local_path, _MAX_PATH);
 	
 	char* lastSlash = strrchr(tmp, UT_SLASH);
 	
 	/* Set dirP */
 	if(lastSlash != NULL) {
 		/* +1 because we don't want the / in the filename */
-		char filename[PATH_MAX]; /* UT_splitFN might modify filename */
-		strcpy(filename,lastSlash+1);
+		char filename[_MAX_PATH]; /* UT_splitFN might modify filename */
+		UT_StrCopy(filename,lastSlash+1, _MAX_PATH);
 		if (strcmp(filename, ".") != 0) {
 			UT_splitFN(filename, nameP, extP);
 		    (*(tmp + (lastSlash - tmp + 1))) = '\0';	
@@ -86,7 +85,7 @@ SK_EntPnt_UT void UT_splitpath(const char *pathP, char *driveP, char *dirP, char
 		}
 	} else {
 		if (strcmp(".", local_path) == 0) { /* Hard-coded to mimic old behaviour */
-		 	strcpy(dirP, ".");
+			UT_StrCopy(dirP, ".", _MAX_DIR);
 		} else {
 			UT_splitFN(tmp, nameP, extP);
 		}
