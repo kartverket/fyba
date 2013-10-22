@@ -85,8 +85,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "..\GM\fygm.h"
-#include "..\UT\fyut.h"
+#include <fygm.h>
+#include <fyut.h>
 
 
 /* ======================================================= */
