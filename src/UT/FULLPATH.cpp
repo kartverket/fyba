@@ -182,19 +182,19 @@ CD
 CD Bruk:  sStatus = UT_FullPath(szBuffer,szPath,maxlen);
 	==================================================================
 */
-SK_EntPnt_UT short  UT_FullPath(wchar_t *pszBuffer, const wchar_t *pszPath, size_t maxlen)
+SK_EntPnt_UT short  UT_FullPath(char *pszBuffer, const char *pszPath, size_t maxlen)
 {
-	wchar_t szFilnavn[_MAX_PATH];
-	wchar_t *pszStart,*pszSlutt;
-	wchar_t *env;
+	char szFilnavn[_MAX_PATH];
+	char *pszStart,*pszSlutt;
+	char *env;
 #ifdef BORLAND
 	wchar_t  *pszOrgPath;
 #endif
 
 	/* Søk start- og sluttparantes */
 	UT_StrCopy(szFilnavn,pszPath,_MAX_PATH);
-	pszStart = wcschr(szFilnavn,'(');
-	pszSlutt = wcschr(szFilnavn,')');
+	pszStart = strchr(szFilnavn,'(');
+	pszSlutt = strchr(szFilnavn,')');
 
 	/* Både start- og sluttparantes er funnet,
       og starten er først i strengen */
@@ -205,7 +205,7 @@ SK_EntPnt_UT short  UT_FullPath(wchar_t *pszBuffer, const wchar_t *pszPath, size
       env = getenv( UT_StrUpper(pszStart));
 #else      
       size_t len;
-      _wdupenv_s(&env, &len, UT_StrUpper(pszStart));
+      _dupenv_s(&env, &len, UT_StrUpper(pszStart));
 #endif
 
       /* Navnet er ikke funnet */
@@ -233,7 +233,7 @@ SK_EntPnt_UT short  UT_FullPath(wchar_t *pszBuffer, const wchar_t *pszPath, size
 #endif
 
 #ifdef WIN32
-   return  (short)(_wfullpath(pszBuffer,szFilnavn,maxlen) != NULL)?  0 : 1;
+   return  (short)(_fullpath(pszBuffer,szFilnavn,maxlen) != NULL)?  0 : 1;
 #endif
 
 #ifdef BORLAND
