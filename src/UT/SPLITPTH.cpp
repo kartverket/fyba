@@ -40,6 +40,8 @@ CD char       *dirP              o  Directory-part
 CD char       *nameP             o  Filename w/o extension
 CD char       *extP              o  extension
 CD  ==============================================================
+CD Usage:  UT_splitpath(szPath,szDrive,szDir,szNavn,szExt);
+   ==================================================================
 */
 SK_EntPnt_UT void UT_splitpath(const char *pathP, char *driveP, char *dirP, char *nameP, char *extP) {
 	char local_path[_MAX_PATH]; /* Copy of pathP i case we modify it */

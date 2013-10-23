@@ -160,7 +160,7 @@ char * _fullpath(char *buffer, const char *pathname, size_t maxlen) {
 AR-930423
 CH UT_FullPath                              Finn fullstendig filnavn
 CD ==================================================================
-CD Formål:
+CD Purpose:
 CD Lag absolutt path navn fra relativt path navn.
 CD I tilleg tolker denne environment-variabler inn i filnavnet.
 CD Environment-varialen skrives i parantes.
@@ -171,15 +171,15 @@ CD
 CD   Filnavnet   (FKB)\CV03851V.SOS
 CD   pakkes ut til  D:\DATA\SOSI\FKB\CV03851V.SOS
 CD
-CD PARAMETERLISTE:
-CD Type             Navn       I/U  Merknad
+CD Parameters:
+CD Type             Name       I/O  Explanation
 CD ------------------------------------------------------------------
 CD wchar_t            *pszBuffer u   Komplett filnavn
 CD const wchar_t      *pszPath   i   Forkortet filnavn
 CD size_t           maxlen    i   Max lengde av pszBuffer
 CD short            sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
-CD Bruk:  sStatus = UT_FullPath(szBuffer,szPath,maxlen);
+CD Usage:  sStatus = UT_FullPath(szBuffer,szPath,maxlen);
 	==================================================================
 */
 SK_EntPnt_UT short  UT_FullPath(char *pszBuffer, const char *pszPath, size_t maxlen)

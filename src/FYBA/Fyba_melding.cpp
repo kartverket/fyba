@@ -45,18 +45,18 @@
 AR-890911
 CH LC_Error                                                  Feilmeldingsrutine
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Standard feilmeldingsrutine.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD short    feil_nr      i   Feil-nummer
 CD char    *logtx        i   Tekst som bare skrives til logfil.
 CD                           Eks:"(utført i LC_RxGr)"
 CD char    *vartx        i   Denne tekststreng henges etter feilmeldingsteksten.
 CD
-CD Bruk:
+CD Usage:
 CD LC_Error(35,"(Kallt i LC_Error)","");
    =============================================================================
 */
@@ -104,15 +104,15 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
 AR-900609
 CH LC_StartMess                                          Vise melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Starter vising av melding om baseoppbygging.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
 CD
-CD Bruk:
+CD Usage:
 CD LC_StartMess(pszFilnavn);
    =============================================================================
 */
@@ -130,15 +130,15 @@ void LC_StartMessage(char const *pszFilnavn)
 AR-900609
 CH LC_ShowMess                                          Vise melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Vising av melding om baseoppbygging.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD double   prosent      i   Prosent ferdig (0.0 - 100.0)
 CD
-CD Bruk:
+CD Usage:
 CD LC_ShowMess(prosent);
    =============================================================================
 */
@@ -155,14 +155,14 @@ void LC_ShowMessage(double prosent)
 AR-900609
 CH LC_EndMess                                          Avslutt melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Avslutt melding om baseoppbygging.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LC_EndMess();
    =============================================================================
 */
@@ -179,17 +179,17 @@ void LC_EndMessage(void)
 AR-910402
 CH LC_Cancel                                         Sjekk om Esc er trykket
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om det er trykkt på Esc (Avbryte indeksoppbygging).
 CD
 CD
-CD Parametre:
-CD Type   Navn      I/U   Forklaring
+CD Parameters:
+CD Type   Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short  sAvbrutt   r    UT_TRUE  = Cancel
 CD                        UT_FALSE = ikke avbrudd
 CD
-CD Bruk:
+CD Usage:
 CD sAvbrutt = LC_Cancel();
    ==========================================================================
 */

@@ -36,18 +36,18 @@
 
 /*
 AR-921013
-CH UT_DeleteDir                                 Sletter et directory
+CH UT_DeleteDir                                  Deletes a directory
 CD ==================================================================
-CD Formål:
-CD Sletter et directory.
+CD Purpose:
+CD Deletes a directory.
 CD
-CD PARAMETERLISTE:
-CD Type      Navn     I/U  Merknad
+CD Parameters:
+CD Type      Name     I/O  Explanation
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Directory-navn
-CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
+CD char     *pszPath   i   Directory-name
+CD short     sStatus   r   Status; 0=OK, other value on error.
 CD
-CD Bruk:  sStatus = UT_DeleteDir(szPath);
+CD Usage:  sStatus = UT_DeleteDir(szPath);
    ==================================================================
 */
 SK_EntPnt_UT short UT_DeleteDir(char *pszPath)

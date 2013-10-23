@@ -19,16 +19,16 @@ static short sProsent;
 AR:2006-03-21
 CH LC_SetErrorHandler                              Registrer feilmeldingsrutine
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Registrer feilmeldingsrutine.
 CD Feilmeldingsrutinen blir kallt hvis det oppstår feil.
 CD
-CD Parametre:
-CD Type   Navn                       I/U  Forklaring
+CD Parameters:
+CD Type   Name                       I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD void  (*f) (short ,char *,char *)  i   Peker til feilmeldingsrutine
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetErrorHandler(ErrorHandler);
 CD
 CD
@@ -36,8 +36,8 @@ CD Feilmeldingsrutinen skal ha følgende definisjon:
 CD
 CD void ErrorHandler(short feil_nr,const char *logtx,const char *vartx);
 CD
-CD Med følgende parametre:
-CD Type    Navn     I/U  Forklaring
+CD Parameters:
+CD Type    Name     I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD short   feil_nr   i   Feil-nummer
 CD char   *logtx     i   Tekst som bare skrives til logfil.
@@ -55,24 +55,24 @@ SK_EntPnt_FYBA void LC_SetErrorHandler(void (*f) (short,const char*,const char*)
 AR:2006-03-21
 CH LC_SetStartMessageHandler                           Registrer initieringsrutine
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Registrer initieringsrutine.
 CD Initieringsrutinen blir kalt for å starte visning av framdrift.
 CD
-CD Parametre:
-CD Type   Navn       I/U  Forklaring
+CD Parameters:
+CD Type   Name       I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD void  (*f)(char*)  i   Peker til initieringsrutine
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetStartMessageHandler(StartMessageHandler);
 CD
 CD Initieringsrutinen skal ha følgende definisjon:
 CD
 CD void StartMessageHandler(char *pszFilnavn);
 CD
-CD Med følgende parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
 CD =============================================================================
@@ -87,24 +87,24 @@ SK_EntPnt_FYBA void LC_SetStartMessageHandler(void (*f)(const char*))
 AR:2006-03-21
 CH LC_SetShowMessageHandler                               Registrer visningsrutine
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Registrer visningsrutine.
 CD Visningsrutine blir kalt for å vise framdrift ved indeks-oppbygging.
 CD
-CD Parametre:
-CD Type   Navn       I/U  Forklaring
+CD Parameters:
+CD Type   Name       I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD void  (*f)(double)  i   Peker til visningsrutine
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetShowMessageHandler(ShowMessageHandler);
 CD
 CD Visningsrutinen skal ha følgende definisjon:
 CD
 CD void ShowMessageHandler(double prosent);
 CD
-CD Med følgende parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD double   prosent      i   Prosent ferdig (0.0 - 100.0)
 CD =============================================================================
@@ -119,16 +119,16 @@ SK_EntPnt_FYBA void LC_SetShowMessageHandler(void (*f)(double))
 AR:2006-03-21
 CH LC_SetEndMessageHandler                             Registrer avslutningsrutine
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Registrer avslutningsrutine.
 CD Avslutningsrutinen blir kalt for å avslutte visning av framdrift ved indeksoppbygging.
 CD
-CD Parametre:
-CD Type   Navn       I/U  Forklaring
+CD Parameters:
+CD Type   Name       I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD void  (*f)(void)  i   Peker til avslutningsrutine
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetEndMessageHandler(EndMessageHandler);
 CD
 CD Avslutningsrutinen skal ha følgende definisjon:
@@ -146,25 +146,25 @@ SK_EntPnt_FYBA void LC_SetEndMessageHandler(void (*f)(void))
 AR:2006-03-21
 CH LC_SetCancelHandler                                Registrer avbruddsstyring
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Registrer avbruddsstyring.
 CD Rutine for avbruddsstyring blir kalt for å sjekke om bruker ønsker
 CD å avbryte beregningen.
 CD
-CD Parametre:
-CD Type   Navn       I/U  Forklaring
+CD Parameters:
+CD Type   Name       I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD short  (*f)(void)  i   Peker til rutine for avbruddsstyring.
 CD
-CD Bruk:
+CD Usage:
 CD LC_SetCancelHandler(CancelHandler);
 CD
 CD Rutine for avbruddsstyring skal ha følgende definisjon:
 CD
 CD short CancelHandler(void);
 CD
-CD Med følgende parametre:
-CD Type   Navn      I/U  Forklaring
+CD Parameters:
+CD Type   Name      I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD short  sAvbrutt   r   UT_TRUE  = Cancel
 CD                       UT_FALSE = ikke avbrudd
@@ -180,18 +180,18 @@ SK_EntPnt_FYBA void LC_SetCancelHandler(short (*f)(void))
 AR-890911
 CH LC_Error                                                  Feilmeldingsrutine
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Standard feilmeldingsrutine.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD short    feil_nr      i   Feil-nummer
 CD char    *logtx        i   Tekst som bare skrives til logfil.
 CD                           Eks:"(utført i LC_RxGr)"
 CD char    *vartx        i   Denne tekststreng henges etter feilmeldingsteksten.
 CD
-CD Bruk:
+CD Usage:
 CD LC_Error(35,"(Kallt i LC_Xxxx)","");
 CD =============================================================================
 */
@@ -243,15 +243,15 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
 AR-900609
 CH LC_StartMessage                                          Vise melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Starter vising av melding om baseoppbygging.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
 CD
-CD Bruk:
+CD Usage:
 CD LC_StartMessage(pszFilnavn);
 CD =============================================================================
 */
@@ -276,15 +276,15 @@ void LC_StartMessage(const char *pszFilnavn)
 AR-900609
 CH LC_ShowMessage                                          Vise melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Vising av melding om baseoppbygging.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD double   prosent      i   Prosent ferdig (0.0 - 100.0)
 CD
-CD Bruk:
+CD Usage:
 CD LC_ShowMessage(prosent);
 CD =============================================================================
 */
@@ -308,14 +308,14 @@ void LC_ShowMessage(double prosent)
 AR-900609
 CH LC_EndMessage                                          Avslutt melding
 CD =============================================================================
-CD Formål:
+CD Purpose:
 CD Avslutt melding om baseoppbygging.
 CD
-CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Parameters:
+CD Type     Name        I/O  Explanation
 CD -----------------------------------------------------------------------------
 CD
-CD Bruk:
+CD Usage:
 CD LC_EndMessage();
 CD =============================================================================
 */
@@ -339,17 +339,17 @@ void LC_EndMessage(void)
 AR-910402
 CH LC_Cancel                                         Sjekk om Esc er trykket
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sjekk om det er trykkt på Esc (Avbryte indeksoppbygging).
 CD
 CD
-CD Parametre:
-CD Type   Navn      I/U   Forklaring
+CD Parameters:
+CD Type   Name      I/O   Explanation
 CD --------------------------------------------------------------------------
 CD short  sAvbrutt   r    UT_TRUE  = Cancel
 CD                        UT_FALSE = ikke avbrudd
 CD
-CD Bruk:
+CD Usage:
 CD sAvbrutt = LC_Cancel();
 CD ==========================================================================
 */

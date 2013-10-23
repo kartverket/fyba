@@ -20,15 +20,15 @@ extern LC_SYSTEMADM    Sys;
 AR:2004-05-04
 CH LC_DelIdx                                            Sletter indeksfilene
 CD ==========================================================================
-CD Formål:
+CD Purpose:
 CD Sletter indeksfilene for gitt SOSI-fil.
 CD
-CD Parametre:
-CD Type  Navn     I/U Forklaring
+CD Parameters:
+CD Type  Name     I/O Explanation
 CD --------------------------------------------------------------------------
 CD char *szSosFil  i  SOSI-filnavn
 CD
-CD Bruk:
+CD Usage:
 CD LC_DelIdx(szSosFil);
    ==========================================================================
 */
