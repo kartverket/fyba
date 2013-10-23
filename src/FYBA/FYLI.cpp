@@ -1536,7 +1536,11 @@ static short LI_ReadAdm(LC_FILADM *pFil)
 
    // Marker at basen er åpnet
    pFil->sIdxOpen = UT_TRUE;
+#ifdef LINUX
+   pFil->ulPid = getpid();
+#else
    pFil->ulPid = _getpid();
+#endif
 
    // Skriv
    fseek(pF,0L,SEEK_SET);
