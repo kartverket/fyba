@@ -76,6 +76,10 @@ SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
          strategi = 2;
          UT_StrCopy(feil,FYBA_STRING_BASE_INDEX_ABORTED,MAX_FEIL_LEN);
          break;
+      case 13:
+         strategi = 3;
+         UT_StrCopy(feil,FYBA_STRING_FILE_PERM_DENIED,MAX_FEIL_LEN);
+         break;
       case 101:
          strategi = 3;
          UT_StrCopy(feil,FYBA_STRING_BASE_OPEN_FAILED,MAX_FEIL_LEN);
