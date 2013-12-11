@@ -32,13 +32,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifdef WIN32
 #include <windows.h>
-#endif
 
 #include <fyba.h>
 
-//static short sProsent;
+static short sProsent;
 
 
 /*
@@ -60,7 +58,7 @@ CD Bruk:
 CD LC_Error(35,"(Kallt i LC_Error)","");
    =============================================================================
 */
-void LC_Error(short feil_nr,const char *logtx,const char *vartx)
+void LC_Error(short feil_nr,char *logtx,char *vartx)
 {
    char szErrMsg[260];
    short strategi;
@@ -77,7 +75,6 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
       default: szErrMsg[0]='\0';
    }
 
-   #ifdef WIN32
    if (strategi > 2) {
       Beep(100,500);
    }
@@ -93,10 +90,6 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
    } else {
       MessageBox(NULL, "Klarer ikke å vise teksten", "Melding fra FYBA ", MB_ICONHAND | MB_OK);
    }
-   #else 
-      printf("\nError: %s ",pszFeilmelding);
-      fflush(stdout);
-   #endif
 }
 
 
@@ -116,7 +109,7 @@ CD Bruk:
 CD LC_StartMess(pszFilnavn);
    =============================================================================
 */
-void LC_StartMessage(char const *pszFilnavn)
+void LC_StartMess(char *pszFilnavn)
 {
 #ifndef LINUX
       printf("\nLeser: %s ",pszFilnavn);
@@ -142,7 +135,7 @@ CD Bruk:
 CD LC_ShowMess(prosent);
    =============================================================================
 */
-void LC_ShowMessage(double prosent)
+void LC_ShowMess(double prosent)
 {
 #ifndef LINUX
       printf("\r%d%%",(short)prosent);
@@ -166,7 +159,7 @@ CD Bruk:
 CD LC_EndMess();
    =============================================================================
 */
-void LC_EndMessage(void)
+void LC_EndMess(void)
 {
 #ifndef LINUX
       printf("\r100%% ferdig.");
@@ -196,6 +189,6 @@ CD sAvbrutt = LC_Cancel();
 short LC_Cancel(void)
 {
       /* Ikke mulig å avbryte */
-      return UT_FALSE;
+      return FALSE;
 }
 

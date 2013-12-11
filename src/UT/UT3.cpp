@@ -1,7 +1,7 @@
  /******************************************************************^$date;
 *                                                                           *
 *       Hjelpebiblioteket   U T  (Utilities)                                *
-*       Lars Staurset, Statens Kartverk / FYSAK-prosjektet, januar 1990     *
+*       Lars Staurset, KARTVERKET / FYSAK-prosjektet, januar 1990     *
 *       Fil: UT3.C versjon C22: Diverse rutiner                             *
 *                                                                           *
 ****************************************************************************/
@@ -127,7 +127,7 @@ SK_EntPnt_UT int UT_RoundDI (double d)
 {
    if (d > INT_MAX  ||  d < INT_MIN)
    {
-      UT_FPRINTF(stderr,"Kan ikke avrunde %.3f til int!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
+      UT_FPRINTF(stderr,L"Kan ikke avrunde %.3f til int!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
 #ifndef LINUX
       RaiseException( EXCEPTION_INT_OVERFLOW, EXCEPTION_NONCONTINUABLE, 0, NULL);
 #endif
@@ -148,7 +148,7 @@ SK_EntPnt_UT unsigned int UT_RoundDUI (double d)
 {
    if (d > UINT_MAX  ||  d < 0)
    {
-      UT_FPRINTF(stderr,"Kan ikke avrunde %.3f til unsigned int!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
+      UT_FPRINTF(stderr,L"Kan ikke avrunde %.3f til unsigned int!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
 #ifndef LINUX
       RaiseException( EXCEPTION_INT_OVERFLOW, EXCEPTION_NONCONTINUABLE, 0, NULL);
 #endif
@@ -167,7 +167,7 @@ SK_EntPnt_UT long UT_RoundDL (double d)
 {
    if (d > LONG_MAX  ||  d < LONG_MIN)
    {
-      UT_FPRINTF(stderr,"Kan ikke avrunde %.3f til long!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
+      UT_FPRINTF(stderr,L"Kan ikke avrunde %.3f til long!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
 #ifndef LINUX
       RaiseException( EXCEPTION_INT_OVERFLOW, EXCEPTION_NONCONTINUABLE, 0, NULL);
 #endif
@@ -187,7 +187,7 @@ SK_EntPnt_UT long long UT_RoundDLL (double d)
 {
    if (d > LLONG_MAX  ||  d < LLONG_MIN)
    {
-      UT_FPRINTF(stderr,"Kan ikke avrunde %.3f til long long!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
+      UT_FPRINTF(stderr,L"Kan ikke avrunde %.3f til long long!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
 #ifndef LINUX
       RaiseException( EXCEPTION_INT_OVERFLOW, EXCEPTION_NONCONTINUABLE, 0, NULL);
 #endif
@@ -207,7 +207,7 @@ SK_EntPnt_UT short UT_RoundDS (double d)
 {
    if (d > SHRT_MAX  ||  d < SHRT_MIN)
    {
-      UT_FPRINTF(stderr,"Kan ikke avrunde %.3f til short!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
+      UT_FPRINTF(stderr,L"Kan ikke avrunde %.3f til short!(Fil:%s, Linje:%d)\n", d, __FILE__, __LINE__);
 #ifndef LINUX
       RaiseException( EXCEPTION_INT_OVERFLOW, EXCEPTION_NONCONTINUABLE, 0, NULL);
 #endif
@@ -229,32 +229,33 @@ SK_EntPnt_UT short UT_RoundDS (double d)
 *       Get Environment Variable                                               *
 *******************************************************************************/
 
-SK_EntPnt_UT char *UT_GetEnv (char *var, short mstr, char *str)
+SK_EntPnt_UT wchar_t *UT_GetEnv (wchar_t *var, short mstr, wchar_t *str)
 {
-    char *env;
+    wchar_t *env;
 #ifdef LINUX
     env = getenv (UT_StrUpper(var));
     if (env == NULL) {
-        UT_StrCopy(str,"C:\\",mstr);
+        UT_StrCopy(str,L"C:\\",mstr);
         UT_StrCat(str,var,(mstr-3));
     }
     else {
         UT_StrCopy(str,env,mstr);
-        *(str+mstr-1) = '\0';
+        *(str+mstr-1) = L'\0';
         UT_ClrTrailsp(str);
     }
     return str;
 #else
     size_t len;
-    _dupenv_s(&env, &len, UT_StrUpper(var));
+    _wdupenv_s(&env, &len, UT_StrUpper(var));
+
     //env = getenv (UT_StrUpper(var));
     if (env == NULL) {
-        UT_StrCopy(str,"C:\\",mstr);
+        UT_StrCopy(str,L"C:\\",mstr);
         UT_StrCat(str,var,(mstr-3));
     }
     else {
         UT_StrCopy(str,env,mstr);
-        *(str+mstr-1) = '\0';
+        *(str+mstr-1) = L'\0';
         UT_ClrTrailsp(str);
     }
     return str;
@@ -267,12 +268,12 @@ SK_EntPnt_UT char *UT_GetEnv (char *var, short mstr, char *str)
 /*LS-890926*********************************************************************
 *       Lag filnavn med path til FYSAK                                               *
 *******************************************************************************/
-SK_EntPnt_UT char *UT_MakeFysakPath ( char *str, short mstr, char *path, char *filename )
+SK_EntPnt_UT wchar_t *UT_MakeFysakPath ( wchar_t *str, short mstr, const wchar_t *path, const wchar_t *filename )
 {
 	size_t len;
 
 	/* Standardverdi */
-	if (path == NULL  ||  *path == '\0') {
+	if (path == NULL  ||  *path == L'\0') {
 		GetCurrentDirectory(mstr,str);
 	} else {
 		UT_StrCopy(str,path,mstr);
@@ -282,73 +283,16 @@ SK_EntPnt_UT char *UT_MakeFysakPath ( char *str, short mstr, char *path, char *f
 	UT_FullPath(str,str,mstr);
 
 	/* Heng på '\' */
-	len = strlen(str);
-	if (*(str+len-1) != '\\'  &&  *(str+len-1) != ':'){
-		UT_StrCat(str, "\\", mstr);
+   len = wcslen(str);
+	if (*(str+len-1) != L'\\'  &&  *(str+len-1) != L':'){
+		UT_StrCat(str, L"\\", mstr);
 	}
 
 	/* Heng på filnavn */
-	len = strlen(str);
+	len = wcslen(str);
 	UT_StrCat(str, filename, mstr);
 
    return str;
-}
-
-#endif
-
-
-#ifdef OS216
-
-/*LS-890926*********************************************************************
-*       Lag filnavn med path til FYSAK                                               *
-*******************************************************************************/
-SK_EntPnt_UT char *UT_MakeFysak ( char *str, short mstr, char *filename )
-{
-   char *cp,finn_env[_MAX_EXT+10];
-   size_t len;
-   char *env = NULL;
-
-   /* S›k etter filtype, og hent environment-variabel */
-   if ((cp = strchr(filename,'.')) != NULL) {
-      cp++;
-      strcpy(finn_env,"FYSAK_");
-      strcat(finn_env,cp);
-      size_t len;
-      errno_t err = _dupenv_s(&env, &len, UT_StrUpper(finn_env));
-		//env = getenv( UT_StrUpper(finn_env));
-   }
-
-   /* Spesialtype er ikke funnet, bruk FYSAK-standard */
-   if (env == NULL) {
-      size_t len;
-      errno_t err = _dupenv_s(&env, &len, "FYSAK");
-      //env = getenv ("FYSAK");
-   }
- 
-   /* Standardverdi */
-   if (env == NULL) {
-      strncpy(str,"C:\\FYSAK\\",(size_t)(mstr-1));
-      *(str+mstr-1) = '\0';
-
-   } else {
-      strncpy (str,env,(size_t)(mstr-1));
-		*(str+mstr-1) = '\0';
-      UT_ClrTrailsp(str);
-   }
-
-   /* Heng p† '\' */
-   len = strlen(str);
-   if (*(str+len-1) != '\\'  &&  *(str+len-1) != ':'){
-      strncat (str,"\\",mstr-len-1);
-      *(str+mstr-1) = '\0';
-   }
-
-   /* Heng p† filnavn */
-   len = strlen(str);
-	strncat (str,filename,mstr-len-1);
-   *(str+mstr-1) = '\0';
-
-    return str;
 }
 
 #endif
@@ -389,19 +333,19 @@ SK_EntPnt_UT void UT_InqDate (short *date)
 
 
 //*****************************************************************
-// Henter og formatterer dagens dato som en 8-sifret streng
+// Henter og formaterer dagens dato som en 8-sifret streng
 //*****************************************************************
-SK_EntPnt_UT char *UT_InqDateString(void)
+SK_EntPnt_UT wchar_t *UT_InqDateString(void)
 { 
 #ifdef LINUX
    struct tm *ntime;
    time_t aclock;
-   static char szDato[9];
+   static wchar_t szDato[9];
 
 
    time(&aclock);
    ntime = localtime(&aclock);
-   UT_SNPRINTF(szDato,9,"%4d%02d%02d",
+   UT_SNPRINTF(szDato,9,L"%4d%02d%02d",
            1900+ntime->tm_year,
            ntime->tm_mon+1,
            ntime->tm_mday);
@@ -410,12 +354,12 @@ SK_EntPnt_UT char *UT_InqDateString(void)
 #else
    struct tm ntime;
    time_t aclock;
-   static char szDato[9];
+   static wchar_t szDato[9];
 
 
    time(&aclock);
    localtime_s(&ntime,&aclock);
-   UT_SNPRINTF(szDato,9,"%4d%02d%02d",
+   UT_SNPRINTF(szDato,9,L"%4d%02d%02d",
            1900+ntime.tm_year,
            ntime.tm_mon+1,
            ntime.tm_mday);
@@ -426,19 +370,19 @@ SK_EntPnt_UT char *UT_InqDateString(void)
 
 
 //*****************************************************************
-// Henter og formatterer dagens dato og tid som en 14-sifret 
+// Henter og formaterer dagens dato og tid som en 14-sifret 
 // streng på formen ååååmmddttmmss.
 //*****************************************************************
-SK_EntPnt_UT char *UT_InqDatetimeString(void)
+SK_EntPnt_UT wchar_t *UT_InqDatetimeString(void)
 { 
 #ifdef LINUX
    struct tm *ntime;
    time_t aclock;
-   static char szDatotid[15];
+   static wchar_t szDatotid[15];
 
    time(&aclock);
    ntime = localtime(&aclock);
-   UT_SNPRINTF(szDatotid,15,"%4d%02d%02d%02d%02d%02d",
+   UT_SNPRINTF(szDatotid,15,L"%4d%02d%02d%02d%02d%02d",
            1900+ntime->tm_year,
            ntime->tm_mon+1,
            ntime->tm_mday,
@@ -450,11 +394,11 @@ SK_EntPnt_UT char *UT_InqDatetimeString(void)
 #else
    struct tm ntime;
    time_t aclock;
-   static char szDatotid[15];
+   static wchar_t szDatotid[15];
 
    time(&aclock);
    localtime_s(&ntime,&aclock);
-   UT_SNPRINTF(szDatotid,15,"%4d%02d%02d%02d%02d%02d",
+   UT_SNPRINTF(szDatotid,15,L"%4d%02d%02d%02d%02d%02d",
            1900+ntime.tm_year,
            ntime.tm_mon+1,
            ntime.tm_mday,

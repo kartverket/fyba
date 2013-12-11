@@ -1,27 +1,16 @@
 /* === 900607 ============================================================= */
-/*  STATENS KARTVERK  -  FYSAK-PC                                           */
+/*  KARTVERKET  -  FYSAK-PC                                           */
 /*  Fil: fyta.c                                                             */
 /*  Innhold: Lagring og henting av "fil"-tabeller                           */
 /* ======================================================================== */
 
 #include "stdafx.h"
-
 #include <fcntl.h>
-
 
 /* Div. styrevariabler */
 #define NY    0
 #define LES   1
 #define SKRIV 2
-
-/* Tabellsystem */
-static short fytab_open = 0;
-static struct {
-   FILE   *fpek;
-   size_t recl;
-   short  modus;
-   long   cur_lin;
-} fytab;
 
 
 /*
@@ -32,15 +21,16 @@ CD Formål:
 CD Initierer tabellsystemet og åpner filen.
 CD
 CD Parametre:
-CD Type     Navn      I/U   Forklaring
+CD Type     Navn           I/U  Forklaring
 CD -----------------------------------------------------------------------------
-CD long     n_rec      i    Antall reckords som skal nullstilles. Disse kan
-CD                          etterpå brukes til tilfeldig aksess. Utvidelse
-CD                          av filen kan senere bare skje i fortløpende
-CD                          rekkefølge.
-CD short    rec_len    i    Reckordlengde. (Bruk sizeof for å finne lengden.)
-CD void    *buffer     i    Peker til buffer som skal brukes for nullstilling.
-CD short    ist        r    Status. (0=OK, -1=feil)
+CD wchar_t *pszKatalognavn  i   Katalognavn for lagring av midlertidig fil
+CD long     n_rec           i   Antall reckords som skal nullstilles. Disse kan
+CD                              etterpå brukes til tilfeldig aksess. Utvidelse
+CD                              av filen kan senere bare skje i fortløpende
+CD                              rekkefølge.
+CD short    rec_len         i   Reckordlengde. (Bruk sizeof for å finne lengden.)
+CD void    *buffer          i   Peker til buffer som skal brukes for nullstilling.
+CD short    ist             r   Status. (0=OK, -1=feil)
 CD
 CD Bruk:
 CD  .
@@ -51,7 +41,7 @@ CD     short nko;
 CD  } buffer;
 CD  .   
 CD  .
-CD  ist = LC_InitTabel(10000L,sizeof buffer,(void *)(&buffer));
+CD  ist = LC_InitTabel(L"C:\\Katalog", 10000L, sizeof buffer, (void *)(&buffer));
 CD  .   
 CD  ist = LC_PutTabel(linje,(void *)&buffer);
 CD  .   
@@ -60,15 +50,22 @@ CD  .
 CD  LC_CloseTabel();
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_InitTabel(long n_rec,short rec_len,void *buffer)
+short CFyba::LC_InitTabel(const wchar_t *pszKatalognavn, long n_rec,short rec_len,void *buffer)
 {
    short ierr;
 
    if (fytab_open){                    /* Systemet er allerede i bruk */
       return -1;
    }
-                                       /* Åpner tabellfilen */
-   fytab.fpek = UT_OpenFile("fytabell.tmp","",UT_UPDATE,UT_UNKNOWN,&ierr);
+          
+   wchar_t drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+   UT_splitpath(pszKatalognavn,drive,dir,fname,ext);
+   UT_makepath(fytab.szPath, drive, dir, L"fytabell", L".tmp");
+   
+   UT_DeleteFile(fytab.szPath);
+
+   /* Åpner tabellfilen */
+   fytab.fpek = UT_OpenFile(fytab.szPath,L"",UT_UPDATE,UT_UNKNOWN,&ierr);
    if (ierr != UT_OK){                 /* Åpningsfeil */
       return -1;
    }
@@ -110,7 +107,7 @@ CD Bruk:
 CD ist = LC_GetTabel(linje,(void *)&buffer);
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_GetTabel(long linje,void *buffer)
+short CFyba::LC_GetTabel(long linje,void *buffer)
 {
    if ( ! fytab_open){        /* Systemet er ikke aktivisert */
       return -1;
@@ -152,7 +149,7 @@ CD Bruk:
 CD ist = LC_PutTabel(linje,(void *)&buffer);
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_PutTabel(long linje,void *buffer)
+short CFyba::LC_PutTabel(long linje,void *buffer)
 {
    if ( ! fytab_open){        /* Systemet er ikke aktivisert */
       return -1;
@@ -189,11 +186,11 @@ CD Bruk:
 CD LC_CloseTabel();
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_CloseTabel(void)
+void CFyba::LC_CloseTabel(void)
 {
    if (fytab_open){
       fclose(fytab.fpek);            /* Stenger tabellfilen */
-      UT_DeleteFile("fytabell.tmp");        /* Sletter tabellfilen */
+      UT_DeleteFile(fytab.szPath);   /* Sletter tabellfilen */
       fytab_open = 0;                /* Merke for at systemet er stengt */
    }
 }

@@ -27,11 +27,6 @@
 #  include <direct.h>
 #endif
 
-#ifdef BORLAND
-#  include <dir.h>
-#endif
-
-//#include "StdAfx.h"
 #include "fyut.h"
 
 /*
@@ -44,13 +39,13 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Directory-navn
+CD wchar_t     *pszPath   i   Directory-navn
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Bruk:  sStatus = UT_DeleteDir(szPath);
    ==================================================================
 */
-SK_EntPnt_UT short UT_DeleteDir(char *pszPath)
+SK_EntPnt_UT short UT_DeleteDir(const wchar_t *pszPath)
 {
 #ifdef LINUX
 	return  (short)rmdir(pszPath);
@@ -69,10 +64,7 @@ SK_EntPnt_UT short UT_DeleteDir(char *pszPath)
 #endif
 
 #ifdef WIN32
-   return  (short)_rmdir(pszPath);
+   return  (short)_wrmdir(pszPath);
 #endif
 
-#ifdef BORLAND
-	return  (short)rmdir(pszPath);
-#endif
 }

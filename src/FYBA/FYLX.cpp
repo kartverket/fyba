@@ -1,5 +1,5 @@
 /* === AR-911003 ============================================================ */
-/*  STATENS KARTVERK  -  FYSAK-PC                                             */
+/*  KARTVERKET  -  FYSAK-PC                                             */
 /*  Fil: fylx.c                                                               */
 /*  Innhold: Put og get rutiner til RB                                        */
 /* ========================================================================== */
@@ -7,25 +7,9 @@
 #include "stdafx.h"
  
 #include <math.h>
-
 #include <ctype.h>
 #include <limits.h>
 
-
-/* Globale variabler for FYBA */
-extern LC_SYSTEMADM Sys;             /* Systemadministrasjon */
-extern char retur_str[LC_MAX_SOSI_LINJE_LEN];  /* Returstreng */
-
-/* Statiske variabler */
-
-/* Lokale rutiner */
-static long LX_GetRefOmkrets(LC_GR_STATUS *pGRS,long *ref_array,
-                              unsigned char *ref_status,long max_ref);
-static long LX_GetRefOy(LC_GRF_STATUS * pGS,long *ref_array,
-                         unsigned char *ref_status,long max_ref);
-static void LX_CreatePibuf(long lPnr);
-static double LX_ArealGruppe(LC_BGR * pBgr,short retning);
-static void LX_PutGi(short lin_nr, const char *szGinfo);
 
 
 /*
@@ -44,7 +28,7 @@ CD Bruk:
 CD     LC_InitGetRefFlate(pGrfStat,pBgr);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA void LC_InitGetRefFlate(LC_GRF_STATUS * pGS)
+void CFyba::LC_InitGetRefFlate(LC_GRF_STATUS * pGS)
 {
    pGS->Omkr.sGiLinNr = 2;
    pGS->Omkr.sRefPos = 0;
@@ -73,7 +57,7 @@ CD                                 GRF_YTRE  = Ytre avgrensing
 CD                                 GRF_INDRE = Indre avgrensing, øyer
 CD                                     (kan kombineres med | (or).)
 CD long           *ref_array  u   GRUPPENUMMER for refererte grupper.
-CD unsigned char  *ref_status u   Status for gruppene i ref_array.
+CD unsigned wchar_t  *ref_status u   Status for gruppene i ref_array.
 CD                                 LC_MED_DIG = Brukes MED dig retning.
 CD                                 LC_MOT_DIG  = Brukes MOT dig retning.
 CD                                 GRF_START_OY     = Første gruppe i øy
@@ -85,7 +69,7 @@ CD
 CD Bruk:
 CD    #define  MAX_REF  20
 CD    long ref_arr[MAX_REF];
-CD    char ref_status[MAX_REF];
+CD    wchar_t ref_status[MAX_REF];
 CD    long ant_ref;
 CD    LC_GRF_STATUS GrfStat;
 CD
@@ -120,7 +104,7 @@ CD    } while (ant_ref > 0);
 CD
 CD ==========================================================================
 */
-SK_EntPnt_FYBA long LC_GetRefFlate(LC_GRF_STATUS * GrfStat,unsigned short usHent,long *ref_array,
+long CFyba::LC_GetRefFlate(LC_GRF_STATUS * GrfStat,unsigned short usHent,long *ref_array,
                      unsigned char *ref_status,long max_ref)
 {
    long antall;
@@ -161,7 +145,7 @@ CD Type            Navn       I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_GR_STATUS   *pGRS       iu   Struktur med statusopplysninger.
 CD long           *ref_array   u    GRUPPENUMMER for refererte grupper.
-CD unsigned char  *ref_status  u    Status for gruppene i ref_array.
+CD unsigned wchar_t  *ref_status  u    Status for gruppene i ref_array.
 CD                                  LC_MED_DIG = Brukes MED dig retning
 CD                                  LC_MOT_DIG  = Brukes MOT dig retning
 CD long            max_ref     i    Max antall linjer i ref_array.
@@ -171,10 +155,10 @@ CD Bruk:
 CD     ant_ref = LX_GetRefOmkrets(&OmkrStat,ref_array,ref_status,max_ref);
 CD ==========================================================================
 */
-static long LX_GetRefOmkrets(LC_GR_STATUS *pGRS,long *ref_array,
+long CFyba::LX_GetRefOmkrets(LC_GR_STATUS *pGRS,long *ref_array,
                               unsigned char *ref_status,long max_ref)
 {
-   char *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
    long snr,grnr;
    long ant_ref = 0;
 
@@ -201,26 +185,26 @@ static long LX_GetRefOmkrets(LC_GR_STATUS *pGRS,long *ref_array,
                         *ref_status++ = LC_MED_DIG;
                      }
                      /* Hent serienummer og konverter til gruppenummer */
-                     if (isdigit(*gp)) {
-                        snr = strtol(gp,&gp,10);
+                     if (iswdigit(*gp)) {
+                        snr = wcstol(gp,&gp,10);
                         /* Konverter til gruppenummer */
                         if ((grnr = LI_GetSnr(Sys.GrId.pFil,snr)) != INGEN_GRUPPE) {
                            *ref_array++ = grnr;
                            ++ant_ref;
 
                         } else {
-                           UT_FPRINTF(stderr,"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",snr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                           UT_FPRINTF(stderr,L"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",snr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                            Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                            ref_status--;
                         }
 
                      } else {
-                        UT_FPRINTF(stderr,"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                        UT_FPRINTF(stderr,L"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                         Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                         ref_status--;
                      }
 
-                  } else if (*gp == '(') {  /* Start øy, ferdig med omkretsen */
+                  } else if (*gp == L'(') {  /* Start øy, ferdig med omkretsen */
                      pGRS->sRefPos = (short)(gp - ginfo);
                      return  ant_ref;
 
@@ -254,7 +238,7 @@ CD Type            Navn       I/U  Forklaring
 CD -------------------------------------------------------------------------
 CD LC_GRF_STATUS *  pGS        iu  Struktur med statusopplysninger.
 CD long           *ref_array   u   GRUPPENUMMER for refererte grupper.
-CD unsigned char  *ref_status  u   Status for gruppene i ref_array.
+CD unsigned wchar_t  *ref_status  u   Status for gruppene i ref_array.
 CD                                  LC_MED_DIG = Brukes MED dig retning
 CD                                  LC_MOT_DIG  = Brukes MOT dig retning
 CD                                  GRF_START_OY     = Første gruppe i øy
@@ -266,13 +250,13 @@ CD Bruk:
 CD     ant_ref = LX_GetRefOy(&GS,ref_array,ref_status,max_ref);
 CD ==========================================================================
 */
-static long LX_GetRefOy(LC_GRF_STATUS * pGS,long *ref_array,
+long CFyba::LX_GetRefOy(LC_GRF_STATUS * pGS,long *ref_array,
                          unsigned char *ref_status,long max_ref)
 {
    short ngi;
    long nko;
    unsigned short info;
-   char *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
    long snr,grnr,antall;
    unsigned char ucRetning;
    LC_BGR Bgr,GmlBgr;
@@ -323,8 +307,8 @@ static long LX_GetRefOy(LC_GRF_STATUS * pGS,long *ref_array,
                         ucRetning = LC_MED_DIG;
                      }
                      /* Hent serienummer og konverter til gruppenummer */
-                     if (isdigit(*gp)) {
-                        snr = strtol(gp,&gp,10);
+                     if (iswdigit(*gp)) {
+                        snr = wcstol(gp,&gp,10);
                         /* Konverter til gruppenummer */
                         if ((grnr = LI_GetSnr(Sys.GrId.pFil,snr)) != INGEN_GRUPPE) {
                            Bgr.lNr = grnr;
@@ -360,22 +344,22 @@ static long LX_GetRefOy(LC_GRF_STATUS * pGS,long *ref_array,
                            }
 
                         } else {
-                           UT_FPRINTF(stderr,"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",snr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                           UT_FPRINTF(stderr,L"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",snr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                            Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                         }
 
                      } else {
-                        UT_FPRINTF(stderr,"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                        UT_FPRINTF(stderr,L"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                         Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                      }
 
-                  } else if (*gp == '(') {                     /* Start øy */
+                  } else if (*gp == L'(') {                     /* Start øy */
                      *ref_array++ = INGEN_GRUPPE;
                      *ref_status++ = GRF_START_OY;
                      ++ant_ref;
                      ++gp;
 
-                  } else if (*gp == ')') {                     /* Slutt øy */
+                  } else if (*gp == L')') {                     /* Slutt øy */
                      *ref_array++ = INGEN_GRUPPE;
                      *ref_status++ = GRF_SLUTT_OY;
                      ++ant_ref;
@@ -421,18 +405,18 @@ CD     short sGiLin,sRefPos;
 CD     long *plRefArray;
 CD
 CD     lAntRef = LC_InqAntRef();
-CD     plRefArray = (long *) UT_MALLOC(lAntRef * sizeof(long));
+CD     plRefArray = (long *) malloc(lAntRef * sizeof(long));
 CD     sGiLin = 2;
 CD     sRefPos = 0;
 CD     LC_GetRef(plRefArray,lAntRef,&sGiLin,&sRefPos);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA long LC_InqAntRef(void)
+long CFyba::LC_InqAntRef(void)
 {
-   char *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
    long lAntRef = 0;
    short gilin = 2;
-   short sRefLin = UT_FALSE;   /* Viser om aktuel linje inneholder referanser */
+   short sRefLin = UT_FALSE;   /* Viser om aktuell linje inneholder referanser */
 
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
@@ -445,19 +429,19 @@ SK_EntPnt_FYBA long LC_InqAntRef(void)
             UT_StrCopy(ginfo,gp,LC_MAX_SOSI_LINJE_LEN);
             gp = ginfo;
             while (*gp) {                  /* Tolk en linje */
-               if (*gp == ':') {                        /* Tall */
+               if (*gp == L':') {                        /* Tall */
                   ++gp;
-                  if (isdigit(*gp) || *gp == '-') {
-                     while (*gp  &&  (!UT_IsSpace(*gp)) &&  *gp != ')') {
+                  if (iswdigit(*gp) || *gp == L'-') {
+                     while (*gp  &&  (!UT_IsSpace(*gp)) &&  *gp != L')') {
                         ++gp;
                      }
                      ++lAntRef;
                   } else {
-                     UT_FPRINTF(stderr,"Ulovlig referanse \"%s\" i gruppe \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                     UT_FPRINTF(stderr,L"Ulovlig referanse \"%s\" i gruppe \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                      Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                   }
 
-               } else if (*gp == '('  ||  *gp == ')') { /* Start og slutt øy */
+               } else if (*gp == L'('  ||  *gp == L')') { /* Start og slutt øy */
                   ++lAntRef;
                   ++gp;
 
@@ -498,9 +482,9 @@ CD Bruk:
 CD     ant_ref = LC_GetRef(ref_array,max_ref,&gilin,&refpos);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA long LC_GetRef(long *ref_array,long max_ref,short *gilin,short *refpos)
+long CFyba::LC_GetRef(long *ref_array,long max_ref,short *gilin,short *refpos)
 {
-   char *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
    long ant_ref = 0;
    short sRefLin = UT_FALSE;   /* Viser om aktuel linje inneholder referanser */
 
@@ -519,19 +503,19 @@ SK_EntPnt_FYBA long LC_GetRef(long *ref_array,long max_ref,short *gilin,short *r
                if (ant_ref < max_ref){
                   if (*gp == ':'){                              /* Tall */
                      ++gp;
-                     if (isdigit(*gp) || *gp == '-') {
-                        *ref_array++ = strtol(gp,&gp,10);
+                     if (iswdigit(*gp) || *gp == '-') {
+                        *ref_array++ = wcstol(gp,&gp,10);
                         ++ant_ref;
                      } else {
-                        UT_FPRINTF(stderr,"Ulovlig referanse \"%s\" i gruppe \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                        UT_FPRINTF(stderr,L"Ulovlig referanse \"%s\" i gruppe \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                         Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                      }
 
-                  } else if (*gp == '('){                       /* Start øy */
+                  } else if (*gp == L'('){                       /* Start øy */
                      *ref_array++ = START_OY;
                      ++ant_ref;
                      ++gp;
-                  } else if (*gp == ')'){                       /* Slutt øy */
+                  } else if (*gp == L')'){                       /* Slutt øy */
                      *ref_array++ = SLUTT_OY;
                      ++ant_ref;
                      ++gp;
@@ -574,12 +558,12 @@ CD Bruk:
 CD     ngi = LC_PutRef(ref_array,ant_ref);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
+short CFyba::LC_PutRef(long *ref_array,long ant_ref)
 {
    #define MAX_LEN  66   /* Ginfolinjen skrives ut når den er lengre en 66 tegn */
    short gilin;
    long j;
-   char temp[LC_MAX_SOSI_LINJE_LEN],*ginfo,*cp;
+   wchar_t temp[LC_MAX_SOSI_LINJE_LEN],*ginfo,*cp;
    short ledig_linje = -1;
 
 
@@ -589,20 +573,20 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
          ginfo = LX_GetGi(gilin);
 
          /* Gammel type referanse er funnet */
-         if (strncmp(ginfo,".. ",3) == 0) {
+         if (wcsncmp(ginfo,L".. ",3) == 0) {
             if (ledig_linje == -1) {        /* Første linje med referanse */
                ledig_linje = gilin;
             }
 
          /* Ny type referanse er funnet */
-         } else if (strncmp(ginfo,"..REF ",6) == 0) {
+         } else if (_wcsnicmp(ginfo,L"..REF ",6) == 0) {
             if (ledig_linje == -1) {        /* Første linje med referanse */
                ledig_linje = gilin;
             }
             /* Søk over resten av referansene */
             for (++gilin; gilin <= Sys.pGrInfo->ngi; ++gilin) {
                ginfo = LX_GetGi(gilin);
-               if (strncmp(ginfo,"..",2) == 0) { /* Annen GINFO er funnet */
+               if (wcsncmp(ginfo,L"..",2) == 0) { /* Annen GINFO er funnet */
                   gilin--;
                   break;      /* Avbryt, alle referanser er funnet*/
                }
@@ -629,10 +613,10 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
          }
 
          if (Sys.GrId.pFil->sSosiVer >= 220) {
-            UT_StrCopy(temp,"..REF ",LC_MAX_SOSI_LINJE_LEN);
+            UT_StrCopy(temp,L"..REF ",LC_MAX_SOSI_LINJE_LEN);
             cp = temp + 6;
          } else {   
-            UT_StrCopy(temp,".. ",LC_MAX_SOSI_LINJE_LEN);
+            UT_StrCopy(temp,L".. ",LC_MAX_SOSI_LINJE_LEN);
             cp = temp + 3;
          }
 
@@ -640,7 +624,7 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
          j=0;
          while (j < ant_ref) {
             /* Strengen er full, skriver ut */
-            if (*ref_array != SLUTT_OY  &&  strlen(temp) > MAX_LEN) {
+            if (*ref_array != SLUTT_OY  &&  wcslen(temp) > MAX_LEN) {
                if (ledig_linje > Sys.pGrInfo->ngi) {
                   ledig_linje = LC_AppGiL();
                }
@@ -651,7 +635,7 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
                   *temp = '\0';
                   cp = temp;
                } else {   
-                  UT_StrCopy(temp,".. ",LC_MAX_SOSI_LINJE_LEN);
+                  UT_StrCopy(temp,L".. ",LC_MAX_SOSI_LINJE_LEN);
                   cp = temp + 3;
                }
             }
@@ -660,25 +644,25 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
                if (! UT_IsSpace(*(cp-1))) {
                   *cp++ = ' ';
                }
-               *cp++ = '(';
-               *cp = '\0';
+               *cp++ = L'(';
+               *cp = L'\0';
 
             } else if (*ref_array == SLUTT_OY) {
-               if (*(cp-1) == '.') {
-                  *cp++ = ' ';
+               if (*(cp-1) == L'.') {
+                  *cp++ = L' ';
                }
-               *cp++ = ')';
-               *cp = '\0';
+               *cp++ = L')';
+               *cp = L'\0';
 
             } else {                                /* Referanse */
-               if (! UT_IsSpace(*(cp-1))  &&  *(cp-1) != '(') {
-                  *cp++ = ' ';
+               if (! UT_IsSpace(*(cp-1))  &&  *(cp-1) != L'(') {
+                  *cp++ = L' ';
                   *cp = '\0';
                }
-               char szOrd[50];
-               UT_SNPRINTF(szOrd,50,":%ld",*ref_array);
+               wchar_t szOrd[50];
+               UT_SNPRINTF(szOrd,50,L":%ld",*ref_array);
                UT_StrCat(temp,szOrd,LC_MAX_SOSI_LINJE_LEN);
-               cp = strchr(temp,'\0');
+               cp = wcschr(temp,'\0');
             }
 
             ++j;
@@ -730,7 +714,7 @@ CD ist = LC_SirkelTilBuep(buff_retning, &as, &ns, &radius, &fi, &dfi, &sfeil )
    ============================================================================
 */
 /*
-SK_EntPnt_FYBA short LC_SirkelTilBuep(short antDelingspunkt,double a1,double n1,double h1,double a2,double n2,double h2,
+short CFyba::LC_SirkelTilBuep(short antDelingspunkt,double a1,double n1,double h1,double a2,double n2,double h2,
                                       short *ngi, long *nko, LC_BGR *pNyBgr)
 {
    double as,ns,da,dn,aNy,nNy,r,fi,dfi,dfi2,fiNy;
@@ -749,10 +733,10 @@ SK_EntPnt_FYBA short LC_SirkelTilBuep(short antDelingspunkt,double a1,double n1,
    lGmlSnr = LC_GetSn();
    LC_GetBuePar(LC_MED_DIG,&as,&ns,&r,&fi,&dfi,&sfeil);
 
-   LC_PutGi(1,".BUEP");
+   LC_PutGi(1,L".BUEP");
 
    sGiLinje = 2;
-   if (LC_GetGP("..RADIUS", &sGiLinje, ngi))  ngi = LC_DelGiL(sGiLinje,1);
+   if (LC_GetGP(L"..RADIUS", &sGiLinje, ngi))  ngi = LC_DelGiL(sGiLinje,1);
 
    // Sikrer at det er tre koordinater i gruppen
    if (nko > 3)       nko = LC_DelKoL(4,nko-3);
@@ -824,7 +808,7 @@ SK_EntPnt_FYBA short LC_SirkelTilBuep(short antDelingspunkt,double a1,double n1,
    LC_WxGr(SKRIV_OPTIMALT);
 
    // ----- Oppretter og tilpasser den andre delen
-   LC_NyGr(pBgr->pFil,".BUEP",&cur.bgr,&lNyttSnr);
+   LC_NyGr(pBgr->pFil,L".BUEP",&cur.bgr,&lNyttSnr);
    gnavn = LC_CopyGr(pBgr,OPPDATER_NGIS,&ngi,&nko,&info);
 
    LC_PutTK(1,a2,n2);
@@ -905,7 +889,7 @@ CD Bruk:
 CD ist = LC_GetBuePar(buff_retning, &as, &ns, &radius, &fi, &dfi, &sfeil )
    ============================================================================
 */
-SK_EntPnt_FYBA short LC_GetBuePar(short buff_retning, double *as, double *ns, double *radius,
+short CFyba::LC_GetBuePar(short buff_retning, double *as, double *ns, double *radius,
                    double *fi, double *dfi, short *sfeil)
 {
    short ist;
@@ -925,7 +909,7 @@ SK_EntPnt_FYBA short LC_GetBuePar(short buff_retning, double *as, double *ns, do
                ist = UT_TRUE;
             } else {
                *sfeil=2;
-               UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - mer enn 2*radius mellom endepunktene\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+               UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - mer enn 2*radius mellom endepunktene\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
             }
          }
@@ -936,7 +920,7 @@ SK_EntPnt_FYBA short LC_GetBuePar(short buff_retning, double *as, double *ns, do
                ist = UT_TRUE;
             } else {
                *sfeil = 2;
-               UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - punktene ligger på rett linje\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+               UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - punktene ligger på rett linje\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
             }
          }
@@ -947,7 +931,7 @@ SK_EntPnt_FYBA short LC_GetBuePar(short buff_retning, double *as, double *ns, do
                ist = UT_TRUE;
             } else {
                *sfeil = 2;
-               UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+               UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
             }
          }
@@ -958,7 +942,7 @@ SK_EntPnt_FYBA short LC_GetBuePar(short buff_retning, double *as, double *ns, do
                ist = UT_TRUE;
             } else {
                *sfeil = 2;
-               UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+               UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
             }
          }
@@ -1005,11 +989,11 @@ CD Bruk:
 CD     ist = LC_GetBue(retning,&a1,&n1,&a2,&n2,&radius,&storbue);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetBue(short retning,double *a1,double *n1,double *a2,double *n2,
+short CFyba::LC_GetBue(short retning,double *a1,double *n1,double *a2,double *n2,
                 double *radius,short *storbue)
 {
    short gilin;
-   char *gp;
+   wchar_t *gp;
    short ist = UT_FALSE;
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                  /* Aktuell gruppe OK */
@@ -1025,24 +1009,24 @@ SK_EntPnt_FYBA short LC_GetBue(short retning,double *a1,double *n1,double *a2,do
 
                                            /* Finn radius og storbue */
          gilin = 2;
-         if ((gp = LC_GetGP("..RADIUS",&gilin,Sys.pGrInfo->ngi)) != NULL) {
-            *radius = strtod(gp,&gp);
+         if ((gp = LC_GetGP(L"..RADIUS",&gilin,Sys.pGrInfo->ngi)) != NULL) {
+            *radius = wcstod(gp,&gp);
             if (retning == HENT_BAKFRA)  *radius = - *radius;
             gilin = 2;
-            if ((gp = LC_GetGP("..STORBUE",&gilin,Sys.pGrInfo->ngi)) != NULL) {
-               *storbue = (short)strtol(gp,&gp,10);
+            if ((gp = LC_GetGP(L"..STORBUE",&gilin,Sys.pGrInfo->ngi)) != NULL) {
+               *storbue = (short)wcstol(gp,&gp,10);
             } else {
                *storbue = 0;
             }
             ist = UT_TRUE;          /* Buen er OK */
 
          } else {
-            UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - mangler ..RADIUS\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+            UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - mangler ..RADIUS\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
             Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
          }
 
       } else {
-         UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - for få koordinater\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+         UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - for få koordinater\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
          Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
       }                              
    }
@@ -1077,7 +1061,7 @@ CD Bruk:
 CD     ist = LC_GetBuep(retning,&a1,&n1,&a2,&n2,&a3,&n3);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetBuep(short retning,double *a1,double *n1,double *a2,double *n2,
+short CFyba::LC_GetBuep(short retning,double *a1,double *n1,double *a2,double *n2,
                  double *a3,double *n3)
 {
    short ist = UT_FALSE;
@@ -1097,7 +1081,7 @@ SK_EntPnt_FYBA short LC_GetBuep(short retning,double *a1,double *n1,double *a2,d
          ist = UT_TRUE;          /* Buen er OK */
 
       } else {
-         UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - for få koordinater\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+         UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - for få koordinater\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
          Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
       }                              
    }
@@ -1126,10 +1110,10 @@ CD Bruk:
 CD     ist = LC_GetSirkel(&as,&ns,&radius);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetSirkel(double *as,double *ns,double *radius)
+short CFyba::LC_GetSirkel(double *as,double *ns,double *radius)
 {
    short gilin;
-   char *gp;
+   wchar_t *gp;
    short ist = UT_FALSE;
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                  /* Aktuell gruppe OK */
@@ -1139,17 +1123,17 @@ SK_EntPnt_FYBA short LC_GetSirkel(double *as,double *ns,double *radius)
 
          /* Finn radius */
          gilin = 2;
-         if ((gp = LC_GetGP("..RADIUS",&gilin,Sys.pGrInfo->ngi)) != NULL) {
-            *radius = strtod(gp,&gp);
+         if ((gp = LC_GetGP(L"..RADIUS",&gilin,Sys.pGrInfo->ngi)) != NULL) {
+            *radius = wcstod(gp,&gp);
             ist = UT_TRUE;          /* Sirkelen er OK */
 
          } else {
-            UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - mangler ..RADIUS\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+            UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - mangler ..RADIUS\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
             Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
          }
 
       } else {
-         UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - mangler koordinat\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+         UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - mangler koordinat\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
          Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
       }
    }
@@ -1181,7 +1165,7 @@ CD Bruk:
 CD     ist = LC_GetSirkelp(&a1,&n1,&a2,&n2,&a3,&n3);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetSirkelp(double *a1,double *n1,double *a2,double *n2,
+short CFyba::LC_GetSirkelp(double *a1,double *n1,double *a2,double *n2,
                 double *a3,double *n3)
 {
    short ist = UT_FALSE;
@@ -1196,7 +1180,7 @@ SK_EntPnt_FYBA short LC_GetSirkelp(double *a1,double *n1,double *a2,double *n2,
          ist = UT_TRUE;          /* Buen er OK */
 
       } else {
-         UT_FPRINTF(stderr,"Ulovlig bue: \"%s : %s\" - for få koordinater\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+         UT_FPRINTF(stderr,L"Ulovlig bue: \"%s : %s\" - for få koordinater\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
          Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_BUE;
       }                              
    }
@@ -1227,10 +1211,10 @@ CD Bruk:
 CD     LC_GetCurEnhet(pFil,&nivaa,&enhet,&enhet_h,&enhet_d);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA void LC_GetCurEnhet(LC_FILADM * pFil,short *nivaa, double *enhet,
+void CFyba::LC_GetCurEnhet(LC_FILADM * pFil,short *nivaa, double *enhet,
                     double *enhet_h, double *enhet_d)
 {
-   LO_TestFilpeker(pFil,"GetCurEnhet");
+   LO_TestFilpeker(pFil,L"GetCurEnhet");
 
    *enhet = pFil->TransPar.dEnhet;
    *enhet_h = pFil->TransPar.dEnhet_h;
@@ -1240,28 +1224,28 @@ SK_EntPnt_FYBA void LC_GetCurEnhet(LC_FILADM * pFil,short *nivaa, double *enhet,
    if (*nivaa == 2)
    {
       short lin = 2;
-      char *para;
+      wchar_t *para;
       double enhet_temp;
 
-      para = LC_GetGP("..ENHET",&lin,Sys.pGrInfo->ngi);
+      para = LC_GetGP(L"..ENHET",&lin,Sys.pGrInfo->ngi);
       if (para == NULL) {
          *nivaa = 1;
       } else {
-         UT_AtoD(para,'.',&enhet_temp);
+         UT_AtoD(para,L'.',&enhet_temp);
          if (enhet_temp > LC_ACCY)  *enhet = enhet_temp;
       }
  
       lin=2;
-      para = LC_GetGP("...ENHET-H",&lin,Sys.pGrInfo->ngi);
+      para = LC_GetGP(L"..ENHET-H",&lin,Sys.pGrInfo->ngi);
       if (para != NULL) {
-         UT_AtoD(para,'.',&enhet_temp);
+         UT_AtoD(para,L'.',&enhet_temp);
          if (enhet_temp > LC_ACCY)  *enhet_h = enhet_temp;
       }
 
       lin=2;
-      para = LC_GetGP("...ENHET-D",&lin,Sys.pGrInfo->ngi);
+      para = LC_GetGP(L"..ENHET-D",&lin,Sys.pGrInfo->ngi);
       if (para != NULL) {
-         UT_AtoD(para,'.',&enhet_temp);
+         UT_AtoD(para,L'.',&enhet_temp);
          if (enhet_temp > LC_ACCY)  *enhet_d = enhet_temp;
       }
    }
@@ -1293,12 +1277,12 @@ CD Bruk:
 CD ngi = LC_UpdateGiEnhet(pFil,enhet,enhet_h,enhet_d);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_h,double enhet_d)
+short CFyba::LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_h,double enhet_d)
 {
    short linje;
-   char tx[80];
+   wchar_t tx[80];
 
-   LO_TestFilpeker(pFil,"UpdateGiEnhet");
+   LO_TestFilpeker(pFil,L"UpdateGiEnhet");
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                  /* Aktuell gruppe OK */
 
@@ -1308,7 +1292,7 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
        // Ikke spesiell ..ENHET
        if (fabs(enhet - pFil->TransPar.dEnhet) < LC_ACCY  ||  fabs(enhet) < LC_ACCY)
        {
-          if (LC_GetGP("..ENHET",&linje,Sys.pGrInfo->ngi) != NULL)
+          if (LC_GetGP(L"..ENHET",&linje,Sys.pGrInfo->ngi) != NULL)
           {
              LC_DelGiL(linje,1);                 /* Funnet, fjern linjen */
           }
@@ -1317,11 +1301,11 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
        // Spesiell ..ENHET
        else
        {
-          if (LC_GetGP("..ENHET",&linje,Sys.pGrInfo->ngi) == NULL)
+          if (LC_GetGP(L"..ENHET",&linje,Sys.pGrInfo->ngi) == NULL)
           {
              linje = LC_AppGiL();         /* Ikke funnet, tildel ny linje */
           }
-          LC_PutGi(linje,LB_FormaterEnhet(tx,80,"..ENHET",enhet));
+          LC_PutGi(linje,LB_FormaterEnhet(tx,80,L"..ENHET",enhet));
        }
 
        // ----- ..ENHET-H
@@ -1330,7 +1314,7 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
        // Ikke spesiell ..ENHET-H
        if (fabs(enhet_h - pFil->TransPar.dEnhet_h) < LC_ACCY  ||  fabs(enhet_h) < LC_ACCY)
        {
-          if (LC_GetGP("..ENHET-H",&linje,Sys.pGrInfo->ngi) != NULL)
+          if (LC_GetGP(L"..ENHET-H",&linje,Sys.pGrInfo->ngi) != NULL)
           {
              LC_DelGiL(linje,1);                 /* Funnet, fjern linjen */
           }
@@ -1339,11 +1323,11 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
        // Spesiell ..ENHET-H
        else
        {
-          if (LC_GetGP("..ENHET-H",&linje,Sys.pGrInfo->ngi) == NULL)
+          if (LC_GetGP(L"..ENHET-H",&linje,Sys.pGrInfo->ngi) == NULL)
           {
              linje = LC_AppGiL();         /* Ikke funnet, tildel ny linje */
           }
-          LC_PutGi(linje,LB_FormaterEnhet(tx,80,"..ENHET-H",enhet_h));
+          LC_PutGi(linje,LB_FormaterEnhet(tx,80,L"..ENHET-H",enhet_h));
        }
 
        // ----- ..ENHET-D
@@ -1352,7 +1336,7 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
        // Ikke spesiell ..ENHET-D
        if (fabs(enhet_d - pFil->TransPar.dEnhet_d) < LC_ACCY  ||  fabs(enhet_d) < LC_ACCY)
        {
-          if (LC_GetGP("..ENHET-D",&linje,Sys.pGrInfo->ngi) != NULL)
+          if (LC_GetGP(L"..ENHET-D",&linje,Sys.pGrInfo->ngi) != NULL)
           {
              LC_DelGiL(linje,1);                 /* Funnet, fjern linjen */
           }
@@ -1361,11 +1345,11 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
        // Spesiell ..ENHET-D
        else
        {
-          if (LC_GetGP("..ENHET-D",&linje,Sys.pGrInfo->ngi) == NULL)
+          if (LC_GetGP(L"..ENHET-D",&linje,Sys.pGrInfo->ngi) == NULL)
           {
              linje = LC_AppGiL();         /* Ikke funnet, tildel ny linje */
           }
-          LC_PutGi(linje,LB_FormaterEnhet(tx,80,"..ENHET-D",enhet_d));
+          LC_PutGi(linje,LB_FormaterEnhet(tx,80,L"..ENHET-D",enhet_d));
        }
    }
 
@@ -1407,17 +1391,17 @@ CD      ist = LC_GetKvalitet(&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                           &sHoydeMetode,&lHoydeNoyaktighet);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetKvalitet(short *psMetode,long *plNoyaktighet,short *psSynbarhet,
+short CFyba::LC_GetKvalitet(short *psMetode,long *plNoyaktighet,short *psSynbarhet,
                      short *psHoydeMetode,long *plHoydeNoyaktighet)
 {
    short lin;
-   char *cp;
+   wchar_t *cp;
    short ist = UT_FALSE;
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {            /* Aktuell gruppe OK */
        lin=2;
        /* Søk i GINFO */
-       if ((cp = LC_GetGP("..KVALITET",&lin,Sys.pGrInfo->ngi)) != NULL) {
+       if ((cp = LC_GetGP(L"..KVALITET",&lin,Sys.pGrInfo->ngi)) != NULL) {
            ist = UT_TRUE;
        }
 
@@ -1466,12 +1450,12 @@ CD  ist = LC_GetCurKvalitet(pFil,&nivaa,pnr,&sMetode,&lNoyaktighet,
 CD                          &sSynbarhet,&sHoydeMetode,&lHoydeNoyaktighet);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
+short CFyba::LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
                         short *psMetode,long *plNoyaktighet,short *psSynbarhet,
                         short *psHoydeMetode,long *plHoydeNoyaktighet)
 {
    short lin;
-   char *cp;
+   wchar_t *cp;
    short sMetode, sHoydeMetode, sSynbarhet;
    long lNoyaktighet, lHoydeNoyaktighet;
    LC_GETPP_STATUS  pp_stat;
@@ -1479,7 +1463,7 @@ SK_EntPnt_FYBA short LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
 
    short sStatus = UT_FALSE;
 
-   LO_TestFilpeker(pFil,"GetCurKvalitet");
+   LO_TestFilpeker(pFil,L"GetCurKvalitet");
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {         /* Aktuell gruppe OK */
 
@@ -1492,7 +1476,7 @@ SK_EntPnt_FYBA short LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
 
       /* Søk i PINFO */
       if (*nivaa == 3) {
-         LC_InitPP("...KVALITET",pnr,pnr,&pp_stat);
+         LC_InitPP(L"...KVALITET",pnr,pnr,&pp_stat);
          if ((cp = LC_GetPP(&pnr,&pp_stat)) != NULL) {
             LN_TolkKvalitet(cp,psMetode,plNoyaktighet,psSynbarhet,
                             psHoydeMetode,plHoydeNoyaktighet);
@@ -1504,7 +1488,7 @@ SK_EntPnt_FYBA short LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
       /* Søk i GINFO */
       if (*nivaa >= 2) {
          lin=2;
-         if ((cp = LC_GetGP("..KVALITET",&lin,Sys.pGrInfo->ngi)) != NULL){       /* Kvalitet */
+         if ((cp = LC_GetGP(L"..KVALITET",&lin,Sys.pGrInfo->ngi)) != NULL){       /* Kvalitet */
             LN_TolkKvalitet(cp,&sMetode,&lNoyaktighet,&sSynbarhet,
                             &sHoydeMetode,&lHoydeNoyaktighet);
 
@@ -1578,7 +1562,7 @@ CD                                sHoydeMetode,lHoydeNoyaktighet);
 CD
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoyaktighet,
+short CFyba::LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoyaktighet,
                           short sSynbarhet,short sHoydeMetode,long lHoydeNoyaktighet)
 {
    // Endret slik at ..KVALITET blir skrevet ut til gruppen bare hvis den er
@@ -1592,7 +1576,7 @@ SK_EntPnt_FYBA short LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoy
    short ngi = Sys.pGrInfo->ngi;
 
 
-   LO_TestFilpeker(pFil,"UpdateGiKvalitet");
+   LO_TestFilpeker(pFil,L"UpdateGiKvalitet");
 
    // Hent kvalitet fra hode
    nivaa = 1;
@@ -1607,7 +1591,7 @@ SK_EntPnt_FYBA short LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoy
        (lHoydeNoyaktighet != ho_hnoyaktighet))
    {
       // Formatterer strengen og oppdater GINFO
-      ngi = LC_PutGP("..KVALITET",
+      ngi = LC_PutGP(L"..KVALITET",
                      LC_FormatterKvalitet(sMetode,lNoyaktighet,sSynbarhet,
                                           sHoydeMetode,lHoydeNoyaktighet),&linje_nr);
    }
@@ -1616,7 +1600,7 @@ SK_EntPnt_FYBA short LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoy
    //{
    //   // Samme kvalitet som i filhodet, fjern eventuell GI-linje
    //   linje_nr = 2;
-   //   if (LC_GetGP("..KVALITET",&linje_nr,ngi) != NULL) {
+   //   if (LC_GetGP(L"..KVALITET",&linje_nr,ngi) != NULL) {
    //      ngi = LC_DelGiL(linje_nr,1);
    //   }
    //}
@@ -1652,21 +1636,21 @@ CD sStatus = LC_UpdatePiKvalitet(pFil,pnr,sMetode,lNoyaktighet,sSynbarhet,
 CD                               sHoydeMetode,lHoydeNoyaktighet)
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,long lNoyaktighet,
+short CFyba::LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,long lNoyaktighet,
                           short sSynbarhet,short sHoydeMetode,long lHoydeNoyaktighet)
 {
-   char  temp[LC_MAX_SOSI_LINJE_LEN],*pp,*neste,*cp;
+   wchar_t  temp[LC_MAX_SOSI_LINJE_LEN],*pp,*neste,*cp;
    short nivaa;
    short gi_metode,gi_hmetode,gi_synbarhet;
    long  gi_noyaktighet,gi_hnoyaktighet;
 
-   LO_TestFilpeker(pFil,"UpdatePiKvalitet");
+   LO_TestFilpeker(pFil,L"UpdatePiKvalitet");
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {            /* Aktuell gruppe OK */
 
       /* Fjern eksisterende KVALITET fra PINFO */
       pp = LC_GetPi(pnr);
-      if ((neste = strstr(pp,"...KVALITET")) != NULL) {    /* Finn SOSI-navnet */
+      if ((neste = wcsstr(pp,L"...KVALITET")) != NULL) {    /* Finn SOSI-navnet */
          cp = neste - 1;                    /* Avslutt første del av pinfo */
          while (UT_IsSpace(*cp) && cp >= pp) {
             cp--;
@@ -1675,9 +1659,9 @@ SK_EntPnt_FYBA short LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,
          UT_StrCopy(temp,pp,LC_MAX_SOSI_LINJE_LEN);
 
          /* Hopp over KVALITETen */
-         if ((cp = strstr(neste+3,"...")) != NULL) {   /* Neste SOSI-navn */
+         if ((cp = wcsstr(neste+3,L"...")) != NULL) {   /* Neste SOSI-navn */
             /* Heng på resten av den gamle PINFOen */
-            if (*temp)  UT_StrCat(temp," ",LC_MAX_SOSI_LINJE_LEN);
+            if (*temp)  UT_StrCat(temp,L" ",LC_MAX_SOSI_LINJE_LEN);
             UT_StrCat(temp,cp,LC_MAX_SOSI_LINJE_LEN);
          }
 
@@ -1698,14 +1682,14 @@ SK_EntPnt_FYBA short LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,
           sHoydeMetode != gi_hmetode  ||
           lHoydeNoyaktighet != gi_hnoyaktighet ) {
 
-         if (*temp)  UT_StrCat(temp," ",LC_MAX_SOSI_LINJE_LEN);
-         UT_StrCat(temp,"...KVALITET ",LC_MAX_SOSI_LINJE_LEN);
+         if (*temp)  UT_StrCat(temp,L" ",LC_MAX_SOSI_LINJE_LEN);
+         UT_StrCat(temp,L"...KVALITET ",LC_MAX_SOSI_LINJE_LEN);
          UT_StrCat(temp,LC_FormatterKvalitet(sMetode,lNoyaktighet,sSynbarhet,sHoydeMetode,lHoydeNoyaktighet),
                    LC_MAX_SOSI_LINJE_LEN);
       }
 
-      if(strlen(temp) > LC_MAX_SOSI_LINJE_LEN) {
-         LC_Error(131,"(LC_UpdatePiKvalitet)",temp);
+      if(wcslen(temp) > LC_MAX_SOSI_LINJE_LEN) {
+         LC_Error(131,L"(LC_UpdatePiKvalitet)",temp);
       }
 
       /* Lagre strengen */
@@ -1757,7 +1741,7 @@ CD
 CD Parametre:
 CD Type     Navn        I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD char     sosi_navn    i    SOSI-navn det skal finnes verdi til.
+CD wchar_t     sosi_navn    i    SOSI-navn det skal finnes verdi til.
 CD                            Leddnummer, posisjon, skilletegn
 CD                            og formateringskode kan inngå
 CD                            som forlengelse av navnet.
@@ -1767,19 +1751,19 @@ CD short   *forste_linje iu   GINFO-linjenummer for start søking
 CD                            (1 er første linje i GINFO.)
 CD                            Ved tilslag returneres linjenummer for tilslaget.
 CD short    siste_linje  i    Siste GINFO-linje det skal søkes i.
-CD char    *para_peker   r    Peker til parameter-streng avslutta med '\0'.
+CD wchar_t    *para_peker   r    Peker til parameter-streng avslutta med '\0'.
 CD                            Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
 CD Bruk:
 CD para_peker = LC_GetGP(sosi_navn,&forste_linje,siste_linje);
    ==========================================================================
 */
-SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short siste_linje)
+wchar_t * CFyba::LC_GetGP(const wchar_t *sosi_navn,short *forste_linje,short siste_linje)
 {
    short gi_lin,sAntallBlank,sSosiLen,sFortegn,s;
-   char *ginfo,*cp,*nt,*cs,szSosiNavn[LC_MAX_SOSINAVN_LEN];
+   wchar_t *ginfo,*cp,*nt,*cs,szSosiNavn[LC_MAX_SOSINAVN_LEN];
    double d;
-   char cSkilleTegn = '\0';
+   wchar_t cSkilleTegn = '\0';
    short sLedd = 0;
    short sStart = 0;
    short sSlutt = 0;
@@ -1788,7 +1772,7 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
    short sFlyttKomma = 0; /* Flytting av komma ( <0 flytt til venstre) */
    short sAntDes = 2;     /* Antall desimaler */
 
-   char *rp = NULL;          /* Retur peker */
+   wchar_t *rp = NULL;          /* Retur peker */
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
       /* Sjekk at det er lovlige linjenummer */
@@ -1799,21 +1783,21 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
       UT_StrCopy(szSosiNavn,sosi_navn,LC_MAX_SOSINAVN_LEN);
       UT_StrUpper(szSosiNavn);
 
-      if ((cs = strpbrk(szSosiNavn,"#[^%£")) != NULL) {
+      if ((cs = wcspbrk(szSosiNavn,L"#[^%£")) != NULL) {
          cp = cs;
          while (*cp != '\0') {
             if (*cp == '#') {
                ++cp;
-               sLedd = (short) strtol(cp,&cp,10);       /* Ledd-nummer */
+               sLedd = (short) wcstol(cp,&cp,10);       /* Ledd-nummer */
             } else if (*cp == '^') {
                ++cp;
                cSkilleTegn = *cp;                       /* Skilletegn */
                ++cp;
             } else if (*cp == '[') {
                ++cp;
-               sStart = (short) strtol(cp,&cp,10);      /* Startposisjon */
+               sStart = (short) wcstol(cp,&cp,10);      /* Startposisjon */
                ++cp;
-               sSlutt = (short) strtol(cp,&cp,10);      /* Sluttposisjon */
+               sSlutt = (short) wcstol(cp,&cp,10);      /* Sluttposisjon */
             } else if ((*cp == '%') || (*cp == '£')) {
                if(*cp == '£')
                   sFormater = 2;
@@ -1826,10 +1810,10 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
                } else {
                   sFortegn = 1;
                }
-               if (isdigit(*cp)) sFlyttKomma = (short) strtol(cp,&cp,10); /* Flytting av komma */
+               if (iswdigit(*cp)) sFlyttKomma = (short) wcstol(cp,&cp,10); /* Flytting av komma */
                sFlyttKomma *= sFortegn;                
-               if (*cp == '.')  ++cp;
-               if (isdigit(*cp)) sAntDes = (short) strtol(cp,&cp,10); /* Ant. des */
+               if (*cp == L'.')  ++cp;
+               if (iswdigit(*cp)) sAntDes = (short) wcstol(cp,&cp,10); /* Ant. des */
             } else {
                ++cp;
             }
@@ -1839,14 +1823,14 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
       }
 
       /* Søk etter SOSI-navnet */
-      sSosiLen = (short)strlen(szSosiNavn);
+      sSosiLen = (short)wcslen(szSosiNavn);
       gi_lin = *forste_linje;
       while (gi_lin <= siste_linje) {
          /* Les ny linje */
          ginfo = LX_GetGi(gi_lin);
 
          /* Er dette rett navn? */
-         if ((strncmp(ginfo,szSosiNavn,sSosiLen) == 0) &&
+         if ((_wcsnicmp(ginfo,szSosiNavn,sSosiLen) == 0) &&
              ( (UT_IsSpace(*(ginfo+sSosiLen))  ||  *(ginfo+sSosiLen) == '\0'))) {
 
             /* Hopp over blanke mellom navn og verdi */
@@ -1858,20 +1842,36 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
             UT_StrCopy(retur_str,cp,LC_MAX_SOSI_LINJE_LEN);
             rp = retur_str;
 
-            // Har ikke ledd , funnet OK
+            // Har ikke ledd, funnet OK
             if (sLedd == 0) {
+               // Fjern hermetegn (")
+               if (*rp == '"') {
 
-               
-               //Fjerner hermetegn " eller ' foran
-               while (*rp == '"' || *rp == '\'')
-                  ++rp;
+                  // Fjerner hermetegn " foran
+                  while (*rp == '"')
+                     ++rp;
 
-               //Finner enden av strengen
-               cp = strchr(rp+1,'\0');
+                  // Finner enden av strengen
+                  cp = wcschr(rp+1,'\0');
 
-               //Går framover fra enden og fjerner anførselstegn
-               while (cp-- && (*cp == '"' || *cp == '\'') && cp != NULL)
-                  *cp = '\0';
+                  // Går framover fra enden og fjerner hermetegn
+                  while (cp-- && (*cp == '"') && cp != NULL)
+                     *cp = '\0';
+               }
+               // Fjern hermetegn (')
+               else if (*rp == '\'') {
+
+                  // Fjerner hermetegn ' foran
+                  while (*rp == '\'')
+                     ++rp;
+
+                  // Finner enden av strengen
+                  cp = wcschr(rp+1,'\0');
+
+                  // Går framover fra enden og fjerner hermetegn
+                  while (cp-- && (*cp == '\'') && cp != NULL)
+                     *cp = '\0';
+               }
 
                funnet = 1;
                // Husk linjenummeret
@@ -1881,29 +1881,29 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
             // Handter leddnummer
             } else {
                s = sLedd;
-               cs = rp+strlen(rp); // Markerer slutten av parameterstrengen
+               cs = rp+wcslen(rp); // Markerer slutten av parameterstrengen
                while(s > 0) {
                   if(s-- == sLedd) {  // Første ledd leses
-                     cp = UT_strtok(rp," ",&nt);
+                     cp = UT_strtok(rp,L" ",&nt);
                   }
                   else {            // Neste ledd leses
-                     cp = UT_strtok(NULL," ",&nt);
+                     cp = UT_strtok(NULL,L" ",&nt);
                   }
                   if (cp != NULL) {
                      // Test på hermetegn
                      if (*cp == '"') {
-                        if((cp+strlen(cp)) != cs)  { // Dersom ikke slutten av parameterstrengen
-                           *(cp+strlen(cp)) = ' ';  // Setter tilbake space for NULL
+                        if((cp+wcslen(cp)) != cs)  { // Dersom ikke slutten av parameterstrengen
+                           *(cp+wcslen(cp)) = ' ';  // Setter tilbake space for NULL
                         }
                         rp = cp+1;              // Unngår start-hermetegnet
-                        cp = UT_strtok(rp,"\"",&nt);   // Leser til slutt-hermetegnet eller \0
+                        cp = UT_strtok(rp,L"\"",&nt);   // Leser til slutt-hermetegnet eller \0
                      }  
                      else if (*cp == '\'') {
-                        if((cp+strlen(cp)) != cs)  { // Dersom ikke slutten av parameterstrengen
-                           *(cp+strlen(cp)) = ' ';  // Setter tilbake space for NULL
+                        if((cp+wcslen(cp)) != cs)  { // Dersom ikke slutten av parameterstrengen
+                           *(cp+wcslen(cp)) = ' ';  // Setter tilbake space for NULL
                         }
                         rp = cp+1;              // Unngår start-hermetegnet
-                        cp = UT_strtok(rp,"'",&nt);    // Leser til slutt-hermetegnet eller \0
+                        cp = UT_strtok(rp,L"'",&nt);    // Leser til slutt-hermetegnet eller \0
                      }
                   }
                   else { // cp == NULL
@@ -1924,7 +1924,7 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
                                     /* AR-950901 */
                   /* rp = NULL; */  /* Det aktuelle leddet finnes ikke */
                   /* Aktuellt ledd huskes */
-                  rp = strchr(rp,'\0');
+                  rp = wcschr(rp,'\0');
                   funnet = 1;
                   /* Husk linjenummeret */
                   *forste_linje = gi_lin;
@@ -1937,82 +1937,82 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
       }
 
       /* Spesialnavn */
-      if ( ! funnet  &&  (*szSosiNavn != '.'  &&  ((*forste_linje <= siste_linje) || (siste_linje == 1)))) {
+      if ( ! funnet  &&  (*szSosiNavn != L'.'  &&  ((*forste_linje <= siste_linje) || (siste_linje == 1)))) {
          /* Handter AREAL spesielt*/
-         if (strcmp(szSosiNavn,"AREAL") == 0) {
+         if (wcscmp(szSosiNavn,L"AREAL") == 0) {
             d = LC_BerAreal();
             d *= pow((double)10.0,(int)sFlyttKomma);
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%.*f",sAntDes,d);
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%.*f",sAntDes,d);
             *forste_linje = siste_linje + 1;
             rp = retur_str;
             sFormater = UT_FALSE;     /* Formatering er utført */
 
          /* Handter LENGDE spesielt */
-         } else if (strcmp(szSosiNavn,"LENGDE") == 0) {
+         } else if (wcscmp(szSosiNavn,L"LENGDE") == 0) {
             if ( ! LC_BerLengde3D(&d)){
                d = LC_BerLengde();
             }
             d *= pow((double)10.0,(int)sFlyttKomma);
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%.*f",sAntDes,d);
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%.*f",sAntDes,d);
             *forste_linje = siste_linje + 1;
             rp = retur_str;
             sFormater = UT_FALSE;     /* Formatering er utført */
             
          /* Handter LENGDE_HORISONTAL spesielt */
-         } else if (strcmp(szSosiNavn,"LENGDE_HORISONTAL") == 0) {
+         } else if (wcscmp(szSosiNavn,L"LENGDE_HORISONTAL") == 0) {
             d = LC_BerLengde();
             d *= pow((double)10.0,(int)sFlyttKomma);
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%.*f",sAntDes,d);
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%.*f",sAntDes,d);
             *forste_linje = siste_linje + 1;
             rp = retur_str;
             sFormater = UT_FALSE;     /* Formatering er utført */
 
          /* Handter LENGDE_AVGRENS spesielt */
-         } else if (strcmp(szSosiNavn,"LENGDE_AVGRENS") == 0) {
+         } else if (wcscmp(szSosiNavn,L"LENGDE_AVGRENS") == 0) {
             d = LC_BerAvgrensLengde();
             d *= pow((double)10.0,(int)sFlyttKomma);
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%.*f",sAntDes,d);
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%.*f",sAntDes,d);
             *forste_linje = siste_linje + 1;
             rp = retur_str;
             sFormater = UT_FALSE;     /* Formatering er utført */
 
          /* Handter LENGDE_YTRE_AVGRENS spesielt */
-         } else if (strcmp(szSosiNavn,"LENGDE_YTRE_AVGRENS") == 0) {
+         } else if (wcscmp(szSosiNavn,L"LENGDE_YTRE_AVGRENS") == 0) {
             d = LC_BerYtreAvgrensLengde();
             d *= pow((double)10.0,(int)sFlyttKomma);
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%.*f",sAntDes,d);
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%.*f",sAntDes,d);
             *forste_linje = siste_linje + 1;
             rp = retur_str;
             sFormater = UT_FALSE;     /* Formatering er utført */
 
          /* Handter LENGDE_INDRE_AVGRENS spesielt */
-         } else if (strcmp(szSosiNavn,"LENGDE_INDRE_AVGRENS") == 0) {
+         } else if (wcscmp(szSosiNavn,L"LENGDE_INDRE_AVGRENS") == 0) {
             d = LC_BerIndreAvgrensLengde();
             d *= pow((double)10.0,(int)sFlyttKomma);
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%.*f",sAntDes,d);
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%.*f",sAntDes,d);
             *forste_linje = siste_linje + 1;
             rp = retur_str;
             sFormater = UT_FALSE;     /* Formatering er utført */
 
          /* Handter SNR spesielt */
-         } else if (strcmp(szSosiNavn,"SNR") == 0) {
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%ld",LC_GetSn());
+         } else if (wcscmp(szSosiNavn,L"SNR") == 0) {
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%ld",LC_GetSn());
             *forste_linje = siste_linje + 1;
             rp = retur_str;
 
          /* Handter NPT spesielt */
-         } else if (strcmp(szSosiNavn,"NPT") == 0) {
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%ld", Sys.pGrInfo->nko);
+         } else if (wcscmp(szSosiNavn,L"NPT") == 0) {
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%ld", Sys.pGrInfo->nko);
             *forste_linje = siste_linje + 1;
             rp = retur_str;
 
          // Handter REF_FRA spesielt (referert fra antall grupper)
-         } else if (strcmp(szSosiNavn,"REF_FRA") == 0) {
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%ld", LC_ErReferertFraAntall());
+         } else if (wcscmp(szSosiNavn,L"REF_FRA") == 0) {
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%ld", LC_ErReferertFraAntall());
             rp = retur_str;
 
          // Handter NPT_REF spesielt antall punkt referert
-         } else if (strcmp(szSosiNavn,"NPT_REF") == 0) {
+         } else if (wcscmp(szSosiNavn,L"NPT_REF") == 0) {
 
             if(Sys.pGrInfo->info & GI_REF)
             {                
@@ -2046,13 +2046,13 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
                LC_POL_FrigiPolygon(&Polygon);
 
                //Lag returstrengen
-               UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%ld", lSumNko);
+               UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%ld", lSumNko);
             }
 
             else
             {
                // Har ikke referanser
-               UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%hd", 0);
+               UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%hd", 0);
             }
 
             *forste_linje = siste_linje + 1;
@@ -2060,7 +2060,7 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
 
 
          /* Handter KVALITET spesielt */
-         } else if (strcmp(szSosiNavn,"KVALITET") == 0) {
+         } else if (wcscmp(szSosiNavn,L"KVALITET") == 0) {
             short sMetode, sSynbarhet, sHoydeMetode;
             long lNoyaktighet, lHoydeNoyaktighet;
             short nivaa = 2;
@@ -2083,10 +2083,10 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
       if ((rp != NULL) && (*rp != '\0')) { //22.11.2007 AR/ÅE Stopper tom variabel som har adresse
          /* Handter delstreng */
          if (sStart != 0) {
-            if (sSlutt != 0  &&  sSlutt < (short)strlen(rp)) {
+            if (sSlutt != 0  &&  sSlutt < (short)wcslen(rp)) {
                *(rp+sSlutt) = '\0';
             }
-            sStart = min(sStart,((short)strlen(rp)));
+            sStart = min(sStart,((short)wcslen(rp)));
             rp += (sStart-1);
          }
 
@@ -2117,7 +2117,7 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
             cp = rp;
             short sTeller=-99;
             while (*cp) {               
-               if (*cp == '.')    // Funnet skilletegn
+               if (*cp == L'.')    // Funnet skilletegn
                   sTeller = -1;                          
                if(sTeller>-99)
                   if(sTeller++==sAntDes) {
@@ -2128,9 +2128,9 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
             }
          }
          if (sFormater) {
-            UT_AtoD (rp,'.',&d);
+            UT_AtoD (rp,L'.',&d);
             d *= pow((double)10.0,(int)sFlyttKomma);
-            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%.*f",sAntDes,d);
+            UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%.*f",sAntDes,d);
             rp = retur_str;
          }
 
@@ -2173,7 +2173,7 @@ CD
 CD Parametre:
 CD Type     Navn        I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD char     pszSosiNavn  i    SOSI-navn det skal finnes verdi til.
+CD wchar_t     pszSosiNavn  i    SOSI-navn det skal finnes verdi til.
 CD                            Leddnummer posisjon og formateringskode kan
 CD                            inngå som forlengelse av navnet.
 CD                            OBS! Store og små bokstaver er signifikante.
@@ -2184,26 +2184,26 @@ CD                            kvalitet fra punktet, GINFO eller hode.
 CD long     lPnr         i    Punktnummer
 CD short   *sSettNr      iu   PINFO-nummer   (1 er første sett i PINFO.)
 CD                            Ved tilslag returneres settnummer for tilslaget.
-CD char    *pszVerdi     r    Peker til verdien avslutta med '\0'.
+CD wchar_t    *pszVerdi     r    Peker til verdien avslutta med '\0'.
 CD                            Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
 CD Bruk:
 CD pszVerdi = LC_GetPiVerdi(pszSosiNavn,lPnr,&sSettNr);
    ==========================================================================
 */
-SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSettNr)
+wchar_t * CFyba::LC_GetPiVerdi(const wchar_t *pszSosiNavn,long lPnr,short *sSettNr)
 {
    short lin,i,sAntallBlank;
-   char *cp,*cs,*nt,szSosiNavn[LC_MAX_SOSINAVN_LEN];
+   wchar_t *cp,*cs,*nt,szSosiNavn[LC_MAX_SOSINAVN_LEN];
    short sAntDes,niv;
-   char format[20];
+   wchar_t format[20];
    double enhet,enhet_h,enhet_d,h;
-   char cSkilleTegn = '\0';
+   wchar_t cSkilleTegn = '\0';
    short sLedd = 0;
    short sStart = 0;
    short sSlutt = 0;
    short funnet = UT_FALSE;
-   char *rp = NULL;          /* Retur peker */
+   wchar_t *rp = NULL;          /* Retur peker */
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
       if (lPnr > 0  &&  lPnr <= Sys.pGrInfo->nko) {    /* Lovlig punkt ? */
@@ -2213,8 +2213,8 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
          }
       
          if (Sys.sPibufStatus != LC_PIBUF_OK) {
-            UT_SNPRINTF(err().tx,LC_ERR_LEN," \"%s\"  pnr: %ld",LX_GetGi(1),lPnr);
-            LC_Error(55,"(LC_GetPiVerdi)",err().tx);
+            UT_SNPRINTF(err.tx,LC_ERR_LEN,L" \"%s\"  pnr: %ld",LX_GetGi(1),lPnr);
+            LC_Error(55,L"(LC_GetPiVerdi)",err.tx);
             return NULL;
 
          }  else {
@@ -2227,21 +2227,21 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
 
             /* Plukk ut info om ledd, delstreng og formatering */
             UT_StrCopy(szSosiNavn,pszSosiNavn,LC_MAX_SOSINAVN_LEN);
-            if ((cs = strpbrk(szSosiNavn,"#[^")) != NULL) {
+            if ((cs = wcspbrk(szSosiNavn,L"#[^")) != NULL) {
                cp = cs;
                for (i=0;i<3;++i) {
                   if (*cp == '#') {
                      ++cp;
-                     sLedd = (short) strtol(cp,&cp,10);       /* Ledd-nummer */
+                     sLedd = (short) wcstol(cp,&cp,10);       /* Ledd-nummer */
                   } else if (*cp == '^') {
                      ++cp;
                      cSkilleTegn = *cp;                       /* Skilletegn */
                      ++cp;
                   } else if (*cp == '[') {
                      ++cp;
-                     sStart = (short) strtol(cp,&cp,10);      /* Startposisjon */
+                     sStart = (short) wcstol(cp,&cp,10);      /* Startposisjon */
                      ++cp;
-                     sSlutt = (short) strtol(cp,&cp,10);      /* Sluttposisjon */
+                     sSlutt = (short) wcstol(cp,&cp,10);      /* Sluttposisjon */
                   }	
                }
                /* Fjern tilleggsinfo fra SOSI-navnet */
@@ -2252,7 +2252,7 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
                                            /* -------- Vanlig PINFO */
             /* Søk etter SOSI-navnet */
             while (lin < Sys.sPibufAntPi) {
-               if (strcmp(Sys.pcPibufNavn[lin],szSosiNavn) == 0) {
+               if (wcscmp(Sys.pcPibufNavn[lin],szSosiNavn) == 0) {
                   funnet = UT_TRUE;
                   /* Kopier parameter */
                   UT_StrCopy(retur_str,Sys.pcPibufVerdi[lin],LC_MAX_SOSI_LINJE_LEN);
@@ -2264,23 +2264,23 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
                                              /* -------- Knutepunkt */
             if (!funnet) {
                if (lin < (Sys.sPibufAntPi+1)  &&
-                           strcmp(szSosiNavn,"...KP") == 0) {
+                           wcscmp(szSosiNavn,L"...KP") == 0) {
                   if ((i = LC_GetKp(lPnr)) != 0) {        /* Funnet KP */
-                     UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%hd",i);
+                     UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%hd",i);
                      funnet = UT_TRUE;
                   }
                   lin = Sys.sPibufAntPi + 1;
 
                                              /* -------- Høyde */
                } else if (lin < (Sys.sPibufAntPi+2)  &&
-                          strcmp(szSosiNavn,"HØYDE") == 0) {
+                          wcscmp(szSosiNavn,L"HØYDE") == 0) {
                   if ((h = LC_GetHoyde(lPnr)) != HOYDE_MANGLER) { /* Funnet høyde */
 
                      /* Hent enhet og formater høyden */
                      niv = 2;
                      LC_GetCurEnhet(Sys.GrId.pFil,&niv,&enhet,&enhet_h,&enhet_d);
                      sAntDes = UT_RoundDS(fabs(min(0.0,log10(enhet_h))));
-                     UT_SNPRINTF(format,20,"%%.%dlf",sAntDes);
+                     UT_SNPRINTF(format,20,L"%%.%df",sAntDes);
                      UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,format,h);
                      funnet = UT_TRUE;
                   }
@@ -2288,7 +2288,7 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
 
                                              /* -------- Kvalitet */
                } else if (lin < (Sys.sPibufAntPi+3)  &&
-                          strcmp(szSosiNavn,"KVALITET") == 0) {
+                          wcscmp(szSosiNavn,L"KVALITET") == 0) {
                   short sMetode, sSynbarhet, sHoydeMetode;
                   long lNoyaktighet, lHoydeNoyaktighet;
                   short nivaa = 3;
@@ -2313,9 +2313,9 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
 
                /* Handter leddnummer */
                if (sLedd != 0) {
-                  cp = UT_strtok(rp," ",&nt);
+                  cp = UT_strtok(rp,L" ",&nt);
                   while(cp != NULL  &&  --sLedd > 0){
-                     cp = UT_strtok(NULL," ",&nt);
+                     cp = UT_strtok(NULL,L" ",&nt);
                   }
                   if (cp == NULL) {
                      *rp = '\0';
@@ -2326,10 +2326,10 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
 
                /* Handter delstreng */
                if (sStart != 0) {
-                  if (sSlutt != 0  &&  sSlutt < (short)strlen(rp)) {
+                  if (sSlutt != 0  &&  sSlutt < (short)wcslen(rp)) {
                      *(rp+sSlutt) = '\0';
                   }
-                  sStart = min(sStart,((short)strlen(rp)));
+                  sStart = min(sStart,((short)wcslen(rp)));
                   rp += (sStart-1);
                }
 
@@ -2357,8 +2357,7 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
          }
 
       } else {                           /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),lPnr);
-         LC_Error(51,"(LC_GetPiVerdi)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetPiVerdi)", lPnr);
       }
    }
 
@@ -2384,11 +2383,11 @@ CD Bruk:
 CD LX_CreatePibuf(lPnr);
    ==========================================================================
 */
-static void LX_CreatePibuf(long lPnr)
+void CFyba::LX_CreatePibuf(long lPnr)
 {
    short sAntPi;
-   char *pp,*cp;
-   char *bp = Sys.cPibuf ;
+   wchar_t *pp,*cp;
+   wchar_t *bp = Sys.cPibuf ;
 
    *Sys.cPibuf = '\0';
 
@@ -2396,13 +2395,13 @@ static void LX_CreatePibuf(long lPnr)
    pp = LC_GetPi(lPnr);
 
    /* For lang pinfo */
-   if (strlen(pp) > LC_MAX_PIBUF_TEGN) {
+   if (wcslen(pp) > LC_MAX_PIBUF_TEGN) {
       Sys.sPibufStatus = LC_PIBUF_FULL;
       return;
    }
 
    /* Finn første/neste SOSI-navn */
-   while ((cp = strstr(pp,"...")) != NULL) {  /* SOSI-navn */
+   while ((cp = wcsstr(pp,L"...")) != NULL) {  /* SOSI-navn */
       ++sAntPi;
 
       /* Sjekk om det er nok plass i tabell for peker til PINFO-linje */
@@ -2426,20 +2425,20 @@ static void LX_CreatePibuf(long lPnr)
       /* Ta vare på verdien */
 
       if (*pp == '"') {                 /* Hermetegn */
-         if ((cp = strchr(pp+1,'"')) != NULL) {      /* Slutt-hermetegn */
+         if ((cp = wcschr(pp+1,'"')) != NULL) {      /* Slutt-hermetegn */
             ++pp;
             *cp++ = '\0';
-            cp = strstr(cp," ..."); /* Neste SOSI-navn */
+            cp = wcsstr(cp,L" ..."); /* Neste SOSI-navn */
 
          } else {
             UT_ClrTrailsp(pp);         /* Fjern blanke på slutten */
          }
 
-      } else if ((cp = strstr(pp," ...")) != NULL) {  /* SOSI-navn */
+      } else if ((cp = wcsstr(pp,L" ...")) != NULL) {  /* SOSI-navn */
          *cp++ = '\0';
          UT_ClrTrailsp(pp);         /* Fjern blanke på slutten */
 
-      } else if ((cp = strchr(pp,'!')) != NULL) {    /* Kommentar */
+      } else if ((cp = wcschr(pp,'!')) != NULL) {    /* Kommentar */
          *cp = '\0';
          UT_ClrTrailsp(pp);         /* Fjern blanke på slutten */
          cp = NULL;
@@ -2480,8 +2479,8 @@ CD
 CD Parametre:
 CD Type     Navn        I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
-CD char     verdi        i    Streng som skal legges inn.
+CD wchar_t     sosi_navn    i    Sosi-navn det skal legges inn verdi til
+CD wchar_t     verdi        i    Streng som skal legges inn.
 CD short   *linje_nr     u    Linjenummer for endringen.
 CD short    ngi          r    Ant. ginfo-linjer etter  endringen.
 CD
@@ -2489,9 +2488,9 @@ CD Bruk:
 CD ngi = LC_PutGP(sosi_navn,verdi,&linje_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *linje_nr)
+short CFyba::LC_PutGP(const wchar_t *sosi_navn,const wchar_t *verdi,short *linje_nr)
 {
-   char temp[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t temp[LC_MAX_SOSI_LINJE_LEN];
 
 
 
@@ -2501,7 +2500,7 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
    short sLedd = 0;
    short funnet = 0;
 
-   char *rp = NULL;          /* Retur peker */
+   wchar_t *rp = NULL;          /* Retur peker */
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
 
@@ -2509,23 +2508,23 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
       UT_StrCopy(szSosiNavn,sosi_navn,LC_MAX_SOSINAVN_LEN);
       UT_StrUpper(szSosiNavn);
 
-      if ((cs = strchr(szSosiNavn,'#')) != NULL) {
+      if ((cs = wcschr(szSosiNavn,'#')) != NULL) {
          cp = cs;
          ++cp;
-         sLedd = (short) strtol(cp,&cp,10);       /* Ledd-nummer */
+         sLedd = (short) wcstol(cp,&cp,10);       /* Ledd-nummer */
          /* Fjern tilleggsinfo fra SOSI-navnet */
          *cs = '\0';
       }
 
       /* Søk etter SOSI-navnet */
-      sSosiLen = strlen(szSosiNavn);
+      sSosiLen = wcslen(szSosiNavn);
       gi_lin = *forste_linje;
       while (gi_lin <= siste_linje) {
          /* Les ny linje */
          ginfo = LX_GetGi(gi_lin);
 
          /* Er dette rett navn? */
-         if ((strncmp(ginfo,szSosiNavn,sSosiLen) == 0) &&
+         if ((_wcsnicmp(ginfo,szSosiNavn,sSosiLen) == 0) &&
              ( (UT_IsSpace(*(ginfo+sSosiLen))  ||  *(ginfo+sSosiLen) == '\0'))) {
 
             /* Hopp over blanke mellom navn og verdi */
@@ -2536,9 +2535,9 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
             /* Kopier parameter */
             rp = strcpy(retur_str,cp);
 
-            /* Fjern hermetegn (") */
+            /* Fjern hermetegn (L") */
             if (*rp == '"') {
-               if ((cp = strchr(rp+1,'"')) != NULL) {   /* Slutt-hermetegn */
+               if ((cp = wcschr(rp+1,'"')) != NULL) {   /* Slutt-hermetegn */
                   ++rp;
                   *cp = '\0';
                }
@@ -2546,7 +2545,7 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
 
             /* Fjern hermetegn (') */
             if (*rp == '\'') {
-               if ((cp = strchr(rp+1,'\'')) != NULL) {   /* Slutt-hermetegn */
+               if ((cp = wcschr(rp+1,'\'')) != NULL) {   /* Slutt-hermetegn */
                   ++rp;
                   *cp = '\0';
                }
@@ -2561,10 +2560,10 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
 
             /* Handter leddnummer */
             } else {
-               cp = strtok(rp," ");
+               cp = strtok(rp,L" ");
                s = sLedd;
                while(cp != NULL  &&  --s > 0){
-                  cp = strtok(NULL," ");
+                  cp = strtok(NULL,L" ");
                }
 
                /* Leddet er funnet */
@@ -2580,7 +2579,7 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
                                     /* AR-950901 */
                   /* rp = NULL; */  /* Det aktuelle leddet finnes ikke */
                   /* Aktuellt ledd huskes */
-                  rp = strchr(rp,'\0');
+                  rp = wcschr(rp,'\0');
                   funnet = 1;
                   /* Husk linjenummeret */
                   *forste_linje = gi_lin;
@@ -2597,10 +2596,10 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
 
          /* Handter delstreng */
          if (sStart != 0) {
-            if (sSlutt != 0  &&  sSlutt < (short)strlen(rp)) {
+            if (sSlutt != 0  &&  sSlutt < (short)wcslen(rp)) {
                *(rp+sSlutt) = '\0';
             }
-            sStart = min(sStart,((short)strlen(rp)));
+            sStart = min(sStart,((short)wcslen(rp)));
             rp += (sStart-1);
          }
 
@@ -2618,13 +2617,13 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
        } else{                             /* Ikke funnet, ny linje */
            *linje_nr = LC_AppGiL();
            UT_StrCopy(temp,sosi_navn,LC_MAX_SOSI_LINJE_LEN);
-           UT_StrCopy(temp," ",LC_MAX_SOSI_LINJE_LEN);
-           UT_StrCopy(temp,verdi,LC_MAX_SOSI_LINJE_LEN);
+           UT_StrCat(temp,L" ",LC_MAX_SOSI_LINJE_LEN);
+           UT_StrCat(temp,verdi,LC_MAX_SOSI_LINJE_LEN);
            LC_PutGi(*linje_nr,temp);
        }
 
    } else{                              /* Ingen aktuell gruppe */
-       LC_Error(49,"(LC_PutGP)","");
+       LC_Error(49,L"(LC_PutGP)",L"");
    }
 
    return Sys.pGrInfo->ngi;
@@ -2642,8 +2641,8 @@ CD
 CD Parametre:
 CD Type     Navn        I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
-CD char     verdi        i    Streng som skal legges inn.
+CD wchar_t     sosi_navn    i    Sosi-navn det skal legges inn verdi til
+CD wchar_t     verdi        i    Streng som skal legges inn.
 CD short   *linje_nr     u    Linjenummer for endringen.
 CD short    ngi          r    Ant. ginfo-linjer etter  endringen.
 CD
@@ -2651,20 +2650,20 @@ CD Bruk:
 CD ngi = LC_AppGP(sosi_navn,verdi,&linje_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_AppGP(const char *sosi_navn,const char *verdi,short *linje_nr)
+short CFyba::LC_AppGP(const wchar_t *sosi_navn,const wchar_t *verdi,short *linje_nr)
 {
-   char temp[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t temp[LC_MAX_SOSI_LINJE_LEN];
 
 
    if (Sys.GrId.lNr != INGEN_GRUPPE){                    /* Aktuell gruppe OK */
         *linje_nr = LC_AppGiL();
         UT_StrCopy(temp,sosi_navn,LC_MAX_SOSI_LINJE_LEN);
-        UT_StrCopy(temp," ",LC_MAX_SOSI_LINJE_LEN);
-        UT_StrCopy(temp,verdi,LC_MAX_SOSI_LINJE_LEN);
+        UT_StrCat(temp,L" ",LC_MAX_SOSI_LINJE_LEN);
+        UT_StrCat(temp,verdi,LC_MAX_SOSI_LINJE_LEN);
         LC_PutGi(*linje_nr,temp);
 
    } else{                              /* Ingen aktuell gruppe */
-       LC_Error(49,"(LC_AppGP)","");
+       LC_Error(49,L"(LC_AppGP)",L"");
    }
 
    return Sys.pGrInfo->ngi;
@@ -2684,22 +2683,22 @@ CD Parametre:
 CD Type     Navn        I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD short    linje_nr     i    Linjenummer som skal endres.
-CD char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
-CD char     verdi        i    Streng som skall legges inn
+CD wchar_t     sosi_navn    i    Sosi-navn det skal legges inn verdi til
+CD wchar_t     verdi        i    Streng som skall legges inn
 CD short    ist          r    1=ok, 0=navnet er ikke funnet
 CD
 CD Bruk:
 CD ist = LC_UpdateGP(linje_nr,sosi_navn,verdi);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_UpdateGP(short linje_nr,const char *sosi_navn,const char *verdi)
+short CFyba::LC_UpdateGP(short linje_nr,const wchar_t *sosi_navn,const wchar_t *verdi)
 {
-   char temp[LC_MAX_SOSI_LINJE_LEN],*gp,*neste,*cp;
+   wchar_t temp[LC_MAX_SOSI_LINJE_LEN],*gp,*neste,*cp;
    short ist=0;
 
    if (Sys.GrId.lNr != INGEN_GRUPPE){                    /* Aktuell gruppe OK */
        gp = LC_GetGi(linje_nr);
-       if ((neste = strstr(gp,sosi_navn)) != NULL){    /* Finn SOSI-navnet */
+       if ((neste = wcsstr(gp,sosi_navn)) != NULL){    /* Finn SOSI-navnet */
 
            cp = neste - 1;                    /* Avslutt første del av ginfo */
            while (cp >= gp && UT_IsSpace(*cp)){
@@ -2707,38 +2706,38 @@ SK_EntPnt_FYBA short LC_UpdateGP(short linje_nr,const char *sosi_navn,const char
            }
            *(cp+1) = '\0';
 
-           neste += strlen(sosi_navn);      /* Hopp over SOSI-navnet */
+           neste += wcslen(sosi_navn);      /* Hopp over SOSI-navnet */
 
            while (UT_IsSpace(*neste))                 /* Ledende blanke */
                ++neste;
 
-           if (*neste == '"' &&  (cp = strchr(neste+1,'"')) != NULL){   /* Hermetegn */
+           if (*neste == '"' &&  (cp = wcschr(neste+1,'"')) != NULL){   /* Hermetegn */
                neste = cp + 1;
                while (UT_IsSpace(*neste)){          /* Blanke */
                    ++neste;
                }
 
-           } else if ((cp = strstr(neste-1," ..")) != NULL) { /* SOSI-navn */
+           } else if ((cp = wcsstr(neste-1,L" ..")) != NULL) { /* SOSI-navn */
                neste = cp + 1;
 
-           } else if ((cp = strchr(neste,'!')) != NULL) { /* Kommentar */
+           } else if ((cp = wcschr(neste,'!')) != NULL) { /* Kommentar */
                neste = cp;
 
            } else{                                 /* Slutten av strengen */
-               neste = strchr(neste,'\0');
+               neste = wcschr(neste,'\0');
            }
 
                                                  /* Legg inn endringen */
            *temp = '\0';
            if (*gp){                      /* Første del */
                UT_StrCat(temp,gp,LC_MAX_SOSI_LINJE_LEN);
-               UT_StrCat(temp," ",LC_MAX_SOSI_LINJE_LEN);
+               UT_StrCat(temp,L" ",LC_MAX_SOSI_LINJE_LEN);
            }
            UT_StrCat(temp,sosi_navn,LC_MAX_SOSI_LINJE_LEN);        /* Aktuellt navn */
-           UT_StrCat(temp," ",LC_MAX_SOSI_LINJE_LEN);
+           UT_StrCat(temp,L" ",LC_MAX_SOSI_LINJE_LEN);
            UT_StrCat(temp,verdi,LC_MAX_SOSI_LINJE_LEN);
            if (*neste){                   /* Siste del */
-               UT_StrCat(temp," ",LC_MAX_SOSI_LINJE_LEN);
+               UT_StrCat(temp,L" ",LC_MAX_SOSI_LINJE_LEN);
                UT_StrCat(temp,neste,LC_MAX_SOSI_LINJE_LEN);
            }
 
@@ -2747,7 +2746,7 @@ SK_EntPnt_FYBA short LC_UpdateGP(short linje_nr,const char *sosi_navn,const char
        }
 
    } else{                              /* Ingen aktuell gruppe */
-       LC_Error(49,"(LC_UpdateGP)","");
+       LC_Error(49,L"(LC_UpdateGP)",L"");
    }
 
    return ist;
@@ -2764,7 +2763,7 @@ CD
 CD Parametre:
 CD Type            Navn        I/U  Forklaring
 CD --------------------------------------------------------------------------
-CD char            sosi_navn    i   Sosi-navn det skal finnes verdi til
+CD wchar_t            sosi_navn    i   Sosi-navn det skal finnes verdi til
 CD long            forste_punkt i   Første punkt. (1 er første pkt i gr)
 CD long            siste_punkt  i   Siste punkt det skal søkes i
 CD LC_GETPP_STATUS pp_stat      iu  Struktur med statusvariabler. Denne er
@@ -2774,7 +2773,7 @@ CD Bruk:
 CD   Se under LC_GetPP.
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_InitPP(char *sosi_navn,long forste_punkt,long siste_punkt,
+void CFyba::LC_InitPP(wchar_t *sosi_navn,long forste_punkt,long siste_punkt,
                LC_GETPP_STATUS *pp_stat)
 {
    short itxu;
@@ -2786,17 +2785,17 @@ SK_EntPnt_FYBA void LC_InitPP(char *sosi_navn,long forste_punkt,long siste_punkt
        pp_stat->slutt_punkt = min(siste_punkt,Sys.pGrInfo->nko) + 1;
 
        /* -------- Knutepunkt */
-       if (strcmp(pp_stat->pinfo_navn,"...KP") == 0){
+       if (wcscmp(pp_stat->pinfo_navn,L"...KP") == 0){
            pp_stat->type = LC_GETPP_KP;
            pp_stat->curr_punkt = max(forste_punkt,1) -1;  /* Sjekk punktnummer */
 
        /* -------- Høyde */
-       } else if (strcmp(pp_stat->pinfo_navn,"HØYDE") == 0) {
+       } else if (wcscmp(pp_stat->pinfo_navn,L"HØYDE") == 0) {
            pp_stat->type = LC_GETPP_HOYDE;
            pp_stat->curr_punkt = max(forste_punkt,1) -1;  /* Sjekk punktnummer */
 
        /* -------- Kvalitet */
-       } else if (strcmp(pp_stat->pinfo_navn,"KVALITET") == 0) {
+       } else if (wcscmp(pp_stat->pinfo_navn,L"KVALITET") == 0) {
            pp_stat->type = LC_GETPP_KVALITET;
            pp_stat->curr_punkt = max(forste_punkt,1) -1;  /* Sjekk punktnummer */
 
@@ -2827,7 +2826,7 @@ CD long    *punkt             u  Ved tilslag returneres punktnummer for
 CD                               tilslaget.
 CD LC_GETPP_STATUS pp_stat iu  Struktur med statusvariabler. Denne er
 CD                               bare for intern bruk i InitPP / GetPP.
-CD char    *para_peker        r  Peker til para.-streng avslutta med '\0'.
+CD wchar_t    *para_peker        r  Peker til para.-streng avslutta med '\0'.
 CD                               Hvis ingenting er funnet returneres NULL.
 CD
 CD Bruk:
@@ -2839,12 +2838,12 @@ CD para_peker = LC_GetPP(&punkt,pp_stat);
 CD   .
    =============================================================================
 */
-SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
+wchar_t * CFyba::LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
 {
    short nt,kp_type,sAntDes,niv;
-   char format[20];
-   char *pinfo,*cp,*parameter;
-   char funnet_sosi[LC_MAX_SOSINAVN_LEN];
+   wchar_t format[20];
+   wchar_t *pinfo,*cp,*parameter;
+   wchar_t funnet_sosi[LC_MAX_SOSINAVN_LEN];
    double enhet,enhet_h,enhet_d,h;
 
 
@@ -2854,7 +2853,7 @@ SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
       if (LC_FinnKp(&(pp_stat->curr_punkt), pp_stat->slutt_punkt-1, &kp_type))  {      /* Søk */
          *punkt = pp_stat->curr_punkt;
                                      /* Lag parameter */
-         UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,"%hd",kp_type);
+         UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,L"%hd",kp_type);
          return  retur_str;               /* OBS! RETURNERER HER! */
 
       } else {                                         /* Ikke funnet */
@@ -2875,7 +2874,7 @@ SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
             LC_GetCurEnhet(Sys.GrId.pFil,&niv,&enhet,&enhet_h,&enhet_d);
             
             sAntDes = UT_RoundDS(fabs(min(0.0,log10(enhet_h))));
-            UT_SNPRINTF(format,20,"%%.%dlf",sAntDes);
+            UT_SNPRINTF(format,20,L"%%.%df",sAntDes);
             UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,format,h);
 
             return retur_str;              /* OBS! RETURNERER HER! */
@@ -2927,21 +2926,21 @@ SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
                    UT_StrToken(pinfo,nt,&nt,LC_MAX_SOSINAVN_LEN,funnet_sosi); /* SOSI-navn */
                    parameter = pinfo + nt;
 
-                   if (strcmp(pp_stat->pinfo_navn,funnet_sosi) == 0){  /* Tilslag */
+                   if (wcscmp(pp_stat->pinfo_navn,funnet_sosi) == 0){  /* Tilslag */
                                                         /* Finn parameter */
                        while (*parameter == ' ')        /* Ledende blanke */
                            ++parameter;
 
                        if (*parameter == '"'){                 /* Hermetegn */
-                           if ((cp = strchr(parameter+1,'"')) != NULL){ /* Slutt-hermetegn */
+                           if ((cp = wcschr(parameter+1,'"')) != NULL){ /* Slutt-hermetegn */
                                ++parameter;
                                *cp = '\0';
                            }
-                       } else if ((cp = strstr(parameter," ..")) != NULL){ /* SOSI-navn */
+                       } else if ((cp = wcsstr(parameter,L" ..")) != NULL){ /* SOSI-navn */
                            *cp = '\0';
                            nt = (short)(cp - pinfo + 1);
 
-                       } else if ((cp = strchr(parameter,'!')) != NULL){ /* Kommentar */
+                       } else if ((cp = wcschr(parameter,'!')) != NULL){ /* Kommentar */
                            *cp = '\0';
                            pp_stat->curr_punkt++;
                            nt = 0;
@@ -2954,7 +2953,7 @@ SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
                        return parameter;              /* OBS! RETURNERER HER! */
 
                    } else{                /* Ikke tilslag, neste PINFO */
-                       if ((cp = strstr(parameter," ..")) != NULL){  /* SOSI-navn */
+                       if ((cp = wcsstr(parameter,L" ..")) != NULL){  /* SOSI-navn */
                            nt = (short)(cp - pinfo + 1);
                        } else{                             /* Linjeslutt */
                            pp_stat->curr_punkt++;
@@ -2994,7 +2993,7 @@ CD Bruk:
 CD status = LC_FinnKp(&forste_punkt,siste_punkt,kp);
    ==========================================================================
 */
-short LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp)
+short CFyba::LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp)
 {
    long punkt;
 
@@ -3034,7 +3033,7 @@ CD Bruk:
 CD LC_PutSn(snr);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_PutSn(long snr)
+void CFyba::LC_PutSn(long snr)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE){               /* Aktuell gruppe OK */
                     /* Legger inn SNR og marker for endring */
@@ -3042,7 +3041,7 @@ SK_EntPnt_FYBA void LC_PutSn(long snr)
        Sys.sGrEndra = END_ENDRA;
 
    } else{                              /* Ingen aktuell gruppe */
-       LC_Error(49,"(LC_PutSn)","");
+       LC_Error(49,L"(LC_PutSn)",L"");
    }
 }
 
@@ -3064,9 +3063,9 @@ CD Bruk:
 CD LX_PutSn(snr);
    ==========================================================================
 */
-void LX_PutSn(long snr)
+void CFyba::LX_PutSn(long snr)
 {
-   char szGinfo[LC_MAX_SOSI_LINJE_LEN],*cp;
+   wchar_t szGinfo[LC_MAX_SOSI_LINJE_LEN],*cp;
 
    /* Legger ikke inn serienr i hodet */
    if (Sys.GrId.lNr > 0L) {
@@ -3081,8 +3080,8 @@ void LX_PutSn(long snr)
      
       /* Heng på serienummer */
       if (snr != 0L) {
-         char szOrd[50];
-         UT_SNPRINTF(szOrd, 50, " %ld:", snr);
+         wchar_t szOrd[50];
+         UT_SNPRINTF(szOrd, 50, L" %ld:", snr);
          UT_StrCat(szGinfo,szOrd,LC_MAX_SOSI_LINJE_LEN);
       }
      
@@ -3108,15 +3107,15 @@ CD Bruk:
 CD snr = LC_GetSn();
    ==========================================================================
 */
-SK_EntPnt_FYBA long LC_GetSn(void)
+long CFyba::LC_GetSn(void)
 {
-   char *cp;
+   wchar_t *cp;
 
    /* Aktuell gruppe OK */
    if (Sys.GrId.lNr != INGEN_GRUPPE) {
-       cp = strchr(LX_GetGi(1),' ');
+       cp = wcschr(LX_GetGi(1),' ');
        if (cp != NULL) {
-         return  atol(cp);                              /* ==> */
+         return  wcstol(cp,&cp,10);                              /* ==> */
       } else {
          return  0L;                                    /* ==> */
       }
@@ -3143,13 +3142,13 @@ CD Parametre:
 CD Type     Navn    I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
-CD char     *ginfo   i    GINFO-streng avslutta med '\0'
+CD wchar_t     *ginfo   i    GINFO-streng avslutta med '\0'
 CD
 CD Bruk:
 CD LC_PutGi(lin_nr,ginfo);
 	==========================================================================
 */
-SK_EntPnt_FYBA void LC_PutGi(short lin_nr, const char *pszGinfo)
+void CFyba::LC_PutGi(short lin_nr, const wchar_t *pszGinfo)
 {
    // Aktuell gruppe OK
 	if (Sys.GrId.lNr != INGEN_GRUPPE)
@@ -3160,8 +3159,8 @@ SK_EntPnt_FYBA void LC_PutGi(short lin_nr, const char *pszGinfo)
          // Gruppestart håndteres spesielt
 			if (lin_nr == 1)
          {                   
-            char ginfo[LC_MAX_SOSI_LINJE_LEN];
-            char *ct;
+            wchar_t ginfo[LC_MAX_SOSI_LINJE_LEN];
+            wchar_t *ct;
 
 				/* Husk gammelt SNR */
             long  lGmlSnr = LC_GetSn();
@@ -3181,8 +3180,8 @@ SK_EntPnt_FYBA void LC_PutGi(short lin_nr, const char *pszGinfo)
 
 				/* Heng på serienummer */
 				if (lGmlSnr != 0L) {
-               char szOrd[50];
-               UT_SNPRINTF(szOrd, 50, " %ld:", lGmlSnr);
+               wchar_t szOrd[50];
+               UT_SNPRINTF(szOrd, 50, L" %ld:", lGmlSnr);
                UT_StrCat(ginfo,szOrd,LC_MAX_SOSI_LINJE_LEN);
 				}
             LX_PutGi(lin_nr,ginfo);
@@ -3196,8 +3195,8 @@ SK_EntPnt_FYBA void LC_PutGi(short lin_nr, const char *pszGinfo)
 			/* Linjen lagres */
 
       } else {                                 /* Ulovlig linjenummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN," %d",lin_nr);
-         LC_Error(52,"(LC_PutGi)",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %d",lin_nr);
+         LC_Error(52,L"(LC_PutGi)",err.tx);
       }
    }
 }
@@ -3218,19 +3217,19 @@ CD Parametre:
 CD Type     Navn    I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
-CD char     *ginfo   i    GINFO-streng avslutta med '\0'
+CD wchar_t     *ginfo   i    GINFO-streng avslutta med '\0'
 CD
 CD Bruk:
 CD LX_PutGi(lin_nr,ginfo);
    ==========================================================================
 */
-static void LX_PutGi(short lin_nr, const char *szGinfo)
+void CFyba::LX_PutGi(short lin_nr, const wchar_t *szGinfo)
 {
    short navn_nr,gr_start,dummy,sGmlLen,sNyLen;
-   char *cs,tmp,*ct;
+   wchar_t *cs,tmp,*ct;
    double enhet,dNord,dAust;
-   char* pszNgisLag;
-   char ginfo[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t* pszNgisLag;
+   wchar_t ginfo[LC_MAX_SOSI_LINJE_LEN];
    short sLagre = UT_TRUE;
 
 
@@ -3247,11 +3246,11 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
    }
 
    // Sjekk at linjen ikke er for lang
-   if (strlen(cs) > (LC_MAX_SOSI_LINJE_LEN - 10))
+   if (wcslen(cs) > (LC_MAX_SOSI_LINJE_LEN - 10))
    {
       *(cs + LC_MAX_SOSI_LINJE_LEN -10) = '\0';
-      UT_StrCat(ginfo, " ?????", LC_MAX_SOSI_LINJE_LEN);
-      LC_Error(134,"(LX_PutGi)",LX_GetGi(1));
+      UT_StrCat(ginfo, L" ?????", LC_MAX_SOSI_LINJE_LEN);
+      LC_Error(134,L"(LX_PutGi)",LX_GetGi(1));
    }
 
    /* Finn SOSI-navnet */
@@ -3268,6 +3267,12 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
    gr_start = LN_FinnNavn(&(Sys.GrId.pFil->SosiNavn),cs,&navn_nr);
    *ct = tmp;
 
+   // Hopp over ledende blanke
+   while (*ct  &&  UT_IsSpace(*ct))
+   {
+      ++ct;
+   }               
+
    /* Gruppestart */
    if (lin_nr == 1) {
       if (gr_start == 1) {
@@ -3275,7 +3280,7 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
 
       } else {
          /* Melding om ukjent gruppestart */
-         LC_Error(54,"(LC_PutGi)",ginfo);
+         LC_Error(54,L"(LC_PutGi)",ginfo);
          sLagre = UT_FALSE;
       }
 
@@ -3286,12 +3291,12 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
          if (Sys.GrId.lNr == 0L  &&  Sys.GrId.pFil->lAntGr > 1  &&  navn_nr == L_ENHET3) {
 
             /* Sjekk at enhet ikke er endret */
-            UT_StrDbl(ct,1,&dummy,'.',&enhet);
+            UT_StrDbl(ct,1,&dummy,L'.',&enhet);
             if (fabs(enhet - Sys.GrId.pFil->TransPar.dEnhet) > LC_ACCY) {
-               LB_FormaterEnhet(err().tx,LC_ERR_LEN,
+               LB_FormaterEnhet(err.tx,LC_ERR_LEN,
                                 LN_GetNavn(&(Sys.GrId.pFil->SosiNavn),navn_nr),
                                 Sys.GrId.pFil->TransPar.dEnhet);
-               LC_Error(57,"(LX_PutGi)",err().tx);
+               LC_Error(57,L"(LX_PutGi)",err.tx);
                sLagre = UT_FALSE;
             }
          }
@@ -3299,12 +3304,12 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
          /* ...ENHET-H i filhode på fil med data */
          if (Sys.GrId.lNr == 0L  &&  Sys.GrId.pFil->lAntGr > 1  &&  navn_nr == L_ENHET3H) {
             /* Sjekk at enhet ikke er endret */
-            UT_StrDbl(ct,1,&dummy,'.',&enhet);
+            UT_StrDbl(ct,1,&dummy,L'.',&enhet);
             if (fabs(enhet - Sys.GrId.pFil->TransPar.dEnhet_h) > LC_ACCY) {
-               LB_FormaterEnhet(err().tx,LC_ERR_LEN,
+               LB_FormaterEnhet(err.tx,LC_ERR_LEN,
                                 LN_GetNavn(&(Sys.GrId.pFil->SosiNavn),navn_nr),
                                 Sys.GrId.pFil->TransPar.dEnhet_h);
-               LC_Error(57,"(LX_PutGi)",err().tx);
+               LC_Error(57,L"(LX_PutGi)",err.tx);
                sLagre = UT_FALSE;
             }
          }
@@ -3312,12 +3317,12 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
          /* ...ENHET-D i filhode på fil med data */
          if (Sys.GrId.lNr == 0L  &&  Sys.GrId.pFil->lAntGr > 1  &&  navn_nr == L_ENHET3D) {
             /* Sjekk at enhet ikke er endret */
-            UT_StrDbl(ct,1,&dummy,'.',&enhet);
+            UT_StrDbl(ct,1,&dummy,L'.',&enhet);
             if (fabs(enhet - Sys.GrId.pFil->TransPar.dEnhet_d) > LC_ACCY) {
-               LB_FormaterEnhet(err().tx,LC_ERR_LEN,
+               LB_FormaterEnhet(err.tx,LC_ERR_LEN,
                                 LN_GetNavn(&(Sys.GrId.pFil->SosiNavn),navn_nr),
                                 Sys.GrId.pFil->TransPar.dEnhet_d);
-               LC_Error(57,"(LX_PutGi)",err().tx);
+               LC_Error(57,L"(LX_PutGi)",err.tx);
                sLagre = UT_FALSE;
             }
          }
@@ -3331,12 +3336,12 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
             // Filen har ikke NGIS-LAG eller NGIS-LAG er endret
             //if (lNgisLag != Sys.GrId.pFil->lNgisLag) {
             if (*(Sys.GrId.pFil->szNgisLag) == '\0'  ||
-                strcmp(pszNgisLag,Sys.GrId.pFil->szNgisLag) != 0) {
+                wcscmp(pszNgisLag,Sys.GrId.pFil->szNgisLag) != 0) {
             
-               UT_SNPRINTF(err().tx,LC_ERR_LEN," %s %s",
+               UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s %s",
                        LN_GetNavn(&(Sys.GrId.pFil->SosiNavn),navn_nr),
                        Sys.GrId.pFil->szNgisLag);
-               LC_Error(58,"(LX_PutGi)",err().tx);
+               LC_Error(58,L"(LX_PutGi)",err.tx);
                sLagre = UT_FALSE;
             }
          }
@@ -3345,16 +3350,16 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
          if (Sys.GrId.lNr == 0L  &&  Sys.GrId.pFil->lAntGr > 1  &&  navn_nr == L_ORIGONO) {
 
             /* Sjekk at ..ORIGO-NØ ikke er endret */
-            UT_StrDbl(ct,1,&dummy,'.',&dNord);
-            UT_StrDbl(ct,dummy,&dummy,'.',&dAust);
+            UT_StrDbl(ct,1,&dummy,L'.',&dNord);
+            UT_StrDbl(ct,dummy,&dummy,L'.',&dAust);
         
             if (fabs(dNord - Sys.GrId.pFil->TransPar.Origo.dNord) > 0.1 ||
                 fabs(dAust - Sys.GrId.pFil->TransPar.Origo.dAust) > 0.1  ) {
          
-               UT_SNPRINTF(err().tx,LC_ERR_LEN," %s %.0f %.0f",
+               UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s %.0f %.0f",
                        LN_GetNavn(&(Sys.GrId.pFil->SosiNavn),navn_nr),
                        Sys.GrId.pFil->TransPar.Origo.dNord, Sys.GrId.pFil->TransPar.Origo.dAust);
-               LC_Error(60,"(LX_PutGi)",err().tx);
+               LC_Error(60,L"(LX_PutGi)",err.tx);
                sLagre = UT_FALSE;
             }
          }
@@ -3379,31 +3384,34 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
    }
 
 
-   if (sLagre == UT_TRUE) {
+   if (sLagre == UT_TRUE)
+   {
       /* Linjen lagres */
-      sGmlLen = (short)strlen(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1]);
-      sNyLen = (short)strlen(cs);
+      sGmlLen = (short)wcslen(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1]);
+      sNyLen = (short)wcslen(cs);
 
       /* Samme lengde, trenger ikke å flytte noe i buffer */
-      if (sNyLen == sGmlLen) {
-         //strcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1], cs);
-         UT_memcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1], sNyLen+1, cs, sNyLen+1);
+      if (sNyLen == sGmlLen)
+      {
+         wmemcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1], cs, sNyLen+1);
+      }
 
       /* Siste linje i GINFO, trenger ikke å flytte noe i buffer */
-      } else if (lin_nr == Sys.pGrInfo->ngi) {
-         //strcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1],cs);
-         UT_memcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1], sNyLen+1, cs, sNyLen+1);
+      else if (lin_nr == Sys.pGrInfo->ngi)
+      {
+         wmemcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1], cs, sNyLen+1);
 
          /* Oppdater antall tegn brukt i GINFO-buffer */
          Sys.pGrInfo->ulGiLen = Sys.pGrInfo->ulGiLen - sGmlLen + sNyLen;
+      }
 
       /* Må flytte resten av buffer for å tilpasse plassen */
-      } else {
-         memmove(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr] - sGmlLen + sNyLen,
+      else 
+      {
+         wmemmove(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr] - sGmlLen + sNyLen,
                  Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr],
                  Sys.pGrInfo->ulGiLen - Sys.Ginfo.ulOfset[lin_nr]);
-         //strcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1],cs);
-         UT_memcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1], sNyLen+1, cs, sNyLen+1);
+         wmemcpy(Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1], cs, sNyLen+1);
 
          /* Oppdater antall tegn brukt i GINFO-buffer */
          Sys.pGrInfo->ulGiLen += (sNyLen - sGmlLen);
@@ -3415,10 +3423,11 @@ static void LX_PutGi(short lin_nr, const char *szGinfo)
 
 /*
 AR-930609
-CH LX_CreGiPeker                              Bygg opp pekertabell til GINFO
+CH LX_CreGiPeker                              Bygg opp peker-tabell til GINFO
 CD ==========================================================================
 CD Formål:
-CH Bygg opp pekertabell til GINFO buffer.
+CD Bygg opp peker-tabell til GINFO buffer.
+CD Alle pekere er i antall tegn fra starten av bufferet. 
 CD
 CD Parametre:
 CD Type            Navn      I/U   Forklaring
@@ -3430,18 +3439,19 @@ CD Bruk:
 CD LX_CreGiPeker(&Sys.Ginfo,Sys.pGrInfo->ngi);
    ==========================================================================
 */
-void LX_CreGiPeker(LC_GINFO_BUFFER * pGinfo,short ngi)
+void CFyba::LX_CreGiPeker(LC_GINFO_BUFFER * pGinfo,short ngi)
 {
    short i;
    unsigned long *pulOfset = pGinfo->ulOfset;
-   char *cp = pGinfo->pszTx;
+   wchar_t *cp = pGinfo->pszTx;
 
    /* Første GINFO starter alltid i posisjon 0 */
    *pulOfset++ = 0;
 
-   /* Skanner strengen og finner startposisjonen for resten av GINFO */
+   /* Skanner buffer og finner startposisjonene for resten av GINFO */
    for (i=1; i<ngi; ++i) {
-      cp = strchr(cp,'\0') + 1;
+      cp = wcschr(cp,'\0');
+      ++cp;
       *pulOfset++ = (unsigned long) (cp - pGinfo->pszTx);
    }
 }
@@ -3460,13 +3470,13 @@ CD Parametre:
 CD Type     Navn    I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
-CD char    *ginfo    r    Peker til GINFO-streng avslutta med '\0'
+CD wchar_t    *ginfo    r    Peker til GINFO-streng avslutta med '\0'
 CD
 CD Bruk:
 CD ginfo = LX_GetGi(lin_nr);
    ==========================================================================
 */
-char *LX_GetGi(short lin_nr)
+wchar_t * CFyba::LX_GetGi(short lin_nr)
 {
    return  Sys.Ginfo.pszTx + Sys.Ginfo.ulOfset[lin_nr - 1];
 }
@@ -3487,13 +3497,13 @@ CD Parametre:
 CD Type     Navn    I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
-CD char    *ginfo    r    Peker til GINFO-streng avslutta med '\0'
+CD wchar_t    *ginfo    r    Peker til GINFO-streng avslutta med '\0'
 CD
 CD Bruk:
 CD ginfo = LC_GetGi(lin_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA char *LC_GetGi(short lin_nr)
+wchar_t * CFyba::LC_GetGi(short lin_nr)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                  /* Aktuell gruppe OK */
 
@@ -3506,7 +3516,7 @@ SK_EntPnt_FYBA char *LC_GetGi(short lin_nr)
       }
 
    } else {                              /* Ingen aktuell gruppe */
-       LC_Error(49,"(LC_GetGi)","");
+       LC_Error(49,L"(LC_GetGi)",L"");
        *retur_str = '\0';
    }
 
@@ -3532,7 +3542,7 @@ CD Bruk:
 CD LC_PutTK(punkt_nr,aust,nord);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_PutTK(long punkt_nr,double aust,double nord)
+void CFyba::LC_PutTK(long punkt_nr,double aust,double nord)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE){                  /* Aktuell gruppe OK */
 
@@ -3544,12 +3554,11 @@ SK_EntPnt_FYBA void LC_PutTK(long punkt_nr,double aust,double nord)
          Sys.sGrEndra = END_ENDRA;
 
       } else {                                     /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_PutTK)",err().tx);
+         LX_VisUlovligPnr(L"(LC_PutTK)", punkt_nr);
       }
 
    } else {                              /* Ingen aktuell gruppe */
-       LC_Error(49,"(LC_PutTK)","");
+       LC_Error(49,L"(LC_PutTK)",L"");
    }
 }
 
@@ -3572,7 +3581,7 @@ CD Bruk:
 CD LC_GetTK(punkt_nr,&aust,&nord);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_GetTK(long punkt_nr,double *aust,double *nord)
+void CFyba::LC_GetTK(long punkt_nr,double *aust,double *nord)
 {
    /* Aktuell gruppe OK? */
    if (Sys.GrId.lNr != INGEN_GRUPPE) {
@@ -3583,8 +3592,7 @@ SK_EntPnt_FYBA void LC_GetTK(long punkt_nr,double *aust,double *nord)
 
       /* Ulovlig punktnummer */
       } else {
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetTK)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetTK)", punkt_nr);
       }
    }
 }
@@ -3613,7 +3621,7 @@ CD Bruk:
 CD LC_GetArrayTK(retning,max_antall,fra_punkt,aust,nord,&lest);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_GetArrayTK(short retning,long max_antall,long fra_punkt,
+void CFyba::LC_GetArrayTK(short retning,long max_antall,long fra_punkt,
                    double *aust,double *nord,long *antall)
 {
    long ant = 0;
@@ -3676,11 +3684,11 @@ CD Bruk:
 CD LC_GetArrayTH(retning,max_antall,fra_punkt,hoyde,&lest);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_GetArrayTH(short retning,long max_antall,long fra_punkt,
+void CFyba::LC_GetArrayTH(short retning,long max_antall,long fra_punkt,
                    double *hoyde,long *antall)
 {
    short gilin;
-   char *gp;
+   wchar_t *gp;
    long pt;
    double dGiHoyde;
    long ant = 0;
@@ -3692,7 +3700,7 @@ SK_EntPnt_FYBA void LC_GetArrayTH(short retning,long max_antall,long fra_punkt,
       gp = LC_GetGP(LN_GetNavn(&Sys.GrId.pFil->SosiNavn,L_HOYDE),
                     &gilin,Sys.pGrInfo->ngi);
       if (gp != NULL) {
-         dGiHoyde = strtod(gp,&gp);
+         dGiHoyde = wcstod(gp,&gp);
 
       } else {
          dGiHoyde = HOYDE_MANGLER;
@@ -3761,7 +3769,7 @@ CD Bruk:
 CD LC_PutTH(punkt_nr,hoyde);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_PutTH(long punkt_nr, double hoyde)
+void CFyba::LC_PutTH(long punkt_nr, double hoyde)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                  /* Aktuell gruppe OK */
 
@@ -3778,12 +3786,12 @@ SK_EntPnt_FYBA void LC_PutTH(long punkt_nr, double hoyde)
 
          /* Gruppen har ..NAD fra før og det prøves å legge inne en høyde */
          } else if (hoyde != HOYDE_MANGLER) {
-            LC_Error(132,"(LC_PutTH)",LC_GetGi(1));
+            LC_Error(132,L"(LC_PutTH)",LC_GetGi(1));
          }
 
       } else {
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_PutTH)",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L"(%s) %ld",LC_GetGi(1),punkt_nr);
+         LC_Error(51,L"(LC_PutTH)",err.tx);
       }
    }
 }
@@ -3808,7 +3816,7 @@ CD Bruk:
 CD hoyde = LC_GetTH(punkt_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA double LC_GetTH(long punkt_nr)
+double CFyba::LC_GetTH(long punkt_nr)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
       if (punkt_nr > 0 && punkt_nr <= Sys.pGrInfo->nko) {  /* Lovlig punkt ? */
@@ -3818,8 +3826,7 @@ SK_EntPnt_FYBA double LC_GetTH(long punkt_nr)
          }
 
       } else {                           /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetTH)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetTH)", punkt_nr);
       }
    }
 
@@ -3847,10 +3854,10 @@ CD Bruk:
 CD hoyde = LC_GetHoyde(punkt_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA double LC_GetHoyde(long punkt_nr)
+double CFyba::LC_GetHoyde(long punkt_nr)
 {
    short gilin;
-   char *gp;
+   wchar_t *gp;
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
       if (punkt_nr > 0 && punkt_nr <= Sys.pGrInfo->nko) {  /* Lovlig punkt ? */
@@ -3867,12 +3874,12 @@ SK_EntPnt_FYBA double LC_GetHoyde(long punkt_nr)
          gp = LC_GetGP(LN_GetNavn(&Sys.GrId.pFil->SosiNavn,L_HOYDE),
                        &gilin,Sys.pGrInfo->ngi);
          if (gp != NULL) {
-            return  strtod(gp,&gp);
+            return  wcstod(gp,&gp);
          }
 
       } else {                           /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetHoyde)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetHoyde)", punkt_nr);
+
       }
    }
 
@@ -3899,7 +3906,7 @@ CD Bruk:
 CD LC_PutTD(punkt_nr,dybde);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_PutTD(long punkt_nr, double dybde)
+void CFyba::LC_PutTD(long punkt_nr, double dybde)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE){                  /* Aktuell gruppe OK */
 
@@ -3916,12 +3923,12 @@ SK_EntPnt_FYBA void LC_PutTD(long punkt_nr, double dybde)
 
          /* Gruppen har ..NAH fra før og det prøves å legge inn en dybde */
          } else if (dybde != HOYDE_MANGLER) {
-            LC_Error(133,"(LC_PutTD)",LC_GetGi(1));
+            LC_Error(133,L"(LC_PutTD)",LC_GetGi(1));
          }
 
       } else {
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_PutTD)",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L"(%s) %ld",LC_GetGi(1),punkt_nr);
+         LC_Error(51,L"(LC_PutTD)",err.tx);
       }
    }
 }
@@ -3946,7 +3953,7 @@ CD Bruk:
 CD dybde = LC_GetTD(punkt_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA double LC_GetTD(long punkt_nr)
+double CFyba::LC_GetTD(long punkt_nr)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
       if (punkt_nr > 0 && punkt_nr <= Sys.pGrInfo->nko) {  /* Lovlig punkt ? */
@@ -3956,8 +3963,8 @@ SK_EntPnt_FYBA double LC_GetTD(long punkt_nr)
          }
 
       } else {                           /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetTD)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetTD)", punkt_nr);
+
       }
    }
 
@@ -3985,10 +3992,10 @@ CD Bruk:
 CD dybde = LC_GetHoyde(punkt_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA double LC_GetDybde(long punkt_nr)
+double CFyba::LC_GetDybde(long punkt_nr)
 {
    short gilin;
-   char *gp;
+   wchar_t *gp;
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                /* Aktuell gruppe OK */
       if (punkt_nr > 0 && punkt_nr <= Sys.pGrInfo->nko) {  /* Lovlig punkt ? */
@@ -4005,12 +4012,11 @@ SK_EntPnt_FYBA double LC_GetDybde(long punkt_nr)
          gp = LC_GetGP(LN_GetNavn(&Sys.GrId.pFil->SosiNavn,L_DYBDE),
                        &gilin,Sys.pGrInfo->ngi);
          if (gp != NULL) {
-            return  strtod(gp,&gp);
+            return  wcstod(gp,&gp);
          }
 
       } else {                           /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetHoyde)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetHoyde)", punkt_nr);
       }
    }
 
@@ -4032,13 +4038,13 @@ CD Parametre:
 CD Type    Navn      I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD long   punkt_nr   i    Punktnummer (1 er første punkt)
-CD char   *pinfo      r    Peker til punktinformasjon eksklusiv knutepunkt
+CD wchar_t   *pinfo      r    Peker til punktinformasjon eksklusiv knutepunkt
 CD
 CD Bruk:
 CD pinfo = LC_GetPi(punkt_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA char *LC_GetPi(long punkt_nr)
+wchar_t * CFyba::LC_GetPi(long punkt_nr)
 {
    unsigned long ulOfset;
 
@@ -4055,8 +4061,7 @@ SK_EntPnt_FYBA char *LC_GetPi(long punkt_nr)
          }
 
       } else {                           /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetPi)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetPi)", punkt_nr);
       }
    }
 
@@ -4078,7 +4083,7 @@ CD Parametre:
 CD Type    Navn      I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD long    punkt_nr   i    Punktnummer (1 er første punkt)
-CD char   *pinfo      i    PINFO-streng som skal legges inn
+CD wchar_t   *pinfo      i    PINFO-streng som skal legges inn
 CD                         (Knutepunkt regnes ikke som pinfo)
 CD short   sStatus    r    UT_TRUE = OK,
 CD                         UT_FALSE = ikke utført (for lite plass tilgjengelig)
@@ -4087,12 +4092,12 @@ CD Bruk:
 CD sStatus = LC_PutPi(punkt_nr,pinfo);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
+short CFyba::LC_PutPi(long punkt_nr, const wchar_t *pinfo)
 {
    short sNyLen, sGmlLen;
    long pt;
    unsigned long ulOfset;
-   char *pszBuffer = NULL;
+   wchar_t *pszBuffer = NULL;
    short sStatus = UT_FALSE;
 
 
@@ -4104,17 +4109,17 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
          while (UT_IsSpace(*pinfo)) {
             ++pinfo;
          }
-         sNyLen = (short)strlen(pinfo);
+         sNyLen = (short)wcslen(pinfo);
          
          if (sNyLen > 0) {
             /* Ta kopi av strengen */
-         	pszBuffer = (char*)UT_MALLOC(sNyLen+1);
+         	pszBuffer = (wchar_t*)malloc((sNyLen+1)*sizeof(wchar_t));
          	UT_StrCopy(pszBuffer,pinfo,sNyLen+1);
             pinfo = pszBuffer;
 
             /* Fjern blanke på slutten */
             UT_ClrTrailsp(pszBuffer);
-            sNyLen = (short)strlen(pszBuffer);
+            sNyLen = (short)wcslen(pszBuffer);
          }
 
          /* Gammel lengde av PINFO */
@@ -4122,7 +4127,7 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
          if (ulOfset == LC_INGEN_PINFO) {
             sGmlLen = 0;
          } else {
-            sGmlLen = (short)strlen(Sys.pszPinfo+ulOfset);
+            sGmlLen = (short)wcslen(Sys.pszPinfo+ulOfset);
          }
 
          /* --------------------- Blank ut PINFO */
@@ -4133,18 +4138,16 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
                (Sys.pInfo+punkt_nr-1)->ulPiOfset = LC_INGEN_PINFO;
                   
                /* Pakk innholdet i bufferet */
-               memmove(Sys.pszPinfo + ulOfset,
+               wmemmove(Sys.pszPinfo + ulOfset,
                        Sys.pszPinfo + ulOfset + sGmlLen + 1,
                        Sys.pGrInfo->ulPiLen - ulOfset - sGmlLen - 1);
  
                /* Oppdater ofset for resten av gruppen */
-               /* if (Sys.pGrInfo->ulPiLen > ulOfset + sGmlLen + 1) { */
-                  for (pt=punkt_nr; pt < Sys.pGrInfo->nko; ++pt) {
-                     if ((Sys.pInfo+pt)->ulPiOfset != LC_INGEN_PINFO) {
-                        (Sys.pInfo+pt)->ulPiOfset -= (sGmlLen + 1);
-                     }
+               for (pt=punkt_nr; pt < Sys.pGrInfo->nko; ++pt) {
+                  if ((Sys.pInfo+pt)->ulPiOfset != LC_INGEN_PINFO) {
+                     (Sys.pInfo+pt)->ulPiOfset -= (sGmlLen + 1);
                   }
-               /* } */
+               }
 
                /* Ny totallengde av PINFO i denne gruppen */
                Sys.pGrInfo->ulPiLen -= sGmlLen;
@@ -4164,9 +4167,8 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
                   ulOfset = 0;
                   for (pt=punkt_nr-2; pt>=0; pt--) {
                      if ((Sys.pInfo+pt)->ulPiOfset != LC_INGEN_PINFO) {
-                        /* ulOfset = (strlen(Sys.pszPinfo+(Sys.pInfo+pt)->ulPiOfset) + 1); */
                         ulOfset = (Sys.pInfo+pt)->ulPiOfset +
-                                  strlen(Sys.pszPinfo+(Sys.pInfo+pt)->ulPiOfset) + 1;
+                                  wcslen(Sys.pszPinfo+(Sys.pInfo+pt)->ulPiOfset) + 1;
                         break;  /* ---> avbryter for-løkka */
                      } /* endif */
                   } /* endfor */
@@ -4175,22 +4177,19 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
                   (Sys.pInfo+punkt_nr-1)->ulPiOfset = ulOfset;
 
                   /* Flytt innholdet i bufferet */
-                  memmove(Sys.pszPinfo + ulOfset + sNyLen + 1,
+                  wmemmove(Sys.pszPinfo + ulOfset + sNyLen + 1,
                           Sys.pszPinfo + ulOfset,
                           Sys.pGrInfo->ulPiLen - ulOfset);
 
                   /* Oppdater ofset for resten av gruppen */
-                  /* if (Sys.pGrInfo->ulPiLen > ulOfset + sGmlLen + 1) { */
                      for (pt=punkt_nr; pt < Sys.pGrInfo->nko; ++pt) {
                         if ((Sys.pInfo+pt)->ulPiOfset != LC_INGEN_PINFO) {
                            (Sys.pInfo+pt)->ulPiOfset += (sNyLen + 1);
                         }
                      }
-                  /* } */
 
                   /* Kopier inn strengen */
-                  //strcpy(Sys.pszPinfo+ulOfset, pinfo);
-                  UT_memcpy(Sys.pszPinfo+ulOfset, sNyLen+1, pinfo, sNyLen+1);
+                  wmemcpy(Sys.pszPinfo+ulOfset, pinfo, sNyLen+1);
 
                   /* Ny totallengde */
                   Sys.pGrInfo->ulPiLen += (sNyLen + 1);
@@ -4198,18 +4197,17 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
                /* Samme lengde, trenger ikke å flytte noe i buffer */
                } else if (sNyLen == sGmlLen) {
                   //strcpy(Sys.pszPinfo+ulOfset, pinfo);
-                  UT_memcpy(Sys.pszPinfo+ulOfset, sNyLen+1, pinfo, sNyLen+1);
+                  wmemcpy(Sys.pszPinfo+ulOfset, pinfo, sNyLen+1);
 
                /* Punktet har PINFO, men med annen lengde */
                } else {
                   /* Flytt innholdet i bufferet */
-                  memmove(Sys.pszPinfo + ulOfset + sNyLen + 1,
+                  wmemmove(Sys.pszPinfo + ulOfset + sNyLen + 1,
                           Sys.pszPinfo + ulOfset + sGmlLen + 1,
                           Sys.pGrInfo->ulPiLen - ulOfset - sGmlLen - 1);
 
                   /* Kopier inn strengen */
-                  //strcpy(Sys.pszPinfo+ulOfset, pinfo);
-                  UT_memcpy(Sys.pszPinfo+ulOfset, sNyLen+1, pinfo, sNyLen+1);
+                  wmemcpy(Sys.pszPinfo+ulOfset, pinfo, sNyLen+1);
 
                   /* Oppdater ofset for resten av gruppen */
                   /* if (Sys.pGrInfo->ulPiLen > ulOfset + sGmlLen + 1) { */
@@ -4234,15 +4232,14 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
          if (punkt_nr == Sys.lPibufPnr)  Sys.sPibufStatus = LC_PIBUF_TOM;
 
          /* Frigir midlertidig buffer */
-         if (pszBuffer != NULL)  UT_FREE(pszBuffer);
+         if (pszBuffer != NULL)  free(pszBuffer);
 
       } else {                            /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_PutPi)",err().tx);
+         LX_VisUlovligPnr(L"(LC_PutPi)", punkt_nr);
       }
 
    } else {                              /* Ingen aktuell gruppe */
-      LC_Error(49,"(LC_PutPi)","");
+      LC_Error(49,L"(LC_PutPi)",L"");
    }
 
    return sStatus;
@@ -4269,7 +4266,7 @@ CD Bruk:
 CD sStatus = LC_TestPi(punkt_nr,UT_TRUE);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_TestPi(long punkt_nr,short sTestHoyde)
+short CFyba::LC_TestPi(long punkt_nr,short sTestHoyde)
 {
 
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                 /* Aktuell gruppe OK */
@@ -4291,8 +4288,7 @@ SK_EntPnt_FYBA short LC_TestPi(long punkt_nr,short sTestHoyde)
          }
 
       } else {                           /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetPi)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetPi)", punkt_nr);
       }
    }
 
@@ -4318,7 +4314,7 @@ CD Bruk:
 CD kp = LC_GetKp(punkt_nr);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetKp(long punkt_nr)
+short CFyba::LC_GetKp(long punkt_nr)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE){                  /* Aktuell gruppe OK */
 
@@ -4326,8 +4322,7 @@ SK_EntPnt_FYBA short LC_GetKp(long punkt_nr)
          return  (Sys.pInfo+punkt_nr-1)->sKp;
 
       } else{                            /* Ulovlig punktnummer */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_GetKp)",err().tx);
+         LX_VisUlovligPnr(L"(LC_GetKp)", punkt_nr);
       }
    }
 
@@ -4354,7 +4349,7 @@ CD Bruk:
 CD LC_PutKp(punkt_nr,kp);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_PutKp(long punkt_nr, short kp)
+void CFyba::LC_PutKp(long punkt_nr, short kp)
 {
    if (Sys.GrId.lNr != INGEN_GRUPPE) {                 /* Aktuell gruppe OK */
       if (punkt_nr > 0 && punkt_nr <= Sys.pGrInfo->nko) {   /* Lovlig punkt ? */
@@ -4374,17 +4369,17 @@ SK_EntPnt_FYBA void LC_PutKp(long punkt_nr, short kp)
             }
 
          } else {
-            UT_SNPRINTF(err().tx,LC_ERR_LEN," %d",kp);
-            LC_Error(53,"(LC_PutKp)",err().tx);
+            UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %d",kp);
+            LC_Error(53,L"(LC_PutKp)",err.tx);
          }
 
       } else {
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"(%s) %ld",LC_GetGi(1),punkt_nr);
-         LC_Error(51,"(LC_PutKp)",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L"(%s) %ld",LC_GetGi(1),punkt_nr);
+         LC_Error(51,L"(LC_PutKp)",err.tx);
       }
 
    } else {                              /* Ingen aktuell gruppe */
-      LC_Error(49,"(LC_PutKp)","");
+      LC_Error(49,L"(LC_PutKp)",L"");
    }
 }
 
@@ -4407,79 +4402,59 @@ CD Bruk:
 CD areal = LC_BerAreal();
    =============================================================================
 */
-SK_EntPnt_FYBA double LC_BerAreal(void)
+double CFyba::LC_BerAreal(void)
 {
    short ngi;
    long nko;
    unsigned short info;
-   #define  MAX_REFERANSE  20
-   long ref_arr[MAX_REFERANSE];
-   unsigned char ref_status[MAX_REFERANSE];
-   long ant_ref;
-   short s,retning;
-   LC_GRF_STATUS GrfStat;
-   LC_BGR BgrFlate,Bgr;
+   LC_OY_ELEMENT * pOE;
+   LC_POL_ELEMENT * pPE;
 
    double dTotalAreal = 0.0;
    double dDelAreal = 0.0;
 
-   /* Husk gruppenummer for flaten */
+   // Husk gruppenummer for flaten
+   LC_BGR BgrFlate;
    LC_GetGrNr(&BgrFlate);
-   Bgr.pFil = BgrFlate.pFil;
+
+   // Polygonstruktur
+   LC_POLYGON Polygon;
+   LC_POL_InitPolygon(&Polygon);
+   LC_POL_GetRef(&Polygon);
 
 
-   /* Behandle ytre avgrensing */
-   LC_InitGetRefFlate(&GrfStat);
-   ant_ref = LC_GetRefFlate(&GrfStat,GRF_YTRE,ref_arr,ref_status,MAX_REFERANSE);
-   do {
-      for (s=0; s<ant_ref; ++s) {
-         Bgr.lNr = ref_arr[s];
-         retning = (ref_status[s] & LC_MED_DIG)?
-                                            HENT_FORRFRA : HENT_BAKFRA;
-         dTotalAreal += LX_ArealGruppe(&Bgr,retning);
-      }
-      /* Les inn flaten igjen */    
-      LC_RxGr(&BgrFlate,LES_OPTIMALT,&ngi,&nko,&info);
+   // ----- Omkretsen
+   for(pPE = Polygon.HovedPO.pForstePE; pPE != NULL; pPE = pPE->pNestePE)
+   {
+      dTotalAreal += LX_ArealGruppe(&pPE->Bgr, (pPE->sRetning == LC_MED_DIG)? HENT_FORRFRA : HENT_BAKFRA);
+   }
 
-      if (ant_ref < MAX_REFERANSE)  break;
-
-      ant_ref = LC_GetRefFlate(&GrfStat,GRF_YTRE,ref_arr,ref_status,MAX_REFERANSE);
-   } while (ant_ref > 0);
-
-   /* Beregn endelig areal innenfor yttergrensen */
+   // Beregn areal innenfor yttergrensen
    dTotalAreal = fabs(dTotalAreal / 2.0);
 
+   // ----- Hull
+   for (pOE = Polygon.OyOA.pForsteOE; pOE != NULL; pOE = pOE->pNesteOE)
+   {
+      dDelAreal = 0.0;
 
-   /* Behandler indre avgrensing (øy) */
-   LC_InitGetRefFlate(&GrfStat);
-   ant_ref = LC_GetRefFlate(&GrfStat,GRF_INDRE,ref_arr,ref_status,MAX_REFERANSE);
-   do {
-      for (s=0; s<ant_ref; ++s) {
-         if (ref_status[s] & GRF_START_OY) {
-            dDelAreal = 0.0;
-
-         } else if (ref_status[s] & GRF_SLUTT_OY) {
-            /* Beregn endelig areal innenfor yttergrensen */
-            dTotalAreal -= fabs(dDelAreal / 2.0);
-
-         } else {
-            Bgr.lNr = ref_arr[s];
-            retning = (ref_status[s] & LC_MED_DIG)?
-                                             HENT_FORRFRA : HENT_BAKFRA;
-            dDelAreal += LX_ArealGruppe(&Bgr,retning);
-         }
+      for (pPE = pOE->PO.pForstePE; pPE != NULL; pPE = pPE->pNestePE)
+      {
+         dDelAreal += LX_ArealGruppe(&pPE->Bgr, (pPE->sRetning == LC_MED_DIG)? HENT_FORRFRA : HENT_BAKFRA);
       }
-      /* Les inn flaten igjen */    
-      LC_RxGr(&BgrFlate,LES_OPTIMALT,&ngi,&nko,&info);
 
-      if (ant_ref < MAX_REFERANSE)  break;
+      // Trekker fra dette hullet i totalarealet
+      dTotalAreal -= fabs(dDelAreal / 2.0);
+   }
+   
+   // Frigi allokerte kjeder
+   LC_POL_FrigiPolygon(&Polygon);
 
-      ant_ref = LC_GetRefFlate(&GrfStat,GRF_INDRE,ref_arr,ref_status,MAX_REFERANSE);
-   } while (ant_ref > 0);
+   // Les inn flaten igjen    
+   LC_RxGr(&BgrFlate,LES_OPTIMALT,&ngi,&nko,&info);
 
    return  dTotalAreal;
 }
-
+  
 
 /*
 AR-900731
@@ -4500,7 +4475,7 @@ CD Bruk:
 CD areal = LX_ArealGruppe(&Bgr,retning);
    =============================================================================
 */
-static double LX_ArealGruppe(LC_BGR * pBgr,short retning)
+double CFyba::LX_ArealGruppe(LC_BGR * pBgr,short retning)
 {
    #define  ARR_LEN  50
    short ngi, gruppenavn;
@@ -4605,7 +4580,7 @@ CD Bruk:
 CD areal = LC_BerLengde();
 =============================================================================
 */
-SK_EntPnt_FYBA double LC_BerLengde(void)
+double CFyba::LC_BerLengde(void)
 {
    short sfeil;
    long l;
@@ -4654,7 +4629,7 @@ CD Bruk:
 CD beregnet = LC_BerLengde3D(&skraa_lengde);
 =============================================================================
 */
-SK_EntPnt_FYBA bool LC_BerLengde3D(double *skraa_lengde)
+bool CFyba::LC_BerLengde3D(double *skraa_lengde)
 {
    long s;
    double a1,n1,a2,n2,h1,h2,da,dn,dh;
@@ -4732,7 +4707,7 @@ CD Bruk:
 CD lengde = LC_BerAvgrensLengde();
 =============================================================================
 */
-SK_EntPnt_FYBA double LC_BerAvgrensLengde(void)
+double CFyba::LC_BerAvgrensLengde(void)
 {
    short ngi;
    long nko;
@@ -4793,7 +4768,7 @@ CD Bruk:
 CD lengde = LC_BerIndreAvgrensLengde();
 =============================================================================
 */
-SK_EntPnt_FYBA double LC_BerIndreAvgrensLengde(void)
+double CFyba::LC_BerIndreAvgrensLengde(void)
 {
    short ngi;
    long nko;
@@ -4849,7 +4824,7 @@ CD Bruk:
 CD lengde = LC_BerYtreAvgrensLengde();
 =============================================================================
 */
-SK_EntPnt_FYBA double LC_BerYtreAvgrensLengde(void)
+double CFyba::LC_BerYtreAvgrensLengde(void)
 {
    short ngi;
    long nko;
@@ -4899,7 +4874,7 @@ CD Bruk:
 CD LC_DumpTab();
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_DumpTab(void)
+void CFyba::LC_DumpTab(void)
 {
    short ngi,s;
    long nko;
@@ -4908,19 +4883,19 @@ SK_EntPnt_FYBA void LC_DumpTab(void)
 
    LC_GetGrNr(&AktBgr);
 
-   UT_FPRINTF(stderr,"\n=================================================\n");
-   UT_FPRINTF(stderr,"Dump av interne tabeller i FYBA\n");
-   UT_FPRINTF(stderr,"=================================================\n");
+   UT_FPRINTF(stderr,L"\n=================================================\n");
+   UT_FPRINTF(stderr,L"Dump av interne tabeller i FYBA\n");
+   UT_FPRINTF(stderr,L"=================================================\n");
 
-   UT_FPRINTF(stderr,"\nLC_INGEN_PINFO = %lu\n", LC_INGEN_PINFO);
+   UT_FPRINTF(stderr,L"\nLC_INGEN_PINFO = %lu\n", LC_INGEN_PINFO);
 
-   UT_FPRINTF(stderr,"\n    Snr    sosi_st     rb_st  rb_fgr  rb_ngr gna ngi  nko info    GiLen    PiLen\n");
+   UT_FPRINTF(stderr,L"\n    Snr    sosi_st     rb_st  rb_fgr  rb_ngr gna ngi  nko info    GiLen    PiLen\n");
    LC_InitNextBgr(&Bgr);
 
    /* Alle gruppene i framgrunn */
    while (LC_NextBgr(&Bgr,LC_FRAMGR)) {
       LC_RxGr(&Bgr,LES_OPTIMALT,&ngi,&nko,&info);
-      UT_FPRINTF(stderr,"%7ld: %9lld %9lld %7ld %7ld %3hd %3hd %5ld %4hx %8lu %8lu\n",
+      UT_FPRINTF(stderr,L"%7ld: %9lld %9lld %7ld %7ld %3hd %3hd %5ld %4hx %8lu %8lu\n",
            Sys.GrId.lNr,
            Sys.pGrInfo->sosi_st,
            Sys.pGrInfo->rb_st,
@@ -4936,7 +4911,7 @@ SK_EntPnt_FYBA void LC_DumpTab(void)
       if (ngi > 0) {
          for (s=1; s<=Sys.pGrInfo->nko; ++s) {
             if ((Sys.pInfo+s-1)->ulPiOfset != LC_INGEN_PINFO) {
-               UT_FPRINTF(stderr,"PI ofset %4hd: %8lu\n", s, (Sys.pInfo+s-1)->ulPiOfset);
+               UT_FPRINTF(stderr,L"PI ofset %4hd: %8lu\n", s, (Sys.pInfo+s-1)->ulPiOfset);
             }
          }
       }
@@ -4945,4 +4920,29 @@ SK_EntPnt_FYBA void LC_DumpTab(void)
    if (AktBgr.lNr != INGEN_GRUPPE) {
       LC_RxGr(&AktBgr,LES_OPTIMALT,&ngi,&nko,&info);
    }
+}
+
+
+/*
+AR-911106
+CH LX_VisUlovligPnr                                  Vis ulovlig punktnummer
+CD ==========================================================================
+CD Formål:
+CD Vis melding om ulovlig punktnummer
+CD
+CD Parametre:
+CD Type     Navn     I/U   Forklaring
+CD --------------------------------------------------------------------------
+CD wchar_t *pszRutine i    Navn på rutinen som kaller  
+CD long     lPnr      i    Punktnummer som er prøvd brukt, men ikke lovlig.   
+CD 
+CD Bruk:
+CD LX_VisUlovligPnr();
+   =============================================================================
+*/
+void CFyba::LX_VisUlovligPnr(wchar_t *pszRutine, long lPnr)
+{
+   UT_SNPRINTF(err.tx, LC_ERR_LEN, L"(\"%s\" : %s) %ld", Sys.GrId.pFil->pszNavn, LC_GetGi(1), lPnr);
+
+   LC_Error(51, pszRutine, err.tx);
 }

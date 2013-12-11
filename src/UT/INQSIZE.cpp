@@ -32,10 +32,6 @@
 #  include<sys/stat.h>
 #endif
 
-#ifdef BORLAND
-#  include<sys/stat.h>
-#endif
-
 #include "fyut.h"
 
 /*
@@ -48,14 +44,14 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Filnavn
+CD wchar_t     *pszPath   i   Filnavn
 CD long     *plSize    u   Filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Bruk:  sStatus = UT_InqPathSize(szPath,&lSize);
    ==================================================================
 */
-SK_EntPnt_UT short UT_InqPathSize(char *pszPath,long *plSize)
+SK_EntPnt_UT short UT_InqPathSize(const wchar_t *pszPath,long *plSize)
 {
 #ifdef UNIX
    struct stat buf; 
@@ -105,21 +101,7 @@ SK_EntPnt_UT short UT_InqPathSize(char *pszPath,long *plSize)
 
 
 	 /* Hent filopplysninger */
-    result = _stat(pszPath,&buf);
-	 if (result == 0) {
-		  *plSize = (long)buf.st_size;
-	 }
-
-	 return (short)result;
-#endif
-
-#ifdef BORLAND
-	 struct stat buf;
-	 int result;
-
-
-	 /* Hent filopplysninger */
-	 result = stat(pszPath,&buf);
+    result = _wstat(pszPath,&buf);
 	 if (result == 0) {
 		  *plSize = (long)buf.st_size;
 	 }
@@ -141,14 +123,14 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Filnavn
+CD wchar_t     *pszPath   i   Filnavn
 CD UT_INT64 *n64Size   u   Filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Bruk:  sStatus = UT_InqPathSize_i64(szPath,&n64Size);
    ==================================================================
 */
-SK_EntPnt_UT short UT_InqPathSize_i64(char *pszPath,UT_INT64 *n64Size)
+SK_EntPnt_UT short UT_InqPathSize_i64(const wchar_t *pszPath,UT_INT64 *n64Size)
 {
 #ifdef LINUX
 	struct stat buf;
@@ -163,7 +145,7 @@ SK_EntPnt_UT short UT_InqPathSize_i64(char *pszPath,UT_INT64 *n64Size)
 #ifdef LINUX
     result = stat(pszPath,&buf);
 #else
-    result = _stat32i64(pszPath,&buf);
+    result = _wstat32i64(pszPath,&buf);
 #endif
 	 if (result == 0) {
 		  *n64Size = buf.st_size;

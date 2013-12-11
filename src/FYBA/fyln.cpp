@@ -1,5 +1,5 @@
 /* == AR 910819 ========================================== */
-/*  STATENS KARTVERK  -  FYSAK-PC                          */
+/*  KARTVERKET  -  FYSAK-PC                          */
 /*  Fil: fyln.c                                            */
 /*  Innhold: Navnesystem for fysak-pc                      */
 /* ======================================================= */
@@ -27,211 +27,211 @@ CD Bruk:
 CD LN_InitTab(pLn);
    ==========================================================================
 */
-void LN_InitTab(LC_NAVNETABELL * pLn)
+void CFyba::LN_InitTab(LC_NAVNETABELL * pLn)
 {
-   UT_StrCopy(pLn->sosi[L_SLUTT].szNavn, ".SLUTT", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_SLUTT].szNavn, L".SLUTT", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_SLUTT].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_SLUTT].cNivo = 1;
+   pLn->sosi[L_SLUTT].ucNivo = 1;
    pLn->sosi[L_SLUTT].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_PUNKT].szNavn, ".PUNKT", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_PUNKT].szNavn, L".PUNKT", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_PUNKT].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_PUNKT].cNivo = 1;
+   pLn->sosi[L_PUNKT].ucNivo = 1;
    pLn->sosi[L_PUNKT].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_LINJE].szNavn, ".LINJE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_LINJE].szNavn, L".LINJE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_LINJE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_LINJE].cNivo = 1;
+   pLn->sosi[L_LINJE].ucNivo = 1;
    pLn->sosi[L_LINJE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_KURVE].szNavn, ".KURVE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_KURVE].szNavn, L".KURVE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_KURVE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_KURVE].cNivo = 1;
+   pLn->sosi[L_KURVE].ucNivo = 1;
    pLn->sosi[L_KURVE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_BUE].szNavn, ".BUE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_BUE].szNavn, L".BUE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_BUE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_BUE].cNivo = 1;
+   pLn->sosi[L_BUE].ucNivo = 1;
    pLn->sosi[L_BUE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_BUEP].szNavn, ".BUEP", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_BUEP].szNavn, L".BUEP", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_BUEP].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_BUEP].cNivo = 1;
+   pLn->sosi[L_BUEP].ucNivo = 1;
    pLn->sosi[L_BUEP].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_SIRKEL].szNavn, ".SIRKEL", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_SIRKEL].szNavn, L".SIRKEL", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_SIRKEL].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_SIRKEL].cNivo = 1;
+   pLn->sosi[L_SIRKEL].ucNivo = 1;
    pLn->sosi[L_SIRKEL].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_SIRKELP].szNavn, ".SIRKELP", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_SIRKELP].szNavn, L".SIRKELP", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_SIRKELP].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_SIRKELP].cNivo = 1;
+   pLn->sosi[L_SIRKELP].ucNivo = 1;
    pLn->sosi[L_SIRKELP].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_KLOTOIDE].szNavn, ".KLOTOIDE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_KLOTOIDE].szNavn, L".KLOTOIDE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_KLOTOIDE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_KLOTOIDE].cNivo = 1;
+   pLn->sosi[L_KLOTOIDE].ucNivo = 1;
    pLn->sosi[L_KLOTOIDE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_BEZIER].szNavn, ".BEZIER", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_BEZIER].szNavn, L".BEZIER", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_BEZIER].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_BEZIER].cNivo = 1;
+   pLn->sosi[L_BEZIER].ucNivo = 1;
    pLn->sosi[L_BEZIER].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_RASTER].szNavn, ".RASTER", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_RASTER].szNavn, L".RASTER", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_RASTER].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_RASTER].cNivo = 1;
+   pLn->sosi[L_RASTER].ucNivo = 1;
    pLn->sosi[L_RASTER].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_TEKST].szNavn, ".TEKST", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_TEKST].szNavn, L".TEKST", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_TEKST].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_TEKST].cNivo = 1;
+   pLn->sosi[L_TEKST].ucNivo = 1;
    pLn->sosi[L_TEKST].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_TRASE].szNavn, ".TRASE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_TRASE].szNavn, L".TRASE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_TRASE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_TRASE].cNivo = 1;
+   pLn->sosi[L_TRASE].ucNivo = 1;
    pLn->sosi[L_TRASE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_FLATE].szNavn, ".FLATE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_FLATE].szNavn, L".FLATE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_FLATE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_FLATE].cNivo = 1;
+   pLn->sosi[L_FLATE].ucNivo = 1;
    pLn->sosi[L_FLATE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_SVERM].szNavn, ".SVERM", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_SVERM].szNavn, L".SVERM", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_SVERM].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_SVERM].cNivo = 1;
+   pLn->sosi[L_SVERM].ucNivo = 1;
    pLn->sosi[L_SVERM].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_DEF].szNavn, ".DEF", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_DEF].szNavn, L".DEF", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_DEF].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_DEF].cNivo = 1;
+   pLn->sosi[L_DEF].ucNivo = 1;
    pLn->sosi[L_DEF].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_OBJDEF].szNavn, ".OBJDEF", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_OBJDEF].szNavn, L".OBJDEF", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_OBJDEF].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_OBJDEF].cNivo = 1;
+   pLn->sosi[L_OBJDEF].ucNivo = 1;
    pLn->sosi[L_OBJDEF].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_MLINJE].szNavn, ".MLINJE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_MLINJE].szNavn, L".MLINJE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_MLINJE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_MLINJE].cNivo = 1;
+   pLn->sosi[L_MLINJE].ucNivo = 1;
    pLn->sosi[L_MLINJE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_STRUKTUR].szNavn, ".STRUKTUR", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_STRUKTUR].szNavn, L".STRUKTUR", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_STRUKTUR].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_STRUKTUR].cNivo = 1;
+   pLn->sosi[L_STRUKTUR].ucNivo = 1;
    pLn->sosi[L_STRUKTUR].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_OBJEKT].szNavn, ".OBJEKT", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_OBJEKT].szNavn, L".OBJEKT", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_OBJEKT].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_OBJEKT].cNivo = 1;
+   pLn->sosi[L_OBJEKT].ucNivo = 1;
    pLn->sosi[L_OBJEKT].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_SYMBOL].szNavn, ".SYMBOL", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_SYMBOL].szNavn, L".SYMBOL", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_SYMBOL].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_SYMBOL].cNivo = 1;
+   pLn->sosi[L_SYMBOL].ucNivo = 1;
    pLn->sosi[L_SYMBOL].bBrukt = false;
    
-   UT_StrCopy(pLn->sosi[L_HODE].szNavn, ".HODE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_HODE].szNavn, L".HODE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_HODE].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_HODE].cNivo = 1;
+   pLn->sosi[L_HODE].ucNivo = 1;
    pLn->sosi[L_HODE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_NA].szNavn, "..NØ", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_NA].szNavn, L"..NØ", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_NA].ucAntPar = 2;
-   pLn->sosi[L_NA].cNivo = 2;
+   pLn->sosi[L_NA].ucNivo = 2;
    pLn->sosi[L_NA].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_NAH].szNavn, "..NØH", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_NAH].szNavn, L"..NØH", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_NAH].ucAntPar = 3;
-   pLn->sosi[L_NAH].cNivo = 2;
+   pLn->sosi[L_NAH].ucNivo = 2;
    pLn->sosi[L_NAH].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_NAD].szNavn, "..NØD", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_NAD].szNavn, L"..NØD", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_NAD].ucAntPar = 3;
-   pLn->sosi[L_NAD].cNivo = 2;
+   pLn->sosi[L_NAD].ucNivo = 2;
    pLn->sosi[L_NAD].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_REF1].szNavn, "..", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_REF1].szNavn, L"..", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_REF1].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_REF1].cNivo = 2;
+   pLn->sosi[L_REF1].ucNivo = 2;
    pLn->sosi[L_REF1].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_REF2].szNavn, "..REF", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_REF2].szNavn, L"..REF", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_REF2].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_REF2].cNivo = 2;
+   pLn->sosi[L_REF2].ucNivo = 2;
    pLn->sosi[L_REF2].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_RADIUS].szNavn, "..RADIUS", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_RADIUS].szNavn, L"..RADIUS", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_RADIUS].ucAntPar = 1;
-   pLn->sosi[L_RADIUS].cNivo = 2;
+   pLn->sosi[L_RADIUS].ucNivo = 2;
    pLn->sosi[L_RADIUS].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_ENHET2].szNavn, "..ENHET", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_ENHET2].szNavn, L"..ENHET", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_ENHET2].ucAntPar = 1;
-   pLn->sosi[L_ENHET2].cNivo = 2;
+   pLn->sosi[L_ENHET2].ucNivo = 2;
    pLn->sosi[L_ENHET2].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_ENHET2H].szNavn, "..ENHET-H", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_ENHET2H].szNavn, L"..ENHET-H", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_ENHET2H].ucAntPar = 1;
-   pLn->sosi[L_ENHET2H].cNivo = 2;
+   pLn->sosi[L_ENHET2H].ucNivo = 2;
    pLn->sosi[L_ENHET2H].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_ENHET2D].szNavn, "..ENHET-D", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_ENHET2D].szNavn, L"..ENHET-D", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_ENHET2D].ucAntPar = 1;
-   pLn->sosi[L_ENHET2D].cNivo = 2;
+   pLn->sosi[L_ENHET2D].ucNivo = 2;
    pLn->sosi[L_ENHET2D].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_ENHET3].szNavn, "...ENHET", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_ENHET3].szNavn, L"...ENHET", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_ENHET3].ucAntPar = 1;
-   pLn->sosi[L_ENHET3].cNivo = 3;
+   pLn->sosi[L_ENHET3].ucNivo = 3;
    pLn->sosi[L_ENHET3].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_ENHET3H].szNavn, "...ENHET-H", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_ENHET3H].szNavn, L"...ENHET-H", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_ENHET3H].ucAntPar = 1;
-   pLn->sosi[L_ENHET3H].cNivo = 3;
+   pLn->sosi[L_ENHET3H].ucNivo = 3;
    pLn->sosi[L_ENHET3H].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_ENHET3D].szNavn, "...ENHET-D", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_ENHET3D].szNavn, L"...ENHET-D", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_ENHET3D].ucAntPar = 1;
-   pLn->sosi[L_ENHET3D].cNivo = 3;
+   pLn->sosi[L_ENHET3D].ucNivo = 3;
    pLn->sosi[L_ENHET3D].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_ORIGONO].szNavn, "...ORIGO-NØ", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_ORIGONO].szNavn, L"...ORIGO-NØ", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_ORIGONO].ucAntPar = 2;
-   pLn->sosi[L_ORIGONO].cNivo = 3;
+   pLn->sosi[L_ORIGONO].ucNivo = 3;
    pLn->sosi[L_ORIGONO].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_HOYDE].szNavn, "..HØYDE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_HOYDE].szNavn, L"..HØYDE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_HOYDE].ucAntPar = 1;
-   pLn->sosi[L_HOYDE].cNivo = 2;
+   pLn->sosi[L_HOYDE].ucNivo = 2;
    pLn->sosi[L_HOYDE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_DYBDE].szNavn, "..DYBDE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_DYBDE].szNavn, L"..DYBDE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_DYBDE].ucAntPar = 1;                                   
-   pLn->sosi[L_DYBDE].cNivo = 2;
+   pLn->sosi[L_DYBDE].ucNivo = 2;
    pLn->sosi[L_DYBDE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_NGISFLAGG].szNavn, "..NGIS-FLAGG", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_NGISFLAGG].szNavn, L"..NGIS-FLAGG", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_NGISFLAGG].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_NGISFLAGG].cNivo = 2;
+   pLn->sosi[L_NGISFLAGG].ucNivo = 2;
    pLn->sosi[L_NGISFLAGG].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_NGISLAG].szNavn, "..NGIS-LAG", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_NGISLAG].szNavn, L"..NGIS-LAG", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_NGISLAG].ucAntPar = LC_ANT_PAR_UKJENT;
-   pLn->sosi[L_NGISLAG].cNivo = 2;
+   pLn->sosi[L_NGISLAG].ucNivo = 2;
    pLn->sosi[L_NGISLAG].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_OBJTYPE].szNavn, "..OBJTYPE", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_OBJTYPE].szNavn, L"..OBJTYPE", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_OBJTYPE].ucAntPar = 1;
-   pLn->sosi[L_OBJTYPE].cNivo = 2;
+   pLn->sosi[L_OBJTYPE].ucNivo = 2;
    pLn->sosi[L_OBJTYPE].bBrukt = false;
 
-   UT_StrCopy(pLn->sosi[L_KP].szNavn, "...KP", LC_MAX_SOSINAVN_LEN);
+   UT_StrCopy(pLn->sosi[L_KP].szNavn, L"...KP", LC_MAX_SOSINAVN_LEN);
    pLn->sosi[L_KP].ucAntPar = 1;
-   pLn->sosi[L_KP].cNivo = 3;
+   pLn->sosi[L_KP].ucNivo = 3;
    pLn->sosi[L_KP].bBrukt = false;
 
    pLn->sAntNavn = L_KP + 1;           /* Antall navn i navnetabellen */
@@ -249,24 +249,24 @@ CD Parametre:
 CD Type             Navn        I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn          i   Peker til navnetabell
-CD char            *ginfo_linje  i   Første pos i linjen
+CD wchar_t            *ginfo_linje  i   Første pos i linjen
 CD short            ok           r   1=linjen er ..ENHET, 0=ikke ..ENHET
 CD
 CD Bruk:
 CD ok = LN_Enhet(pLn,ginfo_linje);
   ===========================================================================
 */
-short LN_Enhet(LC_NAVNETABELL * pLn,char *ginfo_linje)
+short CFyba::LN_Enhet(LC_NAVNETABELL * pLn,wchar_t *ginfo_linje)
 {
-   char ord[LC_MAX_SOSINAVN_LEN];
+   wchar_t ord[LC_MAX_SOSINAVN_LEN];
 
    //JAØ-20000313
    //Leter etter "..ENHET " istedet for "..ENHET" for ikke å få tilslag på ..ENHET-H eller ..ENHET-D
    UT_StrCopy(ord,pLn->sosi[L_ENHET2].szNavn,LC_MAX_SOSINAVN_LEN);
-   UT_StrCat(ord, " ", LC_MAX_SOSINAVN_LEN);
+   UT_StrCat(ord, L" ", LC_MAX_SOSINAVN_LEN);
 
-   return(strstr(ginfo_linje,ord) != NULL);
-   //return(strstr(ginfo_linje,pLn->sosi[L_ENHET2].szNavn) != NULL);
+   return(wcsstr(ginfo_linje,ord) != NULL);
+   //return(wcsstr(ginfo_linje,pLn->sosi[L_ENHET2].szNavn) != NULL);
 }
 
 
@@ -281,23 +281,23 @@ CD Parametre:
 CD Type             Navn        I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn          i   Peker til navnetabell
-CD char            *ginfo_linje  i   Første pos i linjen
+CD wchar_t            *ginfo_linje  i   Første pos i linjen
 CD short            ok           r   1=linjen er ..ENHET-H, 0=ikke ..ENHET-H
 CD
 CD Bruk:
 CD ok = LN_EnhetHoyde(pLn,ginfo_linje);
   ===========================================================================
 */
-short LN_EnhetHoyde(LC_NAVNETABELL * pLn,char *ginfo_linje)
+short CFyba::LN_EnhetHoyde(LC_NAVNETABELL * pLn,wchar_t *ginfo_linje)
 {
-   char ord[LC_MAX_SOSINAVN_LEN];
+   wchar_t ord[LC_MAX_SOSINAVN_LEN];
 
    // Leter etter "..ENHET-H " istedet for "..ENHET-H" for ikke å få tilslag på andre navn
    UT_StrCopy(ord,pLn->sosi[L_ENHET2H].szNavn,LC_MAX_SOSINAVN_LEN);
-   UT_StrCat(ord, " ", LC_MAX_SOSINAVN_LEN);
+   UT_StrCat(ord, L" ", LC_MAX_SOSINAVN_LEN);
                                          
-   //return(strstr(ginfo_linje,pLn->sosi[L_ENHET2H].szNavn) != NULL);
-   return(strstr(ginfo_linje,ord) != NULL);
+   //return(wcsstr(ginfo_linje,pLn->sosi[L_ENHET2H].szNavn) != NULL);
+   return(wcsstr(ginfo_linje,ord) != NULL);
 }
 
 
@@ -312,23 +312,23 @@ CD Parametre:
 CD Type             Navn        I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn          i   Peker til navnetabell
-CD char            *ginfo_linje  i   Første pos i linjen
+CD wchar_t            *ginfo_linje  i   Første pos i linjen
 CD short            ok           r   1=linjen er ..ENHET-D, 0=ikke ..ENHET-D
 CD
 CD Bruk:
 CD ok = LN_EnhetDybde(pLn,ginfo_linje);
   ===========================================================================
 */
-short LN_EnhetDybde(LC_NAVNETABELL * pLn,char *ginfo_linje)
+short CFyba::LN_EnhetDybde(LC_NAVNETABELL * pLn,wchar_t *ginfo_linje)
 {
-   char ord[LC_MAX_SOSINAVN_LEN];
+   wchar_t ord[LC_MAX_SOSINAVN_LEN];
 
    // Leter etter "..ENHET-D " istedet for "..ENHET-D" for ikke å få tilslag på andre navn
    UT_StrCopy(ord,pLn->sosi[L_ENHET2D].szNavn,LC_MAX_SOSINAVN_LEN);
-   UT_StrCat(ord, " ",LC_MAX_SOSINAVN_LEN);
+   UT_StrCat(ord, L" ",LC_MAX_SOSINAVN_LEN);
 
-   //return(strstr(ginfo_linje,pLn->sosi[L_ENHET2D].szNavn) != NULL);
-   return(strstr(ginfo_linje,ord) != NULL);
+   //return(wcsstr(ginfo_linje,pLn->sosi[L_ENHET2D].szNavn) != NULL);
+   return(wcsstr(ginfo_linje,ord) != NULL);
 }
 
 
@@ -343,16 +343,16 @@ CD
 CD Parametre:
 CD Type     Navn        I/U  Forklaring
 CD -----------------------------------------------------------------------
-CD char    *ginfo_linje  i   Første pos i linjen
+CD wchar_t    *ginfo_linje  i   Første pos i linjen
 CD short    ok           r   1=linjen har øy-flate, 0=ikke øy
 CD
 CD Bruk:
-CD ok = LN_TestOy(char *ginfo_linje);
+CD ok = LN_TestOy(wchar_t *ginfo_linje);
   ===========================================================================
 */
-short LN_TestOy(char *ginfo_linje)
+short CFyba::LN_TestOy(wchar_t *ginfo_linje)
 {
-   if (strchr(ginfo_linje,'(') != NULL)  return 1;
+   if (wcschr(ginfo_linje,L'(') != NULL)  return 1;
 
    return 0;
 }
@@ -370,7 +370,7 @@ CD Parametre:
 CD Type             Navn    I/U   Forklaring
 CD -----------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn      i    Peker til navnetabell
-CD char            *streng   i    Peker til SOSI-navn. Avslutta av '\0'.
+CD wchar_t            *streng   i    Peker til SOSI-navn. Avslutta av '\0'.
 CD short           *navn_nr  u    Navnets linjenummer i navnetabellen
 CD short            nivo     r    Antall prikker (0=ukjent navn, 1=gruppenavn, osv.)
 CD
@@ -378,21 +378,21 @@ CD Bruk:
 CD nivo = LN_FinnNavn(pLn,streng,&neste,&navn_nr);
    =============================================================================
 */
-short LN_FinnNavn(LC_NAVNETABELL * pLn,char *navn,short *navn_nr)
+short CFyba::LN_FinnNavn(LC_NAVNETABELL * pLn,wchar_t *navn,short *navn_nr)
 {
    short nr = 0;
 
                                     /* Utfør søket */
    for (; nr < pLn->sAntNavn; nr++)
    {
-      if (strncmp(navn,pLn->sosi[nr].szNavn,LC_MAX_SOSINAVN_LEN-1) == 0)
+      if (wcsncmp(navn,pLn->sosi[nr].szNavn,LC_MAX_SOSINAVN_LEN-1) == 0)
       {
          // Legger inn merke om at navnet er brukt
          pLn->sosi[nr].bBrukt = true;
 
          // Navnet er funnet, ==> returner
          *navn_nr = nr;
-         return  (pLn->sosi[nr].cNivo);     /* Nivå */
+         return  (pLn->sosi[nr].ucNivo);     /* Nivå */
       }
    }
    
@@ -412,7 +412,7 @@ CD Parametre:
 CD Type            Navn    I/U Forklaring
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn     i   Peker til navnetabell
-CD char            *navn    i  SOSI-navn.
+CD wchar_t            *navn    i  SOSI-navn.
 CD short           *ant_par u  Antall parametre til dette navnet.
 CD                             LC_ANT_PAR_UKJENT (-1) = Ant. param. er ukjent.
 CD short           *navn_nr u  Navnenummer.
@@ -422,14 +422,15 @@ CD Bruk:
 CD type = LN_PakkNavn(pLn,navn,&navn_nr,&ant_par);
    =============================================================================
 */
-short LN_PakkNavn (LC_NAVNETABELL * pLn,char *navn,short *navn_nr,short *ant_par)
+short CFyba::LN_PakkNavn (LC_NAVNETABELL * pLn,wchar_t *navn,short *navn_nr,short *ant_par)
 {
-   char nivo,*cp;
+   unsigned char nivo;
+   wchar_t *cp;
    short nr;
                                     /* Utfør søket */
    for (nr=0; nr < pLn->sAntNavn; nr++) 
    {
-      if (strncmp(navn,pLn->sosi[nr].szNavn,LC_MAX_SOSINAVN_LEN-1) == 0)
+      if (wcscmp(navn,pLn->sosi[nr].szNavn) == 0)
       {
          // Legger inn merke om at navnet er brukt
          pLn->sosi[nr].bBrukt = true;
@@ -437,17 +438,17 @@ short LN_PakkNavn (LC_NAVNETABELL * pLn,char *navn,short *navn_nr,short *ant_par
          // Navnet er funnet, ==> returner
          *ant_par = pLn->sosi[nr].ucAntPar;
          *navn_nr = nr;
-         return  (pLn->sosi[nr].cNivo);     /* Nivå */
+         return  (pLn->sosi[nr].ucNivo);     /* Nivå */
       }
    }
 
    /* Er det plass i tabellen for et nytt navn? */
    if (pLn->sAntNavn >= LC_MAX_NAVN) {
-      UT_FPRINTF(stderr,"Utskrift av navnetabellen:\n");
+      UT_FPRINTF(stderr,L"Utskrift av navnetabellen:\n");
       for (nr=0; nr < pLn->sAntNavn; nr++) {
-         UT_FPRINTF(stderr,"%s\n",LN_VisNavn(pLn,nr));
+         UT_FPRINTF(stderr,L"%s\n",LN_VisNavn(pLn,nr));
       }
-      LC_Error(21,"(LN_PakkNavn)","");
+      LC_Error(21,L"(LN_PakkNavn)",L"");
       exit (2);
    }   
 
@@ -459,11 +460,11 @@ short LN_PakkNavn (LC_NAVNETABELL * pLn,char *navn,short *navn_nr,short *ant_par
    /* Finn antall prikker */
    nivo = 0;
    cp = navn;
-   while (*cp == '.') {
+   while (*cp == L'.') {
       nivo++;
       cp++;
    }
-   pLn->sosi[pLn->sAntNavn].cNivo = nivo;
+   pLn->sosi[pLn->sAntNavn].ucNivo = nivo;
 
    // Legger inn merke om at navnet er brukt
    pLn->sosi[pLn->sAntNavn].bBrukt = true;
@@ -474,7 +475,7 @@ short LN_PakkNavn (LC_NAVNETABELL * pLn,char *navn,short *navn_nr,short *ant_par
 
    /* Melding om ulovlig gruppestart */
    if (nivo <= 1) {
-      LC_Error(22,"(LN_PakkNavn)",navn);
+      LC_Error(22,L"(LN_PakkNavn)",navn);
    }
 
    return (nivo);     /* Antall prikker */
@@ -493,13 +494,13 @@ CD Type             Navn  I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn    i    Peker til navnetabell
 CD long             navn   i    Linjenummer i navnetabellen
-CD char            *tx     r    Peker til SOSI-navn, NULL=ukjent linje
+CD wchar_t            *tx     r    Peker til SOSI-navn, NULL=ukjent linje
 CD
 CD Bruk:
 CD cp = LN_GetNavn(pLn,navn_nr);
    =============================================================================
 */
-char *LN_GetNavn(LC_NAVNETABELL * pLn,short navn)
+wchar_t * CFyba::LN_GetNavn(LC_NAVNETABELL * pLn,short navn)
 {
    SOSINAVN *ip;
 
@@ -538,7 +539,7 @@ CD short       sNavnNr  i   Linjenummer i navnetabellen (0 - n)
 CD bool       *bBrukt       Viser om navnet har/er brukt i filen
 CD                          Hvis det har vært en gruppe som har brukt navnet blir
 CD                          denne stående "true" selv om gruppen er slettet.
-CD const char *pszNavn  r   Peker til elementnavn, 
+CD const wchar_t *pszNavn  r   Peker til elementnavn, 
 CD                          NULL = ukjent fil eller ulovlig linjenummer
 CD
 CD
@@ -553,9 +554,9 @@ CD    ++sNavnNr;
 CD }
 =============================================================================
 */
-SK_EntPnt_FYBA const char *LC_GetElementNavn(LC_FILADM *pFil,short sNavnNr,bool *bBrukt)
+const wchar_t * CFyba::LC_GetElementNavn(LC_FILADM *pFil,short sNavnNr,bool *bBrukt)
 {
-   LO_TestFilpeker(pFil,"GetNavn");
+   LO_TestFilpeker(pFil,L"GetNavn");
 
    LC_NAVNETABELL *pLn = &(pFil->SosiNavn);    //Peker til filens navnetabell
 
@@ -584,7 +585,7 @@ CD Type             Navn  I/U   Forklaring
 CD -----------------------------------------------------------------------------
 CD LC_NAVNETABELL *  pLn    i    Peker til navnetabell
 CD long             navn   i    Linjenummer i navnetabellen som skall vises
-CD char            *tx     r    Peker til streng med formatert linje
+CD wchar_t            *tx     r    Peker til streng med formatert linje
 CD
 CD Bruk:
 CD for (navn=0,linje=10; navn<10; navn++,linje++){
@@ -592,18 +593,18 @@ CD     SH_OutTx(linje,1,LN_VisNavn(pLn,navn));
 CD }
    =============================================================================
 */
-char *LN_VisNavn(LC_NAVNETABELL * pLn,short navn)
+wchar_t * CFyba::LN_VisNavn(LC_NAVNETABELL * pLn,short navn)
 {
    SOSINAVN *ip;
 
    if (navn < pLn->sAntNavn){
        ip = pLn->sosi + navn;
-       UT_SNPRINTF(err().tx,LC_ERR_LEN,"%2d %16s", navn,ip->szNavn);
+       UT_SNPRINTF(err.tx,LC_ERR_LEN,L"%2d %16s", navn,ip->szNavn);
    } else{
-       *err().tx = '\0';
+       *err.tx = '\0';
    }
 
-   return err().tx;
+   return err.tx;
 }
 
 
@@ -617,7 +618,7 @@ CD
 CD Parametre:
 CD Type    Navn         I/U   Forklaring
 CD -------------------------------------------------------------------------
-CD char   *pszParameter       i  Peker til '\0'-avslutta streng, eller
+CD wchar_t   *pszParameter       i  Peker til '\0'-avslutta streng, eller
 CD                                 NULL hvis KVALITET mangler.
 CD short  *psMetode           u  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
@@ -641,16 +642,16 @@ CD   ist = LN_TolkKvalitet(pszParameter,&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                         &sHoydeMetode,&lHoydeNoyaktighet);
 CD =============================================================================
 */
-void LN_TolkKvalitet(char *pszParameter,short *psMetode,long *plNoyaktighet,
+void CFyba::LN_TolkKvalitet(wchar_t *pszParameter,short *psMetode,long *plNoyaktighet,
                      short *psSynbarhet,short *psHoydeMetode,long *plHoydeNoyaktighet)
 {
-   char ord[32];
+   wchar_t ord[32];
    short i;
-   char szMetode[6] = {"*"};
-   char szNoyaktighet[11] = {"*"};
-   char szSynbarhet[6] = {"0"};
-   char szHoydeMetode[6] = {" "};
-   char szHoydeNoyaktighet[11] = {" "};
+   wchar_t szMetode[6] = {L"*"};
+   wchar_t szNoyaktighet[11] = {L"*"};
+   wchar_t szSynbarhet[6] = {L"0"};
+   wchar_t szHoydeMetode[6] = {L" "};
+   wchar_t szHoydeNoyaktighet[11] = {L" "};
 
    /* Er det noen parameterstreng? */
    if (pszParameter) {
@@ -753,57 +754,57 @@ CD                               KVAL_MET_STD    standard metode fra nivå over.
 CD long    lHoydeNoyaktighet i Registreringsnøyaktighet
 CD                               KVAL_NOY_UKJENT nøyaktighet er ukjent.
 CD                               KVAL_NOY_STD    standard nøyaktighet fra nivå over 
-CD char   *pszParameter      r Peker til '\0'-avslutta streng.
+CD wchar_t   *pszParameter      r Peker til '\0'-avslutta streng.
 CD
 CD Bruk:
 CD  pszParameter = LC_FormatterKvalitet(sMetode,lNoyaktighet,sSynbarhet,
 CD                                      sHoydeMetode,lHoydeNoyaktighet);
 CD =============================================================================
 */
-SK_EntPnt_FYBA char *LC_FormatterKvalitet(short sMetode,long lNoyaktighet,short sSynbarhet,
+wchar_t * CFyba::LC_FormatterKvalitet(short sMetode,long lNoyaktighet,short sSynbarhet,
                            short sHoydeMetode,long lHoydeNoyaktighet)
 {
-   static char szParameter[60];
-   char szMetode[8] = {"*"};
-   char szNoyaktighet[13] = {" *"};
-   char szSynbarhet[8] = {" *"};
-   char szHoydeMetode[8] = {" *"};
-   char szHoydeNoyaktighet[13] = {" *"};
+   static wchar_t szParameter[60];
+   wchar_t szMetode[8] = {L"*"};
+   wchar_t szNoyaktighet[13] = {L" *"};
+   wchar_t szSynbarhet[8] = {L" *"};
+   wchar_t szHoydeMetode[8] = {L" *"};
+   wchar_t szHoydeNoyaktighet[13] = {L" *"};
 
 
    /* Metode */
    if (sMetode == KVAL_MET_STD) {
       *szMetode = '@';
    } else if (sMetode != KVAL_MET_UNDEF) {
-      UT_SNPRINTF(szMetode,8,"%hd",sMetode);
+      UT_SNPRINTF(szMetode,8,L"%hd",sMetode);
    }
 
    /* Nøyaktighet */
    if (lNoyaktighet == KVAL_NOY_STD) {
       szNoyaktighet[1] = '@';
    } else if (lNoyaktighet != KVAL_NOY_UKJENT  && lNoyaktighet != KVAL_NOY_UNDEF) {
-      UT_SNPRINTF(szNoyaktighet,13," %ld",lNoyaktighet);
+      UT_SNPRINTF(szNoyaktighet,13,L" %ld",lNoyaktighet);
    }
 
    /* Synbarhet */
    if (sSynbarhet == KVAL_SYN_STD) {
       szSynbarhet[1] = '@';
    } else if (sSynbarhet != KVAL_SYN_UNDEF) {
-      UT_SNPRINTF(szSynbarhet,8," %hd",sSynbarhet);
+      UT_SNPRINTF(szSynbarhet,8,L" %hd",sSynbarhet);
    }
 
    /* Høyde-metode */
    if (sHoydeMetode == KVAL_MET_STD) {
       szHoydeMetode[1] = '@';
    } else if (sHoydeMetode != KVAL_MET_UNDEF) {
-      UT_SNPRINTF(szHoydeMetode,8," %hd",sHoydeMetode);
+      UT_SNPRINTF(szHoydeMetode,8,L" %hd",sHoydeMetode);
    }
 
    /* Høyde-nøyaktighet */
    if (lHoydeNoyaktighet == KVAL_NOY_STD) {
       szHoydeNoyaktighet[1] = '@';
    } else if (lHoydeNoyaktighet != KVAL_NOY_UKJENT  &&  lHoydeNoyaktighet != KVAL_NOY_UNDEF) {
-      UT_SNPRINTF(szHoydeNoyaktighet,13," %ld",lHoydeNoyaktighet);
+      UT_SNPRINTF(szHoydeNoyaktighet,13,L" %ld",lHoydeNoyaktighet);
    }
 
    
@@ -850,18 +851,18 @@ CD
 CD PARAMETERLISTE:
 CD Type     Navn      I/U   Merknad
 CD -------------------------------------------------------------
-CD char    *pszGinfo   i    Streng med egenskapsnavn i starten
+CD wchar_t    *pszGinfo   i    Streng med egenskapsnavn i starten
 CD short    sNivo      r    Antall prikker 
 CD
 CD Bruk:
 CD sNivo = LC_FinnNivo(pszGinfo);
   ================================================================
 */
-SK_EntPnt_FYBA short LC_FinnNivo(const char * pszNavn)
+short CFyba::LC_FinnNivo(const wchar_t * pszNavn)
 {
    short sNivo = 0;
 
-   while (*pszNavn != '\0'  &&  *pszNavn == '.') {
+   while (*pszNavn != L'\0'  &&  *pszNavn == L'.') {
       ++pszNavn;
       ++sNivo;
    }

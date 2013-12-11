@@ -1,5 +1,5 @@
 /* ======= =============================================================== */
-/*  STATENS KARTVERK  -  FYSAK-PC                                         */
+/*  KARTVERKET  -  FYSAK-PC                                         */
 /*  Fil: gm.c                                                             */
 /*  Ansvarlig: Andreas Røstad                                             */
 /*  Innhold: Geometrirutiner fysak-pc                                     */
@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <memory.h>
 
-#include "../UT/fyut.h"
+#include <fyut.h>
 
 #include "fygm.h"
 
@@ -2235,8 +2235,8 @@ SK_EntPnt_GM void GM_buebox(double as,double ns,double radius,double fi,double d
 //                 |
 //	                |
 //               --|-
-//             /   |  \        -
-//           1     |   \       -
+//             /   |  \
+//           1     |   \
 //   ----------2---|-------
 //                 |    |
 //                 |   3/
@@ -3178,6 +3178,273 @@ SK_EntPnt_GM void GM_TynnDared(double dMaxAvst,double dMaxPil,long *nko, double 
 
    // Legg ut antall koordinater i resultatet
    if (bBeregnet)  *nko = lLagre-1;
+}
+
+
+/*
+OJ-2012-01-02
+CH GM_KonvGradBuesekundTilGradMinSek
+CD ==============================================================
+CD Formål:
+CD Konverterer til grader/min/sek.fra buesekunder.
+CD
+CD PARAMETERLISTE:
+CD Type     Navn          I/U    Merknad
+CD -------------------------------------------------------------
+CD double   dNordBue       i     Buesekunder nord
+CD double   dAustBue       i     Buesekunder aust
+CD short    sGraderNord    u     Grader nord
+CD short    sMinutterNord  u     Minutter nord
+CD double   dSekNord       u     Sekunder nord
+CD short    sGraderAust    u     Grader Aust
+CD short    sMinutterAust  u     Minutter Aust
+CD double   dSekunderAust  u     Sekunder Aust
+CD
+CD Bruk:
+CD GM_KonvGradBuesekundTilGradMinSek(dNordBue, dAustBue, &sGraderNord, &sMinutterNord, &dSekunderNord,
+                 &sGraderNord, &sMinutterNord, &dSekunderNord          
+CD ==============================================================
+*/
+SK_EntPnt_GM void GM_KonvGradBuesekundTilGradMinSek(double dNordBue, double dAustBue, 
+                          short *sGraderNord, short *sMinutterNord, double *dSekunderNord,
+                          short *sGraderAust, short *sMinutterAust, double *dSekunderAust)
+{
+   *sGraderNord   = (short)(fabs(dNordBue/3600.0));
+   *sMinutterNord = (short)(fabs((dNordBue - (*sGraderNord * 3600.0)) / 60.0));
+   *dSekunderNord = dNordBue - (*sGraderNord * 3600.0) - (*sMinutterNord * 60.0);
+
+   *sGraderAust   = (short)(fabs(dAustBue/3600.0));
+   *sMinutterAust = (short)(fabs((dAustBue - (*sGraderAust * 3600.0)) / 60.0));
+   *dSekunderAust = dAustBue - (*sGraderAust * 3600.0) - (*sMinutterAust * 60.0);
+}
+
+
+/*
+OJ-2012-01-02
+CH GM_KonvGradMinSekTilGradBuesekund
+CD ==============================================================
+CD Formål:
+CD Konverterer fra grader/min/sek til buesekunder.
+CD
+CD PARAMETERLISTE:
+CD Type     Navn          I/U    Merknad
+CD -------------------------------------------------------------
+CD short    sGraderNord    i     Grader Nord
+CD short    sMinutterNord  i     Minutter Nord
+CD double   dSekunderNord  i     Sekunder Nord
+CD short    sGraderAust    i     Grader Aust
+CD short    sMinutterAust  i     Minutter Aust
+CD double   dSekunderAust  i     Sekunder Aust
+CD double   dNordBue       u     Buesekunder nord
+CD double   dAustBue       u     Buesekunder aust
+CD 
+CD
+CD Bruk:
+CD GM_KonvGradMinSekTilGradBuesekund(sGraderNord, sMinutterNord, dSekunderNord,
+CD               sGraderAust, sMinutterAust, dSekunderAust,
+CD               &dNordBue, &dAustBue);
+CD
+CD ==============================================================
+*/
+SK_EntPnt_GM void GM_KonvGradMinSekTilGradBuesekund(short sGraderNord, short sMinutterNord, double dSekunderNord,
+                          short sGraderAust, short sMinutterAust, double dSekunderAust,
+                          double *dNordBue, double *dAustBue)
+{
+   *dNordBue = (sGraderNord * 3600.0) + (sMinutterNord * 60.0) + dSekunderNord;
+   *dAustBue = (sGraderAust * 3600.0) + (sMinutterAust * 60.0) + dSekunderAust;
+}
+
+
+/*
+OJ-2012-01-02
+CH GM_KonvGradDesimalTilGradMinSek
+CD ==============================================================
+CD Formål:
+CD Konverterer fra desimalgrader til grader/min/sek.
+CD
+CD PARAMETERLISTE:
+CD Type     Navn          I/U    Merknad
+CD -------------------------------------------------------------
+CD double   dNordGrad      i     Desimalgrader nord
+CD double   dAustGrad      i     Desimalgrader aust
+CD short    sGraderNord    u     Grader nord
+CD short    sMinutterNord  u     Minutter nord
+CD double   dSekNord       u     Sekunder nord
+CD short    sGraderAust    u     Grader Aust
+CD short    sMinutterAust  u     Minutter Aust
+CD double   dSekunderAust  u     Sekunder Aust
+CD
+CD Bruk:
+CD GM_KonvGradDesimalTilGradMinSek(dNordGrad, dAustGrad, &sGraderNord, &sMinutterNord, &dSekunderNord,
+                 &sGraderNord, &sMinutterNord, &dSekunderNord          
+CD ==============================================================
+*/
+SK_EntPnt_GM void GM_KonvGradDesimalTilGradMinSek(double dNordGrad, double dAustGrad, 
+                          short *sGraderNord, short *sMinutterNord, double *dSekunderNord,
+                          short *sGraderAust, short *sMinutterAust, double *dSekunderAust)
+{
+   *sGraderNord   = (short)(fabs(dNordGrad));
+   *sMinutterNord = (short)(fabs((dNordGrad - (*sGraderNord)) * 60.0));
+   *dSekunderNord = (((dNordGrad - *sGraderNord)* 60.00 - (*sMinutterNord))* 60.00);
+
+   *sGraderAust   = (short)(fabs(dAustGrad));
+   *sMinutterAust = (short)(fabs((dAustGrad - (*sGraderAust)) * 60.0));
+   *dSekunderAust = (((dAustGrad - *sGraderAust)* 60.00 - (*sMinutterAust)) * 60.00);
+}
+
+
+/*
+OJ-2012-01-02
+CH GM_KonvGradMinSekTilGradDesimal
+CD ==============================================================
+CD Formål:
+CD Konverterer fra grader/min/sek. til desimalgrader.
+CD
+CD PARAMETERLISTE:
+CD Type     Navn          I/U    Merknad
+CD -------------------------------------------------------------
+CD short    sGraderNord    i     Grader Nord
+CD short    sMinutterNord  i     Minutter Nord
+CD double   dSekunderNord  i     Sekunder Nord
+CD short    sGraderAust    i     Grader Aust
+CD short    sMinutterAust  i     Minutter Aust
+CD double   dSekunderAust  i     Sekunder Aust
+CD double   dNordGrad      u     Desimalgrader nord
+CD double   dAustGrad      u     Desimalgrader aust
+CD 
+CD
+CD Bruk:
+CD GM_KonvGradMinSekTilGradDesimal(sGraderNord, sMinutterNord, dSekunderNord,
+CD               sGraderAust, sMinutterAust, dSekunderAust,
+CD               &dNordGrad, &dAustGrad);
+CD
+CD ==============================================================
+*/
+SK_EntPnt_GM void GM_KonvGradMinSekTilGradDesimal(short sGraderNord, short sMinutterNord, double dSekunderNord,
+                          short sGraderAust, short sMinutterAust, double dSekunderAust,
+                          double *dNordGrad, double *dAustGrad)
+{
+   *dNordGrad = sGraderNord + sMinutterNord / 60.0 + dSekunderNord / 3600.00;
+   *dAustGrad = sGraderAust + sMinutterAust / 60.0 + dSekunderAust / 3600.00;
+}
+
+
+/*
+OJ-2012-01-02
+CH GM_KonvGradBuesekundTilGradDesimal
+CD ==============================================================
+CD Formål:
+CD Konverterer fra buesekunder til desimalgrader
+CD
+CD PARAMETERLISTE:
+CD Type     Navn          I/U    Merknad
+CD -------------------------------------------------------------
+CD double   dNordBue       i     Buesekunder nord
+CD double   dAustBue       i     Buesekunder aust
+CD double   dNordGrad      u     Desimalgrader nord
+CD double   dAustGrad      u     Desimalgrader aust
+CD
+CD Bruk:
+CD GM_KonvGradBuesekundTilGradDesimal(dNordBue, dAustBue, &dNordGrad, &dAustGrad)
+CD
+CD ==============================================================
+*/
+SK_EntPnt_GM void GM_KonvGradBuesekundTilGradDesimal(double dNordBue, double dAustBue, double *dNordGrad, double *dAustGrad)
+{
+   *dNordGrad   = dNordBue / 3600.0;
+   *dAustGrad   = dAustBue / 3600.0;
+}
+
+
+/*
+OJ-2012-01-02
+CH GM_KonvGradDesimalTilGradBuesekund
+CD ==============================================================
+CD Formål:
+CD Konverterer desimalgrader til buesekunder.
+CD
+CD PARAMETERLISTE:
+CD Type     Navn          I/U    Merknad
+CD -------------------------------------------------------------
+CD double   dNordGrad      i     Desimalgrader nord
+CD double   dAustGrad      i     Desimalgrader aust
+CD double   dNordBue       u     Buesekunder nord
+CD double   dAustBue       u     Buesekunder aust
+CD
+CD Bruk:
+CD GM_KonvGradDesimalTilGradBuesekund(dNordGrad, dAustGrad, &dNordBue, dAustBue);
+CD
+CD ==============================================================
+*/
+SK_EntPnt_GM void GM_KonvGradDesimalTilGradBuesekund(double dNordGrad, double dAustGrad, double *dNordBue, double *dAustBue)
+{
+   *dNordBue = dNordGrad * 3600.0;
+   *dAustBue = dAustGrad * 3600.0;
+}
+
+
+/*
+AR:2007-08-23
+CH GM_ErLik_Avrundet                 Rund av og sjekk om sammenfallende punkt
+CD ==========================================================================
+CD Formål:
+CD Runder av til valgt enhet, og sjekker om de to punktene er sammenfallende. 
+CD (Avviket er mindre enn 1/10 enhet både nord og øst)
+CD
+CD Parametre:
+CD Type     Navn    I/U Forklaring
+CD ---------------------------------------------------------------------------
+CD double   dA1      i  P1
+CD double   dN1      i
+CD double   dA2      i  P2
+CD double   dN2      i
+CD double   dEnhet   i  Enhet som skal brukes i sammenligningen
+CD bool     bErLike  r  Status: true  = Samme koordinat 
+CD                              false = Ikke samme koordinat
+CD
+CD Bruk:
+CD bSammenfallende = GM_ErLik(dA1,dN1,dA2,dN2,dEnhet);
+   ===========================================================================
+*/
+SK_EntPnt_GM bool GM_ErLik_Avrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet)
+{
+   // 2010-01-25: Endret fra UT_RoundDD til UT_RoundHalfUpDD
+   dA1 = UT_RoundHalfUpDD(dA1 / dEnhet) * dEnhet;
+   dN1 = UT_RoundHalfUpDD(dN1 / dEnhet) * dEnhet;
+   dA2 = UT_RoundHalfUpDD(dA2 / dEnhet) * dEnhet;
+   dN2 = UT_RoundHalfUpDD(dN2 / dEnhet) * dEnhet;
+
+   return ((fabs(dA1-dA2) < dEnhet/10.0) && (fabs(dN1-dN2) < dEnhet/10.0));
+}
+
+
+/*
+AR:2007-08-23
+CH GM_ErLik_IkkeAvrundet       Sjekk om sammenfallende punkt (uten avrunding)
+CD ==========================================================================
+CD Formål:
+CD Sjekker om de to punktene er sammenfallende innen gitt nøyaktighet. 
+CD Det skjer ingen avrunding av koordinatene før sammenligningen.
+CD (Avviket er mindre enn 1/10 enhet både nord og øst)
+CD
+CD Parametre:
+CD Type     Navn    I/U Forklaring
+CD ---------------------------------------------------------------------------
+CD double   dA1      i  P1
+CD double   dN1      i
+CD double   dA2      i  P2
+CD double   dN2      i
+CD double   dEnhet   i  Enhet som skal brukes i sammenligningen
+CD bool     bErLike  r  Status: true  = Samme koordinat 
+CD                              false = Ikke samme koordinat
+CD
+CD Bruk:
+CD bSammenfallende = GM_ErLik(dA1,dN1,dA2,dN2,dEnhet);
+   ===========================================================================
+*/
+SK_EntPnt_GM bool GM_ErLik_IkkeAvrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet)
+{
+   return ((fabs(dA1-dA2) < dEnhet/10.0) && (fabs(dN1-dN2) < dEnhet/10.0));
 }
 
 

@@ -1,5 +1,5 @@
 /* === AR-970929 ========================================================= */
-/*  STATENS KARTVERK  -  FYSAK-PC                                          */
+/*  KARTVERKET  -  FYSAK-PC                                          */
 /*  Fil: fylp.c                                                            */
 /*  Innhold: Polygonhandtering for FYSAK-PC                                */
 /* ======================================================================= */
@@ -9,10 +9,6 @@
 #include <ctype.h>
 #include <memory.h>
 #include <limits.h>
-
-
-/* Globale variabler for FYBA */
-extern LC_SYSTEMADM Sys;             /* Systemadministrasjon */
 
 
 /*
@@ -35,11 +31,11 @@ CD
 CD Legg til eit element i kjeden av polygonelement.
 CD =======================================================================
 */
-SK_EntPnt_FYBA LC_POL_ELEMENT * LC_POL_LeggTilGruppeOmkrets(LC_POL_OMKR *pPO,LC_BGR *pBgr,
-                                                short sRetning, long lSnr)
+LC_POL_ELEMENT * CFyba::LC_POL_LeggTilGruppeOmkrets(LC_POL_OMKR *pPO,LC_BGR *pBgr,
+                                                    short sRetning, long lSnr)
 {
-  LC_POL_ELEMENT * pPE;
-  pPE = (LC_POL_ELEMENT *) UT_MALLOC(sizeof(LC_POL_ELEMENT));
+  LC_POL_ELEMENT * pPE = (LC_POL_ELEMENT *) malloc(sizeof(LC_POL_ELEMENT));
+
   pPE->pForrigePE = pPO->pSistePE;
   pPE->pNestePE = NULL;
 
@@ -77,7 +73,7 @@ CD
 CD Fjernar siste element i kjeden av polygonelement.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO)
+void CFyba::LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO)
 {
    LC_POL_ELEMENT *pPE = pPO->pSistePE;
 
@@ -89,7 +85,7 @@ SK_EntPnt_FYBA void LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO)
       } else {
          pPE->pForrigePE->pNestePE = NULL;
       }
-		UT_FREE(pPE);
+		free(pPE);
    }
 }
 
@@ -111,7 +107,7 @@ CD
 CD Fjernar et element i kjeden av polygonelement.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_FjernGruppeOmkrets(LC_POL_OMKR *pPO, LC_POL_ELEMENT *pPE)
+void CFyba::LC_POL_FjernGruppeOmkrets(LC_POL_OMKR *pPO, LC_POL_ELEMENT *pPE)
 {
    /* Oppdaterer pekeren til neste element */
    if (pPE->pForrigePE != NULL) {
@@ -130,7 +126,7 @@ SK_EntPnt_FYBA void LC_POL_FjernGruppeOmkrets(LC_POL_OMKR *pPO, LC_POL_ELEMENT *
       /* Slutten av kjeden */
       pPO->pSistePE = pPE->pForrigePE;
    }
-	UT_FREE(pPE);
+	free(pPE);
 }
 
 
@@ -150,7 +146,7 @@ CD
 CD Frigjer minne som er allokert til kjede av øy (i polygon) - element.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_FrigiAlleOyer(LC_OY_ADM *pOA)
+void CFyba::LC_POL_FrigiAlleOyer(LC_OY_ADM *pOA)
 {
   LC_OY_ELEMENT *pOE,*pNesteOE;
 
@@ -160,7 +156,7 @@ SK_EntPnt_FYBA void LC_POL_FrigiAlleOyer(LC_OY_ADM *pOA)
   while(pOE != NULL) {
     LC_POL_FrigiOmkrets(&(pOE->PO));
 	 pNesteOE = pOE->pNesteOE;
-	 UT_FREE(pOE);
+	 free(pOE);
 	 pOE = pNesteOE;
   }
   pOA->pForsteOE = NULL;
@@ -185,9 +181,9 @@ CD
 CD Frigjer minne som er allokert til kjede av øy (i polygon) - element.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_FjernOy(LC_OY_ADM *pOA,LC_OY_ELEMENT *pOE)
+void CFyba::LC_POL_FjernOy(LC_OY_ADM *pOA,LC_OY_ELEMENT *pOE)
 {
-   /* UT_FPRINTF(stderr,"LC_POL_FjernOy: Kallar LC_POL_Frigi()\n"); */
+   /* UT_FPRINTF(stderr,L"LC_POL_FjernOy: Kallar LC_POL_Frigi()\n"); */
    LC_POL_FrigiOmkrets(&(pOE->PO));
 
    /* Frigir øykjeda */
@@ -202,7 +198,7 @@ SK_EntPnt_FYBA void LC_POL_FjernOy(LC_OY_ADM *pOA,LC_OY_ELEMENT *pOE)
    } else {
       pOA->pSisteOE = pOE->pForrigeOE;
    }
-	UT_FREE(pOE);
+	free(pOE);
 }
 
 
@@ -223,10 +219,10 @@ CD
 CD Legg til eit element i kjeden av øyar (i polygon) - element.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO)
+void CFyba::LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO)
 {
-  LC_OY_ELEMENT *pOE;
-  pOE = (LC_OY_ELEMENT *) UT_MALLOC(sizeof(LC_OY_ELEMENT));
+  LC_OY_ELEMENT *pOE = (LC_OY_ELEMENT *) malloc(sizeof(LC_OY_ELEMENT));
+
   pOE->pForrigeOE = pOA->pSisteOE;
   pOE->pNesteOE = NULL;
   pOE->PO = *pPO;
@@ -241,10 +237,10 @@ SK_EntPnt_FYBA void LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO)
 
   pOA->pSisteOE = pOE;
   /* *********************************************
-  UT_FPRINTF(stderr,"LC_POL_LeggTilOy: Aktuell OE %p\n",pOE);
-  UT_FPRINTF(stderr,"LC_POL_LeggTilOy: OA->førsteOE %p\n" ,pOA->pForsteOE);
-  UT_FPRINTF(stderr,"LC_POL_LeggTilOy: SisteOE->nesteOE %p\n",pOA->pSisteOE->pNesteOE);
-  UT_FPRINTF(stderr,"LC_POL_LeggTilOy: SisteOE %p\n",pOA->pSisteOE);
+  UT_FPRINTF(stderr,L"LC_POL_LeggTilOy: Aktuell OE %p\n",pOE);
+  UT_FPRINTF(stderr,L"LC_POL_LeggTilOy: OA->førsteOE %p\n" ,pOA->pForsteOE);
+  UT_FPRINTF(stderr,L"LC_POL_LeggTilOy: SisteOE->nesteOE %p\n",pOA->pSisteOE->pNesteOE);
+  UT_FPRINTF(stderr,L"LC_POL_LeggTilOy: SisteOE %p\n",pOA->pSisteOE);
    ********************************************* */
 }
 
@@ -263,16 +259,16 @@ CD
 CD Frigir minne som er allokert til kjede av polygonelement.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_FrigiOmkrets(LC_POL_OMKR *pPO)
+void CFyba::LC_POL_FrigiOmkrets(LC_POL_OMKR *pPO)
 {
   LC_POL_ELEMENT *pPE,*pNestePE;
 
   pPE = pPO->pForstePE;
 
   while(pPE != NULL) {
-    /* UT_FPRINTF(stderr,"LC_POL_FrigiOmkrets: pPE = %p\n",pPE); */
+    /* UT_FPRINTF(stderr,L"LC_POL_FrigiOmkrets: pPE = %p\n",pPE); */
 	 pNestePE = pPE->pNestePE;
-	 UT_FREE(pPE);
+	 free(pPE);
 	 pPE = pNestePE;
   }
   pPO->pForstePE = NULL;
@@ -297,7 +293,7 @@ CD LC_POLYGON  Polygon;
 CD LC_POL_FrigiPolygon(&Polygon);
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_FrigiPolygon(LC_POLYGON *pPolygon)
+void CFyba::LC_POL_FrigiPolygon(LC_POLYGON *pPolygon)
 {
    /* Frigir øy-kjeden */
    LC_POL_FrigiAlleOyer(&(pPolygon->OyOA));
@@ -323,7 +319,7 @@ CD
 CD Initierer administrasjonsblokka for polygonelement
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_InitOmkrets(LC_POL_OMKR *pPO)
+void CFyba::LC_POL_InitOmkrets(LC_POL_OMKR *pPO)
 {
   pPO->pForstePE = NULL;
   pPO->pSistePE = NULL;
@@ -346,7 +342,7 @@ CD
 CD Initierer øy-kjeden.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_InitOy(LC_OY_ADM *pOA)
+void CFyba::LC_POL_InitOy(LC_OY_ADM *pOA)
 {
   pOA->pForsteOE = NULL;
   pOA->pSisteOE = NULL;
@@ -370,7 +366,7 @@ CD LC_POLYGON  Polygon;
 CD LC_POL_InitPolygon(&Polygon);
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_InitPolygon(LC_POLYGON *pPolygon)
+void CFyba::LC_POL_InitPolygon(LC_POLYGON *pPolygon)
 {
    LC_POL_InitOmkrets(&(pPolygon->HovedPO));
    LC_POL_InitOy(&(pPolygon->OyOA));
@@ -394,14 +390,14 @@ CD Bruk:
 CD ngi = LC_POL_PutRef(pPolygon);
 CD =======================================================================
 */
-SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
+short CFyba::LC_POL_PutRef(LC_POLYGON *pPolygon)
 {
    #define MAX_LEN  66   /* Ginfolinjen skrives ut når den er lengre en 70 tegn */
    LC_POL_ELEMENT *pPE;
    LC_OY_ELEMENT *pOE;
    short gilin;
-   char temp[LC_MAX_SOSI_LINJE_LEN],*ginfo,*cp;
-   char szOrd[50];
+   wchar_t temp[LC_MAX_SOSI_LINJE_LEN],*ginfo,*cp;
+   wchar_t szOrd[50];
    short ledig_linje = -1;
 
 
@@ -411,20 +407,20 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
          ginfo = LX_GetGi(gilin);
 
          /* Gammel type referanse er funnet */
-         if (strncmp(ginfo,".. ",3) == 0) {
+         if (wcsncmp(ginfo,L".. ",3) == 0) {
             if (ledig_linje == -1) {        /* Første linje med referanse */
                ledig_linje = gilin;
             }
 
          /* Ny type referanse er funnet */
-         } else if (strncmp(ginfo,"..REF ",6) == 0) {
+         } else if (wcsncmp(ginfo,L"..REF ",6) == 0) {
             if (ledig_linje == -1) {        /* Første linje med referanse */
                ledig_linje = gilin;
             }
             /* Søk over resten av referansene */
             for (gilin++; gilin <= Sys.pGrInfo->ngi; gilin++) {
                ginfo = LX_GetGi(gilin);
-               if (strncmp(ginfo,"..",2) == 0) { /* Annen GINFO er funnet */
+               if (wcsncmp(ginfo,L"..",2) == 0) { /* Annen GINFO er funnet */
                   gilin--;
                   break;      /* Avbryt, alle referanser er funnet*/
                }
@@ -454,10 +450,10 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
 
 
          if (Sys.GrId.pFil->sSosiVer >= 220) {
-            UT_StrCopy(temp,"..REF ",LC_MAX_SOSI_LINJE_LEN);
+            UT_StrCopy(temp,L"..REF ",LC_MAX_SOSI_LINJE_LEN);
             cp = temp + 6;
          } else {   
-            UT_StrCopy(temp,".. ",LC_MAX_SOSI_LINJE_LEN);
+            UT_StrCopy(temp,L".. ",LC_MAX_SOSI_LINJE_LEN);
             cp = temp + 3;
          }
 
@@ -465,7 +461,7 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
          for (pPE = pPolygon->HovedPO.pForstePE; pPE != NULL; pPE = pPE->pNestePE) {
 
             /* Strengen er full, skriver ut */
-            if(strlen(temp) > MAX_LEN) {
+            if(wcslen(temp) > MAX_LEN) {
                if (ledig_linje > Sys.pGrInfo->ngi) {
                   ledig_linje = LC_AppGiL();
                }
@@ -476,7 +472,7 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
                   *temp = '\0';
                   cp = temp;
                } else {   
-                  UT_StrCopy(temp,".. ",LC_MAX_SOSI_LINJE_LEN);
+                  UT_StrCopy(temp,L".. ",LC_MAX_SOSI_LINJE_LEN);
                   cp = temp + 3;
                }
             }
@@ -488,16 +484,16 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
                   *cp = '\0';
                }
             }    
-            UT_SNPRINTF(szOrd, 50, ":%ld", ((pPE->sRetning == LC_MED_DIG)?  pPE->lSnr : -pPE->lSnr));
+            UT_SNPRINTF(szOrd, 50, L":%ld", ((pPE->sRetning == LC_MED_DIG)?  pPE->lSnr : -pPE->lSnr));
             UT_StrCat(temp, szOrd, LC_MAX_SOSI_LINJE_LEN);
-            cp = strchr(temp,'\0');
+            cp = wcschr(temp,'\0');
          }
 
 
          /* Legger ut øyer */
          for (pOE = pPolygon->OyOA.pForsteOE; pOE != NULL; pOE = pOE->pNesteOE) {
             /* Strengen er full, skriver ut */
-            if(strlen(temp) >= (MAX_LEN-2)) {
+            if(wcslen(temp) >= (MAX_LEN-2)) {
                if (ledig_linje > Sys.pGrInfo->ngi) {
                   ledig_linje = LC_AppGiL();
                }
@@ -508,7 +504,7 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
                   *temp = '\0';
                   cp = temp;
                } else {   
-                  UT_StrCopy(temp,".. ",LC_MAX_SOSI_LINJE_LEN);
+                  UT_StrCopy(temp,L".. ",LC_MAX_SOSI_LINJE_LEN);
                   cp = temp + 3;
                }
             }
@@ -526,7 +522,7 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
             for (pPE = pOE->PO.pForstePE; pPE != NULL; pPE = pPE->pNestePE) {
 
                /* Strengen er full, skriver ut */
-               if(strlen(temp) >= MAX_LEN) {
+               if(wcslen(temp) >= MAX_LEN) {
                   if (ledig_linje > Sys.pGrInfo->ngi) {
                      ledig_linje = LC_AppGiL();
                   }
@@ -537,7 +533,7 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
                      *temp = '\0';
                      cp = temp;
                   } else {   
-                     UT_StrCopy(temp,".. ",LC_MAX_SOSI_LINJE_LEN);
+                     UT_StrCopy(temp,L".. ",LC_MAX_SOSI_LINJE_LEN);
                      cp = temp + 3;
                   }
                }
@@ -545,30 +541,30 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
                /* Skriv ut referansen */
                if (cp > temp) {
                   if (! UT_IsSpace(*(cp-1))  &&  *(cp-1) != '(') {
-                     *cp++ = ' ';
-                     *cp = '\0';
+                     *cp++ = L' ';
+                     *cp = L'\0';
                   }
                }
-               UT_SNPRINTF(szOrd, 50, ":%ld", ((pPE->sRetning == LC_MED_DIG)?  pPE->lSnr : -pPE->lSnr));
+               UT_SNPRINTF(szOrd, 50, L":%ld", ((pPE->sRetning == LC_MED_DIG)?  pPE->lSnr : -pPE->lSnr));
                UT_StrCat(temp, szOrd, LC_MAX_SOSI_LINJE_LEN);
-               cp = strchr(temp,'\0');
+               cp = wcschr(temp,'\0');
             }
 
 
             /* Sluttparantesen */
             if (cp > temp) {
-               if (*(cp-1) == '.') {
-                  *cp++ = ' ';
+               if (*(cp-1) == L'.') {
+                  *cp++ = L' ';
                }
             }
-            *cp++ = ')';
-            *cp = '\0';
+            *cp++ = L')';
+            *cp = L'\0';
          }
 
 
          /* Skriver ut resten av strengen */
-         if ((Sys.GrId.pFil->sSosiVer >= 220  &&  strlen(temp) > 0)  ||
-             strlen(temp) > 3) {
+         if ((Sys.GrId.pFil->sSosiVer >= 220  &&  wcslen(temp) > 0)  ||
+             wcslen(temp) > 3) {
             if (ledig_linje > Sys.pGrInfo->ngi) {
                ledig_linje = LC_AppGiL();
             }
@@ -595,6 +591,7 @@ CH LC_POL_GetRef                        Hent referanser for flate fra GINFO
 CD ==========================================================================
 CD Formål:
 CD Henter referanser fra GINFO til struktur.
+CD OBS! PktStart og PktSlutt blir ikke oppdatert.
 CD
 CD Parametre:
 CD Type         Navn      I/U  Forklaring
@@ -637,9 +634,9 @@ CD    LC_POL_FrigiPolygon(&Polygon);
 CD
 CD ==========================================================================
 */
-SK_EntPnt_FYBA void LC_POL_GetRef(LC_POLYGON *pPolygon)
+void CFyba::LC_POL_GetRef(LC_POLYGON *pPolygon)
 {
-   char *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
    long lSnr;
    LC_BGR Bgr;
    short ngi;
@@ -679,8 +676,8 @@ SK_EntPnt_FYBA void LC_POL_GetRef(LC_POLYGON *pPolygon)
                      sRetning = LC_MED_DIG;
                   }
                   /* Hent serienummer og konverter til gruppenummer */
-                  if (isdigit(*gp)) {
-                     lSnr = strtol(gp,&gp,10);
+                  if (iswdigit(*gp)) {
+                     lSnr = wcstol(gp,&gp,10);
                      /* Konverter til gruppenummer */
                      if ((Bgr.lNr = LI_GetSnr(Sys.GrId.pFil,lSnr)) != INGEN_GRUPPE) {
                         /* Legg gruppen inn i kjeden */
@@ -701,18 +698,18 @@ SK_EntPnt_FYBA void LC_POL_GetRef(LC_POLYGON *pPolygon)
                         }
 
                      } else {
-                        UT_FPRINTF(stderr,"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",lSnr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                        UT_FPRINTF(stderr,L"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",lSnr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                         Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                      }
 
                   } else {
-                     //UT_FPRINTF(stderr,"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                     //UT_FPRINTF(stderr,L"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                      //Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                      gp++;
                   }
 
 
-               } else if (*gp == '(') {                     /* Start øy */
+               } else if (*gp == L'(') {                     /* Start øy */
 
                   if (sOy == UT_FALSE) {
                      LC_POL_InitOmkrets(&OyPO);
@@ -720,22 +717,32 @@ SK_EntPnt_FYBA void LC_POL_GetRef(LC_POLYGON *pPolygon)
 
                   } else {
                      /* Øy i øy er ikke lovlig */
-                     LC_Error(56,"(LC_POL_GetRef)",Sys.GrId.pFil->pszNavn);
-                     UT_FPRINTF(stderr,"Øy i øy i gruppe \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                     LC_Error(56,L"(LC_POL_GetRef)",Sys.GrId.pFil->pszNavn);
+                     UT_FPRINTF(stderr,L"Øy i øy i gruppe \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                      Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                   }
                   gp++;
 
-               } else if (*gp == ')') {                     /* Slutt øy */
+               } else if (*gp == L')') {                     /* Slutt øy */
 
                   if (sOy == UT_TRUE) {
-                     LC_POL_LeggTilOy(&(pPolygon->OyOA),&OyPO);
+
+                     if (OyPO.pForstePE != NULL)
+                     {
+                        LC_POL_LeggTilOy(&(pPolygon->OyOA),&OyPO);
+                     }
+                     else
+                     {
+                        LC_Error(56,L"(LC_POL_GetRef)",Sys.GrId.pFil->pszNavn);
+                        UT_FPRINTF(stderr,L"Tom øy i gruppe \"()\" \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                        Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
+                     }
                      sOy = UT_FALSE;
 
                   } else {
                      /* Øy i øy er ikke lovlig */
-                     LC_Error(56,"(LC_POL_GetRef)",Sys.GrId.pFil->pszNavn);
-                     UT_FPRINTF(stderr,"Øy i øy i gruppe \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                     LC_Error(56,L"(LC_POL_GetRef)",Sys.GrId.pFil->pszNavn);
+                     UT_FPRINTF(stderr,L"Øy i øy i gruppe \"%s : %s\"\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                      Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                   }
                   gp++;
@@ -772,9 +779,9 @@ CD Bruk:
 CD    LC_POL_GetRefOmkrets(&OyPO);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA void LC_POL_GetRefOmkrets(LC_POL_OMKR *pPO)
+void CFyba::LC_POL_GetRefOmkrets(LC_POL_OMKR *pPO)
 {
-   char *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t *gp,ginfo[LC_MAX_SOSI_LINJE_LEN];
    long lSnr;
    short sRetning;
    short sGiLinNr = 2;
@@ -805,20 +812,20 @@ SK_EntPnt_FYBA void LC_POL_GetRefOmkrets(LC_POL_OMKR *pPO)
                      sRetning = LC_MED_DIG;
                   }
                   /* Hent serienummer og konverter til gruppenummer */
-                  if (isdigit(*gp)) {
-                     lSnr = strtol(gp,&gp,10);
+                  if (iswdigit(*gp)) {
+                     lSnr = wcstol(gp,&gp,10);
                      /* Konverter til gruppenummer */
                      if ((Bgr.lNr = LI_GetSnr(Sys.GrId.pFil,lSnr)) != INGEN_GRUPPE) {
                         /* Legg gruppen inn i kjeden */
                         LC_POL_LeggTilGruppeOmkrets(pPO,&Bgr,sRetning,lSnr);
 
                      } else {
-                        UT_FPRINTF(stderr,"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",lSnr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                        UT_FPRINTF(stderr,L"Snr. %ld er referert i \"%s : %s\", finnes ikke!\n",lSnr,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                         Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                      }
 
                   } else {
-                     UT_FPRINTF(stderr,"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+                     UT_FPRINTF(stderr,L"Ulovlig referanse \"%s\" i \"%s : %s\"\n",ginfo,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
                      Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
                   }
 
@@ -847,33 +854,40 @@ CD Bruk:
 CD LC_POL_TestBrukt(pPolygon,&Bgr);
 CD
 CD parametere:
-CD Type        Navn     I/U    Forklaring
+CD Type        Navn     I/U     Forklaring
 CD -----------------------------------------------------------------------
-CD LC_POLYGON *pPolygon  I     Peker til polygonbeskrivelse.
-CD LC_BGR     *pBgr      I     Peikar til gruppe
-CD short       status    R     Status UT_TRUE = gruppe er brukt i polygonet
+CD LC_POLYGON *pPolygon  I      Peker til polygonbeskrivelse.
+CD LC_BGR     *pBgr      I      Peikar til gruppe
+CD bool        bSjekkIndeGrense Bryter som styrer om det skal sjekkes mot indre grense
+CD                              Ytre grense sjekkes alltid.
+CD short       status    R      Status UT_TRUE = gruppe er brukt i polygonet
 CD                              Status UT_FALSE = gruppe er IKKJE brukt i polygonet
 CD
 CD Testar om ei gruppe er brukt i gitt polygon.
 CD =======================================================================
 */
-SK_EntPnt_FYBA short LC_POL_TestBrukt(LC_POLYGON *pPolygon,LC_BGR *pBgr)
+short CFyba::LC_POL_TestBrukt(LC_POLYGON *pPolygon,LC_BGR *pBgr, bool bSjekkIndreGrense=true)
 {
-   LC_POL_ELEMENT *pPE;
-   LC_OY_ELEMENT *pOE;
-
    /* Sjekk omkretsen */
-   for(pPE = pPolygon->HovedPO.pForstePE; pPE != NULL; pPE = pPE->pNestePE) {
-      if (memcmp(pBgr,&pPE->Bgr, sizeof(LC_BGR)) == 0) {
+   for(LC_POL_ELEMENT *pPE = pPolygon->HovedPO.pForstePE; pPE != NULL; pPE = pPE->pNestePE)
+   {
+      if (LC_ErSammeGr(pBgr, &pPE->Bgr))
+      {
          return UT_TRUE;
       }
    }
 
    /* Sjekk øyene */
-   for (pOE = pPolygon->OyOA.pForsteOE; pOE != NULL; pOE = pOE->pNesteOE) {
-      for (pPE = pOE->PO.pForstePE; pPE != NULL; pPE = pPE->pNestePE) {
-         if (memcmp(pBgr,&pPE->Bgr, sizeof(LC_BGR)) == 0) {
-            return UT_TRUE;
+   if (bSjekkIndreGrense)
+   {
+      for (LC_OY_ELEMENT *pOE = pPolygon->OyOA.pForsteOE; pOE != NULL; pOE = pOE->pNesteOE)
+      {
+         for (LC_POL_ELEMENT *pPE = pOE->PO.pForstePE; pPE != NULL; pPE = pPE->pNestePE)
+         {
+            if (LC_ErSammeGr(pBgr, &pPE->Bgr))
+            {
+               return UT_TRUE;
+            }
          }
       }
    }
@@ -903,7 +917,7 @@ CD Bruk:
 CD .
 ==========================================================================
 */
-SK_EntPnt_FYBA short LC_POL_PTst(LC_POLYGON *pPolygon,double a,double n)
+short CFyba::LC_POL_PTst(LC_POLYGON *pPolygon,double a,double n)
 {
    short ngi;
    long nko;
@@ -977,7 +991,7 @@ CD Bruk:
 CD ist = LC_POL_PTstOmkrets(pPO,a,n);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_POL_PTstOmkrets(LC_POL_OMKR *pPO,double a,double n)
+short CFyba::LC_POL_PTstOmkrets(LC_POL_OMKR *pPO,double a,double n)
 {
    short ngi;
    long nko;
@@ -1041,7 +1055,7 @@ CD Bruk:
 CD ist = LC_POL_PTstOmkrets(pPO,a,n);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_POL_OmkretsSkjaering(LC_POL_OMKR *pPO,double a,double n)
+short CFyba::LC_POL_OmkretsSkjaering(LC_POL_OMKR *pPO,double a,double n)
 {
    short ngi;
    long nko;
@@ -1097,17 +1111,17 @@ CD
 CD Henter omskriven boks for polygon.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_POL_Box(LC_POL_OMKR *pPO,double *nva,double *nvn, double *oha,double*ohn)
+void CFyba::LC_POL_Box(LC_POL_OMKR *pPO,double *nva,double *nvn, double *oha,double*ohn)
 {
-   LC_POL_ELEMENT *pPE;
    double na,nn,oa,on;
+
    /* Omskreven boks */
    double mina = (double)LONG_MAX;
    double minn = (double)LONG_MAX;
    double maxa = (double)LONG_MIN;
    double maxn = (double)LONG_MIN;
 
-   for (pPE = pPO->pForstePE; pPE != NULL; pPE = pPE->pNestePE) {
+   for (LC_POL_ELEMENT *pPE = pPO->pForstePE; pPE != NULL; pPE = pPE->pNestePE) {
 
       if (LC_GetGrWin(&pPE->Bgr,&na,&nn,&oa,&on) ) {
          if (na < mina)  mina = na;
@@ -1134,29 +1148,29 @@ CD
 CD parametere:
 CD Type    Navn        I/U  Forklaring
 CD -----------------------------------------------------------------------
-CD char   *pszGinfoLin  i   Peikar til GINFO-linje
+CD wchar_t   *pszGinfoLin  i   Peikar til GINFO-linje
 CD short   sRefLin      i   Flagg som viser om forrige linje inneholdt referanser
 CD short   sRefLin      r   Flagg som viser om aktuell linje inneholdt referanser
 CD
 CD Sjekk om linje er linje med referanser.
 CD =======================================================================
 */
-short LC_ErLinjeRefLin(char *pszSosiLin, short sRefLin)
+short CFyba::LC_ErLinjeRefLin(wchar_t *pszSosiLin, short sRefLin)
 {
    /* Sjekk om dette er referanselinje */
-   if (strncmp(pszSosiLin,".. ",3) == 0) {
+   if (wcsncmp(pszSosiLin,L".. ",3) == 0) {
       return UT_TRUE;
 
-   } else if (strncmp(pszSosiLin,"..REF ",6) == 0) {
+   } else if (wcsncmp(pszSosiLin,L"..REF ",6) == 0) {
       //if (sRefLin == UT_TRUE) {
-      //   UT_FPRINTF(stderr,"Ulovlig SOSI-syntaks \"%s\" i gruppe \"%s : %s\"\n",pszSosiLin,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+      //   UT_FPRINTF(stderr,L"Ulovlig SOSI-syntaks \"%s\" i gruppe \"%s : %s\"\n",pszSosiLin,Sys.GrId.pFil->pszNavn,LX_GetGi(1));
       //   Sys.GrId.pFil->usDataFeil |= LC_DATAFEIL_REF;
       //}
       return UT_TRUE;
 
    } else if (sRefLin == UT_TRUE) {
       /* Annet SOSI-navn */
-      if (*pszSosiLin == '.') {
+      if (*pszSosiLin == L'.') {
          return UT_FALSE;
       
       } else {
@@ -1165,5 +1179,120 @@ short LC_ErLinjeRefLin(char *pszSosiLin, short sRefLin)
 
    } else {
       return UT_FALSE;
+   }
+}
+
+
+/*
+AR-931213
+CH LC_POL_OmkretsRetning                      Sjekk nøsteretning for omkrets
+CD ==========================================================================
+CD Formål:
+CD Sjekker om gitt polygon er nøstet med eller mot sola.
+CD
+CD Parametre:
+CD Type         Navn I/U  Forklaring
+CD --------------------------------------------------------------------------
+CD LC_POL_OMKR *pPO   I   Peker til beskrivelse av omkretsen
+CD short        ist   r   status: UT_TRUE  = Nøstet med sola. (Ytre avgrensning)
+CD                                UT_FALSE = Nøstet mot sola. (Indre avgrensning)
+CD
+CD Bruk:
+CD ist = LC_POL_OmkretsRetning(pPO);
+   ==========================================================================
+*/
+short CFyba::LC_POL_OmkretsRetning(LC_POL_OMKR *pPO)
+{
+   short ngi;
+   long nko;
+   unsigned short info;
+   LC_BGR AktBgr = Sys.GrId;   // Husk gruppenummer for aktuell gruppe
+   double dAreal = 0.0;
+
+   // Har avgrensning? 
+   if (pPO == NULL  ||  pPO->pForstePE == NULL)  return UT_TRUE;  // ==> Avbryter, har ikke noen avgrensning
+
+
+   for (LC_POL_ELEMENT *pPE = pPO->pForstePE; pPE != NULL; pPE = pPE->pNestePE) {
+      dAreal += LX_ArealGruppe(&pPE->Bgr, (pPE->sRetning == LC_MED_DIG)? HENT_FORRFRA : HENT_BAKFRA);
+   }
+
+   /* Les inn opprinnelig gruppe igjen */
+   LC_RxGr(&AktBgr,LES_OPTIMALT,&ngi,&nko,&info);
+
+   // Sjekk retningen
+   //    Negativt areal --> Med klokka
+   //    Positivt areal --> Mot klokka
+   
+   return  (dAreal <= 0.0)?  UT_TRUE : UT_FALSE;
+}
+
+
+/*
+CH LC_POL_FjernLoop                          Fjern loop i polygonavgrensning
+CD ==========================================================================
+CD Formål:
+CD Fjern loop i polygonavgrensning. Spiker er et spesialtilfelle av loop.
+CD
+CD Parametre:
+CD Type         Navn I/U  Forklaring
+CD --------------------------------------------------------------------------
+CD LC_POL_OMKR *pPO   I   Peker til beskrivelse av omkretsen
+CD short        ist   r   status: UT_TRUE  = Nøstet med sola. (Ytre avgrensning)
+CD                                UT_FALSE = Nøstet mot sola. (Indre avgrensning)
+CD
+CD Bruk:
+CD LC_POL_FjernLoop(pPO);
+   ==========================================================================
+*/
+void CFyba::LC_POL_FjernLoop(LC_POL_OMKR *pPO)
+{
+   // Sjekker om samme node finnes to ganger i avgrensningen. 
+   // I så fall skal mellomliggende element fjernes i polygonomkretsen. 
+   // (De danner spiker, eller øy som tangerer kanten i et punkt.)
+                       
+   // Har to ringer som tangerer hverandre i et punkt. Den indre skal fjernes.
+
+   // For hver node
+   //    Søk om samme noden finnes på annet sted i kjeden
+
+   LC_POL_ELEMENT *pPESlett ;
+   LC_POL_ELEMENT *pPE, *pPE2, *pPE3;
+
+   for(pPE = pPO->pForstePE; pPE != NULL; pPE = pPE->pNestePE)
+   {
+      for (pPE2 = pPE->pNestePE; pPE2 != NULL; pPE2 = pPE2->pNestePE)
+      {
+         // Hvis slutten av de to elementene er like har vi et hull som tangerer kanten.
+         if (GM_ErLik_IkkeAvrundet(pPE->PktSlutt.dAust, pPE->PktSlutt.dNord,
+                                   pPE2->PktSlutt.dAust, pPE2->PktSlutt.dNord, pPE->Bgr.pFil->TransPar.dEnhet) )
+         {
+            //#ifdef LOGG
+            //   UT_fwprintfUTF8(stderr, L"POL_Nos: Fjerner hull/spiker som tangerer kanten av flaten\r\n",g_fyba->LC_GetGi(1),(pKantNodeKoblingUt->m_sDigretning==LC_MED_DIG)? L"MED":L"MOT");
+            //#endif
+
+               // Fjern hullet fra omkretsen
+            pPE3 = pPE->pNestePE;
+            while (pPE3 != pPE2)
+            {
+               pPESlett = pPE3;
+               pPE3 = pPE3->pNestePE;
+
+               #ifdef LOGG
+                  UT_fwprintfUTF8(stderr, L"POL_Nos: Fjerner: %ld\r\n", pPESlett->lSnr);
+               #endif
+
+               LC_POL_FjernGruppeOmkrets(pPO, pPESlett);
+            }
+
+            // Fjerner siste elementet av hullet, og klargjør for videre søk
+            #ifdef LOGG
+               UT_fwprintfUTF8(stderr, L"POL_Nos: Fjerner: %ld\r\n", pPE2->lSnr);
+            #endif
+
+            LC_POL_FjernGruppeOmkrets(pPO, pPE2);
+            pPE2 = pPE;
+         }
+      }
    }
 }

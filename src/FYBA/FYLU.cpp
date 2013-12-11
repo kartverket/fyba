@@ -1,5 +1,5 @@
 /* === AR-920613 ========================================================== */
-/*  STATENS KARTVERK  -  FYSAK-PC                                           */
+/*  KARTVERKET  -  FYSAK-PC                                           */
 /*  Fil: fylu.c                                                             */
 /*  Innhold: Rutiner for utvalg                                             */
 /* ======================================================================== */
@@ -8,37 +8,12 @@
 
 #include <ctype.h>
 #include <math.h>
-#include <locale>
 
 using namespace std;
 
-#define U_PARA_LEN    128     /* Max lengde av parameterstreng */
-
-
-/* Felles variabler for hele FYBA */
-extern LC_SYSTEMADM Sys;
+//#define U_PARA_LEN    1024     /* Max lengde av parameterstreng */
 
 /*  Funksjonsdefinisjoner for interne funksjoner */
-static void  LU_FrigiUtvalg(LC_UTVALG *pU);
-static void  LU_DelLastQuery(LC_UTVALG_BLOKK *pUB);
-static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx);
-static short LU_PiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,long lPnr);
-static short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr);
-//static short LU_GiTestUtvalg(LC_UT_ADM * pUtAdm,LC_UTVALG *pU);
-static short LU_GiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE);
-static short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
-                            short *gilin,char **apara);
-static short LU_ParaTest(LC_UTVALG_ELEMENT * pUE,char *para,char *pszAktPara,short sMaxLen);
-static void  LU_JustPara(char *para,short ledd,short start,short slutt,
-                         char *akt_para,short max_len);
-static short LU_LesULinje(FILE *pKomFil,short sMaxTxLen,char *pszTx,
-                          short *psNiv);
-static void LU_AppUtvalg (LC_UTVALG_BLOKK *pUtBlokk,char *pszNavn);
-static void LU_PakkPrioritet(LC_UT_ADM * pUtAdm);
-static void LU_HuskPrior(short *NyPrior,short *sAntPrior,short sPrior);
-static void LU_SjekkDatatype(char *pszVerdi,char szMetode,short *sType);
-
-
 int LU_compare (const void *arg1, const void *arg2);
 
 
@@ -59,13 +34,13 @@ CD Bruk:
 CD pUtAdm = LC_OpenQuery();
    ==========================================================================
 */
-SK_EntPnt_FYBA LC_UT_ADM *LC_OpenQuery(void)
+LC_UT_ADM * CFyba::LC_OpenQuery(void)
 {
    LC_UT_ADM *pUtAdm;
 
 	/* Tildeler administrasjonsblokk */
-	pUtAdm = (LC_UT_ADM *) UT_MALLOC(sizeof(LC_UT_ADM));
-   memset(pUtAdm,'\0',sizeof(LC_UT_ADM));
+	pUtAdm = (LC_UT_ADM *) malloc(sizeof(LC_UT_ADM));
+   memset(pUtAdm, 0, sizeof(LC_UT_ADM));
 
    /* Nullstiller */
    memset(&(pUtAdm->Gruppe), 0, sizeof(LC_UTVALG_BLOKK));
@@ -94,7 +69,7 @@ CD Bruk:
 CD LC_CloseQuery(pUtAdm);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_CloseQuery(LC_UT_ADM * pUtAdm)
+void CFyba::LC_CloseQuery(LC_UT_ADM * pUtAdm)
 {
    LC_UTVALG *pU,*pNesteU;
    LC_LAG *pLag,*pNesteLag; //JAØ-19980922
@@ -139,15 +114,15 @@ SK_EntPnt_FYBA void LC_CloseQuery(LC_UT_ADM * pUtAdm)
       pLag = pUtAdm->pForsteLag;
       while (pLag != NULL) {
          pNesteLag = pLag->pNesteLag;
-			if (pLag->pszLagNavn != NULL)  UT_FREE(pLag->pszLagNavn);
-			UT_FREE(pLag);
+			if (pLag->pszLagNavn != NULL)  free(pLag->pszLagNavn);
+			free(pLag);
          pLag = pNesteLag;
       }
 
       /*
        * Frigir Adm.blokken.
 		 */
-		UT_FREE(pUtAdm);
+		free(pUtAdm);
    }
 }
 
@@ -168,17 +143,17 @@ CD Bruk:
 CD LU_FrigiUE(pU);
 CD ==========================================================================
 */
-static void LU_FrigiUtvalg (LC_UTVALG * pU)
+void CFyba::LU_FrigiUtvalg (LC_UTVALG * pU)
 {
    /* Frigi utvalgs-elementer */
    if (pU->pForsteUE != NULL)  LU_FrigiUE(pU->pForsteUE);
 
 	/* Frigi navn og regel */
-	if (pU->pszNavn != NULL)  UT_FREE(pU->pszNavn);
-	if (pU->pszRegel != NULL)  UT_FREE(pU->pszRegel);
+	if (pU->pszNavn != NULL)  free(pU->pszNavn);
+	if (pU->pszRegel != NULL)  free(pU->pszRegel);
 
    /* Frigi toppblokken for utvalget */
-	UT_FREE(pU);
+	free(pU);
 }
 
 
@@ -199,7 +174,7 @@ CD Bruk:
 CD LU_FrigiUE(pForsteUE);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA void LU_FrigiUE (LC_UTVALG_ELEMENT * pUE)
+void CFyba::LU_FrigiUE (LC_UTVALG_ELEMENT * pUE)
 {
    LC_UTVALG_ELEMENT *  pNesteUE;
 
@@ -212,10 +187,10 @@ SK_EntPnt_FYBA void LU_FrigiUE (LC_UTVALG_ELEMENT * pUE)
       pNesteUE = pUE->pNesteUE;
 
 		/* Frigi dette elementet */
-		if (pUE->min != NULL)  UT_FREE(pUE->min);
-		if (pUE->max != NULL)  UT_FREE(pUE->max);
+		if (pUE->min != NULL)  free(pUE->min);
+		if (pUE->max != NULL)  free(pUE->max);
 
-		UT_FREE((char *)pUE);
+		free(pUE);
 
       pUE = pNesteUE;
    }
@@ -233,7 +208,7 @@ CD Parametre:
 CD Type       Navn  I/U   Forklaring
 CD ------------------------------------------------------------------------
 CD LC_UT_ADM *UtAdm  i    Peker til administrasjonsblokk for utvalg.
-CD char      *qulin  i    Linje med query-tekst. (Uten prikker på første nivå).
+CD wchar_t      *qulin  i    Linje med query-tekst. (Uten prikker på første nivå).
 CD short     sType   i    Gruppe eller Punkt (U_GRUPPE eller U_PUNKT).
 CD short      ist    r    Status (UT_TRUE=OK, UT_FALSE=linjen er ikke OK)
 CD
@@ -241,9 +216,9 @@ CD Bruk:
 CD ist = LC_PutQueryLine(pUtAdm,qulin,sType);
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_PutQueryLine(LC_UT_ADM *pUtAdm,const char *qulin,short sType)
+short CFyba::LC_PutQueryLine(LC_UT_ADM *pUtAdm,const wchar_t *qulin,short sType)
 {
-   const char *cp;
+   const wchar_t *cp;
    LC_UTVALG_BLOKK *pUB;
    short sNiv = 0;
    short sStatus = UT_FALSE;
@@ -271,7 +246,7 @@ SK_EntPnt_FYBA short LC_PutQueryLine(LC_UT_ADM *pUtAdm,const char *qulin,short s
 
       if (pUB->pForsteU == NULL) {
          /* Legg til et nytt utvalg */
-         LU_AppUtvalg(pUB,"Query");
+         LU_AppUtvalg(pUB,L"Query");
       }
       
       /* Alloker minne og tolk linjen */
@@ -279,7 +254,7 @@ SK_EntPnt_FYBA short LC_PutQueryLine(LC_UT_ADM *pUtAdm,const char *qulin,short s
 
       // Ta vare på opplysning om HØYDE er brukt
       if (sStatus != UT_FALSE) {
-         if (strcmp(pUB->pSisteU->pSisteUE->sosi,"HØYDE") == 0) {
+         if (wcscmp(pUB->pSisteU->pSisteUE->sosi,L"HØYDE") == 0) {
             pUB->sHoydeBrukt = UT_TRUE;
          }
       }
@@ -301,20 +276,21 @@ CD Parametre:
 CD Type         Navn I/U   Forklaring
 CD ------------------------------------------------------------------------
 CD LC_UTVALG   *pU    i    Peker til utvalg
-CD char        *navn  i    Regelnavn. 
+CD wchar_t        *navn  i    Regelnavn. 
 CD
 CD Bruk:
 CD LC_PutQueryRegel(pU,navn);
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_PutQueryRegel(LC_UTVALG * pU,const char *navn)
+void CFyba::LC_PutQueryRegel(LC_UTVALG * pU,const wchar_t *navn)
 {
 	/* Frigi eventuell gammel regel */
-	if (pU->pszRegel != NULL)  UT_FREE(pU->pszRegel);
+	if (pU->pszRegel != NULL)  free(pU->pszRegel);
 
    /* Legg inn ny regel */
-	pU->pszRegel = (char*)UT_MALLOC(strlen(navn)+1);
-	UT_StrCopy(pU->pszRegel, navn, strlen(navn)+1);
+   pU->pszRegel = _wcsdup(navn);  
+	//pU->pszRegel = (wchar_t*)malloc((wcslen(navn)+1) * sizeof(wchar_t));
+	//UT_StrCopy(pU->pszRegel, navn, wcslen(navn)+1);
 	UT_StrUpper(pU->pszRegel);
 }
 
@@ -330,13 +306,13 @@ CD Type         Navn  I/U   Forklaring
 CD ------------------------------------------------------------------------
 CD LC_UT_ADM   *UtAdm  i    Peker til administrasjonsblokk for utvalg.
 CD LC_UTVALG   *pU     i    Peker til utvalg
-CD char        *navn   i    Lag-navn. 
+CD wchar_t        *navn   i    Lag-navn. 
 CD
 CD Bruk:
 CD LC_PutLag(pUB,pU,navn);
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_PutLag(LC_UT_ADM *pUtAdm,LC_UTVALG *pU,const char *navn)
+void CFyba::LC_PutLag(LC_UT_ADM *pUtAdm,LC_UTVALG *pU,const wchar_t *navn)
 {
    LC_LAG * pLag,*pNyttLag;
 	short sFunnet = 0;
@@ -347,24 +323,25 @@ SK_EntPnt_FYBA void LC_PutLag(LC_UT_ADM *pUtAdm,LC_UTVALG *pU,const char *navn)
 	   /* Det er allerede lagt inn lag på dette utvalget ? */
       if (pU->pLag != NULL) { 
          /* Annet lag enn forrige gang ? */
-         if (strcmp(navn,pU->pLag->pszLagNavn) != 0) {
-            LC_Error(128,"(LU_HuskPrior)",pU->pszNavn);
+         if (wcscmp(navn,pU->pLag->pszLagNavn) != 0) {
+            LC_Error(128,L"(LU_HuskPrior)",pU->pszNavn);
          }
 
       } else {
 	      /* Tester om lag-navnet allerede er registrert. */
 	      pLag = pUtAdm->pForsteLag;
 	      while ((pLag != NULL) && (!sFunnet)) {
-		      sFunnet = (strcmp(navn,pLag->pszLagNavn) == 0);
+		      sFunnet = (wcscmp(navn,pLag->pszLagNavn) == 0);
 		      if (!sFunnet) pLag = pLag->pNesteLag;
 	      }
    	 
          if (pLag == NULL) { /* Nytt lag, må opprettes og settes inn i kjeden. */
-		      pNyttLag = (LC_LAG *)UT_MALLOC(sizeof(LC_LAG));
+		      pNyttLag = (LC_LAG *)malloc(sizeof(LC_LAG));
 		      memset(pNyttLag,0,sizeof(LC_LAG));
 		      pNyttLag->sLagAktiv = 1;
-		      pNyttLag->pszLagNavn = (char*)UT_MALLOC(strlen(navn)+1);
-            UT_StrCopy(pNyttLag->pszLagNavn,navn,strlen(navn)+1);
+            pNyttLag->pszLagNavn = _wcsdup(navn);  
+		      //pNyttLag->pszLagNavn = (wchar_t*)malloc((wcslen(navn)+1) * sizeof(wchar_t));
+            //UT_StrCopy(pNyttLag->pszLagNavn,navn,wcslen(navn)+1);
 		      pNyttLag->pNesteLag = NULL;
 		      pU->pLag = pNyttLag;
    		   
@@ -402,11 +379,11 @@ CD Bruk:
 CD sStatus = LC_LesUtvalg(pUtAdm,pKomFil);
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_LesUtvalg(LC_UT_ADM *pUtAdm,const char *pszKomFil)
+short CFyba::LC_LesUtvalg(LC_UT_ADM *pUtAdm,const wchar_t *pszKomFil)
 {
    FILE * pKomFil;
    short sFunnet;
-   char szTx[100],ord[60],szNavn[50];
+   wchar_t szTx[100],ord[60],szNavn[50];
    short itxi,lesefeil,sNiv;
    short sForrigeMaxPrioritet,sPrioritet;
    LC_UTVALG_BLOKK  *pUB=NULL;
@@ -416,14 +393,14 @@ SK_EntPnt_FYBA short LC_LesUtvalg(LC_UT_ADM *pUtAdm,const char *pszKomFil)
    if (pUtAdm != NULL)
    {
       /* Åpner filen */
-      pKomFil = UT_OpenFile(pszKomFil,"",UT_READ,UT_OLD,&sStatus);
+      pKomFil = UT_OpenFile(pszKomFil,L"",UT_READ,UT_OLD,&sStatus);
 
 	   /* Åpningsfeil */
       if (sStatus != UT_OK) {
-         char szError[256];
+         wchar_t szError[256];
          UT_strerror(szError,256,sStatus);
-         UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszKomFil,szError);
-         LC_Error(101,"(LC_LesUtvalg)",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszKomFil,szError);
+         LC_Error(101,L"(LC_LesUtvalg)",err.tx);
          return UT_FALSE;
       }
        
@@ -438,15 +415,15 @@ SK_EntPnt_FYBA short LC_LesUtvalg(LC_UT_ADM *pUtAdm,const char *pszKomFil)
          UT_StrUpper(ord);
          UT_StrToken(szTx,itxi,&itxi,60,szNavn);
 
-         if (sNiv == 1  &&  strcmp(ord,"GRUPPE-UTVALG") == 0) {
+         if (sNiv == 1  &&  wcscmp(ord,L"GRUPPE-UTVALG") == 0) {
             pUB = &pUtAdm->Gruppe;
             sFunnet = UT_TRUE;
 
-         } else if(sNiv == 1  &&  strcmp(ord,"PUNKT-UTVALG") == 0) {
+         } else if(sNiv == 1  &&  wcscmp(ord,L"PUNKT-UTVALG") == 0) {
             pUB = &pUtAdm->Punkt;
             sFunnet = UT_TRUE;
 
-         } else if(sNiv == 1  &&  strcmp(ord,"PINFO-UTVALG") == 0) {
+         } else if(sNiv == 1  &&  wcscmp(ord,L"PINFO-UTVALG") == 0) {
             pUB = &pUtAdm->Pinfo;
             sFunnet = UT_TRUE;
          }
@@ -463,19 +440,19 @@ SK_EntPnt_FYBA short LC_LesUtvalg(LC_UT_ADM *pUtAdm,const char *pszKomFil)
                UT_StrUpper(ord);
 
                /* PRIORITET */
-               if (sNiv == 2  &&  strcmp(ord,"PRIORITET") == 0) {
+               if (sNiv == 2  &&  wcscmp(ord,L"PRIORITET") == 0) {
                   UT_StrShort(szTx,itxi,&itxi,&sPrioritet);
                   pUB->pSisteU->sPrioritet = sPrioritet;
                   pUB->pSisteU->sOriginalPrioritet = sPrioritet;
                   if (sPrioritet > pUtAdm->sMaxPrior)  pUtAdm->sMaxPrior = sPrioritet;
 
                /* BRUK-REGEL */
-               } else if (sNiv == 2  &&  strcmp(ord,"BRUK-REGEL") == 0) {
+               } else if (sNiv == 2  &&  wcscmp(ord,L"BRUK-REGEL") == 0) {
                   UT_StrToken(szTx,itxi,&itxi,61,ord);
                   LC_PutQueryRegel(pUB->pSisteU,ord);
 
                /* GRUPPE */  //JAØ-19980921
-               } else if (sNiv == 2  &&  strcmp(ord,"LAG") == 0) {
+               } else if (sNiv == 2  &&  wcscmp(ord,L"LAG") == 0) {
                   UT_StrToken(szTx,itxi,&itxi,61,ord);
                   LC_PutLag(pUtAdm,pUB->pSisteU,ord);
 
@@ -492,7 +469,7 @@ SK_EntPnt_FYBA short LC_LesUtvalg(LC_UT_ADM *pUtAdm,const char *pszKomFil)
                   }
 
                   /* Sjekk om HØYDE er brukt i utvalg */
-                  if (strcmp(pUB->pSisteU->pSisteUE->sosi,"HØYDE") == 0) {
+                  if (wcscmp(pUB->pSisteU->pSisteUE->sosi,L"HØYDE") == 0) {
                      pUB->sHoydeBrukt = UT_TRUE;
                   }
 
@@ -544,14 +521,14 @@ CD Type         Navn     I/O  Forklaring
 CD -----------------------------------------------------------------------
 CD LC_UTVALG   *pU        i   Aktuellt utvalg
 CD short        sNiv      i   Nivå (antall prikker forran navnet)
-CD char        *pszTx     i   Lest linje
+CD wchar_t        *pszTx     i   Lest linje
 CD short        sStatus   r   UT_TRUE=OK, UT_FALSE=feil i linjen
 CD
 CD Bruk:
 CD    sStatus = LU_AppUE(pUB->pSisteU,sNiv,szTx);
 CD =============================================================================
 */
-SK_EntPnt_FYBA short LU_AppUE (LC_UTVALG *pU,short sNiv,const char *pszTx)
+short CFyba::LU_AppUE (LC_UTVALG *pU,short sNiv,const wchar_t *pszTx)
 {
    LC_UTVALG_ELEMENT *pUE,*pNyUE,*pForrigeUE=NULL;
    short sAktNiv = 0;
@@ -566,12 +543,12 @@ SK_EntPnt_FYBA short LU_AppUE (LC_UTVALG *pU,short sNiv,const char *pszTx)
 
    //if (sAktNiv < sNiv-1) {
    if (sAktNiv < sNiv  ||  sNiv > sAktNiv) {
-      LC_Error(126,"(LU_AppUE)",pszTx);
+      LC_Error(126,L"(LU_AppUE)",pszTx);
       return  UT_FALSE;       /* ==> Retur når ulovlig sprang i nivå */
    }
 
 	/* Alloker minne og initier */
-	pNyUE = (LC_UTVALG_ELEMENT *)UT_MALLOC(sizeof(LC_UTVALG_ELEMENT));
+	pNyUE = (LC_UTVALG_ELEMENT *)malloc(sizeof(LC_UTVALG_ELEMENT));
 	memset(pNyUE,0,sizeof(LC_UTVALG_ELEMENT));
 	pNyUE->min = NULL;
 	pNyUE->max = NULL;
@@ -605,7 +582,7 @@ SK_EntPnt_FYBA short LU_AppUE (LC_UTVALG *pU,short sNiv,const char *pszTx)
 
    /* Tolk linjen */
    if ( ! LU_TolkUtvalgslinje(pNyUE,pszTx)) {
-      LC_Error(124,"(LU_AppUE)",pszTx);
+      LC_Error(124,L"(LU_AppUE)",pszTx);
       return  UT_FALSE;       /* ==> Retur når ulovlig utvalgslinje */
    }
          
@@ -629,9 +606,9 @@ CD Bruk:
 CD LU_DelLastQuery(pUB);
    =============================================================================
 */
-static void LU_DelLastQuery(LC_UTVALG_BLOKK *pUB)
+void CFyba::LU_DelLastQuery(LC_UTVALG_BLOKK *pUB)
 {
-   /* Husk aktuellt utvalg */
+   /* Husk aktuelt utvalg */
    LC_UTVALG * pU = pUB->pSisteU;
    
    /*
@@ -667,17 +644,17 @@ CD Parametre:
 CD Type                Navn  I/U  Forklaring
 CD -----------------------------------------------------------------------
 CD LC_UTVALG_ELEMENT * pUE    i   Peker til utvalgselement
-CD char               *pszTx  i   Linje med query-tekst. (Uten prikker i starten)
+CD wchar_t               *pszTx  i   Linje med query-tekst. (Uten prikker i starten)
 CD short               ist    r   Status (UT_TRUE=OK, UT_FALSE=linjen er ikke OK)
 CD
 CD Bruk:
 CD ist = LU_TolkUtvalgslinje(pUE,pszTx);
    =============================================================================
 */
-static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx)
+short CFyba::LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const wchar_t *pszTx)
 {
-   char tx[100],ord[60];
-   const char *cp;
+   wchar_t tx[100],ord[60];
+   const wchar_t *cp;
    short itxi;
    short i;
 
@@ -693,13 +670,13 @@ static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx)
    // ----- Hent kommandonavn
    UT_StrToken(tx,0,&itxi,60,ord);
 
-   if (strcmp(ord,"VELG") == 0) {
+   if (wcscmp(ord,L"VELG") == 0) {
       pUE->kommando = LC_U_ELLER;
 
-   } else if (strcmp(ord,"ELLER") == 0) {
+   } else if (wcscmp(ord,L"ELLER") == 0) {
       pUE->kommando = LC_U_ELLER;
 
-   } else if (strcmp(ord,"OG") == 0) {
+   } else if (wcscmp(ord,L"OG") == 0) {
       pUE->kommando = LC_U_OG;
 
    } else {
@@ -726,35 +703,35 @@ static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx)
    UT_StrUpper(ord);
 
    if (*ord) {
-      if (!strcmp(ord,"="))
+      if (!wcscmp(ord,L"="))
          pUE->metode = LC_U_LIK;
-      else if (!strcmp(ord,"<>"))
+      else if (!wcscmp(ord,L"<>"))
          pUE->metode = LC_U_FRATIL;
-      else if (!strcmp(ord,"/"))
+      else if (!wcscmp(ord,L"/"))
          pUE->metode = LC_U_DELELIG;
-      else if (!strcmp(ord,"!/"))
+      else if (!wcscmp(ord,L"!/"))
          pUE->metode = LC_U_UDELELIG;
-      else if (!strcmp(ord,"()"))
+      else if (!wcscmp(ord,L"()"))
          pUE->metode = LC_U_CONTEIN;
-      else if (!strcmp(ord,"!()"))
+      else if (!wcscmp(ord,L"!()"))
          pUE->metode = LC_U_IKKECONTEIN;
-      else if (!strcmp(ord,"AL"))
+      else if (!wcscmp(ord,L"AL"))
          pUE->metode = LC_U_ALLE;
-      else if (!strcmp(ord,"!="))
+      else if (!wcscmp(ord,L"!="))
          pUE->metode = LC_U_IKKELIK;
-      else if (!strcmp(ord,"!"))
+      else if (!wcscmp(ord,L"!"))
          pUE->metode = LC_U_IKKE;
-      else if (!strcmp(ord,"><"))
+      else if (!wcscmp(ord,L"><"))
          pUE->metode = LC_U_UTENFOR;
-      else if (!strcmp(ord,"<"))
+      else if (!wcscmp(ord,L"<"))
          pUE->metode = LC_U_MINDRE;
-      else if (!strcmp(ord,">"))
+      else if (!wcscmp(ord,L">"))
          pUE->metode = LC_U_STORRE;
-      else if (! strcmp(ord,"IV"))
+      else if (! wcscmp(ord,L"IV"))
          pUE->metode = LC_U_IKKEVALGT;
-      else if (!strcmp(ord,"FL"))
+      else if (!wcscmp(ord,L"FL"))
          pUE->metode = LC_U_FLERE;
-      else if (!strcmp(ord,"!FL"))
+      else if (!wcscmp(ord,L"!FL"))
          pUE->metode = LC_U_IKKEFLERE;
       else {
          return  UT_FALSE;                /* ===> Feil i utvalgslinjen */
@@ -764,15 +741,17 @@ static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx)
    // ----- Min
    UT_StrToken(tx,itxi,&itxi,60,ord);
 	if (*ord) {
-		pUE->min = (char*)UT_MALLOC(strlen(ord)+1);
-      UT_StrCopy(pUE->min,ord,strlen(ord)+1);
+      pUE->min = _wcsdup(ord);  
+		//pUE->min = (wchar_t*)malloc((wcslen(ord)+1) * sizeof(wchar_t));
+      //UT_StrCopy(pUE->min,ord,wcslen(ord)+1);
 
 		// Sjekk type
       LU_SjekkDatatype(pUE->min,0,&pUE->type);
 
   	} else {
-		pUE->min = (char*)UT_MALLOC(1);
-		UT_StrCopy(pUE->min,"",1);
+      pUE->min = _wcsdup(L"");  
+		//pUE->min = (wchar_t*)malloc(sizeof(wchar_t));
+		//UT_StrCopy(pUE->min,L"",1);
       pUE->type = LC_U_ALFA;
 	}
 
@@ -780,8 +759,9 @@ static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx)
    // ----- Max
    UT_StrToken(tx,itxi,&itxi,60,ord);
 	if (*ord) {
-		pUE->max = (char*)UT_MALLOC(strlen(ord)+1);
-      UT_StrCopy(pUE->max, ord, strlen(ord)+1);
+      pUE->max = _wcsdup(ord);  
+		//pUE->max = (wchar_t*)malloc((wcslen(ord)+1) * sizeof(wchar_t));
+      //UT_StrCopy(pUE->max, ord, wcslen(ord)+1);
 
       // Sjekk type
       if (pUE->type != LC_U_ALFA) {
@@ -789,8 +769,9 @@ static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx)
       }
 
 	} else {
-      pUE->max = (char*)UT_MALLOC(1);
-		UT_StrCopy(pUE->max,"",1);
+      pUE->max = _wcsdup(ord);  
+      //pUE->max = (wchar_t*)malloc(sizeof(wchar_t));
+		//UT_StrCopy(pUE->max,L"",1);
    }
 							  
    // ----- Type
@@ -806,24 +787,19 @@ static short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const char *pszTx)
          return  UT_FALSE;                /* ===> Feil i utvalgslinjen */
       }
 
-      char *cp2 = ord + 1;
+      wchar_t *cp2 = ord + 1;
       for (i=0; i<2; ++i) {
          if (*cp2 == '#') {
             ++cp2;
-            pUE->ledd = (char) strtol(cp2,&cp2,10);          /* Ledd-nummer */
+            pUE->ledd = (char) wcstol(cp2,&cp2,10);          /* Ledd-nummer */
          }else if (*cp2 == '[') {
             ++cp2;
-            pUE->start = (char) strtol(cp2,&cp2,10);         /* Startposisjon */
+            pUE->start = (char) wcstol(cp2,&cp2,10);         /* Startposisjon */
             ++cp2;
-            pUE->slutt = (char) strtol(cp2,&cp2,10);         /* Sluttposisjon */
+            pUE->slutt = (char) wcstol(cp2,&cp2,10);         /* Sluttposisjon */
          }
       }
    }
-
-
-	// Sikkrer at det er lagt inn strenger for min og max
-	//if (pUE->min == NULL)  pUE->min = strcpy(UT_MALLOC(2),"");
-	//if (pUE->max == NULL)  pUE->max = strcpy(UT_MALLOC(2),"");
 
 	return UT_TRUE;
 }
@@ -839,21 +815,19 @@ CD
 CD Parametre:
 CD Type      Navn       I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD char     *pszVerdi    i    Verdi
-CD char     szMetode     i    Utvalgsmetode
+CD wchar_t     *pszVerdi    i    Verdi
+CD wchar_t     szMetode     i    Utvalgsmetode
 CD short    *psType      iu   Type, Inn=foreløpig type, Ut=beregnet type
 CD
 CD Bruk:
 CD LU_SjekkDatatype(pszVerdi,szMetode,sType);
    =============================================================================
 */
-static void LU_SjekkDatatype(char *pszVerdi,char szMetode,short *psType)
+void CFyba::LU_SjekkDatatype(wchar_t *pszVerdi,wchar_t szMetode,short *psType)
 {
-   char *cp;
+   wchar_t *cp;
    short i=0;
 
-
-   locale loc ( "Norwegian" );
 
 	/* Sjekk typen */
 	for (cp=pszVerdi; *cp!='\0'; ++cp)
@@ -865,13 +839,13 @@ static void LU_SjekkDatatype(char *pszVerdi,char szMetode,short *psType)
          {
             *psType = LC_U_FLYT;
          } 
-         else if (*cp!='+' && *cp!='-' && !isdigit( *cp, loc ))
+         else if (*cp!='+' && *cp!='-' && !iswdigit( *cp ))
          {
             *psType = LC_U_ALFA;
             break;
          }
       } 
-      else if ( ! isdigit( *cp, loc ) ) 
+      else if ( ! iswdigit( *cp ) ) 
       {
          // Resten av tegnene:
          if (*cp == '.')  // funnet '.' tidligere
@@ -899,7 +873,7 @@ static void LU_SjekkDatatype(char *pszVerdi,char szMetode,short *psType)
    if (*psType == LC_U_TALL)
    {
       // Hvis tallet har for mange siffer til long må det håndteres som tekst
-      long lTall = atol(pszVerdi);
+      long lTall = wcstol(pszVerdi,&pszVerdi,10);
       if (lTall == LONG_MAX  ||  lTall == LONG_MIN)
       {
          *psType = LC_U_ALFA;
@@ -922,13 +896,13 @@ CD -----------------------------------------------------------------------------
 CD LC_UT_ADM *pUtAdm     i     Peker til administrasjonsblokk for utvalg.
 CD short   *ist          iu    Status (Inn: 1=start,  0=neste)
 CD                                    (Ut:  0=OK,    -1=ferdig);
-CD char    *regelpeker   r     Peker til utvalgsnavn.
+CD wchar_t    *regelpeker   r     Peker til utvalgsnavn.
 CD
 CD Bruk:
 CD regelpeker = LC_GetUtRegelNavn(pUtAdm,&ist);
    =============================================================================
 */
-SK_EntPnt_FYBA char *LC_GetUtRegelNavn(LC_UT_ADM *pUtAdm,short *ist)
+wchar_t * CFyba::LC_GetUtRegelNavn(LC_UT_ADM *pUtAdm,short *ist)
 {
    if (pUtAdm != NULL)
    {
@@ -982,14 +956,14 @@ CD Parametre:
 CD Type          Navn     I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_UT_ADM *    pUtAdm    i   Peker til administrasjonsblokk for utvalg.
-CD char         *pszNavn   i   Utvalgsnavn
+CD wchar_t         *pszNavn   i   Utvalgsnavn
 CD LC_UTVALG *    pUtvalg   r   Peker til utvalget. (NULL = ikke funnet)
 CD
 CD Bruk:
 CD pUtvalg = LC_FinnPinfoUtvalg(pszNavn);
    ==========================================================================
 */
-SK_EntPnt_FYBA LC_UTVALG * LC_FinnPinfoUtvalg(LC_UT_ADM * pUtAdm,const char *pszNavn)
+LC_UTVALG * CFyba::LC_FinnPinfoUtvalg(LC_UT_ADM * pUtAdm,const wchar_t *pszNavn)
 {
    LC_UTVALG * pU;
 
@@ -997,7 +971,7 @@ SK_EntPnt_FYBA LC_UTVALG * LC_FinnPinfoUtvalg(LC_UT_ADM * pUtAdm,const char *psz
    {
       /* Søk i kjeden av pinfo-utvalg */
       for (pU=pUtAdm->Pinfo.pForsteU; pU != NULL; pU=pU->pNesteU) {
-         if (strcmp(pszNavn,pU->pszRegel) == 0) {
+         if (wcscmp(pszNavn,pU->pszRegel) == 0) {
             return  pU;              /* ==> Funnet */
          }
       }
@@ -1023,13 +997,13 @@ CD short      sPrior      i    Prioritet.
 CD short     *psStat     iu    Søkestatus, Inn: 1=start søk, 0=fortsett søk
 CD                                         Ut : 0=tilslag, -1=ikke tilslag
 CD long       lPnr        i    Punktnummer som skal sjekkes.
-CD char     **ppszRegel   u    Peker til regelnavn
+CD wchar_t     **ppszRegel   u    Peker til regelnavn
 CD
 CD Bruk:
 CD LC_PunktUtvalg(pUtAdm,sPrior,&psStat,lPnr,&ppszRegel);
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_PunktUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *psStat,long lPnr,char **ppszRegel)
+void CFyba::LC_PunktUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *psStat,long lPnr,wchar_t **ppszRegel)
 {
    LC_UTVALG * pU;
 
@@ -1098,7 +1072,7 @@ CD Bruk:
 CD sTilslag = LC_PiTestUtvalg(pUtAdm,pU,lPnr);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_PiTestUtvalg(LC_UT_ADM * pUtAdm,LC_UTVALG * pU,long lPnr)
+short CFyba::LC_PiTestUtvalg(LC_UT_ADM * pUtAdm,LC_UTVALG * pU,long lPnr)
 {
    short sTilslag = UT_FALSE;
 
@@ -1146,7 +1120,7 @@ CD Bruk:
 CD sTilslag = LU_PiTestDelutvalg(pUtAdm,pUE,lPnr);
    ==========================================================================
 */
-static short LU_PiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,long lPnr)
+short CFyba::LU_PiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,long lPnr)
 {
    short sTilslag = UT_FALSE;
    short sForste = UT_TRUE;
@@ -1202,12 +1176,12 @@ CD Bruk:
 CD tilslag = LU_PiTestLinje(pUE,lPnr);
    ==========================================================================
 */
-static short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr)
+short CFyba::LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr)
 {
-   char akt_para[U_PARA_LEN];
+   wchar_t akt_para[LC_MAX_SOSI_LINJE_LEN];
    short tilslag;
    long lMaxAntall;
-   char *para;
+   wchar_t *para;
    short sSett = 1;
    short metode = pUE->metode;
 
@@ -1232,7 +1206,8 @@ static short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr)
 
    } else if (metode == LC_U_IKKEFLERE) {          /* Metode "!FL" */
       /* Teller opp antall av dette SOSI-navnet */
-      lMaxAntall = max(atol(pUE->min),1l);
+      wchar_t *ep;
+      lMaxAntall = max(wcstol(pUE->min,&ep,10),1l);
       tilslag = 0;
       
       while (LC_GetPiVerdi(pUE->sosi,lPnr,&sSett) != NULL) {
@@ -1255,7 +1230,7 @@ static short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr)
       pUE->metode = LC_U_LIK;                         /* Sjekker først på likhet */
          /* Hent parameter */
       while ((para = LC_GetPiVerdi(pUE->sosi,lPnr,&sSett)) != NULL) {
-         if (LU_ParaTest(pUE,para,akt_para,U_PARA_LEN)) {              /* Tilslag? */
+         if (LU_ParaTest(pUE,para,akt_para,LC_MAX_SOSI_LINJE_LEN)) {              /* Tilslag? */
             tilslag = 1;
             break;          /* Vet nå at det ikke blir tilslag, hopper ut */
          }
@@ -1271,7 +1246,7 @@ static short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr)
       pUE->metode = LC_U_CONTEIN;            /* Sjekker først INNEHOLDER */
          /* Hent parameter */
       while ((para = LC_GetPiVerdi(pUE->sosi,lPnr,&sSett)) != NULL) {
-         if (LU_ParaTest(pUE,para,akt_para,U_PARA_LEN)) {              /* Tilslag? */
+         if (LU_ParaTest(pUE,para,akt_para,LC_MAX_SOSI_LINJE_LEN)) {              /* Tilslag? */
             tilslag = 1;
             break;          /* Vet nå at det ikke blir tilslag, hopper ut */
          }
@@ -1285,7 +1260,7 @@ static short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr)
    } else {
       /* Hent parameter */
       while ((para = LC_GetPiVerdi(pUE->sosi,lPnr,&sSett)) != NULL) {
-         if (LU_ParaTest(pUE,para,akt_para,U_PARA_LEN)) {              /* Tilslag? */
+         if (LU_ParaTest(pUE,para,akt_para,LC_MAX_SOSI_LINJE_LEN)) {              /* Tilslag? */
             return UT_TRUE;
          }
          sSett++;
@@ -1311,14 +1286,14 @@ CD short      sPrior    i    Prioritet.
 CD                           LC_OVERSE_PRIORITET = Tar ikke hensyn til prioritet.
 CD short     *sstat     iu   Søkestatus, Inn: 1=start søk, 0=fortsett søk
 CD                                       Ut : 0=tilslag, -1=ikke tilslag
-CD char     **regelnavn  u   Peker til regelnavn
-CD char      *regelnavn  u   Peker til utvalgsnavn
+CD wchar_t     **regelnavn  u   Peker til regelnavn
+CD wchar_t      *regelnavn  u   Peker til utvalgsnavn
 CD
 CD Bruk:
 CD pszUtvalgsNavn = LC_GruppeUtvalg(pUtAdm.sPrior,&sstat,&regel);
    =============================================================================
 */
-SK_EntPnt_FYBA char *LC_GruppeUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *sstat,char **regelnavn)
+wchar_t * CFyba::LC_GruppeUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *sstat,wchar_t **regelnavn)
 {
    LC_UTVALG * pU;
 
@@ -1379,7 +1354,7 @@ CD Bruk:
 CD ist = LC_GiQuery(pUtAdm);
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_GiQuery(LC_UT_ADM *pUtAdm)
+short CFyba::LC_GiQuery(LC_UT_ADM *pUtAdm)
 {
    if (pUtAdm != NULL)
    {
@@ -1418,7 +1393,7 @@ CD antall = LC_FAGiQuery(pUtAdm, LC_FRAMGR | LC_BAKGR);
 CD
    =============================================================================
 */
-SK_EntPnt_FYBA long LC_FAGiKombinertFlateQuery(LC_UT_ADM * pUtAdmFlate,LC_UT_ADM * pUtAdmOmkrets,
+long CFyba::LC_FAGiKombinertFlateQuery(LC_UT_ADM * pUtAdmFlate,LC_UT_ADM * pUtAdmOmkrets,
                                                unsigned short usLag,short sMetode)
 {
 	#define RED_MAX_REF   10
@@ -1532,7 +1507,7 @@ CD antall = LC_FAGiQuery(pUtAdm, LC_FRAMGR | LC_BAKGR);
 CD
    =============================================================================
 */
-SK_EntPnt_FYBA long LC_FAGiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag)
+long CFyba::LC_FAGiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag)
 {
    short ngi;
    long nko;
@@ -1600,7 +1575,7 @@ CD antall = LC_FAPiQuery(pUtAdm, LC_FRAMGR | LC_BAKGR);
 CD
    =============================================================================
 */
-SK_EntPnt_FYBA long LC_FAPiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag)
+long CFyba::LC_FAPiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag)
 {
    short ngi;
    long nko;
@@ -1610,7 +1585,7 @@ SK_EntPnt_FYBA long LC_FAPiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag)
    short avbrutt = UT_FALSE;
    short ustat;
    short sFunnet = UT_FALSE;
-   char *regel;
+   wchar_t *regel;
    long antall = -1L;
 
 
@@ -1679,7 +1654,7 @@ CD Bruk:
 CD bTilslag = LU_GiTestUtvalg(pUtAdm,pU);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LU_GiTestUtvalg(LC_UT_ADM * pUtAdm,LC_UTVALG *  pU)
+short CFyba::LU_GiTestUtvalg(LC_UT_ADM * pUtAdm,LC_UTVALG *  pU)
 {
    short sTilslag = UT_FALSE;
    LC_UTVALG_ELEMENT * pUE = pU->pForsteUE;
@@ -1729,9 +1704,9 @@ CD Bruk:
 CD bTilslag = LU_GiTestDelutvalg(pUtAdm,pUE);
    ==========================================================================
 */
-static short LU_GiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE)
+short CFyba::LU_GiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE)
 {
-	char *apara;
+	wchar_t *apara;
    short gilin;
    short sTilslag = UT_FALSE;
    short sForste = UT_TRUE;
@@ -1788,21 +1763,21 @@ CD Type                Navn   I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_UT_ADM *          pUtAdm  i   Peker til administrasjonsblokk for utvalg.
 CD LC_UTVALG_ELEMENT * pUE     i   Peker til administrasjonsblokk for utvalg.
-CD char               *gilin   u   GINFO-linje for funnet tilslag.
-CD char              **apara   u   Peker til aktuell del av parameterstreng.
+CD wchar_t               *gilin   u   GINFO-linje for funnet tilslag.
+CD wchar_t              **apara   u   Peker til aktuell del av parameterstreng.
 CD short               tilslag r   Status: 1=tilslag, 0=ikke tilslag.
 CD
 CD Bruk:
 CD tilslag = LU_GiTestLinje(pUtAdm,pUE,&gilin,&apara);
    ==========================================================================
 */
-static short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
-                            short *gilin,char **apara)
+short CFyba::LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
+                            short *gilin,wchar_t **apara)
 {
-   static char akt_para[U_PARA_LEN];
+   wchar_t akt_para[LC_MAX_SOSI_LINJE_LEN];
    short metode,tilslag;
    long lMaxAntall;
-   char *para;
+   wchar_t *para;
 
    metode = pUE->metode;
    *gilin = 1;
@@ -1831,7 +1806,8 @@ static short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
    /* Metode "!FL" */
    } else if (metode == LC_U_IKKEFLERE) {
       /* Teller opp antall av dette SOSI-navnet */
-      lMaxAntall = max(atol(pUE->min),1l);
+      wchar_t *ep;
+      lMaxAntall = max(wcstol(pUE->min,&ep,10),1l);
       tilslag = 0;
       while ((*apara = LC_GetGP(pUE->sosi,gilin,9999)) != NULL) {
          tilslag++;
@@ -1858,7 +1834,7 @@ static short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
       tilslag = 0;
       pUE->metode = LC_U_LIK;                         /* Sjekker først på likhet */
       while ((para = LC_GetGP(pUE->sosi,gilin,9999)) != NULL) { /* Hent parameter */
-         if (LU_ParaTest(pUE,para,akt_para,U_PARA_LEN)) {              /* Tilslag? */
+         if (LU_ParaTest(pUE,para,akt_para,LC_MAX_SOSI_LINJE_LEN)) {              /* Tilslag? */
             tilslag = 1;
             break;          /* Vet nå at det ikke blir tilslag, hopper ut */
          }
@@ -1873,7 +1849,7 @@ static short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
       tilslag = 0;
       pUE->metode = LC_U_CONTEIN;            /* Sjekker først INNEHOLDER */
       while ((para = LC_GetGP(pUE->sosi,gilin,9999)) != NULL) { /* Hent parameter */
-         if (LU_ParaTest(pUE,para,akt_para,U_PARA_LEN)) {              /* Tilslag? */
+         if (LU_ParaTest(pUE,para,akt_para,LC_MAX_SOSI_LINJE_LEN)) {              /* Tilslag? */
             tilslag = 1;
             break;          /* Vet nå at det ikke blir tilslag, hopper ut */
          }
@@ -1887,7 +1863,7 @@ static short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
    /* Andre utvalgsmetoder */
    } else {
       while ((para = LC_GetGP(pUE->sosi,gilin,9999)) != NULL) { /* Hent parameter */
-         if (LU_ParaTest(pUE,para,akt_para,U_PARA_LEN)) {              /* Tilslag? */
+         if (LU_ParaTest(pUE,para,akt_para,LC_MAX_SOSI_LINJE_LEN)) {              /* Tilslag? */
             return UT_TRUE;
          }
          (*gilin)++;
@@ -1909,8 +1885,8 @@ CD Parametre:
 CD Type                Navn    I/U  Forklaring
 CD -----------------------------------------------------------------------------
 CD LC_UTVALG_ELEMENT * pUE      i   Peker til utvalgslinje
-CD char               *para     i   Peker til parameterstreng
-CD char               *akt_para i   Aktuell del av parameterstrengen.
+CD wchar_t               *para     i   Peker til parameterstreng
+CD wchar_t               *akt_para i   Aktuell del av parameterstrengen.
 CD short               sMaxLen  i   Maks lengde for akt_para
 CD short               tilslag  r   Status: 1=tilslag, 0=ikke tilslag
 CD
@@ -1918,7 +1894,7 @@ CD Bruk:
 CD tilslag = LU_ParaTest(pUE,para,&akt_para,sMaxLen);
    =============================================================================
 */
-static short LU_ParaTest(LC_UTVALG_ELEMENT * pUE,char *para,char *pszAktPara,short sMaxLen)
+short CFyba::LU_ParaTest(LC_UTVALG_ELEMENT * pUE,wchar_t *para,wchar_t *pszAktPara,short sMaxLen)
 {
    long heltall;
    double flyttall,desimal;
@@ -1931,7 +1907,7 @@ static short LU_ParaTest(LC_UTVALG_ELEMENT * pUE,char *para,char *pszAktPara,sho
     */
    if((pUE->ledd > 0) || (pUE->start > 0) || (pUE->slutt > 0)) { // Ledd eller del av streng er angitt utenfor SOSI-navnet
       LU_JustPara(para,(short)pUE->ledd,(short)pUE->start,(short)pUE->slutt,
-                   pszAktPara,U_PARA_LEN);
+                   pszAktPara,LC_MAX_SOSI_LINJE_LEN);
    }
    else {
       UT_StrCopy(pszAktPara,para,sMaxLen);
@@ -1941,7 +1917,8 @@ static short LU_ParaTest(LC_UTVALG_ELEMENT * pUE,char *para,char *pszAktPara,sho
    short type = pUE->type;
    if ((type & LC_U_TALL) == LC_U_TALL)
    { 
-      heltall = atol(pszAktPara);   // OBS! Denne brukes i selve sammenligningen lenger nede i koden
+      wchar_t *ep;
+      heltall = wcstol(pszAktPara,&ep,10);   // OBS! Denne brukes i selve sammenligningen lenger nede i koden
       if (heltall == LONG_MIN  ||  heltall == LONG_MAX)
       {
          // Tallet har for mange siffer, må håndtere sammenligningen som tekst
@@ -1953,29 +1930,33 @@ static short LU_ParaTest(LC_UTVALG_ELEMENT * pUE,char *para,char *pszAktPara,sho
    switch (metode) {
       case LC_U_LIK:                                             /* Lik  "=" */
          if ((type & LC_U_TALL) == LC_U_TALL){              /* Heltall */
-            if (heltall == atol(pUE->min) )
+            wchar_t *ep;
+            if (heltall == wcstol(pUE->min,&ep,10) )
                return (1);
          } else if ((type & LC_U_FLYT) == LC_U_FLYT){        /* Flyttall */
-            if (atof(pszAktPara) == atof(pUE->min) )
+            wchar_t *ep;
+            if (wcstod(pszAktPara,&ep) == wcstod(pUE->min,&ep) )
                return (1);
          } else{                               /* Streng */
             UT_StrUpper(pszAktPara);
-            if (strcmp(pszAktPara,pUE->min) == 0)
+            if (wcscmp(pszAktPara,pUE->min) == 0)
                return (1);
          }
          break;
 
       case LC_U_FRATIL:                                   /* Fra - til  "<>" */
          if ((type & LC_U_TALL) == LC_U_TALL){             /* Heltall */
-            if (heltall >= atol(pUE->min)  &&  heltall <= atol(pUE->max))
+            wchar_t *ep;
+            if (heltall >= wcstol(pUE->min,&ep,10)  &&  heltall <= wcstol(pUE->max,&ep,10))
                return (1);
          } else if ((type & LC_U_FLYT) == LC_U_FLYT){       /* Flyttall */
-            flyttall = atof(pszAktPara);
-            if (flyttall >= atof(pUE->min)  &&  flyttall <= atof(pUE->max))
+            wchar_t *ep;
+            flyttall = wcstod(pszAktPara,&ep);
+            if (flyttall >= wcstod(pUE->min,&ep)  &&  flyttall <= wcstod(pUE->max,&ep))
                return (1);
          } else{                              /* Streng */
             UT_StrUpper(pszAktPara);
-            if (strcmp(pszAktPara,pUE->min) >= 0  &&  strcmp(pszAktPara,pUE->max) <= 0)
+            if (wcscmp(pszAktPara,pUE->min) >= 0  &&  wcscmp(pszAktPara,pUE->max) <= 0)
                return (1);
          }
          break;
@@ -1983,76 +1964,86 @@ static short LU_ParaTest(LC_UTVALG_ELEMENT * pUE,char *para,char *pszAktPara,sho
       case LC_U_DELELIG:                 /* Delelig "/" */
          // 2001-03-19: Endret slik at algoritmen for desimaltall alltid brukes.
          //if (type == U_FLYT){             /* Flyttall */
-            desimal = modf(atof(pszAktPara) / atof(pUE->min), &flyttall);
-            if (fabs(fabs(desimal*atof(pUE->min)) - fabs(atof(pUE->max))) < 1.0E-6) {
+            wchar_t *ep;
+            desimal = modf(wcstod(pszAktPara,&ep) / wcstod(pUE->min,&ep), &flyttall);
+            if (fabs(fabs(desimal*wcstod(pUE->min,&ep)) - fabs(wcstod(pUE->max,&ep))) < 1.0E-6) {
                return (1);
             }
 
          //} else{                              /* Heltall eller streng */
-         //   if ((atol(pszAktPara) % atol(pUE->min)) == atol(pUE->max)) {
+         //   if ((wcstol(pszAktPara) % wcstol(pUE->min)) == wcstol(pUE->max)) {
          //      return (1);
          //   }
          //}
          break;
       
       case LC_U_UDELELIG:                /* Ikke delellig "!/" */
+         {
          // 2001-03-19: Endret slik at algoritmen for desimaltall alltid brukes.
          //if (type == U_FLYT){             /* Flyttall */
-            desimal = modf(atof(pszAktPara) / atof(pUE->min), &flyttall);
+            wchar_t *ep;
+            desimal = modf(wcstod(pszAktPara,&ep) / wcstod(pUE->min,&ep), &flyttall);
             if (fabs(desimal) >= 1.0E-6)
                return (1);
 
          //} else{                              /* Heltall eller streng */
-         //   if ((atol(pszAktPara) % atol(pUE->min)) != 0L)
+         //   if ((wcstol(pszAktPara) % wcstol(pUE->min)) != 0L)
          //      return (1);
          //}
+         }
          break;
 
       case LC_U_CONTEIN:                 /* Inneholder "()" */
          UT_StrUpper(pszAktPara);
-         if (strstr(pszAktPara,pUE->min) != NULL)
+         if (wcsstr(pszAktPara,pUE->min) != NULL)
             return (1);
          break;
 
       case LC_U_UTENFOR:                 /* Utenfor "><" */
          if ((type & LC_U_TALL) == LC_U_TALL){             /* Heltall */
-            if (heltall < atol(pUE->min)  ||  heltall > atol(pUE->max))
+            wchar_t *ep;
+            if (heltall < wcstol(pUE->min,&ep,10)  ||  heltall > wcstol(pUE->max,&ep,10))
                return (1);
          } else if ((type & LC_U_FLYT) == LC_U_FLYT){             /* Flyttall */
-            flyttall = atof(pszAktPara);
-            if (flyttall < atof(pUE->min)  ||  flyttall > atof(pUE->max))
+            wchar_t *ep;
+            flyttall = wcstod(pszAktPara,&ep);
+            if (flyttall < wcstod(pUE->min,&ep)  ||  flyttall > wcstod(pUE->max,&ep))
                return (1);
          } else{                              /* Streng */
             UT_StrUpper(pszAktPara);
-            if (strcmp(pszAktPara,pUE->min) < 0  ||  strcmp(pszAktPara,pUE->max) > 0)
+            if (wcscmp(pszAktPara,pUE->min) < 0  ||  wcscmp(pszAktPara,pUE->max) > 0)
                return (1);
          }
          break;
 
       case LC_U_MINDRE:                  /* Mindre enn "<" */
          if ((type & LC_U_TALL) == LC_U_TALL){             /* Heltall */
-            if (heltall < atol(pUE->min))
+            wchar_t *ep;
+            if (heltall < wcstol(pUE->min,&ep,10))
                return (1);
          } else if ((type & LC_U_FLYT) == LC_U_FLYT){       /* Flyttall */
-            if (atof(pszAktPara) < atof(pUE->min))
+            wchar_t *ep;
+            if (wcstod(pszAktPara,&ep) < wcstod(pUE->min,&ep))
                return (1);
          } else{                              /* Streng */
             UT_StrUpper(pszAktPara);
-            if (strcmp(pszAktPara,pUE->min) < 0)
+            if (wcscmp(pszAktPara,pUE->min) < 0)
                return (1);
          }
          break;
 
       case LC_U_STORRE:                  /* Større enn ">" */
          if ((type & LC_U_TALL) == LC_U_TALL){             /* Heltall */
-            if (heltall > atol(pUE->min))
+            wchar_t *ep;
+            if (heltall > wcstol(pUE->min,&ep,10))
                return (1);
          } else if ((type & LC_U_FLYT) == LC_U_FLYT){      /* Flyttall */
-            if (atof(pszAktPara) > atof(pUE->min))
+            wchar_t *ep;
+            if (wcstod(pszAktPara,&ep) > wcstod(pUE->min,&ep))
                return (1);
          } else{                              /* Streng */
             UT_StrUpper(pszAktPara);
-            if (strcmp(pszAktPara,pUE->min) > 0)
+            if (wcscmp(pszAktPara,pUE->min) > 0)
                return (1);
          }
          break;
@@ -2072,35 +2063,35 @@ CD
 CD Parametre:
 CD Type       Navn    I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD char      *para     i    Parameterstreng som skal behandles
+CD wchar_t      *para     i    Parameterstreng som skal behandles
 CD short      ledd     i    Leddnummer
 CD short      start    i    Startposisjon i strengen (0=hele strengen)
 CD short      slutt    i    Sluttposisjon i strengen (0=resten)
-CD char      *akt_para iu   Ny behandla parameterstreng
+CD wchar_t      *akt_para iu   Ny behandla parameterstreng
 CD short      max_len  i    Max lengde på akt_para
 CD
 CD Bruk:
 CD LU_JustPara(para,ledd,start,slutt,akt_para,max_len);
    =============================================================================
 */
-static void LU_JustPara(char *para,short ledd,short start,short slutt,
-                         char *akt_para,short max_len)
+void CFyba::LU_JustPara(wchar_t *para,short ledd,short start,short slutt,
+                         wchar_t *akt_para,short max_len)
 {
-   char *cp,*nt;
+   wchar_t *cp,*nt;
                                     /* Juster for ledd */
-   cp = UT_strtok(para," ",&nt);
+   cp = UT_strtok(para,L" ",&nt);
    while(cp != NULL  &&  --ledd > 0){
-      cp = UT_strtok(NULL," ",&nt);
+      cp = UT_strtok(NULL,L" ",&nt);
    }
 
                                     /* Juster for delstreng */
    if (cp != NULL){
       if (start != 0){
          if (slutt != 0){
-            slutt = min(slutt,((short)strlen(cp)));
+            slutt = min(slutt,((short)wcslen(cp)));
             *(cp+slutt) = '\0';
          }
-         start = min(start,((short)strlen(cp)));
+         start = min(start,((short)wcslen(cp)));
          cp += (start-1);
       }
       UT_StrCopy(akt_para,cp,max_len);
@@ -2121,7 +2112,7 @@ CD
 CD Parametre:
 CD Type     Navn   I/U   Forklaring
 CD ---------------------------------------------------------------------------
-CD char    *qulin   i    Linje med query-tekst.
+CD wchar_t    *qulin   i    Linje med query-tekst.
 CD unsigned short    iniv    i    Nivå: Det er definert konstanter som henges
 CD                             sammen med "|".
 CD                             LC_GINFO = søk i GINFO på aktuell gruppe
@@ -2130,14 +2121,14 @@ CD                             Hvis begge er brukt søkes det først i GINFO.
 CD unsigned short   *univ    u    Nivå: LC_GINFO = parameter er fra GINFO
 CD                             LC_HODE = parameter er fra filhodet
 CD short   *ulin    u    GINFO-linjenummer for tilslaget.
-CD char   **para    u    Funnet parameter.
+CD wchar_t   **para    u    Funnet parameter.
 CD short     funnet  r    Status: UT_TRUE=funnet, UT_FALSE=ikke funnet
 CD
 CD Bruk:
 CD funnet = LC_QueryGP(qulin,LC_GINFO | LC_HODE,&univ,&ulin,&para);
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_QueryGP(char *qulin,unsigned short iniv,unsigned short *univ,short *ulin,char **para)
+short CFyba::LC_QueryGP(wchar_t *qulin,unsigned short iniv,unsigned short *univ,short *ulin,wchar_t **para)
 {
    LC_BGR Bgr,Hode;
    short ngi;
@@ -2150,7 +2141,7 @@ SK_EntPnt_FYBA short LC_QueryGP(char *qulin,unsigned short iniv,unsigned short *
    pUtAdm = LC_OpenQuery();
    /* Tolk linjen */
    if (LC_PutQueryLine(pUtAdm,qulin,U_GRUPPE)) {
-      LC_PutQueryRegel(pUtAdm->Gruppe.pSisteU,"S");
+      LC_PutQueryRegel(pUtAdm->Gruppe.pSisteU,L"S");
 
       /* Sjekk GINFO */
       /* Initier søk */
@@ -2202,7 +2193,7 @@ CD Type     Name     I/O  Forklaring
 CD ----------------------------------------------------------------
 CD FILE    *pKomFil   i   Filpeker for beskrivelsesfil
 CD short    sMaxTxLen i   Max lengde av pszTx
-CD char    *pszTx     i   Lest linje
+CD wchar_t    *pszTx     i   Lest linje
 CD short   *psNiv     u   Nivå (antall prikker forran navnet)
 CD short    lesefeil  r   Lesefeil fra UT_ReadLine.
 CD
@@ -2210,10 +2201,10 @@ CD Bruk:
 CD lesefeil = LU_LesULinje(pFil,sMaxTxLen,pszTx,&sNiv);
 CD =============================================================================
 */
-static short LU_LesULinje(FILE *pKomFil,short sMaxTxLen,char *pszTx,
+short CFyba::LU_LesULinje(FILE *pKomFil,short sMaxTxLen,wchar_t *pszTx,
                           short *psNiv)
 {
-   char szLinje[100],*cp;
+   wchar_t szLinje[100],*cp;
    short lesefeil;
 
    if (!(lesefeil = UT_ReadLineNoComm(pKomFil,100,szLinje))) {
@@ -2251,26 +2242,27 @@ CD Parametre:
 CD Type              Navn     I/O  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_UTVALG_BLOKK  *pUtBlokk  i   Toppblokk for aktuell utvalgstype.
-CD char             *pszNavn   i   Utvalgsnavn
+CD wchar_t             *pszNavn   i   Utvalgsnavn
 CD
 CD Bruk:
 CD LU_AppUtvalg(pUtAdm->pGruppe,szNavn);
 CD =============================================================================
 */
-static void LU_AppUtvalg (LC_UTVALG_BLOKK *pUB,char *pszNavn)
+void CFyba::LU_AppUtvalg (LC_UTVALG_BLOKK *pUB,wchar_t *pszNavn)
 {
    LC_UTVALG * pU;
 
 	/* Alloker minne og initier */
-	pU = (LC_UTVALG *)UT_MALLOC(sizeof(LC_UTVALG));
+	pU = (LC_UTVALG *)malloc(sizeof(LC_UTVALG));
 	memset(pU, 0, sizeof(LC_UTVALG));
 
 	pU->sPrioritet = 0;
 	pU->sOriginalPrioritet = 0;
    pU->sStatus = LC_UFORANDRET;
    pU->sTegnes = 1;
-	pU->pszNavn = (char*)UT_MALLOC(strlen(pszNavn)+1);
-	UT_StrCopy(pU->pszNavn, pszNavn, strlen(pszNavn)+1);
+   pU->pszNavn = _wcsdup(pszNavn);  
+	//pU->pszNavn = (wchar_t*)malloc((wcslen(pszNavn)+1) * sizeof(wchar_t));
+	//UT_StrCopy(pU->pszNavn, pszNavn, wcslen(pszNavn)+1);
 	pU->pszRegel = NULL;
 
 	pU->pForsteUE = NULL;
@@ -2310,7 +2302,7 @@ CD Bruk:
 CD sMaxPrioritet = LC_InqMaxPrioritet(pUA);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_InqMaxPrioritet(LC_UT_ADM * pUA)
+short CFyba::LC_InqMaxPrioritet(LC_UT_ADM * pUA)
 {
    if (pUA != NULL)
    {
@@ -2339,7 +2331,7 @@ CD Bruk:
 CD sBrukt = LC_TestPrioritetBrukt(pUtAdm,sPrioritet);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_TestPrioritetBrukt(LC_UT_ADM * pUtAdm,short sPrioritet)
+short CFyba::LC_TestPrioritetBrukt(LC_UT_ADM * pUtAdm,short sPrioritet)
 {
    LC_UTVALG * pU;
 
@@ -2388,7 +2380,7 @@ CD Bruk:
 CD LU_PakkPrioritet(pUtAdm);
    ==========================================================================
 */
-static void LU_PakkPrioritet(LC_UT_ADM * pUtAdm)
+void CFyba::LU_PakkPrioritet(LC_UT_ADM * pUtAdm)
 {
    LC_UTVALG * pU;
    short s,sFerdig;
@@ -2490,10 +2482,10 @@ CD Bruk:
 CD LU_HuskPrior(NyPrior,&sAntPrior,pU->sPrioritet);
    ==========================================================================
 */
-static void LU_HuskPrior(short *NyPrior,short *sAntPrior,short sPrior)
+void CFyba::LU_HuskPrior(short *NyPrior,short *sAntPrior,short sPrior)
 {
    short s;
-   char szTx[10];
+   wchar_t szTx[10];
 
    for (s=0; s<*sAntPrior; s++) {
       if (sPrior == NyPrior[s]) {
@@ -2502,8 +2494,8 @@ static void LU_HuskPrior(short *NyPrior,short *sAntPrior,short sPrior)
    }
 
    if (*sAntPrior >= LC_MAX_ANT_PRIOR) {
-      UT_SNPRINTF(szTx,10,"%hd",sPrior);
-      LC_Error(127,"(LU_HuskPrior)",szTx);
+      UT_SNPRINTF(szTx,10,L"%hd",sPrior);
+      LC_Error(127,L"(LU_HuskPrior)",szTx);
 
    } else {
       /* Ny prioritet, husk denne */
@@ -2531,7 +2523,7 @@ CD Bruk:
 CD LC_LoggPrioritetUtvalg(pUtAdm);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_LoggPrioritetUtvalg(LC_UT_ADM * pUtAdm)
+void CFyba::LC_LoggPrioritetUtvalg(LC_UT_ADM * pUtAdm)
 {
    if (pUtAdm != NULL)
    {
@@ -2541,16 +2533,16 @@ SK_EntPnt_FYBA void LC_LoggPrioritetUtvalg(LC_UT_ADM * pUtAdm)
       short sG = 0;
       short sP = 0;
 
-      UT_FPRINTF(stderr,"\n\n***** Prioriteter og utvalg *****\n");
+      UT_FPRINTF(stderr,L"\n\n***** Prioriteter og utvalg *****\n");
 
       for (sPrioritet=0; sPrioritet<sMaxPrioritet; sPrioritet++) {
     
-         UT_FPRINTF(stderr,"\nPrioritet: %hd\n",sPrioritet);
+         UT_FPRINTF(stderr,L"\nPrioritet: %hd\n",sPrioritet);
 
          /* GRUPPE-UTVALG. */
          for (pU=pUtAdm->Gruppe.pForsteU; pU != NULL;  pU = pU->pNesteU) {
             if (sPrioritet == pU->sPrioritet) {
-               UT_FPRINTF(stderr,"   Gruppeutvalg: %s (%hd) \n",pU->pszNavn ,pU->sOriginalPrioritet);
+               UT_FPRINTF(stderr,L"   Gruppeutvalg: %s (%hd) \n",pU->pszNavn ,pU->sOriginalPrioritet);
                sG++;
             }
          }
@@ -2558,7 +2550,7 @@ SK_EntPnt_FYBA void LC_LoggPrioritetUtvalg(LC_UT_ADM * pUtAdm)
          /* PUNKT-UTVALG. */
          for (pU=pUtAdm->Punkt.pForsteU; pU != NULL;  pU = pU->pNesteU) {
             if (sPrioritet == pU->sPrioritet) {
-               UT_FPRINTF(stderr,"   Punktutvalg: %s (%hd) \n",pU->pszNavn ,pU->sOriginalPrioritet);
+               UT_FPRINTF(stderr,L"   Punktutvalg: %s (%hd) \n",pU->pszNavn ,pU->sOriginalPrioritet);
                sP++;
             }
          }
@@ -2567,13 +2559,13 @@ SK_EntPnt_FYBA void LC_LoggPrioritetUtvalg(LC_UT_ADM * pUtAdm)
    #ifdef TEST
          for (pU=pUtAdm->Pinfo.pForsteU; pU != NULL;  pU = pU->pNesteU) {
             if (sPrioritet == pU->sPrioritet) {
-               UT_FPRINTF(stderr,"   Pinfoutvalg: %s (%hd) \n",pU->pszNavn ,pU->sOriginalPrioritet);
+               UT_FPRINTF(stderr,L"   Pinfoutvalg: %s (%hd) \n",pU->pszNavn ,pU->sOriginalPrioritet);
             }
          }
    #endif
       }
 
-      UT_FPRINTF(stderr,"\nTotalt  %hd gruppeutvalg, og  %hd punktutvalg.\n",sG,sP);
+      UT_FPRINTF(stderr,L"\nTotalt  %hd gruppeutvalg, og  %hd punktutvalg.\n",sG,sP);
    }
 }
 
@@ -2595,7 +2587,7 @@ CD Bruk:
 CD LC_UtvalgPrioritet(pUtAdm);
    ===========================================================================
 */
-SK_EntPnt_FYBA void LC_UtvalgPrioritet(LC_UT_ADM *pUtAdm)
+void CFyba::LC_UtvalgPrioritet(LC_UT_ADM *pUtAdm)
 {
    long lPnr;
    short sPrior,sKolonne;
@@ -2700,70 +2692,6 @@ SK_EntPnt_FYBA void LC_UtvalgPrioritet(LC_UT_ADM *pUtAdm)
 }
 
 
-/*
-AR:2007-08-23
-CH LC_ErLik_Avrundet                 Rund av og sjekk om sammenfallende punkt
-CD ==========================================================================
-CD Formål:
-CD Runder av til valgt enhet, og sjekker om de to punktene er sammenfallende. 
-CD (Avviket er mindre enn 1/10 enhet både nord og øst)
-CD
-CD Parametre:
-CD Type     Navn    I/U Forklaring
-CD ---------------------------------------------------------------------------
-CD double   dA1      i  P1
-CD double   dN1      i
-CD double   dA2      i  P2
-CD double   dN2      i
-CD double   dEnhet   i  Enhet som skal brukes i sammenligningen
-CD bool     bErLike  r  Status: true  = Samme koordinat 
-CD                              false = Ikke samme koordinat
-CD
-CD Bruk:
-CD bSammenfallende = LC_ErLik(dA1,dN1,dA2,dN2,dEnhet);
-   ===========================================================================
-*/
-SK_EntPnt_FYBA bool LC_ErLik_Avrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet)
-{
-   // 2010-01-25: Endret fra UT_RoundDD til UT_RoundHalfUpDD
-   dA1 = UT_RoundHalfUpDD(dA1 / dEnhet) * dEnhet;
-   dN1 = UT_RoundHalfUpDD(dN1 / dEnhet) * dEnhet;
-   dA2 = UT_RoundHalfUpDD(dA2 / dEnhet) * dEnhet;
-   dN2 = UT_RoundHalfUpDD(dN2 / dEnhet) * dEnhet;
-
-   return ((fabs(dA1-dA2) < dEnhet/10.0) && (fabs(dN1-dN2) < dEnhet/10.0));
-}
-
-
-/*
-AR:2007-08-23
-CH LC_ErLik_IkkeAvrundet       Sjekk om sammenfallende punkt (uten avrunding)
-CD ==========================================================================
-CD Formål:
-CD Sjekker om de to punktene er sammenfallende innen gitt nøyaktighet. 
-CD Det skjer ingen avrunding av koordinatene før sammenligningen.
-CD (Avviket er mindre enn 1/10 enhet både nord og øst)
-CD
-CD Parametre:
-CD Type     Navn    I/U Forklaring
-CD ---------------------------------------------------------------------------
-CD double   dA1      i  P1
-CD double   dN1      i
-CD double   dA2      i  P2
-CD double   dN2      i
-CD double   dEnhet   i  Enhet som skal brukes i sammenligningen
-CD bool     bErLike  r  Status: true  = Samme koordinat 
-CD                              false = Ikke samme koordinat
-CD
-CD Bruk:
-CD bSammenfallende = LC_ErLik(dA1,dN1,dA2,dN2,dEnhet);
-   ===========================================================================
-*/
-SK_EntPnt_FYBA bool LC_ErLik_IkkeAvrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet)
-{
-   return ((fabs(dA1-dA2) < dEnhet/10.0) && (fabs(dN1-dN2) < dEnhet/10.0));
-}
-
 
 /*
 AR:2007-08-23
@@ -2781,7 +2709,7 @@ CD Bruk:
 CD bReferert = LC_ErReferert();
 ===========================================================================
 */
-SK_EntPnt_FYBA bool LC_ErReferert(void)
+bool CFyba::LC_ErReferert(void)
 {
    LC_BGR FlateBgr;
    double a,n;
@@ -2809,7 +2737,7 @@ SK_EntPnt_FYBA bool LC_ErReferert(void)
             /* Funnet flate i rett fil, sjekk referansene */
             LC_RxGr(&FlateBgr,LES_OPTIMALT,&ngi,&nko,&info);
             lAntRef = LC_InqAntRef();
-            plRefArray = (long *) UT_MALLOC(lAntRef * sizeof(long));
+            plRefArray = (long *) malloc(lAntRef * sizeof(long));
             sGiLin = 2;
             sRefPos = 0;
             LC_GetRef(plRefArray,lAntRef,&sGiLin,&sRefPos);
@@ -2822,7 +2750,7 @@ SK_EntPnt_FYBA bool LC_ErReferert(void)
                ++plRef;
             }
 
-            UT_FREE(plRefArray);
+            free(plRefArray);
          }
       } while ((!bReferert)  &&  LC_FNFlate(&GeoStat,&FlateBgr));
    }
@@ -2833,6 +2761,7 @@ SK_EntPnt_FYBA bool LC_ErReferert(void)
 
    return bReferert;
 }
+
 
 /*
 AR:2009-04-28
@@ -2850,7 +2779,7 @@ CD Bruk:
 CD lAntall = LC_ErReferertFraAntall();
 ===========================================================================
 */
-SK_EntPnt_FYBA long LC_ErReferertFraAntall(void)
+long CFyba::LC_ErReferertFraAntall(void)
 {
    LC_BGR FlateBgr;
    double a,n;
@@ -2878,7 +2807,7 @@ SK_EntPnt_FYBA long LC_ErReferertFraAntall(void)
             /* Funnet flate i rett fil, sjekk referansene */
             LC_RxGr(&FlateBgr,LES_OPTIMALT,&ngi,&nko,&info);
             lAntRef = LC_InqAntRef();
-            plRefArray = (long *) UT_MALLOC(lAntRef * sizeof(long));
+            plRefArray = (long *) malloc(lAntRef * sizeof(long));
             sGiLin = 2;
             sRefPos = 0;
             LC_GetRef(plRefArray,lAntRef,&sGiLin,&sRefPos);
@@ -2891,7 +2820,7 @@ SK_EntPnt_FYBA long LC_ErReferertFraAntall(void)
                ++plRef;
             }
 
-            UT_FREE(plRefArray);
+            free(plRefArray);
          }
       } while (LC_FNFlate(&GeoStat,&FlateBgr));
    }
@@ -2901,4 +2830,88 @@ SK_EntPnt_FYBA long LC_ErReferertFraAntall(void)
    LC_RxGr(&Bgr,LES_OPTIMALT,&ngi,&nko,&info);
 
    return lAntall;
+}
+
+
+/*
+AR:2011-11-30
+CH LC_ErReferertFraReadOnly         Sjekk om gruppe er referert fra ReadOnly
+CD ==========================================================================
+CD Formål:
+CD Sjekker om aktuell gruppe er referert fra andre grupper (FLATE eller TRASE)
+CD som er ReadOnly. Dette er vanligvis NGIS-grupper som er låst av andre.
+CD
+CD Parametre:
+CD Type  Navn      I/U Forklaring
+CD ---------------------------------------------------------------------------
+CD bool  bReferert  r  Aktuell gruppe er referert fra gruppe som er ReadOnly
+CD
+CD Bruk:
+CD bReferert = LC_ErReferertFraReadOnly();
+===========================================================================
+*/
+bool CFyba::LC_ErReferertFraReadOnly(void)
+{
+   LC_BGR FlateBgr;
+   double a,n;
+   LC_GEO_STATUS GeoStat;
+   short ngi;
+   long nko;
+   unsigned short info;
+   long lAntRef;
+   short sGiLin,sRefPos;
+   long *plRefArray,*plRef;
+   long l;
+
+   bool bReferert = false;
+
+   /* Husk gruppen */
+   LC_FILADM *pFil = Sys.GrId.pFil;
+   LC_BGR Bgr = Sys.GrId;
+   long lGmlSnr = LC_GetSn();
+
+   LC_GetTK(1,&a,&n);
+   LC_SBFlate(&GeoStat,LC_FRAMGR,a-0.1,n-0.1,a+0.1,n+0.1);
+   if (LC_FFFlate(&GeoStat,&FlateBgr))
+   {
+      do 
+      {
+         // Funnet flate i rett fil
+         if (FlateBgr.pFil == pFil)
+         {
+            // Er flaten ReadOnly?
+            LC_GetGrParaBgr(&FlateBgr,&ngi,&nko,&info);
+            if ( info & GI_READ_ONLY)
+            {
+               // Sjekk referansene om den aktuelle gruppen er referert 
+               LC_RxGr(&FlateBgr,LES_OPTIMALT,&ngi,&nko,&info);
+               lAntRef = LC_InqAntRef();
+               plRefArray = (long *) malloc(lAntRef * sizeof(long));
+               sGiLin = 2;
+               sRefPos = 0;
+               LC_GetRef(plRefArray,lAntRef,&sGiLin,&sRefPos);
+
+               plRef = plRefArray;
+               for (l=0; (!bReferert) && l<lAntRef; l++)
+               {
+                  // Er 
+                  if (labs(*plRef) == lGmlSnr)
+                  {
+                     bReferert = true;
+                  } 
+                  ++plRef;
+               }
+
+               free(plRefArray);
+            }
+         }
+      } while ((!bReferert)  &&  LC_FNFlate(&GeoStat,&FlateBgr));
+   }
+
+   LC_AvsluttSok(&GeoStat);
+
+   // Leser inn opprinnelig gruppe igjen
+   LC_RxGr(&Bgr,LES_OPTIMALT,&ngi,&nko,&info);
+
+   return bReferert;
 }

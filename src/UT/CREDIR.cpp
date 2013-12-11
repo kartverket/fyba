@@ -31,11 +31,6 @@
 #  include <direct.h>
 #endif
 
-#ifdef BORLAND
-#  include <dir.h>
-#endif
-
-//#include "StdAfx.h"
 #include "fyut.h"
 
 /*
@@ -48,13 +43,13 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Directory-navn
+CD wchar_t     *pszPath   i   Directory-navn
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Bruk:  sStatus = UT_CreateDir(szPath);
 	==================================================================
 */
-SK_EntPnt_UT short UT_CreateDir(char *pszPath)
+SK_EntPnt_UT short UT_CreateDir(const wchar_t *pszPath)
 {
 #ifdef UNIX
 	mode_t modus;
@@ -72,10 +67,17 @@ SK_EntPnt_UT short UT_CreateDir(char *pszPath)
 #endif
 
 #ifdef WIN32
-   return  (short)_mkdir(pszPath);
+   int status = _wmkdir(pszPath);
+
+   if (status != 0)
+   {
+      wchar_t szError[256];
+      UT_strerror(szError, 256, errno);
+      UT_FPRINTF(stderr, L"%d> (UT_CreateDir) Feil ved opprett directory (_wmkdir). (%s - %s)\n", GetCurrentThreadId(), pszPath, szError);
+   }
+
+   return  (short)status;
+
 #endif
 
-#ifdef BORLAND
-	return  (short)mkdir(pszPath);
-#endif
 }

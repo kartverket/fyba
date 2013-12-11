@@ -37,6 +37,7 @@
 #ifdef LINUX
 
 #include <termios.h>
+#include <stropts.h>
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/ioctl.h>

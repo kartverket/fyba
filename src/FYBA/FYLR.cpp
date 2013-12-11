@@ -1,5 +1,5 @@
 /* === 911001 ============================================================ */
-/*  STATENS KARTVERK  -  FYSAK-PC                                          */
+/*  KARTVERKET  -  FYSAK-PC                                          */
 /*  Fil: fylr.c                                                            */
 /*  Ansvarlig: Andreas Røstad                                              */
 /*  Innhold: Rutiner for geografisk søking mm. i fysak-pc                  */
@@ -11,31 +11,6 @@
 #include <math.h>
 #include <limits.h>
 #include <memory.h>
-
-
-/* Globale variabler */
-extern LC_SYSTEMADM Sys;
-
-/* --- Lokale rutiner */
-static LC_R_LEAF * LR_R_Insert(long lGrNr,LC_BOKS * pB,LC_R_NODE * pFar,LC_R_NODE * pRN,LC_R_NODE * *ppNyRN);
-static LC_R_NODE * LR_R_CreateRNode( LC_R_NODE * pFar,short sSonType);
-static LC_R_LEAF * LR_R_CreateRLeaf(long lGrNr, LC_BOKS * pB,LC_R_NODE * pFar);
-static void LR_R_BoksSum(LC_BOKS * pB1,LC_BOKS * pB2);
-static double LR_BoksDeltaArealSum(LC_BOKS * pB1,LC_BOKS * pB2);
-static void LR_LeggTilKB(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,long lNr);
-static short LR_R_BoksTestIntersect(LC_BOKS * pB1,LC_BOKS * pB2);
-static void LR_R_SjekkNode(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN);
-static void LR_R_SjekkNodeFlate(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN);
-static void LR_VelgMetode(LC_GEO_STATUS * pGeoStat);
-
-//#ifdef TEST
-//#include <string.h>
-//static void LR_R_DumpNode(LC_R_NODE * pRN, int iNivo);
-static void LR_R_DumpLov(LC_R_LEAF * pRL, LC_FILADM *pDumpFil, int iNivo, double dA, double dN,long *plAntBarn);
-static void LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, double dA, double dN, double dLengde,long *plAntBarn);
-//#endif
-
-
 
 
 #define MAX_REF 25
@@ -63,12 +38,12 @@ CD Bruk:
 CD    ist = LC_GetGrWin(&Bgr,&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetGrWin(LC_BGR * pBgr,double *nva,double *nvn,double *oha,double *ohn)
+short CFyba::LC_GetGrWin(LC_BGR * pBgr,double *nva,double *nvn,double *oha,double *ohn)
 {
    LC_R_LEAF * pRL;
 
-   /* LO_TestFilpeker(pBgr->pFil,"LC_GetGrWin"); */
-   LO_TestFilpeker(pBgr->pFil,"GetGrWin");
+   /* LO_TestFilpeker(pBgr->pFil,L"LC_GetGrWin"); */
+   LO_TestFilpeker(pBgr->pFil,L"GetGrWin");
 
                                            /* Lovlig gruppe */
    if (pBgr->lNr >= 0L  &&  pBgr->lNr < pBgr->pFil->lAntGr) {
@@ -89,7 +64,7 @@ SK_EntPnt_FYBA short LC_GetGrWin(LC_BGR * pBgr,double *nva,double *nvn,double *o
    }
 
    /* Ulovlig gruppe */
-   LC_Error(36,"(LC_GetGrWin)","");
+   LC_Error(36,L"(LC_GetGrWin)",L"");
    return  UT_FALSE;
 }
 
@@ -107,7 +82,7 @@ CD Bruk:
 CD LR_Indx();
    ==========================================================================
 */
-void LR_Indx(void)
+void CFyba::LR_Indx(void)
 {
    short sfeil;
    long pt;
@@ -115,7 +90,7 @@ void LR_Indx(void)
    double radius,aust,nord,fi,dfi;
    LC_BOKS Boks;
 
-   // UT_FPRINTF(stderr,"Indeks for: %s\n",LX_GetGi(1));
+   // UT_FPRINTF(stderr,L"Indeks for: %s\n",LX_GetGi(1));
 
    /* Bygg ny indeks */
    if (Sys.pGrInfo->nko > 0) {
@@ -135,8 +110,8 @@ void LR_Indx(void)
          } else {
             if (Sys.pGrInfo->gnavn == L_BUE) {
                /* Ulovlig bue-angivelse */
-               //LC_Error(130,"(LR_Indx)",LX_GetGi(1));
-               UT_FPRINTF(stderr,"Ulovlig forhold mellom koordinater og radius i: %s : %s\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
+               //LC_Error(130,L"(LR_Indx)",LX_GetGi(1));
+               UT_FPRINTF(stderr,L"Ulovlig forhold mellom koordinater og radius i: %s : %s\n",Sys.GrId.pFil->pszNavn,LX_GetGi(1));
             }
 
             // Spesialhandtering av ulogiske sirkler og buer. Håndteres som KURVE
@@ -191,16 +166,16 @@ void LR_Indx(void)
 
 
 // ==========================================================================
-SK_EntPnt_FYBA void LC_DumpGeoRtre(LC_FILADM *pFil)
+void CFyba::LC_DumpGeoRtre(LC_FILADM *pFil)
 {
    short ostat;
    LC_FILADM *pDumpFil;
    long lAntBarn = 0;
 
    // Åpner ny SOSI-fil for dump
-   HO_New("Indeksdump.sos", 99, 0.0, 0.0, 0.001, 0.001, 0.001,
+   HO_New(L"Indeksdump.sos", 99, 0.0, 0.0, 0.001, 0.001, 0.001,
           -151000, -151000, 151000, 1000);
-   if (LC_OpenSos("Indeksdump.sos",LC_BASE_FRAMGR,LC_NY_IDX,LC_INGEN_STATUS,&pDumpFil,&ostat))
+   if (LC_OpenSos(L"Indeksdump.sos",LC_BASE_FRAMGR,LC_NY_IDX,LC_INGEN_STATUS,&pDumpFil,&ostat))
    {
       short sUtvidModus = LC_GetUtvidModus();
       long lMaxSkriv = LC_InqMaxSkriv();
@@ -222,10 +197,10 @@ SK_EntPnt_FYBA void LC_DumpGeoRtre(LC_FILADM *pFil)
 
 
 // ==========================================================================
-static void LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, double dA, double dN, double dLengde,long *plAntBarn)
+void CFyba::LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, double dA, double dN, double dLengde,long *plAntBarn)
 {
    LC_BGR Bgr;
-   char szTx[100];
+   wchar_t szTx[100];
    int i;
    long lSnr;
    double dDeltaN;
@@ -234,8 +209,8 @@ static void LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, doubl
    iNivo++;
    /* Rekursiv sjekk av de underliggende løv eller nodene */
    for (i=0; i<pRN->sSonAnt; i++) { 
-      LC_NyGr(pDumpFil,".LINJE",&Bgr,&lSnr);
-      LC_PutGi(LC_AppGiL(), "..LTEMA 1000");
+      LC_NyGr(pDumpFil,L".LINJE",&Bgr,&lSnr);
+      LC_PutGi(LC_AppGiL(), L"..LTEMA 1000");
       LC_PutTK(LC_AppKoL(), dA, dN);
       dDeltaN = dLengde;
 
@@ -272,25 +247,25 @@ static void LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, doubl
    }
 
    // Skriv ut noden 
-   LC_NyGr(pDumpFil,".PUNKT",&Bgr,&lSnr);
-   LC_PutGi(LC_AppGiL(), "..PTEMA 3000");
-   LC_PutGi(LC_AppGiL(), "..NODE 1");
+   LC_NyGr(pDumpFil,L".PUNKT",&Bgr,&lSnr);
+   LC_PutGi(LC_AppGiL(), L"..PTEMA 3000");
+   LC_PutGi(LC_AppGiL(), L"..NODE 1");
    
-   UT_SNPRINTF(szTx,100,"..NIVÅ %d", iNivo-1);
+   UT_SNPRINTF(szTx,100,L"..NIVÅ %d", iNivo-1);
    LC_PutGi(LC_AppGiL(), szTx);
    
-   UT_SNPRINTF(szTx,100,"..MIN-NØ %f %f", pRN->Boks.dMinNord, pRN->Boks.dMinAust);
+   UT_SNPRINTF(szTx,100,L"..MIN-NØ %f %f", pRN->Boks.dMinNord, pRN->Boks.dMinAust);
    LC_PutGi(LC_AppGiL(), szTx);
 
-   UT_SNPRINTF(szTx,100,"..MAX-NØ %f %lf", pRN->Boks.dMaxNord, pRN->Boks.dMaxAust);
+   UT_SNPRINTF(szTx,100,L"..MAX-NØ %f %f", pRN->Boks.dMaxNord, pRN->Boks.dMaxAust);
    LC_PutGi(LC_AppGiL(), szTx);
 
-   UT_SNPRINTF(szTx,100,"..DELTA-NØ %f %f",
+   UT_SNPRINTF(szTx,100,L"..DELTA-NØ %f %f",
             pRN->Boks.dMaxNord - pRN->Boks.dMinNord,
             pRN->Boks.dMaxAust - pRN->Boks.dMinAust);
    LC_PutGi(LC_AppGiL(), szTx);
 
-   UT_SNPRINTF(szTx,100,"..BARN %ld",lBarn);
+   UT_SNPRINTF(szTx,100,L"..BARN %ld",lBarn);
    LC_PutGi(LC_AppGiL(), szTx);
 
    LC_PutTK(LC_AppKoL(), dA, dN);
@@ -302,32 +277,32 @@ static void LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, doubl
 
 
 // ==========================================================================
-static void LR_R_DumpLov(LC_R_LEAF * pRL, LC_FILADM *pDumpFil, int iNivo, double dA, double dN, long *plAntBarn)
+void CFyba::LR_R_DumpLov(LC_R_LEAF * pRL, LC_FILADM *pDumpFil, int iNivo, double dA, double dN, long *plAntBarn)
 {
    LC_BGR Bgr;
-   char szTx[100];
+   wchar_t szTx[100];
    long lSnr;
 
 
    (*plAntBarn)++;
    // Skriv ut løvet
-   LC_NyGr(pDumpFil,".PUNKT",&Bgr,&lSnr);
-   LC_PutGi(LC_AppGiL(), "..PTEMA 5000");
-   LC_PutGi(LC_AppGiL(), "..LØV 1");
+   LC_NyGr(pDumpFil,L".PUNKT",&Bgr,&lSnr);
+   LC_PutGi(LC_AppGiL(), L"..PTEMA 5000");
+   LC_PutGi(LC_AppGiL(), L"..LØV 1");
 
-   UT_SNPRINTF(szTx,100,"..NR %ld", pRL->lNr);
+   UT_SNPRINTF(szTx,100,L"..NR %ld", pRL->lNr);
    LC_PutGi(LC_AppGiL(), szTx);
    
-   UT_SNPRINTF(szTx,100,"..NIVÅ %d", iNivo);
+   UT_SNPRINTF(szTx,100,L"..NIVÅ %d", iNivo);
    LC_PutGi(LC_AppGiL(), szTx);
    
-   UT_SNPRINTF(szTx,100,"..MIN-NØ %f %f", pRL->Boks.dMinNord, pRL->Boks.dMinAust);
+   UT_SNPRINTF(szTx,100,L"..MIN-NØ %f %f", pRL->Boks.dMinNord, pRL->Boks.dMinAust);
    LC_PutGi(LC_AppGiL(), szTx);
 
-   UT_SNPRINTF(szTx,100,"..MAX-NØ %f %f", pRL->Boks.dMaxNord, pRL->Boks.dMaxAust);
+   UT_SNPRINTF(szTx,100,L"..MAX-NØ %f %f", pRL->Boks.dMaxNord, pRL->Boks.dMaxAust);
    LC_PutGi(LC_AppGiL(), szTx);
 
-   UT_SNPRINTF(szTx,100,"..DELTA-NØ %f %f",
+   UT_SNPRINTF(szTx,100,L"..DELTA-NØ %f %f",
             pRL->Boks.dMaxNord - pRL->Boks.dMinNord,
             pRL->Boks.dMaxAust - pRL->Boks.dMinAust);
    LC_PutGi(LC_AppGiL(), szTx);
@@ -351,7 +326,7 @@ CD Bruk:
 CD LR_IndxFlate();
    =============================================================================
 */
-void LR_IndxFlate(void)
+void CFyba::LR_IndxFlate(void)
 {
    long ref_arr[MAX_REF];
    unsigned char ref_status[MAX_REF];
@@ -479,7 +454,7 @@ CD LC_AvsluttSok(&GeoStat);
 CD .
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_SBGeo(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
+void CFyba::LC_SBGeo(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
               double nv_a,double nv_n,double oh_a,double oh_n)
 {
    /* Normaliserer vinduet */
@@ -529,7 +504,7 @@ CD Bruk:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_FFGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
+short CFyba::LC_FFGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 {
    /* Bruker R-tre */
    if (pGeoStat->usMetode == LC_GEO_RTRE) {
@@ -609,7 +584,7 @@ CD Bruk:
 CD LR_R_SjekkNode(pGeoStat,pB,pFil,pRN->pSon[i]);
    ==========================================================================
 */
-static void LR_R_SjekkNode(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN)
+void CFyba::LR_R_SjekkNode(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN)
 {
    int i;
 
@@ -657,7 +632,7 @@ CD Bruk:
 CD LR_R_BoksTestIntersect(...);
    ==========================================================================
 */
-static short LR_R_BoksTestIntersect(LC_BOKS * pB1,LC_BOKS * pB2)
+short CFyba::LR_R_BoksTestIntersect(LC_BOKS * pB1,LC_BOKS * pB2)
 {
    if (pB1->dMaxNord  >=  pB2->dMinNord  &&
        pB1->dMaxAust  >=  pB2->dMinAust  &&
@@ -690,7 +665,7 @@ CD Bruk:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_FNGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
+short CFyba::LC_FNGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 {
    /* Bruker R-tre */
    if (pGeoStat->usMetode == LC_GEO_RTRE) {
@@ -750,7 +725,7 @@ CD Bruk:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_FFGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pOnsketFil,LC_BGR * pBgr)
+short CFyba::LC_FFGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pOnsketFil,LC_BGR * pBgr)
 {
    /* Bruker R-tre */
    if (pGeoStat->usMetode == LC_GEO_RTRE) {
@@ -830,7 +805,7 @@ CD Bruk:
 CD Se under LC_SBGeo.
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_FNGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,LC_BGR * pBgr)
+short CFyba::LC_FNGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,LC_BGR * pBgr)
 {
    /* Bruker R-tre */
    if (pGeoStat->usMetode == LC_GEO_RTRE) {
@@ -893,7 +868,7 @@ CD antall = LC_FAGeo(&Bgr);
 CD .
    =============================================================================
 */
-SK_EntPnt_FYBA long LC_FAGeo(LC_GEO_STATUS * pGeoStat)
+long CFyba::LC_FAGeo(LC_GEO_STATUS * pGeoStat)
 {
    short ngi;
    long nko;
@@ -958,7 +933,7 @@ CD LC_AvsluttSok(&GeoStat);
 CD .
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_SBFlate(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
+void CFyba::LC_SBFlate(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
               double nv_a,double nv_n,double oh_a,double oh_n)
 {
                      /* Normaliserer vinduet */
@@ -1003,7 +978,7 @@ CD Bruk:
 CD Se under LC_SBFlate.
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_FFFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
+short CFyba::LC_FFFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 {
    /* Bruker R-tre */
    if (pGeoStat->usMetode == LC_GEO_RTRE) {
@@ -1089,7 +1064,7 @@ CD Bruk:
 CD LR_R_SjekkNodeFlate(pGeoStat,pB,pFil,pRN->pSon[i]);
    ==========================================================================
 */
-static void LR_R_SjekkNodeFlate(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN)
+void CFyba::LR_R_SjekkNodeFlate(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN)
 {
    int i;
 
@@ -1140,7 +1115,7 @@ CD Bruk:
 CD Se under LC_SBFlate.
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_FNFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
+short CFyba::LC_FNFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 {
    /* Bruker R-tre */
    if (pGeoStat->usMetode == LC_GEO_RTRE) {
@@ -1216,7 +1191,7 @@ CD LC_AvsluttSok(&GeoStat);
 CD .
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_WTst(double nva,double nvn,double oha,double ohn)
+short CFyba::LC_WTst(double nva,double nvn,double oha,double ohn)
 {
    short ngi,gruppenavn,sfeil;
    long nko,pt;
@@ -1361,7 +1336,7 @@ CD LC_AvsluttSok(&GeoStat);
 CD .
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_PTst(double a,double n)
+short CFyba::LC_PTst(double a,double n)
 {
    LC_POLYGON Polygon;
    short inni = 0;   /* Returverdi: 1 = inne på flaten, 0 = utenfor  */
@@ -1405,7 +1380,7 @@ CD Bruk:
 CD ist = LC_PTstOmkrets(a,n);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_PTstOmkrets(double a,double n)
+short CFyba::LC_PTstOmkrets(double a,double n)
 {
    long ref_arr[MAX_REF];
    unsigned char ref_status[MAX_REF];
@@ -1472,7 +1447,7 @@ CD Bruk:
 CD ist = LR_PTstOmkrets(&Bgr,a,n);
    ==========================================================================
 */
-short LR_PTstGruppe(LC_BGR * pBgr,double a,double n)
+short CFyba::LR_PTstGruppe(LC_BGR * pBgr,double a,double n)
 {
    double maxa = 99999999999.0;           /* "Uendelig" øst */
    short ngi,gruppenavn,sfeil;
@@ -1488,7 +1463,18 @@ short LR_PTstGruppe(LC_BGR * pBgr,double a,double n)
    short sAntSkjaer = 0;
 
        
-   /* Sjekk gruppen */
+   // Grov første sjekk
+   double nva, nvn, oha, ohn;
+   LC_GetGrWin(pBgr, &nva, &nvn, &oha, &ohn);
+
+   if (n < nvn  ||  n > ohn)
+   {
+      // Punktet ligger nord eller sør for gruppen. Kan ikke ha skjæring.
+      return 0;  // ===>
+   }
+
+
+   // ----- Sjekk gruppen
    gruppenavn = LC_RxGr(pBgr,LES_OPTIMALT,&ngi,&nko,&info);
    if (nko > 0) {
        
@@ -1557,7 +1543,7 @@ CD Legg gruppen inn i geografisk indeks.
 CD Forutsetter at grupen ikke ligger i søketreet fra før.
 CD =======================================================================
 */
-LC_R_LEAF * LR_InsertGeo(LC_FILADM *pFil,long lNr,LC_BOKS * pB)
+LC_R_LEAF * CFyba::LR_InsertGeo(LC_FILADM *pFil,long lNr,LC_BOKS * pB)
 {
    LC_R_NODE * pNyRN,*pRotRN;
    LC_R_LEAF * pRL;
@@ -1615,7 +1601,7 @@ CD Leger inn et rektangl i R-treet med rot i node pRN.
 CD Hvis pRN == NULL (Tomt tre) settes *ppNyRN til å peke til et nyt tre.
 CD =======================================================================
 */
-static LC_R_LEAF * LR_R_Insert(long lGrNr,LC_BOKS *pB,LC_R_NODE *pFar,LC_R_NODE *pRN,LC_R_NODE **ppNyRN)
+LC_R_LEAF * CFyba::LR_R_Insert(long lGrNr,LC_BOKS *pB,LC_R_NODE *pFar,LC_R_NODE *pRN,LC_R_NODE **ppNyRN)
 {
    LC_R_NODE *pNyRN,*pKandidatRN[LC_R_MAX_SON+1];
    LC_R_LEAF *pRL,*pKandidatRL[LC_R_MAX_SON+1];
@@ -1624,9 +1610,9 @@ static LC_R_LEAF * LR_R_Insert(long lGrNr,LC_BOKS *pB,LC_R_NODE *pFar,LC_R_NODE 
    double dMinAust,dMaxAust;
 
    // Test
-   //static int iNivo;
+   //int iNivo;
    //iNivo++;
-   //UT_FPRINTF(stderr,"LR_R_Insert nivå :%d\n",iNivo);
+   //UT_FPRINTF(stderr,L"LR_R_Insert nivå :%d\n",iNivo);
 
    
    *ppNyRN = NULL;
@@ -1855,7 +1841,7 @@ CD LC_BOKS *   pB1   iu   Boks1 som skal utvides
 CD LC_BOKS *   pB2   i    Boks2 som skal legges til boks1
 CD =======================================================================
 */
-static void LR_R_BoksSum(LC_BOKS * pB1,LC_BOKS * pB2)
+void CFyba::LR_R_BoksSum(LC_BOKS * pB1,LC_BOKS * pB2)
 {
    pB1->dMinAust = min(pB1->dMinAust,pB2->dMinAust);
 	pB1->dMinNord = min(pB1->dMinNord,pB2->dMinNord);
@@ -1880,7 +1866,7 @@ CD LC_BOKS *   pB2         i   Boks2
 CD double     dDeltaAreal r   Arealendring
 CD =======================================================================
 */
-static double LR_BoksDeltaArealSum(LC_BOKS * pB1,LC_BOKS * pB2)
+double CFyba::LR_BoksDeltaArealSum(LC_BOKS * pB1,LC_BOKS * pB2)
 {
     //long lNy, lGml;
     //lGml = (pB1->dMaxAust - pB1->dMinAust) * (pB1->dMaxNord - pB1->dMinNord);
@@ -1908,7 +1894,7 @@ CD Formål:
 CD Fjern et gitt element fra R-treet for geografisk søk.
 CD =======================================================================
 */
-void LR_R_Delete(LC_R_LEAF * pRL)
+void CFyba::LR_R_Delete(LC_R_LEAF * pRL)
 {
    LC_R_NODE *pFar,*pRN,*pSonRN;
    int i,iFunnet,iIdx=0,iFerdig;
@@ -1945,7 +1931,7 @@ void LR_R_Delete(LC_R_LEAF * pRL)
       }
 
       // Frigir det aktuelle "løvet"
-      UT_FREE((char *)pRL);
+      free(pRL);
 
       /* Sjekk om det er mere som skal fjernes oppover i treet */
       iFerdig = UT_FALSE;
@@ -1984,7 +1970,7 @@ void LR_R_Delete(LC_R_LEAF * pRL)
                }
 
                /* Frigir noden */
-               UT_FREE((char *)pSonRN);
+               free(pSonRN);
          
 
             /* Har kommet til toppen */
@@ -2040,11 +2026,11 @@ CD Formål:
 CD Alloker og initier node i R-tre.
 CD =======================================================================
 */
-static LC_R_NODE * LR_R_CreateRNode( LC_R_NODE * pFar,short sSonType)
+LC_R_NODE * CFyba::LR_R_CreateRNode( LC_R_NODE * pFar,short sSonType)
 {
    LC_R_NODE * pRN;
 
-   pRN = (LC_R_NODE *)UT_MALLOC(sizeof(LC_R_NODE));
+   pRN = (LC_R_NODE *)malloc(sizeof(LC_R_NODE));
 
    pRN->pFar = pFar;
    pRN->sSonType = sSonType;
@@ -2085,9 +2071,9 @@ CD Formål:
 CD Alloker og initier løv R-tre.
 CD =======================================================================
 */
-static LC_R_LEAF * LR_R_CreateRLeaf(long lGrNr, LC_BOKS * pB,LC_R_NODE * pFar)
+LC_R_LEAF * CFyba::LR_R_CreateRLeaf(long lGrNr, LC_BOKS * pB,LC_R_NODE * pFar)
 {
-   LC_R_LEAF * pCL = (LC_R_LEAF *)UT_MALLOC(sizeof(LC_R_LEAF));
+   LC_R_LEAF * pCL = (LC_R_LEAF *)malloc(sizeof(LC_R_LEAF));
 
    pCL->pFar = pFar;
    pCL->Boks = *pB;
@@ -2114,11 +2100,11 @@ CD Formål:
 CD Legg til Bgr i kjede med søkeresultat.
 CD =======================================================================
 */
-static void LR_LeggTilKB(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,long lNr)
+void CFyba::LR_LeggTilKB(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,long lNr)
 {
    LC_KJEDE_BGR * pKB;
 
-   pKB = (LC_KJEDE_BGR *) UT_MALLOC(sizeof(LC_KJEDE_BGR));
+   pKB = (LC_KJEDE_BGR *) malloc(sizeof(LC_KJEDE_BGR));
 
    /* Sosi-gruppe */
    pKB->Bgr.pFil = pFil;
@@ -2153,7 +2139,7 @@ CD Formål:
 CD Avslutter geografisk søk, og frigir kjede med søkeresultat.
 CD =======================================================================
 */
-SK_EntPnt_FYBA void LC_AvsluttSok(LC_GEO_STATUS * pGeoStat)
+void CFyba::LC_AvsluttSok(LC_GEO_STATUS * pGeoStat)
 {
    LC_KJEDE_BGR *pKB, *pNesteKB; 
       
@@ -2163,7 +2149,7 @@ SK_EntPnt_FYBA void LC_AvsluttSok(LC_GEO_STATUS * pGeoStat)
    while (pNesteKB != NULL) {
       pKB = pNesteKB;
       pNesteKB = pKB->pNesteKB;
-      UT_FREE(pKB);
+      free(pKB);
    }
 
    pGeoStat->pForsteKB = NULL;
@@ -2187,7 +2173,7 @@ CD LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 CD
    ==========================================================================
 */
-static void LR_VelgMetode(LC_GEO_STATUS * pGeoStat)
+void CFyba::LR_VelgMetode(LC_GEO_STATUS * pGeoStat)
 {
    LC_BOKS * pB = &Sys.pAktBase->Omraade;
  
@@ -2216,7 +2202,7 @@ CD Formål:
 CD Frigir en gren fra R-treet for geografisk søk.
 CD =======================================================================
 */
-void LR_R_FrigiGren(LC_R_NODE * pRN)
+void CFyba::LR_R_FrigiGren(LC_R_NODE * pRN)
 {
    int i;
 
@@ -2224,7 +2210,7 @@ void LR_R_FrigiGren(LC_R_NODE * pRN)
    if (pRN->sSonType == LC_LEAF) {
       /* Sjekk løvene som er lagret under denne noden */
       for (i=0; i<pRN->sSonAnt; i++) { 
-         UT_FREE((char *)pRN->Son.pLeaf[i]);
+         free(pRN->Son.pLeaf[i]);
       }
 
    /* Node */
@@ -2236,5 +2222,5 @@ void LR_R_FrigiGren(LC_R_NODE * pRN)
       }
    }
 
-   UT_FREE((char *)pRN);
+   free(pRN);
 }

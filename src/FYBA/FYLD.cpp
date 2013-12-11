@@ -1,19 +1,10 @@
 /* === 920413 ============================================================= */
-/*  STATENS KARTVERK  -  FYSAK-PC                                           */
+/*  KARTVERKET  -  FYSAK-PC                                           */
 /*  Fil: fyld.c                                                             */
 /*  Innhold: Lagring og henting av indekstabeller                           */
 /* ======================================================================== */
 
 #include "stdafx.h"
-
-#include <stdlib.h>
-
-
-
-
-/* Globale strukturer for fyba */
-extern LC_SYSTEMADM    Sys;
-
 
 
 /*
@@ -26,17 +17,17 @@ CD
 CD Parametre:
 CD Type  Navn     I/U Forklaring
 CD --------------------------------------------------------------------------
-CD char *szSosFil  i  SOSI-filnavn
+CD wchar_t *szSosFil  i  SOSI-filnavn
 CD
 CD Bruk:
 CD LC_DelIdx(szSosFil);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_DelIdx(char *szSosFil)
+void CFyba::LC_DelIdx(const wchar_t *szSosFil)
 {
-   char fil[_MAX_PATH],sdir[_MAX_PATH];
-   char drive1[_MAX_DRIVE],dir1[_MAX_DIR],fname1[_MAX_FNAME],ext1[_MAX_EXT];
-   char drive2[_MAX_DRIVE],dir2[_MAX_DIR],fname2[_MAX_FNAME],ext2[_MAX_EXT];
+   wchar_t fil[_MAX_PATH],sdir[_MAX_PATH];
+   wchar_t drive1[_MAX_DRIVE],dir1[_MAX_DIR],fname1[_MAX_FNAME],ext1[_MAX_EXT];
+   wchar_t drive2[_MAX_DRIVE],dir2[_MAX_DIR],fname2[_MAX_FNAME],ext2[_MAX_EXT];
 
 
    // Bygg opp fullstendig filnavn
@@ -49,10 +40,10 @@ SK_EntPnt_FYBA void LC_DelIdx(char *szSosFil)
    if ( *Sys.szIdxPath != 0) {
       // Gitt sti for indeksfilene
       UT_splitpath(Sys.szIdxPath,drive2,dir2,fname2,ext2);
-      UT_makepath(sdir,drive2,dir2,fname1,"");
+      UT_makepath(sdir,drive2,dir2,fname1,L"");
    } else {
       // Ikke gitt sti.
-      UT_makepath(sdir,drive1,dir1,fname1,"");
+      UT_makepath(sdir,drive1,dir1,fname1,L"");
    }
 
    /* Lag sti til filer på sub-directory */
@@ -65,43 +56,43 @@ SK_EntPnt_FYBA void LC_DelIdx(char *szSosFil)
    //
 
    // Administrasjonstabeller
-   UT_makepath(fil,drive2,dir2,"Adm",".Idx");
+   UT_makepath(fil,drive2,dir2,L"Adm",L".Idx");
    UT_DeleteFile(fil);
-   UT_makepath(fil,drive2,dir2,"admin",".idx");       /* FYBA - C */
+   UT_makepath(fil,drive2,dir2,L"admin",L".idx");       /* FYBA - C */
    UT_DeleteFile(fil);
 
    // Ringbuffer
-   UT_makepath(fil,drive2,dir2,"Rb",".Idx"); 
+   UT_makepath(fil,drive2,dir2,L"Rb",L".Idx"); 
    UT_DeleteFile(fil);
    
    // Inf
-   UT_makepath(fil,drive2,dir2,"Inf",".Idx");         /* FYBA - D */
+   UT_makepath(fil,drive2,dir2,L"Inf",L".Idx");         /* FYBA - D */
    UT_DeleteFile(fil);
-   UT_makepath(fil,drive2,dir2,"info",".idx");        /* FYBA - C */
+   UT_makepath(fil,drive2,dir2,L"info",L".idx");        /* FYBA - C */
    UT_DeleteFile(fil);
    
    // Gruppetabell
-   UT_makepath(fil,drive2,dir2,"Grt",".Idx");
+   UT_makepath(fil,drive2,dir2,L"Grt",L".Idx");
    UT_DeleteFile(fil);
-   UT_makepath(fil,drive2,dir2,"grtab",".idx");       /* FYBA - C */
+   UT_makepath(fil,drive2,dir2,L"grtab",L".idx");       /* FYBA - C */
    UT_DeleteFile(fil);
    
    // Serienummer-tabell */
-   UT_makepath(fil,drive2,dir2,"Snr",".Idx");
+   UT_makepath(fil,drive2,dir2,L"Snr",L".Idx");
    UT_DeleteFile(fil);
    
    // Brukt-tabell
-   UT_makepath(fil,drive2,dir2,"Bt",".Idx");
+   UT_makepath(fil,drive2,dir2,L"Bt",L".Idx");
    UT_DeleteFile(fil);
-   UT_makepath(fil,drive2,dir2,"btab",".idx");        /* FYBA - C */
+   UT_makepath(fil,drive2,dir2,L"btab",L".idx");        /* FYBA - C */
    UT_DeleteFile(fil);
 
    // Geografisk søketabell
-   UT_makepath(fil,drive2,dir2,"Geo",".Idx");
+   UT_makepath(fil,drive2,dir2,L"Geo",L".Idx");
    UT_DeleteFile(fil);
 
    // Flate geografisk søketabell
-   UT_makepath(fil,drive2,dir2,"flate",".idx");       /* FYBA - C */
+   UT_makepath(fil,drive2,dir2,L"flate",L".idx");       /* FYBA - C */
    UT_DeleteFile(fil);
 
    //

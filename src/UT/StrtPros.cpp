@@ -20,9 +20,6 @@
 #  include<windows.h>
 #endif
 
-#ifdef BORLAND
-#endif
-
 #include "fyut.h"
 
 
@@ -34,30 +31,35 @@ CD  Formål:
 CD  Starter en ny prosess.
 CD
 CD  PARAMETERLISTE:
-CD  Type   Navn           I/U Merknad
+CD  Type     Navn           I/U Merknad
 CD  ------------------------------------------------------------- 
-CD  char  *pszCommandLine  i  Kommandolinje
-CD  short  sVent           i  UT_VENT = Vent til prosessen avsluttes
-CD                            UT_FORTSETT = Ikke vent
-CD short  sStatus          r  Status:
+CD  wchar_t *pszCommandLine  i  Kommandolinje
+CD  short    sVent           i  UT_VENT = Vent til prosessen avsluttes
+CD                              UT_FORTSETT = Ikke vent
+CD  int      nCmdShow        i  Styrer visning av vinduet. SW_SHOWNORMAL er default.
+CD                              (Tilsvarer ShowWindow)
+CD                              Bruk SW_SHOWMINIMIZED eller SW_SHOWMINNOACTIVE for minimert kjøring.
+
+CD  short    sStatus         r  Status:
 CD                              UT_TRUE = OK
 CD                              UT_FALSE = Feil.
-CD
 CD
 CD  Bruk:
 CD  sStatus = UT_StartProsess(szKommandolinje,UT_VENT);
 CD
 CD  ==============================================================
 */
-SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
+SK_EntPnt_UT short UT_StartProsess(const wchar_t *pszCommandLine, short sVent, int nCmdShow,
+                                   HANDLE hStdInput, HANDLE hStdOutput, HANDLE hStdError)
 {
 
 #ifdef WIN32
    PROCESS_INFORMATION ProcessInfo;
    STARTUPINFO StartupInfo;
    DWORD ExitCode = 0;
-   //char szCurrentDir[_MAX_PATH];
-   //char szShortPath[100];
+   BOOL bInheritHandles = FALSE;
+   //wchar_t szCurrentDir[_MAX_PATH];
+   //wchar_t szShortPath[100];
 
 
    // Setter opp oppstartinformasjon
@@ -68,12 +70,39 @@ SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
    StartupInfo.lpReserved = NULL; 
    StartupInfo.lpReserved2 = NULL;
    StartupInfo.dwFlags = 0;
+
+   if ( hStdInput != NULL  ||  hStdOutput != NULL  ||  hStdError != NULL)
+   {
+      bInheritHandles = TRUE;
+      StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+
+      StartupInfo.hStdInput = GetStdHandle(STD_INPUT_HANDLE); 
+      StartupInfo.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE); 
+      StartupInfo.hStdError = GetStdHandle(STD_ERROR_HANDLE); 
+
+      if ( hStdInput != NULL )   StartupInfo.hStdInput  = hStdInput;
+      if ( hStdOutput != NULL )  StartupInfo.hStdOutput = hStdOutput;
+      if ( hStdError != NULL )   StartupInfo.hStdError  = hStdError;
+   }
+
    //   STARTF_USESTDHANDLES	If this value is specified, sets the standard input of the process, standard output,
    //                        and standard error handles to the handles specified in the hStdInput, hStdOutput, 
    //                        and hStdError members of the STARTUPINFO structure. The CreateProcess function's fInheritHandles
    //                        parameter must be set to TRUE for this to work properly.
 	//                        If this value is not specified, the hStdInput, hStdOutput, and hStdError members of the STARTUPINFO
    //                        structure are ignored.
+
+   if (nCmdShow != SW_SHOWNORMAL)
+   { 
+      StartupInfo.dwFlags |= STARTF_USESHOWWINDOW;  // The wShowWindow member contains additional information. 
+      StartupInfo.wShowWindow = nCmdShow;
+   }
+
+   // wShowWindow
+   // If dwFlags specifies STARTF_USESHOWWINDOW, this member can be any of the values that can be specified 
+   // in the nCmdShow parameter for the ShowWindow function, except for SW_SHOWDEFAULT. Otherwise, this member is ignored. 
+   // For GUI processes, the first time ShowWindow is called, its nCmdShow parameter is ignored wShowWindow specifies the default value. 
+   // In subsequent calls to ShowWindow, the wShowWindow member is used if the nCmdShow parameter of ShowWindow is set to SW_SHOWDEFAULT. 
 
    //StartupInfo.dwX; 
    //StartupInfo.dwY; 
@@ -82,23 +111,15 @@ SK_EntPnt_UT short UT_StartProsess(char *pszCommandLine,short sVent)
    //StartupInfo.dwXCountChars; 
    //StartupInfo.dwYCountChars; 
    //StartupInfo.dwFillAttribute; 
-   //StartupInfo.wShowWindow; 
-   //StartupInfo.hStdInput; 
-   //StartupInfo.hStdOutput; 
-   //StartupInfo.hStdError; 
-
 
    //GetCurrentDirectory(_MAX_PATH,szCurrentDir);
    //GetShortPathName(szCurrentDir,szShortPath,100);
 
-   // Utfører system-kommando
-   if ( ! CreateProcess(NULL, pszCommandLine, NULL, NULL, FALSE,
-                        NORMAL_PRIORITY_CLASS , 
-                                  //CREATE_NEW_CONSOLE	
-                                  //CREATE_NEW_PROCESS_GROUP	
-                                  //CREATE_SEPARATE_WOW_VDM	
-                                  //CREATE_SHARED_WOW_VDM	
-                        NULL, NULL, &StartupInfo, &ProcessInfo)) {
+   // Utfører system-kommando  
+   if ( ! CreateProcessW(NULL, (LPTSTR)pszCommandLine, NULL, NULL, bInheritHandles,
+                        NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE, 
+                        NULL, NULL, &StartupInfo, &ProcessInfo))
+   {
       return UT_FALSE;
    }   
 

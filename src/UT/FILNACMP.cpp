@@ -6,10 +6,6 @@
 #include <string.h>
 #include "fyut.h"
 
-#ifdef BORLAND
-#  include <windows.h>
-#endif
-
 #ifdef WIN32
 #  include <windows.h>
 #endif
@@ -25,24 +21,24 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszFil1   i   Filnavn 1
-CD char     *pszFil2   i   Filnavn 2
+CD wchar_t     *pszFil1   i   Filnavn 1
+CD wchar_t     *pszFil2   i   Filnavn 2
 CD short     sStatus   r   Status; 0=Navnene er like, annen verdi = ulik
 CD
 CD Bruk:  sStatus = UT_FilnavnCmp(pszFil1,pszFil2);
    ==================================================================
 */
-SK_EntPnt_UT short UT_FilnavnCmp(char *pszFil1,char *pszFil2)
+SK_EntPnt_UT short UT_FilnavnCmp(const wchar_t *pszFil1, const wchar_t *pszFil2)
 {
-   char fil1[_MAX_PATH];
-   char fil2[_MAX_PATH];
+   wchar_t fil1[_MAX_PATH];
+   wchar_t fil2[_MAX_PATH];
 
 #ifdef LINUX
    strncpy(fil1,pszFil1,strlen(pszFil1));
    strncpy(fil2,pszFil2,strlen(pszFil2));
 #else
-   strcpy_s(fil1,pszFil1);
-   strcpy_s(fil2,pszFil2);
+   UT_StrCopy(fil1, pszFil1, _MAX_PATH);
+   UT_StrCopy(fil2, pszFil2, _MAX_PATH);
 #endif
 
 #ifndef UNIX
@@ -50,5 +46,5 @@ SK_EntPnt_UT short UT_FilnavnCmp(char *pszFil1,char *pszFil2)
    UT_StrUpper(fil2);
 #endif
 
-   return  (short)strcmp(fil1,fil2);
+   return  (short)wcscmp(fil1, fil2);
 }

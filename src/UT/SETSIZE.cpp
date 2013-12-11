@@ -31,11 +31,6 @@
 #  include <stdlib.h>
 #endif
 
-#ifdef BORLAND
-#  include <fcntl.h>
-#  include <sys/stat.h>
-#endif
-
 #include "fyut.h"
 
 /*
@@ -48,7 +43,7 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Filnavn
+CD wchar_t     *pszPath   i   Filnavn
 CD long      lSize     i   Ønsket filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
@@ -56,7 +51,7 @@ CD Bruk:  sStatus = UT_SetPathSize(szPath,lSize);
    ==================================================================
 */
 
-SK_EntPnt_UT short UT_SetPathSize(char *pszPath,long lSize)
+SK_EntPnt_UT short UT_SetPathSize(const wchar_t *pszPath,long lSize)
 {
 #ifdef UNIX
    size_t filesize;
@@ -118,7 +113,7 @@ SK_EntPnt_UT short UT_SetPathSize(char *pszPath,long lSize)
    int fh,rc;
 
 	//fh = _open( pszPath, _O_RDWR | _O_BINARY | _O_RANDOM );
-   _sopen_s(&fh, pszPath, _O_RDWR | _O_BINARY | _O_RANDOM, _SH_DENYRW, _S_IREAD | _S_IWRITE);
+   _wsopen_s(&fh, pszPath, _O_RDWR | _O_BINARY | _O_RANDOM, _SH_DENYRW, _S_IREAD | _S_IWRITE);
 
 	 if (fh != -1) {
 		  rc = _chsize(fh,lSize);
@@ -131,22 +126,6 @@ SK_EntPnt_UT short UT_SetPathSize(char *pszPath,long lSize)
 	 return (short)rc;
 #endif
 
-#ifdef BORLAND
-	 int fh,rc;
-
-
-	 fh = open( pszPath, O_RDWR | O_BINARY);
-
-	 if (fh != -1) {
-		  rc = chsize(fh,lSize);
-		  close(fh);
-
-	 }  else {
-		rc = fh;
-	}
-
-	 return (short)rc;
-#endif
 }
 
 
@@ -161,20 +140,32 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Filnavn
+CD wchar_t     *pszPath   i   Filnavn
 CD UT_INT64  n64Size   i   Ønsket filstørrelse
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Bruk:  sStatus = UT_SetPathSize_i64(szPath,lSize);
    ==================================================================
 */
-SK_EntPnt_UT short UT_SetPathSize_i64(char *pszPath, UT_INT64 n64Size)
+SK_EntPnt_UT short UT_SetPathSize_i64(const wchar_t *pszPath, UT_INT64 n64Size)
 {
    int fh,rc;
 
-   //fh = _open( pszPath, _O_RDWR | _O_BINARY | _O_RANDOM );
-   _sopen_s(&fh, pszPath, _O_RDWR | _O_BINARY | _O_RANDOM, _SH_DENYRW, _S_IREAD | _S_IWRITE);
-  
+
+   errno_t status = _wsopen_s(&fh, pszPath, _O_RDWR | _O_BINARY | _O_RANDOM, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+   if (fh == -1)
+   {
+      // Feil, venter 1/10 sekund og prøver en gang til, 5 ganger
+      for (int i=0; fh==-1 && i<5; ++i)
+      {
+
+         UT_FPRINTF(stderr, L"%d> (UT_SetPathSize_i64: _wsopen_s) Venter 0.1 sek.\n", GetCurrentThreadId());
+
+         Sleep(100);
+         status = _wsopen_s(&fh, pszPath, _O_RDWR | _O_BINARY | _O_RANDOM, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+      }
+   }
+
    // Åpnet OK
    if (fh != -1)
    {
@@ -183,9 +174,23 @@ SK_EntPnt_UT short UT_SetPathSize_i64(char *pszPath, UT_INT64 n64Size)
       // _chsize_s returns the value 0 if the file size is successfully changed.
       if (rc != 0)
       {
-         char szError[256];
-         UT_strerror(szError,256,errno);
-         UT_FPRINTF(stderr,"(UT_SetPathSize_i64)Feil ved endring av filstørrelse (_chsize_s). (%s, Posisjon:%ld, Feil:%s)\n",pszPath,n64Size,szError);
+         // Feil, venter 1/10 sekund og prøver en gang til, 5 ganger
+         for (int i=0; rc != 0 && i<5; ++i)
+         {
+
+            UT_FPRINTF(stderr, L"%d> (UT_SetPathSize_i64: _chsize_s) Venter 0.1 sek.\n", GetCurrentThreadId());
+
+            Sleep(100);
+            rc = _chsize_s(fh,n64Size);
+         }
+
+         if (rc != 0)
+         {
+            wchar_t szError[256];
+            UT_strerror(szError,256,errno);
+            UT_FPRINTF(stderr, L"%d> (UT_SetPathSize_i64)Feil ved endring av filstørrelse (_chsize_s). (%s, Posisjon:%ld, Feil:%s)\n",
+                       GetCurrentThreadId(), pszPath, n64Size, szError);
+         }
       }
 
       _close(fh);
@@ -194,16 +199,29 @@ SK_EntPnt_UT short UT_SetPathSize_i64(char *pszPath, UT_INT64 n64Size)
    // Feil ved filåpning
    else
    {
-      char szError[256];
+      wchar_t szMelding[200];
+      switch (status)
+      {
+         case EACCES: UT_StrCopy(szMelding, L"EACCES - Given path is a directory, or file is read-only, but an open-for-writing operation was attempted.", 200);
+         case EEXIST: UT_StrCopy(szMelding, L"EEXIST - _O_CREAT and _O_EXCL flags were specified, but filename already exists.", 200);
+         case EINVAL: UT_StrCopy(szMelding, L"EINVAL - Invalid oflag, shflag, or pmode argument, or pfh or filename was a null pointer.", 200);
+         case EMFILE: UT_StrCopy(szMelding, L"EMFILE - No more file descriptors available.", 200);
+         case ENOENT: UT_StrCopy(szMelding, L"ENOENT - File or path not found.", 200);
+         default:     UT_StrCopy(szMelding, L"Ukjent status", 200);
+      }
+
+      wchar_t szError[256];
       UT_strerror(szError,256,errno);
-      UT_FPRINTF(stderr,"(UT_SetPathSize_i64)Feil ved filåpning. (%s, Feil:%s)\n",pszPath,szError);
+
+      UT_FPRINTF(stderr, L"%d> (UT_SetPathSize_i64)Feil ved filåpning. (%s, Status:%s, Feil:%s)\n",
+                 GetCurrentThreadId(), pszPath, szMelding, szError);
       rc = fh;
    }
 
    return (short)rc;
 }
 #else
-SK_EntPnt_UT short UT_SetPathSize_i64(char *pszPath, UT_INT64 n64Size)
+SK_EntPnt_UT short UT_SetPathSize_i64(const wchar_t *pszPath, UT_INT64 n64Size)
 {
 	return UT_SetPathSize(pszPath, n64Size);
 }

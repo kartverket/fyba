@@ -1,5 +1,5 @@
 /* == AR 891104 ========================================== */
-/*  STATENS KARTVERK  -  FYSAK-PC                          */
+/*  KARTVERKET  -  FYSAK-PC                          */
 /*  Fil: fyls.c                                            */
 /*  Innhold: Serienummer system for fysak-pc               */
 /* ======================================================= */
@@ -7,10 +7,6 @@
 #include "stdafx.h"
 
 #include <ctype.h>
-
-
-/* Globale variabler */
-extern LC_SYSTEMADM    Sys;
 
 
 /*
@@ -26,7 +22,7 @@ CD Bruk:
 CD LS_Indx();
 ================================================================================
 */
-void LS_Indx(void)
+void CFyba::LS_Indx(void)
 {
    long lSnr = LC_GetSn();
 
@@ -55,10 +51,10 @@ CD LC_SNR_ADM SnrAdm;
 CD LC_SBSn(&SnrAdm,pFil,lMinSnr,lMaxSnr);
 =============================================================================
 */
-SK_EntPnt_FYBA void LC_SBSn(LC_SNR_ADM * pSnrAdm,LC_FILADM *pFil,long lMinSnr,long lMaxSnr)
+void CFyba::LC_SBSn(LC_SNR_ADM * pSnrAdm,LC_FILADM *pFil,long lMinSnr,long lMaxSnr)
 {
-   /* LO_TestFilpeker(pFil,"LC_SBSn"); */
-   LO_TestFilpeker(pFil,"SBSn");
+   /* LO_TestFilpeker(pFil,L"LC_SBSn"); */
+   LO_TestFilpeker(pFil,L"SBSn");
 
    pSnrAdm->pFil = pFil;
    pSnrAdm->lMinSnr = lMinSnr;
@@ -68,28 +64,28 @@ SK_EntPnt_FYBA void LC_SBSn(LC_SNR_ADM * pSnrAdm,LC_FILADM *pFil,long lMinSnr,lo
 
 /*
 AR-911118
-CH LC_FiSn                              Finn gruppenummer for et serienummer
+CH LC_FiSn                            Finn gruppenummer for gitt serienummer
 CD ==========================================================================
 CD Formål:
-CD Finn gruppenummer for et gitt serienummer i søkeområdet for serienummer.
+CD Finn gruppenummer for gitt serienummer.
 CD Endrer IKKE "current gruppe".
 CD
 CD Parametre:
 CD Type        Navn    I/U    Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_FILADM * pFil     i     Peker til FilAdm
+CD LC_FILADM  *pFil     i     Peker til FilAdm
 CD long        lSnr     i     Serienummer som skal finnes
-CD LC_BGR *     pBgr     u     Gruppenummer i basen
+CD LC_BGR     *pBgr     u     Gruppenummer i basen
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FiSn(pFil,lSnr,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FiSn(LC_FILADM *pFil,long lSnr,LC_BGR * pBgr)
+short CFyba::LC_FiSn(LC_FILADM *pFil,long lSnr,LC_BGR * pBgr)
 {
-   /* LO_TestFilpeker(pFil,"LC_FiSn"); */
-   LO_TestFilpeker(pFil,"FiSn");
+   /* LO_TestFilpeker(pFil,L"LC_FiSn"); */
+   LO_TestFilpeker(pFil,L"FiSn");
 
    pBgr->pFil = pFil;
    pBgr->lNr = LI_GetSnr(pFil,lSnr);
@@ -114,19 +110,19 @@ CD
 CD Parametre:
 CD Type     Navn     I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD long        lSnr     i     Serienummer som skal finnes
-CD LC_BGR *     pBgr     u     Gruppenummer i basen
+CD LC_BGR     *pBgr     u     Gruppenummer i basen
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_MoveSn(pSnrAdm,snr,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_MoveSn(LC_SNR_ADM * pSnrAdm,long lSnr,LC_BGR * pBgr)
+short CFyba::LC_MoveSn(LC_SNR_ADM * pSnrAdm,long lSnr,LC_BGR * pBgr)
 {
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_MoveSn"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"MoveSn");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_MoveSn"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"MoveSn");
 
    pBgr->pFil = pSnrAdm->pFil;
    pBgr->lNr = LI_GetSnr(pSnrAdm->pFil,lSnr);
@@ -163,11 +159,11 @@ CD Bruk:
 CD LC_FiArraySn(pFil,antall,snr,bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA void LC_FiArraySn(LC_FILADM *pFil,short antall,long *snr,long *bgr)
+void CFyba::LC_FiArraySn(LC_FILADM *pFil,short antall,long *snr,long *bgr)
 {
    short s;
 
-   LO_TestFilpeker(pFil,"LC_FiArraySn");
+   LO_TestFilpeker(pFil,L"LC_FiArraySn");
 
    /* Søk gjennom hele serienummertabellen */
    for (s=0; s<antall; s++) {
@@ -192,14 +188,14 @@ CD
 CD Parametre:
 CD Type        Navn    I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  i    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM *pSnrAdm  i    Peker til statusblokk for serienummersøk
 CD long        antall   r    Antall grupper funnet.
 CD
 CD Bruk:
 CD antall_funnet = LC_FASn(&SnrAdm);
 =============================================================================
 */
-SK_EntPnt_FYBA long LC_FASn(LC_SNR_ADM * pSnrAdm)
+long CFyba::LC_FASn(LC_SNR_ADM * pSnrAdm)
 {
    short ngi;
    long nko;
@@ -210,8 +206,8 @@ SK_EntPnt_FYBA long LC_FASn(LC_SNR_ADM * pSnrAdm)
    long lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FASn"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FASn");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FASn"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FASn");
 
    /* Husk aktuell gruppe */
    AktBgr = Sys.GrId;
@@ -248,26 +244,26 @@ CD
 CD Parametre:
 CD Type        Navn     I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-CD LC_BGR *     pBgr     u     Gruppenummer
+CD LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
+CD LC_BGR     *pBgr     u     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FFSn(&SnrAdm,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FFSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
+short CFyba::LC_FFSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 {
    long lSnr,lGrNr;
    long lMaxSnr;
 
    if (pSnrAdm->pFil == NULL) {
-		LC_Error(5,"(LC_FFSn)","Ingen aktuelt fil.");
+		LC_Error(5,L"(LC_FFSn)",L"Ingen aktuelt fil.");
 		return UT_FALSE;
    }
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FFSn"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FFSn");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FFSn"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FFSn");
 
    lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
@@ -296,23 +292,23 @@ CD
 CD Parametre:
 CD Type        Navn     I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR     *pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FFSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 =============================================================================
 */
-SK_EntPnt_FYBA short LC_FFSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
+short CFyba::LC_FFSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 {
    long lSnr,lGrNr;
    LC_BGR Bgr;
    long lMaxSnr;
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FFSnBt"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FFSnBt");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FFSnBt"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FFSnBt");
 
    lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
@@ -347,19 +343,19 @@ CD Type     Navn     I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 CD LC_BGR *     pBgr     u     Gruppenummer
-CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
+CD short        sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FNSn(&SnrAdm,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FNSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
+short CFyba::LC_FNSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 {
    long lSnr,lGrNr;
    long lMaxSnr;
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FNSn"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FNSn");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FNSn"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FNSn");
 
    lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
@@ -388,23 +384,23 @@ CD
 CD Parametre:
 CD Type        Navn     I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR     *pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FNSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FNSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
+short CFyba::LC_FNSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 {
    long lSnr,lGrNr;
    LC_BGR Bgr;
    long lMaxSnr;
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FNSnBt"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FNSnBt");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FNSnBt"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FNSnBt");
 
    lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
@@ -437,20 +433,20 @@ CD
 CD Parametre:
 CD Type        Navn     I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-CD LC_BGR *     pBgr     u     Gruppenummer
+CD LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
+CD LC_BGR     *pBgr     u     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FPSn(&SnrAdm,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FPSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
+short CFyba::LC_FPSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 {
    long lSnr,lGrNr;
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FPSn"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FPSn");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FPSn"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FPSn");
 
    /* Sjekker fra aktuellt serienummer */
    for (lSnr=pSnrAdm->lAktSnr-1L; lSnr>=pSnrAdm->lMinSnr; lSnr--) {
@@ -478,22 +474,22 @@ CD
 CD Parametre:
 CD Type        Navn     I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR     *pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FPSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FPSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
+short CFyba::LC_FPSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 {
    long lSnr,lGrNr;
    LC_BGR Bgr;
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FPSnBt"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FPSnBt");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FPSnBt"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FPSnBt");
 
    /* Sjekker fra aktuellt serienummer */
    for (lSnr=pSnrAdm->lAktSnr-1L; lSnr>=pSnrAdm->lMinSnr; lSnr--) {
@@ -524,21 +520,21 @@ CD
 CD Parametre:
 CD Type        Navn     I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
-CD LC_BGR *     pBgr     u     Gruppenummer
+CD LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
+CD LC_BGR     *pBgr     u     Gruppenummer
 CD short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FLSn(&SnrAdm,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FLSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
+short CFyba::LC_FLSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 {
    long lGrNr;
    long lSnr;
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FLSn"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FLSn");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FLSn"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FLSn");
 
    lSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
@@ -568,23 +564,23 @@ CD
 CD Parametre:
 CD Type        Navn     I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD LC_SNR_ADM * pSnrAdm   i    Peker til statusblokk for serienummersøk
+CD LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 CD short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
-CD LC_BGR *     pBgr      u    Gruppenummer
+CD LC_BGR     *pBgr      u    Gruppenummer
 CD short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
 CD
 CD Bruk:
 CD sstat = LC_FLSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
 */
-SK_EntPnt_FYBA short LC_FLSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
+short CFyba::LC_FLSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 {
    long lGrNr;
    LC_BGR Bgr;
    long lSnr;
 
-   /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FLSnBt"); */
-   LO_TestFilpeker(pSnrAdm->pFil,"FLSnBt");
+   /* LO_TestFilpeker(pSnrAdm->pFil,L"LC_FLSnBt"); */
+   LO_TestFilpeker(pSnrAdm->pFil,L"FLSnBt");
 
    lSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
@@ -625,11 +621,11 @@ CD Bruk:
 CD LS_PutSn(pFil,lGrNr,lSnr);
 =============================================================================
 */
-void LS_PutSn(LC_FILADM *pFil,long lGrNr,long lSnr)
+void CFyba::LS_PutSn(LC_FILADM *pFil,long lGrNr,long lSnr)
 {
    if (lSnr >= 0L) {
-      /* LO_TestFilpeker(pFil,"LC_PutSn"); */
-      LO_TestFilpeker(pFil,"PutSn");
+      /* LO_TestFilpeker(pFil,L"LC_PutSn"); */
+      LO_TestFilpeker(pFil,L"PutSn");
 
       /* Max snr på filen */
       if (lSnr > pFil->lMaxSnr) {
@@ -640,8 +636,8 @@ void LS_PutSn(LC_FILADM *pFil,long lGrNr,long lSnr)
       LI_PutSnr(pFil,lSnr,lGrNr);
 
    } else {
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %ld ",lSnr);
-      LC_Error(61,"(LS_PutSn)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %ld ",lSnr);
+      LC_Error(61,L"(LS_PutSn)",err.tx);
    }
 }
 
@@ -658,21 +654,21 @@ CD Type     Navn    I/U   Forklaring
 CD -----------------------------------------------------------------------------
 CD LC_FILADM *pFil   i    Peker til FilAdm
 CD long       lin    i    Linjenummer i SN-tab som skal hentes
-CD char      *tx     r    Peker til streng med formatert SN-linje
+CD wchar_t      *tx     r    Peker til streng med formatert SN-linje
 CD
 CD Bruk:
-CD UT_FPRINTF(stderr,"\nSerienummertabell:\n");
+CD UT_FPRINTF(stderr,L"\nSerienummertabell:\n");
 CD for (lin=0L; lin<100L; lin++) {
-CD     UT_FPRINTF(stderr,"%s\n",LS_VisSn(BlaFile,lin));
+CD     UT_FPRINTF(stderr,L"%s\n",LS_VisSn(BlaFile,lin));
 CD }
    =============================================================================
 */
-char *LS_VisSn(LC_FILADM *pFil,long lin)
+wchar_t * CFyba::LS_VisSn(LC_FILADM *pFil,long lin)
 {
    if (lin >= 0L  &&  lin < pFil->lMaxSnr){
-       UT_SNPRINTF(err().tx,LC_ERR_LEN,"%8ld: %8ld",lin,LI_GetSnr(pFil,lin));
+       UT_SNPRINTF(err.tx,LC_ERR_LEN,L"%8ld: %8ld",lin,LI_GetSnr(pFil,lin));
    } else{
-       *err().tx = '\0';
+       *err.tx = '\0';
    }
-   return err().tx;
+   return err.tx;
 }

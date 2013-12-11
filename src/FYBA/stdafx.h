@@ -8,9 +8,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
 
-#include <../UT/fyut.h>
-#include <../GM/fygm.h>
+#include <fyut.h>
+#include <fygm.h>
 
 #include "fyba.h"
 #include "fybax.h"

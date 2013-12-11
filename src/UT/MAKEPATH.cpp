@@ -8,14 +8,11 @@
 #include "stdafx.h"
 #include "fyut.h"
 
-#ifdef BORLAND
-#	include <windows.h>
-#endif
 #ifdef WIN32
 #	include <windows.h>
 #endif
 
-static char *_stpcpy(char *til, const char *fra);
+static wchar_t *_stpcpy(wchar_t *til, const wchar_t *fra);
 
 
 /*---------------------------------------------------------------------*
@@ -23,8 +20,8 @@ static char *_stpcpy(char *til, const char *fra);
 Name            UT_makepath - bygg opp filnavn
 
 Bruk            #include <fyut.h>
-                void UT_makepath(char *path, const char * drive, const char * dir,
-                                 const char * name, const char * ext);
+                void UT_makepath(wchar_t *path, const wchar_t * drive, const wchar_t * dir,
+                                 const wchar_t * name, const wchar_t * ext);
 
 Prototype i     fyut.h
 
@@ -73,17 +70,17 @@ CD
 CD PARAMETERLISTE:
 CD Type         Navn       I/U  Merknad
 CD --------------------------------------------------------------
-CD char        *pszPath   u   Komplett filnavn
-CD const char  *pszDrive  i   Disk
-CD const char  *pszDir    i   Katalog
-CD const char  *pszNavn   i   Navn
-CD const char  *pszExt    i   Extension
+CD wchar_t        *pszPath   u   Komplett filnavn
+CD const wchar_t  *pszDrive  i   Disk
+CD const wchar_t  *pszDir    i   Katalog
+CD const wchar_t  *pszNavn   i   Navn
+CD const wchar_t  *pszExt    i   Extension
 CD
 CD Bruk:  UT_makepath(szPath,szDrive,szDir,szNavn,szExt);
    ==================================================================
 */
-SK_EntPnt_UT void  UT_makepath(char *pathP, const char *driveP, const char *dirP,
-                  const char *nameP, const char *extP)
+SK_EntPnt_UT void  UT_makepath(wchar_t *pathP, const wchar_t *driveP, const wchar_t *dirP,
+                  const wchar_t *nameP, const wchar_t *extP)
 {
 #ifdef UNIX
    if (dirP && *dirP) {
@@ -128,7 +125,7 @@ SK_EntPnt_UT void  UT_makepath(char *pathP, const char *driveP, const char *dirP
 
 
 //====================================================
-static char *_stpcpy(char *til, const char *fra)
+static wchar_t *_stpcpy(wchar_t *til, const wchar_t *fra)
 {
    while (*fra) {
       *til = *fra;

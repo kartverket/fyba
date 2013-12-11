@@ -1,5 +1,5 @@
 /* === AR-920210 ========================================================= */
-/*  STATENS KARTVERK  -  FYSAK-PC                                          */
+/*  KARTVERKET  -  FYSAK-PC                                          */
 /*  Fil: fylo.c                                                            */
 /*  Innhold: Åpningsrutiner for FYSAK-PC                                   */
 /* ======================================================================= */
@@ -14,141 +14,11 @@
 #include <limits.h>
 
 
-/* --- Lokale rutiner -------------------------- */
-static LC_BASEADM * LO_AppBaseAdm(void);
-static short       LO_DelBaseAdm(LC_BASEADM * pBase);
-static LC_FILADM * LO_AppFilAdm(LC_BASEADM * pBase);
-static void        LO_DelFilAdm(LC_FILADM *pFil);
-static short       LO_OpenKladd(LC_BASEADM * pBase);
-static short       LO_InklSos(LC_FILADM *pFil,short vising);
-
-/* --- Globale strukturer ---------------------- */
-LC_SYSTEMADM Sys;
-
-LC_FEILMELDING& err() { /* Feilmeldingsstruktur - construct on first use to prevent */
-					    /* it from being uninitialized */
-  static LC_FEILMELDING* err = new LC_FEILMELDING;
-  return *err;
-}                       
-char retur_str[LC_MAX_SOSI_LINJE_LEN];          /* Returstreng */
-
-volatile short fyba_initiert = 0;    /* Bryter for å vise at LC_Init er utført */
-
-
-void  (*LC_ErrorAdr)(short ifeilnr, const char* logtx, const char* vartx) = NULL;
-void  (*LC_StartMessageAdr)(const char *cfil) = NULL;
+void  (*LC_ErrorAdr)(short ifeilnr, const wchar_t* logtx, const wchar_t* vartx) = NULL;
+void  (*LC_StartMessageAdr)(const wchar_t *cfil) = NULL;
 void  (*LC_ShowMessageAdr)(double prosent) = NULL;
 void  (*LC_EndMessageAdr)(void) = NULL;
 short (*LC_CancelAdr)(void) = NULL;
-
-
-
-/*
-AR-910920
-CH LC_Init                                                       Initierer FYBA
-CD =============================================================================
-CD Formål:
-CD Initierer FYBA.
-CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
-CD -----------------------------------------------------------------------------
-CD
-CD Bruk:
-CD LC_Init();
-   =============================================================================
-*/
-SK_EntPnt_FYBA void LC_Init(void)
-{
-   fyba_initiert = 1;                  /* FYBA er initiert */
-
-   /* Husker aktuelle versjonsnummer */
-   UT_StrCopy(Sys.szBaseVer,FYBA_IDENT,LC_BASEVER_LEN);
-   UT_StrCopy(Sys.szIdxVer,FYBA_INDEKS_VERSJON,5);
-
-	/* Ingen aktuell gruppe */
-   Sys.GrId.lNr = INGEN_GRUPPE;
-   Sys.sGrEndra = END_UENDRA;
-
-   Sys.sResPlass = 0;
-   Sys.lMaxSkriv = 0L;
-   Sys.lAntSkriv = 0L;
-   Sys.sNGISmodus = NGIS_NORMAL;
-   Sys.sUtvidModus = LC_UTVID_SIKKER;
-
-	/* Allokerer buffer */
-	Sys.Hode.pszTx  = (char*)UT_MALLOC(LC_MAX_GINFO_BUFFER * sizeof(char));
-	Sys.Ginfo.pszTx = (char*)UT_MALLOC(LC_MAX_GINFO_BUFFER * sizeof(char));
-	Sys.pszPinfo    = (char*)UT_MALLOC(LC_MAX_PINFO_BUFFER * sizeof(char));
-	Sys.pdAust      = (double *)UT_MALLOC(LC_MAX_KOORD * sizeof(double));
-	Sys.pdNord      = (double *)UT_MALLOC(LC_MAX_KOORD * sizeof(double));
-	Sys.pInfo       = (LB_INFO *)UT_MALLOC(LC_MAX_KOORD * sizeof(LB_INFO));
-
-	/* Initierer lesebuffer for HO-rutinene */
-	Sys.BufAdm.sStatus = LESEBUFFER_TOM;
-
-	/* Initierer navnetabell for HO-rutinene */
-	LN_InitTab(&(Sys.SosiNavn));
-
-   Sys.usMerkRefGr = 0;
-
-   /* Ingen base er åpnet */
-   Sys.pForsteBase = NULL;
-   Sys.pAktBase = NULL;
-}
-
-
-/*
-AR-910920
-CH LC_Close                                                    Stenger ned FYBA
-CD =============================================================================
-CD Formål:
-CD Stenger ned FYBA.
-CD
-CD Parametre:
-CD Type     Navn      I/U   Forklaring
-CD -----------------------------------------------------------------------------
-CD
-CD Bruk:
-CD LC_Close();
-	=============================================================================
-*/
-SK_EntPnt_FYBA void LC_Close(void)
-{
-   LC_BASEADM *pBase, *pNesteBase;
-
-   /* Ingen aktuell gruppe */
-   Sys.GrId.lNr = INGEN_GRUPPE;
-
-   if (fyba_initiert != 0) {
-      fyba_initiert = 0;       /* FYBA er ikke initiert */
-
-		/* Frigir buffer */
-		UT_FREE(Sys.Hode.pszTx);
-		UT_FREE(Sys.Ginfo.pszTx);
-		UT_FREE(Sys.pszPinfo);
-		UT_FREE(Sys.pdAust);
-		UT_FREE(Sys.pdNord);
-		UT_FREE(Sys.pInfo);
-
-      /* Initierer navnetabell for HO-rutinene */
-		LN_InitTab(&(Sys.SosiNavn));
-
-      /* Stenger eventuelle åpne baser. */
-      for (pBase=Sys.pForsteBase; pBase!=NULL; pBase=pNesteBase) {
-         pNesteBase = pBase->pNesteBase;
-         LC_CloseBase(pBase,RESET_IDX);
-      }
-    
-      /* Ingen base er åpnet */
-      Sys.pForsteBase = NULL;
-      Sys.pAktBase = NULL;
-
-   }
-}
-
-
-
 
 
 /*
@@ -168,7 +38,7 @@ CD Bruk:
 CD LC_SetDefLpfi(ant_tegn);
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_SetDefLpfi(short ant_tegn)
+void CFyba::LC_SetDefLpfi(short ant_tegn)
 {
    Sys.sResPlass = ant_tegn;
 }
@@ -191,7 +61,7 @@ CD Bruk:
 CD ant_tegn = LC_InqDefLpfi();
    =============================================================================
 */
-SK_EntPnt_FYBA short LC_InqDefLpfi(void)
+short CFyba::LC_InqDefLpfi(void)
 {
    return  Sys.sResPlass;
 }
@@ -214,7 +84,7 @@ CD Bruk:
 CD     status = LC_InqLag(&usLag);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_InqLag(unsigned short *usLag)
+short CFyba::LC_InqLag(unsigned short *usLag)
 {
    /* Er det noen aktuell gruppe? */
    if (Sys.GrId.lNr != INGEN_GRUPPE) {
@@ -244,10 +114,9 @@ CD Bruk:
 CD     usLag = LC_InqFilLag(pFil);
    ==========================================================================
 */
-SK_EntPnt_FYBA unsigned short LC_InqFilLag(LC_FILADM *pFil)
+unsigned short CFyba::LC_InqFilLag(LC_FILADM *pFil)
 {
-   /* LO_TestFilpeker(pFil,"LC_InqFilLag"); */
-   LO_TestFilpeker(pFil,"InqFilLag");
+   LO_TestFilpeker(pFil,L"InqFilLag");
    return pFil->usLag;
 }
 
@@ -269,11 +138,11 @@ CD Bruk:
 CD     LC_SetFilLag(pFil,LC_FRAMGR);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag)
+void CFyba::LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag)
 {
    short ostat;
    
-   LO_TestFilpeker(pFil,"SetFilLag");
+   LO_TestFilpeker(pFil,L"SetFilLag");
 
    /* Må lagre aktuell gruppe hvis den er på denne filen og er endret */
    //if (pFil == Sys.GrId.pFil  &&  Sys.sGrEndra != END_UENDRA) {
@@ -290,14 +159,14 @@ SK_EntPnt_FYBA void LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag)
 
    if ( usLag == LC_FRAMGR) {
       /* Sjekk at filen kan åpnes med den ønskede aksessen */   
-		pFil->pBase->pfSos = UT_OpenFile(pFil->pszNavn,"",UT_UPDATE,UT_OLD,&ostat);
+		pFil->pBase->pfSos = UT_OpenFile(pFil->pszNavn,L"",UT_UPDATE,UT_OLD,&ostat);
 
       /* Åpningsfeil */
       if (ostat != UT_OK) {
-         char szError[256];
+         wchar_t szError[256];
          UT_strerror(szError,256,ostat);
-         UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pFil->pszNavn,szError);
-         LC_Error(101,"(LC_SetFilLag)",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pFil->pszNavn,szError);
+         LC_Error(101,L"(LC_SetFilLag)",err.tx);
 
       } else {
          // Husk current filnummer mm
@@ -335,7 +204,7 @@ CD Parametre:
 CD Type         Navn          I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_FILADM   *pFil           i   Filpeker
-CD char        *pszBackupPath  i   Katalognavn for lagring av backup.
+CD wchar_t        *pszBackupPath  i   Katalognavn for lagring av backup.
 CD short        sStatus        r   UT_TRUE = OK
 CD                                 UT_FALSE = Feil.
 CD
@@ -343,15 +212,15 @@ CD Bruk:
 CD     sStatus = LC_Backup(pFil, szBackupPath);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_Backup(LC_FILADM *pFil, const char *pszBackupPath)
+short CFyba::LC_Backup(LC_FILADM *pFil, const wchar_t *pszBackupPath)
 {
-   char drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
-	char szBakFil[_MAX_PATH];
-	char szBakKatalog[_MAX_PATH];
+   wchar_t drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+	wchar_t szBakFil[_MAX_PATH];
+	wchar_t szBakKatalog[_MAX_PATH];
    short sIdx;
    UT_INT64 Size;
    
-   LO_TestFilpeker(pFil,"Backup");
+   LO_TestFilpeker(pFil,L"Backup");
 
    /* Må lagre aktuell gruppe hvis den er på denne filen og er endret */
    //if (pFil == Sys.GrId.pFil  &&  Sys.sGrEndra != END_UENDRA) {
@@ -373,15 +242,15 @@ SK_EntPnt_FYBA short LC_Backup(LC_FILADM *pFil, const char *pszBackupPath)
    if (pszBackupPath != NULL  &&  *pszBackupPath != '\0') {
       UT_StrCopy(szBakKatalog,pszBackupPath,_MAX_PATH);
    } else {
-      UT_makepath(szBakKatalog,drive,dir,"Backup","");
+      UT_makepath(szBakKatalog,drive,dir,L"Backup",L"");
    }
    UT_CreateDir(szBakKatalog);
 
    /* Lag standard navn */
    for (sIdx=0; sIdx<100; sIdx++) {
 
-      UT_SNPRINTF(ext,_MAX_EXT,".b%02hd",sIdx);
-      UT_makepath(szBakFil,"",szBakKatalog,fname,ext);
+      UT_SNPRINTF(ext,_MAX_EXT,L".b%02hd",sIdx);
+      UT_makepath(szBakFil,L"",szBakKatalog,fname,ext);
 
       /* Kontroller om filen finnes fra før */
       /* (Gjøres ved å prøve å spørre om filens størrelse) */
@@ -412,7 +281,7 @@ CD Bruk:
 CD LC_MaxSkriv(antall);
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_MaxSkriv(long antall)
+void CFyba::LC_MaxSkriv(long antall)
 {
    Sys.lMaxSkriv = labs(antall);
 }
@@ -435,7 +304,7 @@ CD Bruk:
 CD antall = LC_InqMaxSkriv();
    =============================================================================
 */
-SK_EntPnt_FYBA long LC_InqMaxSkriv(void)
+long CFyba::LC_InqMaxSkriv(void)
 {
    return Sys.lMaxSkriv;
 }
@@ -461,7 +330,7 @@ CD Bruk:
 CD LC_SetNgisModus(NGIS_NORMAL);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_SetNgisModus(short modus)
+void CFyba::LC_SetNgisModus(short modus)
 {
    if (modus == NGIS_SPESIAL){
 		 Sys.sNGISmodus = NGIS_SPESIAL;
@@ -491,7 +360,7 @@ CD Bruk:
 CD modus = LC_GetNgisModus();
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetNgisModus(void)
+short CFyba::LC_GetNgisModus(void)
 {
    return Sys.sNGISmodus;
 }
@@ -511,7 +380,7 @@ CD Parametre:
 CD Type       Navn    I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD LC_FILADM *pFil     i   Fil det ønskes opplsninger om.
-CD char*  pszNgisLag   r   NGIS-lag. 
+CD wchar_t*  pszNgisLag   r   NGIS-lag. 
 CD                           Tom streng = ..NGIS-LAG er ikke funnet
 CD                           "0"  = Bare leseaksess (..NGIS-LAG 0)
 CD
@@ -520,9 +389,9 @@ CD Bruk:
 CD pszNgisLag = LC_GetNgisLag(pFil);
    ==========================================================================
 */
-SK_EntPnt_FYBA char* LC_GetNgisLag(LC_FILADM *pFil)
+wchar_t * CFyba::LC_GetNgisLag(LC_FILADM *pFil)
 {
-	LO_TestFilpeker(pFil,"LC_GetNgisLag");
+	LO_TestFilpeker(pFil,L"LC_GetNgisLag");
    
    UT_StrCopy(retur_str,pFil->szNgisLag,LC_MAX_SOSI_LINJE_LEN);
 
@@ -554,11 +423,21 @@ CD Bruk:
 CD LC_SetUtvidModus(LC_UTVID_SIKKER);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_SetUtvidModus(short modus)
+void CFyba::LC_SetUtvidModus(short modus)
 {
-   if (modus == LC_UTVID_SIKKER) {
+   if (modus == LC_UTVID_SIKKER)
+   {
+      // Stenger eventuelle åpen fil i alle baser for å sikre at filen er oppdatert i forhold til de endringer som allerede er gjort.
+      for (LC_BASEADM *pBase=Sys.pForsteBase; pBase!=NULL; pBase=pBase->pNesteBase)
+      {
+         LO_CloseSos(pBase);
+      }
+
       Sys.sUtvidModus = LC_UTVID_SIKKER;
-   } else{
+   }
+
+   else
+   {
       Sys.sUtvidModus = LC_UTVID_RASK;
    }
 }
@@ -587,7 +466,7 @@ CD Bruk:
 CD short sModus = LC_GetUtvidModus();
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetUtvidModus(void)
+short CFyba::LC_GetUtvidModus(void)
 {
    return Sys.sUtvidModus;
 }
@@ -611,15 +490,15 @@ CD Bruk:
 CD pBase = LO_AppBaseAdm();
    =============================================================================
 */
-static LC_BASEADM * LO_AppBaseAdm(void)
+LC_BASEADM * CFyba::LO_AppBaseAdm(void)
 {
    LC_BASEADM * pBase;
 
    /*
     * Allokerer og nullstiller minne til blokken
 	 */
-	pBase = (LC_BASEADM *) UT_MALLOC(sizeof(LC_BASEADM));
-	memset(pBase,'\0',sizeof(LC_BASEADM));
+	pBase = (LC_BASEADM *) malloc(sizeof(LC_BASEADM));
+	memset(pBase, 0, sizeof(LC_BASEADM));
 
 	/*
 	 * Legger blokken inn i kjeden av baser
@@ -650,7 +529,7 @@ CD Bruk:
 CD pBase = LC_InqCurBase();
    =============================================================================
 */
-SK_EntPnt_FYBA LC_BASEADM * LC_InqCurBase(void)
+LC_BASEADM * CFyba::LC_InqCurBase(void)
 {
    return  Sys.pAktBase;
 }
@@ -675,7 +554,7 @@ CD Bruk:
 CD sStatus = LO_DelBaseAdm(pBase);
    =============================================================================
 */
-static short LO_DelBaseAdm(LC_BASEADM * pBase)
+short CFyba::LO_DelBaseAdm(LC_BASEADM * pBase)
 {
    LC_BASEADM * pB;
 
@@ -714,7 +593,7 @@ static short LO_DelBaseAdm(LC_BASEADM * pBase)
    /*
     * Frigi minne som var brukt av blokken
 	 */
-	UT_FREE(pBase);
+	free(pBase);
 
 	return UT_TRUE;
 }
@@ -748,21 +627,19 @@ CD Bruk:
 CD pBase = LC_OpenBase(sBaseType);
 	==========================================================================
 */
-SK_EntPnt_FYBA LC_BASEADM * LC_OpenBase(short sBaseType)
+LC_BASEADM * CFyba::LC_OpenBase(LcBasetype basetype)
 {
 	LC_BASEADM * pBase;
 
 	/*
-	 * Sjekk at FYBA er initiert og at det er gitt lovlig sBaseType
+	 * Sjekk at det er gitt lovlig sBaseType
 	 */
-	if (fyba_initiert != 1){
-		LC_Error(4,"(LC_OpenBase)","");
-		exit(2);
-	}
+   /*
 	if (sBaseType != LC_BASE  &&  sBaseType != LC_KLADD) {
-		LC_Error(1,"(LC_OpenBase)","");
+		LC_Error(1,L"(LC_OpenBase)",L"");
 		exit(2);
 	}
+   */
 
 	/*
 	 * Legg til ny baseadm og sett denne som aktuell base
@@ -772,7 +649,7 @@ SK_EntPnt_FYBA LC_BASEADM * LC_OpenBase(short sBaseType)
 	/*
 	 * Initierer
 	 */
-	pBase->sType = sBaseType;
+	pBase->type = basetype;
 	pBase->lAntGr = 0L;
    pBase->sAntFramgrFil = 0;
    pBase->sAntBakgrFil = 0;
@@ -786,7 +663,7 @@ SK_EntPnt_FYBA LC_BASEADM * LC_OpenBase(short sBaseType)
 	/*
 	 * Kladdebase ==> Opprett kladde-SOSI-fil og opprett en gruppe i denne
 	 */
-	if (sBaseType == LC_KLADD) {
+	if (basetype == LC_KLADD) {
 		if (! LO_OpenKladd(pBase)) {
 
          /*
@@ -817,7 +694,7 @@ CD Bruk:
 CD LC_SelectBase(pBase);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_SelectBase(LC_BASEADM * pBase)
+void CFyba::LC_SelectBase(LC_BASEADM * pBase)
 {
    Sys.pAktBase = pBase;
 }
@@ -843,52 +720,52 @@ CD Bruk:
 CD status = LO_OpenKladd(pBase);
    ==========================================================================
 */
-static short LO_OpenKladd(LC_BASEADM * pBase)
+short CFyba::LO_OpenKladd(LC_BASEADM * pBase)
 {
    short status = UT_TRUE;
    short o_stat;
    long snr;
    FILE *kladdefil;
    LC_BGR Bgr;
-   char fil[] = "FyKladd.Sos";
+   wchar_t fil[] = L"FyKladd.Sos";
 
 	/*
     * Åpner kladde-sosi-filen
     */
-   kladdefil = UT_OpenFile(fil,"",UT_UPDATE,UT_UNKNOWN,&o_stat);
+   kladdefil = UT_OpenFile(fil,L"",UT_UPDATE,UT_UNKNOWN,&o_stat);
 
                                            /* Åpnet OK */
    if (o_stat == UT_OK){
       ho_New(kladdefil,0,0.0,0.0,0.001,0.001,0.001,-199999.0,-199999.0,1999999.0,1999999.0);
       fclose(kladdefil);
                         /* Nuller styrevariablene */
-      pBase->sType = LC_BASE;    /* Åpner midlertidig som base */
+      pBase->type = LC_BASE;    /* Åpner midlertidig som base */
 
       /* Åpner kladde filen */
       if (LC_OpenSos(fil,LC_BASE_FRAMGR,LC_NY_IDX,LC_INGEN_STATUS,
            &(Bgr.pFil),&o_stat)) {
 
-         LC_NyGr(Bgr.pFil,".LINJE",&Bgr,&snr);
+         LC_NyGr(Bgr.pFil,L".LINJE",&Bgr,&snr);
 
          /* Merke for at dette er åpen kladdebase */
-			pBase->sType = LC_KLADD;
+			pBase->type = LC_KLADD;
       
       /* Åpningsfeil */
       } else {   
          UT_DeleteFile(fil);
-         char szError[256];
+         wchar_t szError[256];
          UT_strerror(szError,256,o_stat);
-         UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",fil,szError);
-         LC_Error(101,"(LC_OpenKladd)",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",fil,szError);
+         LC_Error(101,L"(LC_OpenKladd)",err.tx);
          status = UT_FALSE;
       }
 
 	/* Åpningsfeil på kladdefilen */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,o_stat);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",fil,szError);
-      LC_Error(101,"(LO_OpenKladd)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",fil,szError);
+      LC_Error(101,L"(LO_OpenKladd)",err.tx);
       status = UT_FALSE;
    }
 
@@ -919,12 +796,12 @@ CD Bruk:
 CD LC_CloseBase(pBase,s_stat);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_CloseBase(LC_BASEADM * pBase,short s_stat)
+void CFyba::LC_CloseBase(LC_BASEADM * pBase,short s_stat)
 {
 	short sAktBaseSletta = (pBase == Sys.pAktBase);
 	
     if (pBase == NULL) {
-      LC_Error(101,"(LC_CloseBase)","LC_CloseBase fikk NULL-peker");
+      LC_Error(101,L"(LC_CloseBase)",L"LC_CloseBase fikk NULL-peker");
       return;
 	}
 
@@ -938,8 +815,8 @@ SK_EntPnt_FYBA void LC_CloseBase(LC_BASEADM * pBase,short s_stat)
 	/*
 	 * Kladdebase ==>  Slett kladdefilen
     */
-   if (pBase->sType == LC_KLADD) {
-      UT_DeleteFile("FyKladd.Sos");
+   if (pBase->type == LC_KLADD) {
+      UT_DeleteFile(L"FyKladd.Sos");
    }
 
    /*
@@ -972,15 +849,15 @@ CD Bruk:
 CD pFil = LO_AppFilAdm();
    =============================================================================
 */
-static LC_FILADM *LO_AppFilAdm(LC_BASEADM * pBase)
+LC_FILADM * CFyba::LO_AppFilAdm(LC_BASEADM * pBase)
 {
 	LC_FILADM *pFil;
 
    /*
     * Allokerer minne til blokken
 	 */
-	pFil = (LC_FILADM *) UT_MALLOC(sizeof(LC_FILADM));
-	memset(pFil,'\0',sizeof(LC_FILADM));
+	pFil = (LC_FILADM *) malloc(sizeof(LC_FILADM));
+	memset(pFil, 0, sizeof(LC_FILADM));
 
 	/*
     * Legger blokken inn i kjeden av filer
@@ -1023,7 +900,7 @@ CD Bruk:
 CD LO_DelFilAdm(pFil);
    =============================================================================
 */
-static void LO_DelFilAdm(LC_FILADM *pFil)
+void CFyba::LO_DelFilAdm(LC_FILADM *pFil)
 {
    LC_FILADM *pF;
 	LC_BASEADM * pBase = pFil->pBase;
@@ -1060,21 +937,21 @@ static void LO_DelFilAdm(LC_FILADM *pFil)
 	pFil->szBaseVer[0] = '\0';
 
    
-   //UT_FPRINTF(stderr,"Frigir minne til FilAdm for: %s\n",pFil->pszNavn);
+   //UT_FPRINTF(stderr,L"Frigir minne til FilAdm for: %s\n",pFil->pszNavn);
 
    /*
     * Frigi minne som var brukt av blokken
 	 */
 	if (pFil->pszNavn != NULL)
    {
-      UT_FREE(pFil->pszNavn);
+      free(pFil->pszNavn);
       pFil->pszNavn = NULL;
    }
 
    // OBS! midlertidig?  AR:2004-05-19 
-   //memset(pFil,'\0',sizeof(LC_FILADM));
+   //memset(pFil, 0, sizeof(LC_FILADM));
 
-	UT_FREE(pFil);
+	free(pFil);
 }
 
 
@@ -1094,7 +971,7 @@ CD
 CD Parametre:
 CD Type    Navn   I/U  Forklaring
 CD --------------------------------------------------------------------
-CD char   *fil        i   Filnavn inkl. sti og fil-type
+CD wchar_t   *fil        i   Filnavn inkl. sti og fil-type
 CD                        (Hvis fil-type mangler forutsettes  .SOS)
 CD short   sModus     i   Filmodus
 CD                        LC_BASE_FRAMGR = Framgrunnsfil
@@ -1132,14 +1009,14 @@ CD ist=LC_OpenSos(fil,LC_SEKV_LES,LC_NY_IDX,LC_INGEN_STATUS,&pFil,&o_stat);
 /// <summary><c>LC_OpenSos</c> Åpner og sjekker SOSI-fil <c>FYBA</c> biblioteket.
 /// </summary>
 /// <param name="fil">Filnavn inkl. sti og fil-type (Hvis fil-type mangler forutsettes  .SOS)</param>
-SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short sVisStatus,
+short CFyba::LC_OpenSos(const wchar_t *fil,short sModus,short sNyIdx,short sVisStatus,
                                 LC_FILADM **pFil, short *o_stat)
 {
    short sAccess;
    UT_INT64 sluttpos;
    double nv_a,nv_n,oh_a,oh_n;
-   char drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
-	char szSosFil[_MAX_PATH];
+   wchar_t drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+	wchar_t szSosFil[_MAX_PATH];
    LC_FILADM *pFi;
    UT_INT64 Size;
    short sStatus;
@@ -1147,18 +1024,14 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
    /*
     * Sjekk at FYBA er initiert
     */
-   if (fyba_initiert != 1) {
-      LC_Error(4,"(LC_OpenSos)","");
-      exit(2);
-   }
    if (Sys.pForsteBase == NULL) {
-		LC_Error(5,"(LC_OpenSos)","");
+		LC_Error(5,L"(LC_OpenSos)",L"");
       exit(2);
    }
 
-   if (Sys.pAktBase->sType == LC_KLADD) {
+   if (Sys.pAktBase->type == LC_KLADD) {
       if (sModus == LC_BASE_FRAMGR  || sModus == LC_BASE_BAKGR) {
-   		LC_Error(106,"(LC_OpenSos)",fil);
+   		LC_Error(106,L"(LC_OpenSos)",fil);
          exit(2);
       }
    }
@@ -1171,11 +1044,11 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
     */
 	UT_FullPath(szSosFil,fil,_MAX_PATH);
    UT_splitpath(szSosFil,drive,dir,fname,ext);
-   if (*ext == '\0')  UT_StrCopy(ext, ".sos",_MAX_EXT);
+   if (*ext == '\0')  UT_StrCopy(ext, L".sos",_MAX_EXT);
    UT_makepath(szSosFil,drive,dir,fname,ext);
    /* UT_StrUpper(szSosFil); */
 
-   /* UT_FPRINTF(stderr,"Åpner: %s\n",szSosFil); */
+   /* UT_FPRINTF(stderr,L"Åpner: %s\n",szSosFil); */
 
    /* Sjekk om filen er i basen fra før */
 	if ((*pFil = LC_GetFiNr(szSosFil)) != NULL) {
@@ -1238,11 +1111,11 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
    UT_StrCopy(pFi->szBaseVer,FYBA_IDENT,LC_BASEVER_LEN);
    UT_StrCopy(pFi->szIdxVer,FYBA_INDEKS_VERSJON,5);
 	pFi->sSosiVer = FYBA_SOSI_VERSJON;
-   UT_StrCopy(pFi->szDato,"*",LC_DATO_LEN);
 	pFi->SosiNiv[0] = 0;
 	pFi->SosiNiv[1] = 0;
-	pFi->pszNavn = (char*)UT_MALLOC(strlen(szSosFil)+1);
-	UT_StrCopy(pFi->pszNavn,szSosFil,strlen(szSosFil)+1);
+   pFi->pszNavn = _wcsdup(szSosFil);  
+	//pFi->pszNavn = (wchar_t*)malloc((wcslen(szSosFil)+1) * sizeof(wchar_t));
+	//UT_StrCopy(pFi->pszNavn,szSosFil,wcslen(szSosFil)+1);
 	pFi->sAccess = sAccess;
 	pFi->lMaxSnr = NYTT_SNR;   /* Ikke noe akt. snr */
 	pFi->lAntGr = 0L;
@@ -1262,11 +1135,11 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
    }
 
                                            /* Åpner .SOS-filen */
-	pFi->pBase->pfSos = UT_OpenFile(pFi->pszNavn,"",sAccess,UT_OLD,o_stat);
+	pFi->pBase->pfSos = UT_OpenFile(pFi->pszNavn,L"",sAccess,UT_OLD,o_stat);
 
                  /* Ukjent fil med skriveaksess ==> opprett filen */
    if (*o_stat == ENOENT  &&  sAccess == UT_UPDATE){
-      pFi->pBase->pfSos = UT_OpenFile(pFi->pszNavn,"",sAccess,UT_UNKNOWN,o_stat);
+      pFi->pBase->pfSos = UT_OpenFile(pFi->pszNavn,L"",sAccess,UT_UNKNOWN,o_stat);
    }
    pFi->pBase->pCurSos = pFi;
 
@@ -1279,10 +1152,10 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
    
    } else {
       /* Åpningsfeil på SOSI-filen  ==>  avbryter */
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,*o_stat);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pFi->pszNavn,szError);
-      LC_Error(101,"(LC_OpenSos)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pFi->pszNavn,szError);
+      LC_Error(101,L"(LC_OpenSos)",err.tx);
       pFi->pBase->pCurSos = NULL;
       LO_DelFilAdm(pFi);
       *pFil = NULL;
@@ -1409,15 +1282,20 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
                return UT_FALSE;
             }
 
-            /* Gi melding om ulovlig referanse */
+            // Gi melding om ulovlig referanse
             if ((pFi->usDataFeil & LC_DATAFEIL_REF) != 0) {
-               LC_Error(56,"(LC_OpenSos)",pFi->pszNavn);
+               LC_Error(56,L"(LC_OpenSos)",pFi->pszNavn);
             }
 
-            /* Gi melding om ulovlig bue */
+            // Gi melding om ulovlig bue
             if ((pFi->usDataFeil & LC_DATAFEIL_BUE) != 0) {
-               LC_Error(59,"(LC_OpenSos)",pFi->pszNavn);
+               LC_Error(59,L"(LC_OpenSos)",pFi->pszNavn);
             }
+
+            // Gi melding om ulovlig sprang i prikknivå
+            if ((pFi->usDataFeil & LC_DATAFEIL_PRIKKNIVO) != 0) {
+               LC_Error(107,L"(LC_OpenSos)",pFi->pszNavn);
+            }  
          }
       }
 
@@ -1433,9 +1311,6 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
    if (pFi->usLag & LC_FRAMGR)     pFi->pBase->sAntFramgrFil++;
    else if (pFi->usLag & LC_BAKGR) pFi->pBase->sAntBakgrFil++;
 
-
-   // Initierer filtype
-   LC_SetFilType(pFi,LC_FILTYPE_UKJENT);
    return  UT_TRUE;
 }
 
@@ -1456,7 +1331,7 @@ CD Bruk:
 CD LO_ReopenSos(pFil);
    ==========================================================================
 */
-void LO_ReopenSos(LC_FILADM *pFil)
+void CFyba::LO_ReopenSos(LC_FILADM *pFil)
 {
    short ostat;
 
@@ -1466,11 +1341,11 @@ void LO_ReopenSos(LC_FILADM *pFil)
       }
 
       /* Åner filen */
-		pFil->pBase->pfSos = UT_OpenFile(pFil->pszNavn,"",pFil->sAccess,UT_OLD,&ostat);
+		pFil->pBase->pfSos = UT_OpenFile(pFil->pszNavn,L"",pFil->sAccess,UT_OLD,&ostat);
 
       /* Åpningsfeil */
       if (ostat != UT_OK) {
-         LC_Error(6,"(LO_ReopenSos)",pFil->pszNavn);
+         LC_Error(6,L"(LO_ReopenSos)",pFil->pszNavn);
          exit(2);
       }
 
@@ -1499,25 +1374,25 @@ CD Bruk:
 CD LC_CloseSos(pFil,SAVE_IDX);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
+void CFyba::LC_CloseSos(LC_FILADM *pFil,short s_stat)
 {
    LC_BGR Bgr,AktBgr;
    short ngi,linje_nr;
    long nko;
    unsigned short info;
-   char szSosiNiv[10];
+   wchar_t szSosiNiv[10];
    LC_BOKS * pB;
 
 
-   /* LO_TestFilpeker(pFil,"LC_CloseSos"); */
-	LO_TestFilpeker(pFil,"CloseSos");
+   /* LO_TestFilpeker(pFil,L"LC_CloseSos"); */
+	LO_TestFilpeker(pFil,L"CloseSos");
 
 	/*
     * Hvis aktuell gruppe er på denne filen
     */
    if (Sys.GrId.lNr != INGEN_GRUPPE  &&  Sys.GrId.pFil == pFil) {
 
-      if (pFil->pBase->sType == LC_BASE) {
+      if (pFil->pBase->type == LC_BASE) {
          /* Hvis gruppen er endra, skriv den til filen */
          if (Sys.sGrEndra != END_UENDRA) {
             if (LC_WxGr(SKRIV_SOSI) == UT_FALSE) {
@@ -1537,7 +1412,7 @@ SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
    /*
 	 * Sikrer oppdatering av sosi-filen
     */
-   if (pFil->pBase->sType == LC_BASE) {
+   if (pFil->pBase->type == LC_BASE) {
       LB_Save(pFil);
    }
    
@@ -1548,8 +1423,8 @@ SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
       Bgr.lNr = 0;
       LC_RxGr(&Bgr,LES_OPTIMALT,&ngi,&nko,&info);
 
-      UT_SNPRINTF (szSosiNiv, 10, "%d", (int)pFil->SosiNiv[1]);
-      ngi = LC_PutGP("..SOSI-NIVÅ", szSosiNiv, &linje_nr);
+      UT_SNPRINTF (szSosiNiv, 10, L"%d", (int)pFil->SosiNiv[1]);
+      ngi = LC_PutGP(L"..SOSI-NIVÅ", szSosiNiv, &linje_nr);
       LC_WxGr(SKRIV_SOSI);
 
       if (AktBgr.lNr != INGEN_GRUPPE) { 
@@ -1559,13 +1434,13 @@ SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
       }
    }
    
-   /* UT_FPRINTF(stderr,"Stenger: %s\n",pFil->pszNavn); */
+   /* UT_FPRINTF(stderr,L"Stenger: %s\n",pFil->pszNavn); */
    LO_CloseSos(pFil->pBase);
 
    /*
    * Indeks skal alltid fjernes for kladdefilen i kladdebase
    */
-   if (pFil->pBase->sType == LC_KLADD  &&  (pFil->usLag & LC_FRAMGR)) {
+   if (pFil->pBase->type == LC_KLADD  &&  (pFil->usLag & LC_FRAMGR)) {
       s_stat = RESET_IDX;
    }
 
@@ -1626,9 +1501,9 @@ CD Bruk:
 CD LC_FcloseSos(pFil);
 ==========================================================================
 */
-SK_EntPnt_FYBA void LC_FcloseSos(LC_FILADM *pFil)
+void CFyba::LC_FcloseSos(LC_FILADM *pFil)
 {
-   LO_TestFilpeker(pFil,"LC_FcloseSos");
+   LO_TestFilpeker(pFil,L"LC_FcloseSos");
 
    // Må lagre aktuell gruppe hvis den er på denne filen og er endret
    if (pFil == Sys.GrId.pFil  &&  Sys.GrId.lNr != INGEN_GRUPPE  &&  Sys.sGrEndra != END_UENDRA) {
@@ -1660,7 +1535,7 @@ CD Bruk:
 CD LO_CloseSos(pBase);
 	==========================================================================
 */
-void LO_CloseSos(LC_BASEADM * pBase)
+void CFyba::LO_CloseSos(LC_BASEADM * pBase)
 {
    if (pBase->pCurSos != NULL) {
       fclose(pBase->pfSos);     
@@ -1686,11 +1561,11 @@ CD Bruk:
 CD LO_BeFt(pFil);
    ==========================================================================
 */
-void LO_BeFt(LC_FILADM *pFil)
+void CFyba::LO_BeFt(LC_FILADM *pFil)
 {
    double nva,nvn,oha,ohn;
    short lin;
-   char *cp;
+   wchar_t *cp;
 
 
    /* Transformasjonsparametre */
@@ -1716,24 +1591,16 @@ void LO_BeFt(LC_FILADM *pFil)
 
    /* SOSI-VERSJON */
    lin=2;
-   if ((cp = LC_GetGP("..SOSI-VERSJON",&lin,Sys.pGrInfo->ngi)) != NULL) {
-      pFil->sSosiVer = (short)(strtod(cp,&cp)*100.0);
+   if ((cp = LC_GetGP(L"..SOSI-VERSJON",&lin,Sys.pGrInfo->ngi)) != NULL) {
+      pFil->sSosiVer = (short)(wcstod(cp,&cp)*100.0);
    } else {
       pFil->sSosiVer = FYBA_SOSI_VERSJON;
    }
 
-   // DATO
-   lin=2;
-   if ((cp = LC_GetGP("..DATO",&lin,Sys.pGrInfo->ngi)) != NULL) {
-      UT_StrCopy(pFil->szDato,cp,LC_DATO_LEN);
-   } else {
-      UT_StrCopy(pFil->szDato,"*",LC_DATO_LEN);
-   }
-
    /* SOSI-NIVÅ */
    lin=2;
-   if ((cp = LC_GetGP("..SOSI-NIVÅ",&lin,Sys.pGrInfo->ngi)) != NULL) {
-      pFil->SosiNiv[0] = (char)(strtol(cp,&cp,10));
+   if ((cp = LC_GetGP(L"..SOSI-NIVÅ",&lin,Sys.pGrInfo->ngi)) != NULL) {
+      pFil->SosiNiv[0] = (wchar_t)(wcstol(cp,&cp,10));
    } else {
       pFil->SosiNiv[0] = 0;
    }
@@ -1767,7 +1634,7 @@ CD Bruk:
 CD sStatus = LC_GetBaOm(LC_FRAMGR,&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,double *oha,
+short CFyba::LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,double *oha,
                  double *ohn)
 {
    double na,nn,oa,on;
@@ -1816,10 +1683,10 @@ CD Bruk:
 CD ist = LC_GetFiOm(pFil,&nva,&nvn,&oha,&ohn);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetFiOm(LC_FILADM *pFil,double *nva,double *nvn,double *oha,double *ohn)
+short CFyba::LC_GetFiOm(LC_FILADM *pFil,double *nva,double *nvn,double *oha,double *ohn)
 {
-	/* LO_TestFilpeker(pFil,"LC_GetFiOm"); */
-   LO_TestFilpeker(pFil,"LC_GetFiOm");
+	/* LO_TestFilpeker(pFil,L"LC_GetFiOm"); */
+   LO_TestFilpeker(pFil,L"LC_GetFiOm");
 
    if (pFil->usLag != LC_SEKV) {
       *nva = pFil->Omr.dMinAust;
@@ -1857,7 +1724,7 @@ CD Bruk:
 CD ant_bgr = LO_InklSos(pFil,LC_VIS_STATUS);
    ==========================================================================
 */
-static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
+short CFyba::LO_InklSos(LC_FILADM *pFil,short sVisStatus)
 {
    unsigned long ulLedigPlass;
    short siste,ngi,nivaa;
@@ -1909,7 +1776,7 @@ static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
 			      UT_InqAvailSize(pFil->pszNavn,&ulLedigPlass);
 			      if (ulLedigPlass < ((unsigned long)LC_MAX_KOORD * (unsigned long)120)) {
                   /* Disken er snart full */
-                  LC_Error(93,"(LO_InklSos)",pFil->pszNavn);
+                  LC_Error(93,L"(LO_InklSos)",pFil->pszNavn);
                }
             }
 
@@ -1930,7 +1797,9 @@ static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
       
 			   /* Grafisk vising av mengde lest */
             if (sVisStatus == LC_VIS_STATUS) {
-               LC_ShowMessage((double)pos * lengde_faktor);
+               if ((Sys.GrId.lNr % 10) == 0) {
+                  LC_ShowMessage((double)pos * lengde_faktor);
+               }
             }
 
             /* Gruppe lest OK */
@@ -1980,8 +1849,8 @@ static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
 			   }
 
          } else {                     /* For mange grupper, tab. sprengt */
-            UT_SNPRINTF(err().tx,LC_ERR_LEN," %ld",pFil->lAntGr+1L);
-            LC_Error(2,"(LO_InklSos)",err().tx);
+            UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %ld",pFil->lAntGr+1L);
+            LC_Error(2,L"(LO_InklSos)",err.tx);
             exit(99);
          }
 
@@ -1996,7 +1865,9 @@ static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
          Bgr.pFil = pFil;
          for (lGrNr=0; lGrNr<pFil->lAntGr && !avbrutt; lGrNr++) {
             if (sVisStatus == LC_VIS_STATUS) {
-				   LC_ShowMessage((double)lGrNr * lengde_faktor);
+               if ((lGrNr%10) == 0) {
+				      LC_ShowMessage((double)lGrNr * lengde_faktor);
+               }
             }
 
             /* Sjekk om gruppen har referanser */
@@ -2038,7 +1909,7 @@ static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
       }
 
       if (avbrutt) {          /* Lesing er avbrutt */
-         LC_Error(10,"(LO_InklSos)","");
+         LC_Error(10,L"(LO_InklSos)",L"");
 		   pFil->lAntGr = 0L;
          sStatus = UT_FALSE;
       }
@@ -2062,18 +1933,18 @@ CD
 CD Parametre:
 CD Type        Navn     I/U  Forklaring
 CD --------------------------------------------------------------------------
-CD char        fil_navn  i   Filnavn
+CD wchar_t        fil_navn  i   Filnavn
 CD LC_FILADM  *pFil      r   Peker til FilAdm for filen. (NULL = ukjent fil)
 CD
 CD Bruk:
 CD pFil = LC_GetFiNr(fil_navn);
    ==========================================================================
 */
-SK_EntPnt_FYBA LC_FILADM *LC_GetFiNr(const char *fil_navn)
+LC_FILADM * CFyba::LC_GetFiNr(const wchar_t *fil_navn)
 {
    LC_FILADM *pFil;
-   char drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
-   char szSosFil[_MAX_PATH];
+   wchar_t drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+   wchar_t szSosFil[_MAX_PATH];
 
 
    /*
@@ -2081,7 +1952,7 @@ SK_EntPnt_FYBA LC_FILADM *LC_GetFiNr(const char *fil_navn)
     */
    UT_FullPath(szSosFil,fil_navn,_MAX_PATH);
    UT_splitpath(szSosFil,drive,dir,fname,ext);
-   if (*ext == '\0')  UT_StrCopy(ext,".sos",_MAX_EXT);
+   if (*ext == '\0')  UT_StrCopy(ext,L".sos",_MAX_EXT);
 	UT_makepath(szSosFil,drive,dir,fname,ext);
 
    for (pFil=Sys.pAktBase->pForsteFil; pFil!=NULL; pFil=pFil->pNesteFil) {
@@ -2107,16 +1978,16 @@ CD Parametre:
 CD Type        Navn      I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil       i    Peker til FilAdm
-CD char       *fil_navn   r    Peker til filnavn 
+CD wchar_t       *fil_navn   r    Peker til filnavn 
 CD
 CD Bruk:
 CD fil_navn = LC_GetFiNa(pFil);
    ==========================================================================
 */
-SK_EntPnt_FYBA char *LC_GetFiNa(LC_FILADM *pFil)
+wchar_t * CFyba::LC_GetFiNa(LC_FILADM *pFil)
 {
-   /* LO_TestFilpeker(pFil,"LC_GetFiNa"); */
-   LO_TestFilpeker(pFil,"GetFiNa");
+   /* LO_TestFilpeker(pFil,L"LC_GetFiNa"); */
+   LO_TestFilpeker(pFil,L"GetFiNa");
 
    return pFil->pszNavn;
 }
@@ -2133,21 +2004,21 @@ CD Parametre:
 CD Type        Navn         I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_FILADM * pFil          i    Peker til FilAdm
-CD char       *pszRutineNavn i    Melding (rutinenavnet for kallende rutine)
+CD wchar_t       *pszRutineNavn i    Melding (rutinenavnet for kallende rutine)
 CD
 CD Bruk:
-CD LO_TestFilpeker(pFil,"LC_OpenBase");
+CD LO_TestFilpeker(pFil,L"LC_OpenBase");
    ==========================================================================
 */
-void LO_TestFilpeker(LC_FILADM *pFil,char *pszRutineNavn)
+void CFyba::LO_TestFilpeker(LC_FILADM *pFil,wchar_t *pszRutineNavn)
 {
-   char szTx[100];
+   wchar_t szTx[100];
 
 
    if (pFil == NULL  ||  *(pFil->szBaseVer) != 'F') { 
 
-      UT_SNPRINTF(szTx,100," %s,  (Filpeker: %p)",pszRutineNavn,pFil); 
-      LC_Error(105,"(TestFilpeker)",szTx);
+      UT_SNPRINTF(szTx,100,L" %s,  (Filpeker: %p)",pszRutineNavn,pFil); 
+      LC_Error(105,L"(TestFilpeker)",szTx);
    }
 }
 
@@ -2162,7 +2033,7 @@ CD
 CD Parametre:
 CD Type    Navn   I/U  Forklaring
 CD --------------------------------------------------------------------
-CD char   *fil     i   Filnavn inkl. sti og fil-type
+CD wchar_t   *fil     i   Filnavn inkl. sti og fil-type
 CD                     (Hvis fil-type mangler forutsettes  .SOS)
 CD short   status  r   Status: UT_TRUE = Filen er med i basen.
 CD                             UT_FALSE = Filen er IKKE med i basen.
@@ -2171,17 +2042,17 @@ CD Bruk:
 CD ist = LC_ErFilBase(fil);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_ErFilBase(const char *fil)
+short CFyba::LC_ErFilBase(const wchar_t *fil)
 {
-   char drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
-   char szSosFil[_MAX_PATH];
+   wchar_t drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+   wchar_t szSosFil[_MAX_PATH];
 
    /*
     * Bygg opp fullstendig filnavn
     */
    UT_FullPath(szSosFil,fil,_MAX_PATH);
    UT_splitpath(szSosFil,drive,dir,fname,ext);
-   if (*ext == '\0')  UT_StrCopy(ext,".sos",_MAX_EXT);
+   if (*ext == '\0')  UT_StrCopy(ext,L".sos",_MAX_EXT);
    UT_makepath(szSosFil,drive,dir,fname,ext);
 
    /* Sjekk om filen er i basen fra før */
@@ -2209,7 +2080,7 @@ CD Bruk:
 CD ist = LC_ErKoordsysLik();
 	=======================================================================
 */
-SK_EntPnt_FYBA short LC_ErKoordsysLik(void)
+short CFyba::LC_ErKoordsysLik(void)
 {
    short sKoSys = 0;
    short sFilNr = 0;
@@ -2232,12 +2103,12 @@ SK_EntPnt_FYBA short LC_ErKoordsysLik(void)
 
          // Skriv filnavn og koordinatsystem til loggfilen
 
-         UT_FPRINTF(stderr,"Det er funnet filer med ulikt koordinatsystem:\n");
+         UT_FPRINTF(stderr,L"Det er funnet filer med ulikt koordinatsystem:\n");
 
          LC_InitNextFil(&pF);
          while (LC_NextFil(&pF,LC_FRAMGR | LC_BAKGR))
          {
-            UT_FPRINTF(stderr,"   \"%s\" : %hd\n",pF->pszNavn,pF->TransPar.sKoordsys);
+            UT_FPRINTF(stderr,L"   \"%s\" : %hd\n",pF->pszNavn,pF->TransPar.sKoordsys);
          }
          return  UT_FALSE;
       }
@@ -2265,12 +2136,12 @@ CD Bruk:
 CD ist = LC_ErVertdatumLik();
 	=======================================================================
 */
-SK_EntPnt_FYBA short LC_ErVertdatumLik(void)
+short CFyba::LC_ErVertdatumLik(void)
 {
-   char szVertdatHref[7];
-   char szVertdatDref[6];
-   char szVertdatFref[6];
-   char szVertdatHtyp[2];
+   wchar_t szVertdatHref[7];
+   wchar_t szVertdatDref[6];
+   wchar_t szVertdatFref[6];
+   wchar_t szVertdatHtyp[2];
 
    bool bForsteFil = true;
    LC_FILADM *pFil;
@@ -2282,7 +2153,7 @@ SK_EntPnt_FYBA short LC_ErVertdatumLik(void)
    {
       // Sjekker bare filer med VERT-DATUM gitt i filhodet
       // (Overser standardverdien)
-      if (strlen(pFil->TransPar.szVertdatHref) > 0)
+      if (wcslen(pFil->TransPar.szVertdatHref) > 0)
       {
          if ( bForsteFil)
          {
@@ -2302,12 +2173,12 @@ SK_EntPnt_FYBA short LC_ErVertdatumLik(void)
 
             // Skriv filnavn og VERT-DATUM til loggfilen
 
-            UT_FPRINTF(stderr,"Det er funnet filer med ulikt VERT-DATUM:\n");
+            UT_FPRINTF(stderr,L"Det er funnet filer med ulikt VERT-DATUM:\n");
 
             LC_InitNextFil(&pF);
             while (LC_NextFil(&pF,LC_FRAMGR | LC_BAKGR))
             {
-               UT_FPRINTF(stderr,"   \"%s\" : \"%s %s %s %s\"\n",
+               UT_FPRINTF(stderr,L"   \"%s\" : \"%s %s %s %s\"\n",
                          pF->pszNavn,
                          pF->TransPar.szVertdatHref,
                          pF->TransPar.szVertdatDref,
@@ -2345,86 +2216,9 @@ CD Bruk:
 CD LC_dg_SetEndringsstatus(END_KOPI);
 =============================================================================
 */
-SK_EntPnt_FYBA void LC_SetEndringsstatus(short sStatus)
+void CFyba::LC_SetEndringsstatus(short sStatus)
 {
    Sys.sGrEndra = sStatus;
-}
-
-/*
-JAØ:2001-03-06
-CH LC_SetFilType								Setter filtype for en sosifil
-CD ==========================================================================
-CD Formål:
-CD Setter filtype for en fil.
-CD
-CD Denne rutinen er primært tenkt brukt i GabEdit hvor det er behov for å 
-CD definere flere typer arbeidsfil.
-CD
-CD Parametre:
-CD Type         Navn   I/U  Forklaring
-CD --------------------------------------------------------------------------
-CD LC_FILADM *  pFil	   i   Peker til filen
-CD short        type    i   Filtypen som skal settes
-CD                             LC_FILTYPE_UKJENT
-CD                             LC_FILTYPE_INAKTIV
-CD                             LC_FILTYPE_GAB_EIENDOM
-CD                             LC_FILTYPE_GAB_ADRESSE
-CD                             LC_FILTYPE_GAB_BYGNING
-CD                             LC_FILTYPE_BYGG
-CD                             LC_FILTYPE_DEK
-CD                             LC_FILTYPE_DEK_ENDRING
-CD                             LC_FILTYPE_GRUNNKRETS
-CD                             LC_FILTYPE_POSTKRETS
-CD                             LC_FILTYPE_SKOLEKRETS
-CD                             LC_FILTYPE_KIRKESOGN
-CD                             LC_FILTYPE_TETTSTED
-CD                             LC_FILTYPE_VALGKRETS
-CD
-CD Bruk:
-CD LC_SetFilType(pFil,type);
-=============================================================================
-*/
-SK_EntPnt_FYBA void LC_SetFilType(LC_FILADM *pFil, short sType)
-{  
-   LO_TestFilpeker(pFil,"SetFilType");
-	pFil->sFilType = sType;
-}
-
-/*
-JAØ:2001-03-06
-CH LC_GetFilType                               Henter filtype for en sosifil
-CD ==========================================================================
-CD Formål:
-CD Finner filtypen for en fil.
-CD
-CD Parametre:
-CD Type         Navn   I/U  Forklaring
-CD --------------------------------------------------------------------------
-CD LC_FILADM *  pFil	   i   Peker til filen
-CD short        type    r   Filtypen som skal settes
-CD                             LC_FILTYPE_UKJENT
-CD                             LC_FILTYPE_INAKTIV
-CD                             LC_FILTYPE_GAB_EIENDOM
-CD                             LC_FILTYPE_GAB_ADRESSE
-CD                             LC_FILTYPE_GAB_BYGNING
-CD                             LC_FILTYPE_BYGG
-CD                             LC_FILTYPE_DEK
-CD                             LC_FILTYPE_DEK_ENDRING
-CD                             LC_FILTYPE_GRUNNKRETS
-CD                             LC_FILTYPE_POSTKRETS
-CD                             LC_FILTYPE_SKOLEKRETS
-CD                             LC_FILTYPE_KIRKESOGN
-CD                             LC_FILTYPE_TETTSTED
-CD                             LC_FILTYPE_VALGKRETS
-CD
-CD Bruk:
-CD type = LC_GetFilType(pFil);
-=============================================================================
-*/
-SK_EntPnt_FYBA short LC_GetFilType(LC_FILADM *pFil)
-{
-   LO_TestFilpeker(pFil,"GetFilType");
-	return pFil->sFilType;
 }
 
 
@@ -2438,13 +2232,13 @@ CD
 CD Parametre:
 CD Type         Navn        I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD const char  *pszIdxPath   r    Katalog for indeks
+CD const wchar_t  *pszIdxPath   r    Katalog for indeks
 CD
 CD Bruk:
-CD const char *pszIdxPath = LC_GetIdxPath();
+CD const wchar_t *pszIdxPath = LC_GetIdxPath();
    ==========================================================================
 */
-SK_EntPnt_FYBA const char *LC_GetIdxPath(void)
+const wchar_t * CFyba::LC_GetIdxPath(void)
 {
    return Sys.szIdxPath;
 }
@@ -2464,7 +2258,7 @@ CD
 CD Parametre:
 CD Type        Navn       I/U Forklaring
 CD --------------------------------------------------------------------------
-CD const char *pszIdxPath  i  Katalog for indeks
+CD const wchar_t *pszIdxPath  i  Katalog for indeks
 CD                            "" = Tom streng betyr at indeksfilene legges på en
 CD                                 underkatalog under katalogen der SOSI-filen ligger
 CD                                 (default).
@@ -2474,10 +2268,10 @@ CD short       status      r  Status: UT_TRUE = OK
 CD                                    UT_FALSE = Feil, feilmelding er gitt.
 CD
 CD Bruk:
-CD status = LC_SetIdxPath("C:\\kart\\test");
+CD status = LC_SetIdxPath(L"C:\\kart\\test");
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_SetIdxPath(const char *pszIdxPath)
+short CFyba::LC_SetIdxPath(const wchar_t *pszIdxPath)
 {
    if (LC_InqAntFiler(LC_FRAMGR|LC_BAKGR) == 0)
    {
@@ -2485,9 +2279,9 @@ SK_EntPnt_FYBA short LC_SetIdxPath(const char *pszIdxPath)
       /*
       CD "TEMP" = Indeksfilene legges på brukerens temp-katalog.
       // 2011-05-31: Handtering av "TEMP" er fjernet.
-      if (_strcmpi(pszIdxPath,"TEMP") == 0)
+      if (_strcmpi(pszIdxPath,L"TEMP") == 0)
       {
-         char szBuffer[_MAX_PATH];
+         wchar_t szBuffer[_MAX_PATH];
          size_t returnValue;
         // Hent katalognavn fra environment
          getenv_s( &returnValue, szBuffer, _MAX_PATH, "TEMP");
@@ -2503,7 +2297,7 @@ SK_EntPnt_FYBA short LC_SetIdxPath(const char *pszIdxPath)
          else
          {
             UT_StrCopy(Sys.szIdxPath,szBuffer,_MAX_PATH);
-            if (Sys.szIdxPath[strlen(Sys.szIdxPath)-1] != UT_SLASH)  UT_StrCat(Sys.szIdxPath,UT_STR_SLASH,_MAX_PATH);
+            if (Sys.szIdxPath[wcslen(Sys.szIdxPath)-1] != UT_SLASH)  UT_StrCat(Sys.szIdxPath,UT_STR_SLASH,_MAX_PATH);
          }
       }
       else 
@@ -2516,7 +2310,7 @@ SK_EntPnt_FYBA short LC_SetIdxPath(const char *pszIdxPath)
       else
       {
          UT_StrCopy(Sys.szIdxPath,pszIdxPath,_MAX_PATH);
-         if (Sys.szIdxPath[strlen(Sys.szIdxPath)-1] != UT_SLASH)  UT_StrCat(Sys.szIdxPath,UT_STR_SLASH,_MAX_PATH);
+         if (Sys.szIdxPath[wcslen(Sys.szIdxPath)-1] != UT_SLASH)  UT_StrCat(Sys.szIdxPath,UT_STR_SLASH,_MAX_PATH);
 
          // Opprett katalogen hvis den ikke finnes fra før
          UT_CreateDir(Sys.szIdxPath);

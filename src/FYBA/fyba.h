@@ -1,12 +1,12 @@
 /******************************************************************************
 *
-* STATENS KARTVERK  -  FYSAK
+* KARTVERKET  -  FYSAK
 *
 * Filename: fyba.h
 *
 * Content: Prototyper for rutiner for les/skriv av SOSI-fil.
 *
-* Copyright (c) 1990-2011 Statens kartverk
+* Copyright (c) 1990-2012 Kartverket
 *
 * Permission is hereby granted, free of charge, to any person obtaining a
 * copy of this software and associated documentation files (the "Software"),
@@ -26,7 +26,7 @@
 * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 * DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
-
+     
 #pragma once
 
 //
@@ -40,9 +40,9 @@
 #ifdef FYBA_DLL_IMPORTS /* FYBA brukes som DLL */
 #  pragma comment (lib, "FYBA_DLL.lib")
 //#  ifdef _DEBUG
-//#     pragma comment (lib, "FYBA_DLLD.lib")
+//#     pragma comment (lib, "CFYBA_DLLD.lib")
 //#  else
-//#     pragma comment (lib, "FYBA_DLL.lib")
+//#     pragma comment (lib, "CFYBA_DLL.lib")
 //#  endif
 #else
 #   ifndef FYBA_DLL_EXPORTS  /* FYBA brukes som LIB */
@@ -69,11 +69,11 @@
 #ifndef SK_EntPnt_FYBA
 
 #   ifdef FYBA_DLL_EXPORTS /* FYBA kompileres til DLL ==> FYBA_DLL.DLL */
-#      define SK_EntPnt_FYBA DllExport
+#      define DllExport
 
 #   else 
 #      ifdef FYBA_DLL_IMPORTS /* FYBA brukes som DLL */
-#         define SK_EntPnt_FYBA DllImport
+#         define DllImport
 
 #      else /* FYBA kompileres eller brukes som LIB */
 #         define SK_EntPnt_FYBA
@@ -88,6 +88,8 @@
 #include <fygm.h>
 #include <fyut.h>
 
+#define BRUK_MAP_SNR /* Brukes hvis serienummer organiseres i map. Fjernes hvis serienummer organiseres i array. */
+#include <map>
 
 /* ======================================================= */
 /*  Definerer konstanter                                   */
@@ -96,23 +98,24 @@
 #define LC_MAX_GRU        10000000  /* Max grupper i en base */
 #define LC_MAX_GINFO          6000  /* Max linjer GINFO i en gruppe */
 #define LC_MAX_GINFO_BUFFER 250000  /* GINFO-buffer */
-#define LC_MAX_KOORD         90000  /* Max antall koordinater i en gruppe */
+#define LC_MAX_KOORD        150000  /* Max antall koordinater i en gruppe */
 #define LC_MAX_PINFO_BUFFER 250000  /* PINFO-buffer */
 #define LC_MAX_ANT_PRIOR       128  /* Max antall prioriteter */
-#define LC_DATO_LEN              9  /* Max lengde dato (inkl. '\0') */
 #define LC_BASEVER_LEN          50  /* Max lengde av szBaseVer (inkl. '\0') */
 #define LC_MAX_SOSINAVN_LEN     50  /* Max lengde for SOSI-navn (inkl. '\0') */
 #define LC_MAX_NAVN            500  /* Max linjer i navnetabellen (pr. fil) */
 #define LC_NGISLAG_LEN          50  /* Max lengde av NGIS-LAG fra filhodet */
 #define LC_MAX_SOSI_LINJE_LEN 1024  /* Max linjelengde for lesing fra SOSI-filen */
+#define LC_TX8_BUFFER_LEN   (LC_MAX_SOSI_LINJE_LEN*8)  /* Størrelse av lavnivå lesebuffer fra SOSI-filen */
 #define LC_MAX_OBJTYPE_LEN      33  // Max lengde av objettypenavn (inkl. '\0')
+#define LC_MAX_GINFO_NIVAA      15  // Max antall (prikk)nivåer i GINFO
 
 #define  LC_INTERNT_TEGNSETT TS_ISO8859
         
 
    /* Konstanter for basetype */
-#define  LC_KLADD  3   /* Kladdebase */
-#define  LC_BASE   1   /* Vanlig base */
+enum LcBasetype { LC_BASE  = 1,    /* Vanlig base */
+                  LC_KLADD = 3 };  /* Kladdebase */
 
    /* Konstanter for åpning av eksisterende base */
 #define  UKJENT_BASE     -1
@@ -312,14 +315,14 @@ typedef struct dLC_KVALITET {  /* Standard Kvalitet */
  */
 
 typedef struct dLB_LESEBUFFER {
-   char tx[LC_MAX_SOSI_LINJE_LEN];  /* Lesebuffer */
+   wchar_t tx[LC_MAX_SOSI_LINJE_LEN];  /* Lesebuffer */
    UT_INT64 filpos;                 /* Filposisjon for starten av bufret */
    UT_INT64 startpos;               /* Startposisjon i filen for aktuellt SOSI-navn */
-   char *cp;                        /* Peker til aktuell posisjon i bufret */
-   char *pp;                        /* Peker til start parameter */
-   char *ep;                        /* Peker til posisjon etter aktuellt ord */
-	char *np;                        /* Peker til posisjon etter parameter (neste cp) */
-   short cur_navn[6];               /* Aktuellt SOSI-navn på dette nivå */
+   wchar_t *cp;                        /* Peker til aktuell posisjon i bufret */
+   wchar_t *pp;                        /* Peker til start parameter */
+   wchar_t *ep;                        /* Peker til posisjon etter aktuellt ord */
+	wchar_t *np;                        /* Peker til posisjon etter parameter (neste cp) */
+   short cur_navn[LC_MAX_GINFO_NIVAA]; /* Aktuellt SOSI-navn på dette nivå */
    short cur_niv;                   /* Aktuellt nivå (der cp peker) (Ant. prikker) */
    short cur_ant_par;               /* Antall parametre på aktuellt nivå */
    short cur_type;                  /* Viser hva aktuellt set inneholder */
@@ -383,14 +386,16 @@ typedef struct d_LB_INFO {
  *! Navnetabell                                                  !
  *!--------------------------------------------------------------!
  */
-typedef struct dSOSINAVN {            /* Navnetabellen */
-   char szNavn[LC_MAX_SOSINAVN_LEN];   /* Sosi-navn */
-   unsigned char ucAntPar;      /* Antall parametre til dette navnet */
-   char cNivo;                  /* "Prikk-nivå"  (1 = Gruppenavn) */
+typedef struct dSOSINAVN       // Navnetabellen
+{           
+   wchar_t szNavn[LC_MAX_SOSINAVN_LEN]; // Sosi-navn
+   unsigned char ucAntPar;            // Antall parametre til dette navnet
+   unsigned char ucNivo;              // "Prikk-nivå"  (1 = Gruppenavn)
    bool bBrukt;                 // Viser om navnet er vært brukt
 } SOSINAVN;
 
-typedef struct dLC_NAVNETABELL {
+typedef struct dLC_NAVNETABELL 
+{
    short sAntNavn;              /* Antall navn totalt i navnetabellen */
    SOSINAVN sosi[LC_MAX_NAVN];  /* Navnetabellen */
 } LC_NAVNETABELL;
@@ -551,7 +556,7 @@ typedef struct dLC_GRTAB_LINJE{
    long nko;             /* Antall koordinater */
    unsigned short info;  /* Info, se under gruppetabellen */
 	LC_KVALITET Kvalitet; /* Aktuell kvalitet fra GINFO */
-   char szObjtype[LC_MAX_OBJTYPE_LEN]; /* ..OBJTYPE fra GINFO */
+   wchar_t szObjtype[LC_MAX_OBJTYPE_LEN]; /* ..OBJTYPE fra GINFO */
    double dEnhet;        /* Aktuell enhet for gruppen i bufferet */
    double dEnhetHoyde;   /* Aktuell enhet-H for gruppen i bufferet */
    double dEnhetDybde;   /* Aktuell enhet-D for gruppen i bufferet */
@@ -587,14 +592,24 @@ CD   0  Gruppen ligger i kø for skriving til SOSI-filen
     *! Overordnet blokk med pekere til de ulike indekstabellene     !
     *!--------------------------------------------------------------!
     */
-#define LC_IDX_LIN_BLOKK 5000
+#define LC_IDX_LIN_BLOKK 3000
 #define LC_ANT_IDX_BLOKK  (LC_MAX_GRU / LC_IDX_LIN_BLOKK)
+
+#ifdef BRUK_MAP_SNR
+   /* Map for serienummersøk */
+   typedef std::map<long, long> MapSerieNr;
+#endif
+
 typedef struct dLC_IDX_TABELL{
 	/* Array med pekere til starten av blokk med Gruppetabell-linjer */
    LC_GRTAB_LINJE * GtAdm[LC_MAX_GRU / LC_IDX_LIN_BLOKK];
-
+#ifndef BRUK_MAP_SNR
    /* Array med pekere til starten av blokk med Gruppenummer for gitt SNR */
    long             *SnrAdm[LC_MAX_GRU / LC_IDX_LIN_BLOKK];
+#else
+   /* Peker til map med serienummer */
+   MapSerieNr *SerieNrAdm;
+#endif
 
    /* Array med pekere til starten av blokk med Brukttabell-linjer */
    unsigned long    *BtAdm[LC_MAX_GRU / LC_IDX_LIN_BLOKK];
@@ -663,8 +678,8 @@ typedef struct dLC_REKT {
 typedef struct dLC_TRANSPAR {
    /* ...KOORDSYS */
    short   sKoordsys;
-   char    szKoordsysDatum[36];
-   char    szKoordsysProjek[36];
+   wchar_t    szKoordsysDatum[36];
+   wchar_t    szKoordsysProjek[36];
    /* ...TRANSSYS */
    short sTranssysTilsys;
    double dTranssysKonstA1;
@@ -690,10 +705,10 @@ typedef struct dLC_TRANSPAR {
    /* ...ENHET-D */
    double  dEnhet_d;      
    /* ...VERT-DATUM */ 
-   char szVertdatHref[7];
-   char szVertdatDref[6];
-   char szVertdatFref[6];
-   char szVertdatHtyp[2];
+   wchar_t szVertdatHref[7];
+   wchar_t szVertdatDref[6];
+   wchar_t szVertdatFref[6];
+   wchar_t szVertdatHtyp[2];
    /* ...VERT-INT */ 
    short sVertintHref;
    short sVertintDref;
@@ -706,22 +721,6 @@ typedef struct dLC_TRANSPAR {
 
 #define LC_TR_GEOSYS_INGEN_VERDI  -9999  // Brukes  for å angi at projeksjon og sone under geosys ikke er gitt
 
-// Konstanter for definering av filtype (primært for bruk i GabEdit) JAØ-20010306
-#define LC_FILTYPE_UKJENT        0
-#define LC_FILTYPE_INAKTIV       1
-#define LC_FILTYPE_GAB_EIENDOM   2
-#define LC_FILTYPE_GAB_ADRESSE   3
-#define LC_FILTYPE_GAB_BYGNING   4
-#define LC_FILTYPE_BYGG          5
-#define LC_FILTYPE_DEK           6
-#define LC_FILTYPE_DEK_ENDRING   7
-#define LC_FILTYPE_GRUNNKRETS    8
-#define LC_FILTYPE_POSTKRETS     9
-#define LC_FILTYPE_SKOLEKRETS   10
-#define LC_FILTYPE_KIRKESOGN    11
-#define LC_FILTYPE_TETTSTED     12
-#define LC_FILTYPE_VALGKRETS    13
-
 
 /*
  *!--------------------------------------------------------------!
@@ -729,25 +728,23 @@ typedef struct dLC_TRANSPAR {
  *!--------------------------------------------------------------!
  */
 typedef struct dLC_FILADM{
-   char     szBaseVer[LC_BASEVER_LEN]; // Versjon og dato for aktuell versjon av FYBA
-   char     szIdxVer[5];    // Indeksfil-versjon
+   wchar_t    szBaseVer[LC_BASEVER_LEN]; // Versjon og dato for aktuell versjon av FYBA
+   wchar_t    szIdxVer[5];    // Indeksfil-versjon
    short    sIdxOpen;       // UT_FALSE/UT_TRUE - Flagg som viser at indeks er åpnet
    unsigned long ulPid;     // Prosess ID for programmet som har åpnet filen
-   short    sFilType;       // Primært tenkt brukt i GabEdit, definerer hvilken type arbeidsfil dette er.
    unsigned short  usLag;   // Lag: (LC_SEKV,LC_FRAMGR,LC_BAKGR)
-   char     szNgisLag[LC_NGISLAG_LEN]; // Ngislag i filhodet
+   wchar_t    szNgisLag[LC_NGISLAG_LEN]; // Ngislag i filhodet
    short    sAccess;        // Aksess: (READ / UPDATE)
 	/* short    sDisk; */          // Disk for SOSI-filen (1=A, 2=B, osv.)
-   char    *pszNavn;        // Filnavn (SOSI-filens navn, inkl. sti
+   wchar_t   *pszNavn;        // Filnavn (SOSI-filens navn, inkl. sti
    UT_INT64 SosiBytes;      // Antall byte i SOSI-filen
    FTID     SosiTid;        // Oppdateringstidspunkt for SOSI-filen
    LC_TRANSPAR TransPar;       // Transformasjonsparametre fra filhodet
    unsigned short TransMaske;  // Maske som viser hvilke deler av TransPar som inneholder data
    LC_REKT Omr;                // ..OMRÅDE fra filhodet
    short   sTegnsett;          // Tegnsett fra filhodet eller standardverdi
-   char    szDato[LC_DATO_LEN]; // ..DATO fra fil-hodet
    short   sSosiVer;            // ..SOSI-VERSJON fra fil-hodet * 100
-   char    SosiNiv[2];          // ..SOSI-NIVÅ fra fil-hodet
+   wchar_t   SosiNiv[2];          // ..SOSI-NIVÅ fra fil-hodet
                                  // SosiNiv[0] = nivå fra filåpningen
                                  // SosiNiv[1] = nivå fra senere handtering
                                  // Filhodet oppdateres når filen stenges
@@ -776,9 +773,9 @@ typedef struct dLC_FILADM{
 
 
 /* Konstanter for flagg som viser om det er datafeil i filen (Indeksoppbygging) */
-#define LC_DATAFEIL_REF  1   /* Ulovlig referanse (referanse til gruppe som ikke finnes)*/
-#define LC_DATAFEIL_BUE  2   /* Ulovlige buer i filen */
-
+#define LC_DATAFEIL_REF       1   // Ulovlig referanse (referanse til gruppe som ikke finnes)
+#define LC_DATAFEIL_BUE       2   // Ulovlige buer i filen
+#define LC_DATAFEIL_PRIKKNIVO 4   // Ulovlig sprang i prikknivå mellom egenskaper i GINFO
 
 /*
  *!--------------------------------------------------------------!
@@ -786,7 +783,7 @@ typedef struct dLC_FILADM{
  *!--------------------------------------------------------------!
  */
 typedef struct dLC_BASEADM{
-   short  sType;        // Basetype: LC_BASE / LC_START_KLADD / LC_KLADD
+   LcBasetype type;        // Basetype: LC_BASE / LC_KLADD
 
    long   lAntGr;       // Antall grupper i basen
    LC_BOKS Omraade;     // Summert område fra filhodene
@@ -892,7 +889,7 @@ CD *----------------------------------------------------------------------------
 /* Struktur for statusopplysninger for LC_InitPP / LC_GetPP */
 typedef struct {
    short type;         /* LC_GETPP_KP, LC_GETPP_HOYDE, LC_GETPP_KVALITET, LC_GETPP_VANLIG */
-   char pinfo_navn[LC_MAX_SOSINAVN_LEN]; /* Sosi-navn det skal finnes verdi til */
+   wchar_t pinfo_navn[LC_MAX_SOSINAVN_LEN]; /* Sosi-navn det skal finnes verdi til */
    long curr_punkt;        /* Aktuellt punkt */
    long slutt_punkt;       /* Første punkt etter søkeområdet */
 	short neste_tegn;       /* Neste tegn (Ved flere PINFO i punktet) */
@@ -909,23 +906,23 @@ typedef struct {
 
 /* Utvalgslinje */
 typedef struct sLC_UTVALG_ELEMENT {
-   char kommando;
-   char sosi[LC_MAX_SOSINAVN_LEN];
-   char metode;
-   //char type;
+   wchar_t kommando;
+   wchar_t sosi[LC_MAX_SOSINAVN_LEN];
+   wchar_t metode;
+   //wchar_t type;
    short type;
-   char ledd;         /* Ledd-nr for flerleddet parameter */
-	char start;        /* Startposisjon i tegnstreng (0=hele) */
-   char slutt;        /* Sluttposisjon i tegnstreng (0=resten) */
-   char *min;
-   char *max;
+   char  ledd;         /* Ledd-nr for flerleddet parameter */
+	char  start;        /* Startposisjon i tegnstreng (0=hele) */
+   char  slutt;        /* Sluttposisjon i tegnstreng (0=resten) */
+   wchar_t *min;
+   wchar_t *max;
    struct sLC_UTVALG_ELEMENT *pNesteUE;       /* Neste på dette nivå */
    struct sLC_UTVALG_ELEMENT *pForsteUE; /* Første på nivået under */
    struct sLC_UTVALG_ELEMENT *pSisteUE;  /* Siste på nivået under */
 } LC_UTVALG_ELEMENT;
 
 typedef struct sLC_LAG {
-   char  *pszLagNavn;           /* Lagnavn */
+   wchar_t  *pszLagNavn;           /* Lagnavn */
    short  sLagAktiv;            /* Lag aktiv for tegning */
    struct sLC_LAG *pNesteLag;   /* Neste lag */
 } LC_LAG;
@@ -936,7 +933,7 @@ typedef struct sLC_LAG {
 #define LC_SLETTET    3
 
 typedef struct sLC_UTVALG {
-   char  *pszNavn;
+   wchar_t  *pszNavn;
    short  sPrioritet;
    short  sOriginalPrioritet;
    short sStatus;
@@ -947,7 +944,7 @@ typedef struct sLC_UTVALG {
    struct sLC_UTVALG *pForrigeU;  /* Forrige utvalg */
    struct sLC_UTVALG *pNesteU;    /* Neste utvalg */
    struct sLC_LAG *pLag;          /* Lag */
-   char *pszRegel;                /* Regel */
+   wchar_t *pszRegel;                /* Regel */
 } LC_UTVALG;
 
 /* Toppblokk for GRUPPE-, PUNKT- og PINFO-utvalg */
@@ -1031,12 +1028,13 @@ CD                                           !-----------------!   !------------
  *!--------------------------------------------------------------!
  */
 typedef struct dLC_POL_ELEMENT {
-   LC_BGR Bgr;       /* Gruppenummer */
-   short  sRetning;  /* LC_MED_DIG eller LC_MOT_DIG */
-   long   lSnr;      /* Serienummer */
-   LC_KOORD_2D Pkt;     /* (ø,n) Representasjonspunkt (Brukes ikke av FYBA. Til disp.) */
-   struct dLC_POL_ELEMENT *pNestePE;  /* Peker til neste element i polygonet */
-   struct dLC_POL_ELEMENT *pForrigePE;  /* Peker til forrige element i polygonet */
+   LC_BGR Bgr;       // Gruppenummer
+   short  sRetning;  // LC_MED_DIG eller LC_MOT_DIG
+   long   lSnr;      // Serienummer
+   LC_KOORD_2D PktStart;   // Koordinat i starten av elementet (Brukes ikke av FYBA. Til disp.)
+   LC_KOORD_2D PktSlutt;   // Koordinat i slutten av elementet (Brukes ikke av FYBA. Til disp.)
+   struct dLC_POL_ELEMENT *pNestePE;   // Peker til neste element i polygonet
+   struct dLC_POL_ELEMENT *pForrigePE; // Peker til forrige element i polygonet
 } LC_POL_ELEMENT;
 
 /*
@@ -1082,84 +1080,168 @@ typedef struct dLC_POLYGON {
 } LC_POLYGON;
 
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyho.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA short HO_New(const char *pszFil,short koosys,double origo_a,double origo_n,
-                            double enhet,double enhet_h,double enhet_d,
-                            double nv_a,double nv_n,double oh_a,double oh_n);
-SK_EntPnt_FYBA short HO_TestSOSI(const char *pszFil,UT_INT64 *sluttpos);
-SK_EntPnt_FYBA char *HO_GetVal(const char *pszFil,char *sosi_navn,short *sett_nr);
-SK_EntPnt_FYBA short HO_GetKvalitet(const char *pszFil,short *psMetode,long *plNoyaktighet,
-                                    short *psSynbarhet,short *psHoydeMetode,long *plHoydeNoyaktighet);
-SK_EntPnt_FYBA short HO_GetTrans(const char *pszFil,short *koosys,double *origo_a,
-                                 double *origo_n,double *enhet,double *enhet_h,double *enhet_d);
-SK_EntPnt_FYBA short HO_GetTransEx(const char *pszFil,unsigned short *pusMaske, LC_TRANSPAR *pTrans);
-SK_EntPnt_FYBA short HO_GetOmr(const char *pszFil,double *nv_a,double *nv_n,double *oh_a,double *oh_n);
-SK_EntPnt_FYBA short HO_GetTegnsett(const char *pszFil,short *psTegnsett);
-SK_EntPnt_FYBA short HO_SjekkTegnsett(const char *pszFil,short *psTegnsett);
+/* GINFO i minne */
+typedef struct dLC_GINFO_BUFFER {
+   wchar_t *pszTx;         /* GINFO buffer */
+   unsigned long ulOfset[LC_MAX_GINFO]; /* Peker til starten av hver GINFO-linje i antall tegn fra starten */
+} LC_GINFO_BUFFER;
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fylh.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA short LC_GetTrans(short *koosys,double *origo_a,double *origo_n,double *enhet,
-						               double *enhet_h,double *enhet_d);
-SK_EntPnt_FYBA short LC_GetTransEx(unsigned short *pusMaske, LC_TRANSPAR *pTrans);
-SK_EntPnt_FYBA short LC_PutTrans(short koosys,double origo_a,double origo_n,
-                                 double enhet,double enhet_h,double enhet_d);
-SK_EntPnt_FYBA short LC_PutTransEx(unsigned short usMaske, LC_TRANSPAR *pTrans);
-SK_EntPnt_FYBA short LC_GetTegnsett(short *psTegnsett);
-SK_EntPnt_FYBA short LC_GetOmr(double *nv_a,double *nv_n,double *oh_a,double *oh_n);
-SK_EntPnt_FYBA short LC_PutOmr(double nv_a,double nv_n,double oh_a,double oh_n);
-SK_EntPnt_FYBA void  LC_NyttHode(void);
-SK_EntPnt_FYBA short LC_TestHode(void);
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fylo.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA void			LC_Init(void);
-SK_EntPnt_FYBA void			LC_Close(void);
-SK_EntPnt_FYBA LC_BASEADM* LC_OpenBase(short sBaseType);
-SK_EntPnt_FYBA void			LC_CloseBase(LC_BASEADM *pBase,short s_stat);
-SK_EntPnt_FYBA short			LC_OpenSos(const char *fil,short sModus,short sNyIdx,short sVisStatus,
-                                      LC_FILADM **ppFil, short *o_stat);
-SK_EntPnt_FYBA void			LC_CloseSos(LC_FILADM *pFil,short s_stat);
-SK_EntPnt_FYBA void        LC_FcloseSos(LC_FILADM *pFil);
-SK_EntPnt_FYBA void    LC_SetDefLpfi(short ant_tegn);
-SK_EntPnt_FYBA short   LC_InqDefLpfi(void);
-SK_EntPnt_FYBA short   LC_InqLag(unsigned short *usLag);
-SK_EntPnt_FYBA unsigned short LC_InqFilLag(LC_FILADM *pFil);
-SK_EntPnt_FYBA void    LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag);
-SK_EntPnt_FYBA short   LC_Backup(LC_FILADM *pFil,const char *pszBackupPath);
-SK_EntPnt_FYBA void    LC_MaxSkriv(long);
-SK_EntPnt_FYBA long    LC_InqMaxSkriv(void);
-SK_EntPnt_FYBA void    LC_SetNgisModus(short modus);
-SK_EntPnt_FYBA short   LC_GetNgisModus(void);
-SK_EntPnt_FYBA void    LC_SetUtvidModus(short modus);
-SK_EntPnt_FYBA short   LC_GetUtvidModus(void);
-SK_EntPnt_FYBA LC_BASEADM* LC_InqCurBase(void);
-SK_EntPnt_FYBA void    LC_SelectBase(LC_BASEADM *pBase);
-SK_EntPnt_FYBA short   LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,double *oha,double *ohn);
-SK_EntPnt_FYBA short   LC_GetFiOm(LC_FILADM *pFil,double *nva,double *nvn,double *oha,double *ohn);
-SK_EntPnt_FYBA LC_FILADM * LC_GetFiNr(const char *fil_navn);
-SK_EntPnt_FYBA char   *LC_GetFiNa(LC_FILADM *pFil);
-SK_EntPnt_FYBA short   LC_ErFilBase(const char *fil);
-SK_EntPnt_FYBA short   LC_ErKoordsysLik(void);
-SK_EntPnt_FYBA short   LC_ErVertdatumLik(void);
-SK_EntPnt_FYBA char*   LC_GetNgisLag(LC_FILADM *pFil);
-SK_EntPnt_FYBA void    LC_SetEndringsstatus(short sStatus);
-SK_EntPnt_FYBA void    LC_SetFilType(LC_FILADM *pFil, short sType);
-SK_EntPnt_FYBA short   LC_GetFilType(LC_FILADM *pFil);
-SK_EntPnt_FYBA short   LC_SetIdxPath(const char *pszIdxPath);
-SK_EntPnt_FYBA const char* LC_GetIdxPath(void);
-/* Konstanter for intgt.sEndra (aktuell gruppe er endra) */
+// --- Diverse for intern mellomlagring av hele PINFO
+
+// Statusverdier
+#define LC_PIBUF_TOM   0
+#define LC_PIBUF_OK    1
+#define LC_PIBUF_FULL  2
+// Ant. tegn i buffer
+#define LC_MAX_PIBUF_TEGN  LC_MAX_SOSI_LINJE_LEN
+// Ant linjer i tabell med pekere til startposisjoner i strengen
+#define LC_MAX_PIBUF_LIN 50
+
+
+/*
+ *!--------------------------------------------------------------!
+ *! Systemadministrasjon                                         !
+ *!--------------------------------------------------------------!
+ */
+typedef struct dLC_SYSTEMADM {
+   wchar_t   szBaseVer[LC_BASEVER_LEN];  // Versjon og dato for aktuell versjon av FYBA
+   wchar_t   szIdxVer[5];                // Indeksfil-versjon
+
+   short  sResPlass;  // Ant. tegn reserve plass bak ny gruppe
+   long   lMaxSkriv;  // Max antall skriv uten lagring til SOSI-filen
+   long   lAntSkriv;  // Antall skriv siden siste lagring til SOSI
+   short  sNGISmodus; // Behandlingsmåte for grupper med NGIS-oppdateringsflagg
+   short  sUtvidModus; // Handteringsmåte for utvidelse av SOSI-filer.
+   wchar_t   szIdxPath[_MAX_PATH]; //Katalognavn for ny indeks.
+   LB_LESEBUFFER BufAdm;         // Lesebuffer mot SOSI-fil-hode
+
+   char *pszTx8Buffer;   // Lavnivå lesebuffer fra SOSI-fil
+
+   LC_NAVNETABELL  SosiNavn;     // Navnetabell (brukes av HO-rutinene)
+
+   /* Div opplysninger om aktuell gruppe */
+   short sGrEndra;         // Er aktuell gruppe endra?
+   LC_BGR GrId;            // Gruppens identifikasjon
+   LC_GRTAB_LINJE *pGrInfo;  // Peker til gruppetabell-linje
+   
+   /* Aktuell gruppe i minne */
+   /* GINFO i minne */
+   LC_GINFO_BUFFER Hode;     // Hodebuffer
+   unsigned short usHoLen;   // Ant tegn i hodebuffer
+   LC_GINFO_BUFFER Ginfo;    // GINFO-buffer
+   double *pdAust;    // Øst koordinat
+   double *pdNord;    // Nord koordinat
+   LB_INFO * pInfo;    // Høyde,KP og PINFO-peker
+   wchar_t *pszPinfo;    // PINFO buffer
+
+   /* Søkebuffer for PINFO */
+   long lPibufPnr;                 // Punktnummer for data i buffer
+   short sPibufAntPi;               // Antall elementer brukt i PIbuf
+   wchar_t cPibuf[LC_MAX_PIBUF_TEGN];  // Kopi av PINFO, (for raskere søking)
+   short sPibufStatus;              // Status for bruken av cPibuf
+   /* Peker til startposisjoner i cPibuf for hver PINFO */
+   wchar_t *pcPibufNavn[LC_MAX_PIBUF_LIN];   // Peker til SOSI-navn
+   wchar_t *pcPibufVerdi[LC_MAX_PIBUF_LIN];  // Peker til verdi
+
+   unsigned short usMerkRefGr;  // Flagg for å vise om refererte grupper skal merkes ved utvalg
+
+   LC_BASEADM * pForsteBase;   // Peker til første base-adm.
+   LC_BASEADM * pAktBase;      // Peker til aktuell base-adm.
+} LC_SYSTEMADM;
+
+
+// Felles streng for feilmeldinger
+#define LC_ERR_LEN 300
+typedef struct dLC_FEILMELDING {
+   short nr;
+   short strategi;
+   wchar_t tx[LC_ERR_LEN];
+} LC_FEILMELDING;
+
+
+//////////////////////////////////////////////////////////////////////////
+class CFyba
+{
+public:
+   CFyba(LcBasetype basetype = LC_BASE);
+   ~CFyba(void);
+
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyho.c                       */
+   /* ======================================================= */
+   short HO_New(const wchar_t *pszFil,short koosys,double origo_a,double origo_n,
+      double enhet,double enhet_h,double enhet_d,
+      double nv_a,double nv_n,double oh_a,double oh_n);
+   short HO_TestSOSI(const wchar_t *pszFil,UT_INT64 *sluttpos);
+   wchar_t *HO_GetVal(const wchar_t *pszFil,wchar_t *sosi_navn,short *sett_nr);
+   short HO_GetKvalitet(const wchar_t *pszFil,short *psMetode,long *plNoyaktighet,
+      short *psSynbarhet,short *psHoydeMetode,long *plHoydeNoyaktighet);
+   short HO_GetTrans(const wchar_t *pszFil,short *koosys,double *origo_a,
+      double *origo_n,double *enhet,double *enhet_h,double *enhet_d);
+   short HO_GetTransEx(const wchar_t *pszFil,unsigned short *pusMaske, LC_TRANSPAR *pTrans);
+   short HO_GetOmr(const wchar_t *pszFil,double *nv_a,double *nv_n,double *oh_a,double *oh_n);
+   short HO_GetTegnsett(const wchar_t *pszFil,short *psTegnsett);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylh.c                       */
+   /* ======================================================= */
+   short LC_GetTrans(short *koosys,double *origo_a,double *origo_n,double *enhet,
+      double *enhet_h,double *enhet_d);
+   short LC_GetTransEx(unsigned short *pusMaske, LC_TRANSPAR *pTrans);
+   short LC_PutTrans(short koosys,double origo_a,double origo_n,
+      double enhet,double enhet_h,double enhet_d);
+   short LC_PutTransEx(unsigned short usMaske, LC_TRANSPAR *pTrans);
+   short LC_GetTegnsett(short *psTegnsett);
+   short LC_GetOmr(double *nv_a,double *nv_n,double *oh_a,double *oh_n);
+   short LC_PutOmr(double nv_a,double nv_n,double oh_a,double oh_n);
+   void  LC_NyttHode(void);
+   short LC_TestHode(void);
+   short LC_GetBaEnhet(double *enhet);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylo.c                       */
+   /* ======================================================= */
+   LC_BASEADM* LC_OpenBase(LcBasetype basetype);
+   void			LC_CloseBase(LC_BASEADM *pBase,short s_stat);
+   short			LC_OpenSos(const wchar_t *fil,short sModus,short sNyIdx,short sVisStatus,
+      LC_FILADM **ppFil, short *o_stat);
+   void			LC_CloseSos(LC_FILADM *pFil,short s_stat);
+   void        LC_FcloseSos(LC_FILADM *pFil);
+   void    LC_SetDefLpfi(short ant_tegn);
+   short   LC_InqDefLpfi(void);
+   short   LC_InqLag(unsigned short *usLag);
+   unsigned short LC_InqFilLag(LC_FILADM *pFil);
+   void    LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag);
+   short   LC_Backup(LC_FILADM *pFil,const wchar_t *pszBackupPath);
+   void    LC_MaxSkriv(long);
+   long    LC_InqMaxSkriv(void);
+   void    LC_SetNgisModus(short modus);
+   short   LC_GetNgisModus(void);
+   void    LC_SetUtvidModus(short modus);
+   short   LC_GetUtvidModus(void);
+   LC_BASEADM* LC_InqCurBase(void);
+   void    LC_SelectBase(LC_BASEADM *pBase);
+   short   LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,double *oha,double *ohn);
+   short   LC_GetFiOm(LC_FILADM *pFil,double *nva,double *nvn,double *oha,double *ohn);
+   LC_FILADM * LC_GetFiNr(const wchar_t *fil_navn);
+   wchar_t   *LC_GetFiNa(LC_FILADM *pFil);
+   short   LC_ErFilBase(const wchar_t *fil);
+   short   LC_ErKoordsysLik(void);
+   short   LC_ErVertdatumLik(void);
+   wchar_t*   LC_GetNgisLag(LC_FILADM *pFil);
+   void    LC_SetEndringsstatus(short sStatus);
+   short   LC_SetIdxPath(const wchar_t *pszIdxPath);
+   const wchar_t* LC_GetIdxPath(void);
+   /* Konstanter for intgt.sEndra (aktuell gruppe er endra) */
 #define END_UENDRA  0   /* Ikke endra */
 #define END_KOPI    1   /* Endra ved totalkopi fra annen gruppe */
 #define END_ENDRA   2   /* Endra ved normal Put fra program */
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fylx.c                       */
-/* ======================================================= */
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylx.c                       */
+   /* ======================================================= */
 #define GRF_YTRE   0x01  /* Ytre avgrensing */
 #define GRF_INDRE   0x02  /* Indre avgrensing, øyer */
 #define LC_MED_DIG 0x01  /* Brukes MED dig retning */
@@ -1167,108 +1249,109 @@ SK_EntPnt_FYBA const char* LC_GetIdxPath(void);
 #define GRF_START_OY    0x04  /* Første gruppe i øy */
 #define GRF_SLUTT_OY    0x08  /* Siste gruppe i øy */
 
-SK_EntPnt_FYBA long   LC_InqAntRef(void);
-SK_EntPnt_FYBA void   LC_InitGetRefFlate(LC_GRF_STATUS *pGrfStat);
-SK_EntPnt_FYBA long   LC_GetRefFlate(LC_GRF_STATUS *RefStat,unsigned short sHent,long *ref_array,
-                                     unsigned char *ref_status,long max_ref);
-SK_EntPnt_FYBA short  LC_PutRef(long *ref_array,long ant_ref);
-SK_EntPnt_FYBA long   LC_GetRef(long *ref_array,long max_ref,short *gilin,short *refpos);
+   long   LC_InqAntRef(void);
+   void   LC_InitGetRefFlate(LC_GRF_STATUS *pGrfStat);
+   long   LC_GetRefFlate(LC_GRF_STATUS *RefStat,unsigned short sHent,long *ref_array,
+      unsigned char *ref_status,long max_ref);
+   short  LC_PutRef(long *ref_array,long ant_ref);
+   long   LC_GetRef(long *ref_array,long max_ref,short *gilin,short *refpos);
 
-SK_EntPnt_FYBA short  LC_GetBuePar(short buff_retning, double *as, double *ns, double *radius,
-                                   double *fi, double *dfi, short *sfeil);
-SK_EntPnt_FYBA short  LC_GetBue(short retning,double *a1,double *n1,double *a2,double *n2,
-                                double *radius,short *storbue);
-SK_EntPnt_FYBA short  LC_GetBuep(short retning,double *a1,double *n1,double *a2,double *n2,
-                                 double *a3,double *n3);
-SK_EntPnt_FYBA short  LC_GetSirkel(double *as,double *ns,double *radius);
-SK_EntPnt_FYBA short  LC_GetSirkelp(double *a1,double *n1,double *a2,double *n2,
-                                    double *a3,double *n3);
+   short  LC_GetBuePar(short buff_retning, double *as, double *ns, double *radius,
+      double *fi, double *dfi, short *sfeil);
+   short  LC_GetBue(short retning,double *a1,double *n1,double *a2,double *n2,
+      double *radius,short *storbue);
+   short  LC_GetBuep(short retning,double *a1,double *n1,double *a2,double *n2,
+      double *a3,double *n3);
+   short  LC_GetSirkel(double *as,double *ns,double *radius);
+   short  LC_GetSirkelp(double *a1,double *n1,double *a2,double *n2,
+      double *a3,double *n3);
 
-SK_EntPnt_FYBA void   LC_GetCurEnhet(LC_FILADM * pFil,short *nivaa, double *enhet,
-                                     double *enhet_h, double *enhet_d);
-SK_EntPnt_FYBA short  LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_h,double enhet_d);
+   void   LC_GetCurEnhet(LC_FILADM * pFil,short *nivaa, double *enhet,
+      double *enhet_h, double *enhet_d);
+   short  LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_h,double enhet_d);
 
-SK_EntPnt_FYBA short  LC_GetKvalitet(short *psMetode,long *plNoyaktighet,short *psSynbarhet,
-                                     short *psHoydeMetode,long *plHoydeNoyaktighet);
-SK_EntPnt_FYBA short  LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
-                                        short *psMetode,long *plNoyaktighet,short *psSynbarhet,
-                                        short *psHoydeMetode,long *plHoydeNoyaktighet);
-SK_EntPnt_FYBA short  LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoyaktighet,
-                                          short sSynbarhet,short sHoydeMetode,long lHoydeNoyaktighet);
-SK_EntPnt_FYBA short  LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,long lNoyaktighet,
-                                          short sSynbarhet,short sHoydeMetode,long lHoydeNoyaktighet);
+   short  LC_GetKvalitet(short *psMetode,long *plNoyaktighet,short *psSynbarhet,
+      short *psHoydeMetode,long *plHoydeNoyaktighet);
+   short  LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
+      short *psMetode,long *plNoyaktighet,short *psSynbarhet,
+      short *psHoydeMetode,long *plHoydeNoyaktighet);
+   short  LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoyaktighet,
+      short sSynbarhet,short sHoydeMetode,long lHoydeNoyaktighet);
+   short  LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,long lNoyaktighet,
+      short sSynbarhet,short sHoydeMetode,long lHoydeNoyaktighet);
 
-SK_EntPnt_FYBA char * LC_GetGP(const char *,short *,short);
-SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *linje_nr);
-SK_EntPnt_FYBA short LC_AppGP(const char *sosi_navn,const char *verdi,short *linje_nr);
-SK_EntPnt_FYBA short  LC_UpdateGP(short linje_nr,const char *sosi_navn,const char *verdi);
-SK_EntPnt_FYBA void   LC_InitPP(char *sosi_navn,long forste_punkt,long siste_punkt,
-                                LC_GETPP_STATUS *pp_status);
-SK_EntPnt_FYBA char * LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat);
-SK_EntPnt_FYBA char * LC_GetPiVerdi(const char *pszSosiNavn,long sPnr,short *sSettNr);
-SK_EntPnt_FYBA short  LC_TestPi(long punkt_nr,short sTestHoyde);
-SK_EntPnt_FYBA short  LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp);
-SK_EntPnt_FYBA long   LC_GetSn(void);
-SK_EntPnt_FYBA void   LC_PutSn(long snr);
-SK_EntPnt_FYBA char * LC_GetGi(short gilin);
-SK_EntPnt_FYBA void   LC_PutGi(short gilin,const char *ginfo);
-SK_EntPnt_FYBA void   LC_GetTK(long pkt,double *aust,double *nord);
-SK_EntPnt_FYBA void   LC_GetArrayTK(short retning,long max_antall,long fra_punkt,
-                                    double *aust,double *nord,long *antall);
-SK_EntPnt_FYBA void   LC_GetArrayTH(short retning,long max_antall,long fra_punkt,
-                                    double *hoyde,long *antall);
-SK_EntPnt_FYBA void   LC_PutTK(long punkt_nr,double aust,double nord);
-SK_EntPnt_FYBA double LC_GetTH(long pkt);
-SK_EntPnt_FYBA void   LC_PutTH(long pkt,double hoyde);
-SK_EntPnt_FYBA double LC_GetHoyde(long punkt_nr);
-SK_EntPnt_FYBA void   LC_PutTD(long punkt_nr, double dybde);
-SK_EntPnt_FYBA double LC_GetTD(long punkt_nr);
-SK_EntPnt_FYBA double LC_GetDybde(long punkt_nr);
-SK_EntPnt_FYBA char * LC_GetPi(long pkt);
-SK_EntPnt_FYBA short  LC_PutPi(long pkt,const char *pi);
-SK_EntPnt_FYBA short  LC_GetKp(long pkt);
-SK_EntPnt_FYBA void   LC_PutKp(long pkt,short kp);
-SK_EntPnt_FYBA double LC_BerAreal(void);
-SK_EntPnt_FYBA double LC_BerLengde(void);
-SK_EntPnt_FYBA bool   LC_BerLengde3D(double *skraa_lengde);
-SK_EntPnt_FYBA double LC_BerAvgrensLengde(void);
-SK_EntPnt_FYBA double LC_BerIndreAvgrensLengde(void);
-SK_EntPnt_FYBA double LC_BerYtreAvgrensLengde(void);
-SK_EntPnt_FYBA void   LC_DumpTab(void);
+   wchar_t * LC_GetGP(const wchar_t *,short *,short);
+   short LC_PutGP(const wchar_t *sosi_navn,const wchar_t *verdi,short *linje_nr);
+   short LC_AppGP(const wchar_t *sosi_navn,const wchar_t *verdi,short *linje_nr);
+   short  LC_UpdateGP(short linje_nr,const wchar_t *sosi_navn,const wchar_t *verdi);
+   void   LC_InitPP(wchar_t *sosi_navn,long forste_punkt,long siste_punkt,
+      LC_GETPP_STATUS *pp_status);
+   wchar_t * LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat);
+   wchar_t * LC_GetPiVerdi(const wchar_t *pszSosiNavn,long sPnr,short *sSettNr);
+   short  LC_TestPi(long punkt_nr,short sTestHoyde);
+   short  LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp);
+   long   LC_GetSn(void);
+   void   LC_PutSn(long snr);
+   wchar_t * LC_GetGi(short gilin);
+   void   LC_PutGi(short gilin,const wchar_t *ginfo);
+   void   LC_GetTK(long pkt,double *aust,double *nord);
+   void   LC_GetArrayTK(short retning,long max_antall,long fra_punkt,
+      double *aust,double *nord,long *antall);
+   void   LC_GetArrayTH(short retning,long max_antall,long fra_punkt,
+      double *hoyde,long *antall);
+   void   LC_PutTK(long punkt_nr,double aust,double nord);
+   double LC_GetTH(long pkt);
+   void   LC_PutTH(long pkt,double hoyde);
+   double LC_GetHoyde(long punkt_nr);
+   void   LC_PutTD(long punkt_nr, double dybde);
+   double LC_GetTD(long punkt_nr);
+   double LC_GetDybde(long punkt_nr);
+   wchar_t * LC_GetPi(long pkt);
+   short  LC_PutPi(long pkt,const wchar_t *pi);
+   short  LC_GetKp(long pkt);
+   void   LC_PutKp(long pkt,short kp);
+   double LC_BerAreal(void);
+   double LC_BerLengde(void);
+   bool   LC_BerLengde3D(double *skraa_lengde);
+   double LC_BerAvgrensLengde(void);
+   double LC_BerIndreAvgrensLengde(void);
+   double LC_BerYtreAvgrensLengde(void);
+   void   LC_DumpTab(void);
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fylb.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA short  LC_GetGrFi(LC_FILADM **ppFil);
-SK_EntPnt_FYBA void   LC_InitNextFil(LC_FILADM **ppFil);
-SK_EntPnt_FYBA short  LC_NextFil(LC_FILADM **ppFil,unsigned short usLag);
-SK_EntPnt_FYBA void   LC_InitNextBgr(LC_BGR * pBgr);
-SK_EntPnt_FYBA short  LC_NextBgr(LC_BGR * pBgr,unsigned short usLag);
-SK_EntPnt_FYBA short  LC_InqAntFiler(unsigned short usLag);
-SK_EntPnt_FYBA short  LC_GetGrNr(LC_BGR * pBgr);
-SK_EntPnt_FYBA const char *LC_GetObjtypeBgr(LC_BGR * pBgr);
-SK_EntPnt_FYBA short  LC_GetGrPara(short *ngi,long *nko,unsigned short *info);
-SK_EntPnt_FYBA short  LC_GetGrParaBgr(LC_BGR * pBgr,short *ngi,long *nko,unsigned short *info);
-SK_EntPnt_FYBA short  LC_RsGr(short *rstat,LC_FILADM *pFil,short *ngi,long *nko,
-                              unsigned short *info,long *gml_snr);
-SK_EntPnt_FYBA short  LC_RsHode(LC_FILADM *pFil,short *ngi,long *nko,unsigned short *info);
-SK_EntPnt_FYBA void   LC_WsGr(LC_FILADM *pFil);
-SK_EntPnt_FYBA void   LC_WsGrPart(LC_FILADM *pFil,long fra_punkt,long antall);
-SK_EntPnt_FYBA short  LC_EndreHode(LC_FILADM *pFil);
-SK_EntPnt_FYBA short  LC_RxGr(LC_BGR * pBgr,short les_sosi,short *ngi,long *nko,unsigned short *info);
-SK_EntPnt_FYBA short  LC_WxGr(short k_stat);
-SK_EntPnt_FYBA void   LC_RoundKoord(void);
-SK_EntPnt_FYBA long   LC_FiLastGr(LC_FILADM *pFil);
-SK_EntPnt_FYBA short  LC_NyGr (LC_FILADM *pFil,char *sosi,LC_BGR * pBgr,long *snr);
-SK_EntPnt_FYBA short  LC_CopyGr (LC_BGR * pBgr,short ngis,short *ngi,long *nko,unsigned short *info);
-SK_EntPnt_FYBA short  LC_CopyCoord(LC_BGR * pBgr,short retning,long til_linje,short *ngi,
-                                   long *nko,unsigned short *info);
-SK_EntPnt_FYBA short  LC_DelGr(void);
-SK_EntPnt_FYBA void   LC_SnuGr(void);
-SK_EntPnt_FYBA short  LC_SplittGr (long p1,long p2,LC_BGR * pBgr2);
-SK_EntPnt_FYBA short  LC_SammenfoyGr(LC_BGR * pFraBgr,short retning,short plassering,short metode,
-                      short *ngi,long *nko,unsigned short *info);
-SK_EntPnt_FYBA void   LC_ErstattReferanse (LC_FILADM *pFil,long lGmlSnr,long lNyttSnr, bool bSammeRetning);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylb.c                       */
+   /* ======================================================= */
+   short  LC_GetGrFi(LC_FILADM **ppFil);
+   void   LC_InitNextFil(LC_FILADM **ppFil);
+   short  LC_NextFil(LC_FILADM **ppFil,unsigned short usLag);
+   void   LC_InitNextBgr(LC_BGR * pBgr);
+   short  LC_NextBgr(LC_BGR * pBgr,unsigned short usLag);
+   short  LC_InqAntFiler(unsigned short usLag);
+   short  LC_GetGrNr(LC_BGR * pBgr);
+   const wchar_t *LC_GetObjtypeBgr(LC_BGR * pBgr);
+   short  LC_GetGrPara(short *ngi,long *nko,unsigned short *info);
+   short  LC_GetGrParaBgr(LC_BGR * pBgr,short *ngi,long *nko,unsigned short *info);
+   short  LC_RsGr(short *rstat,LC_FILADM *pFil,short *ngi,long *nko,
+      unsigned short *info,long *gml_snr);
+   short  LC_RsHode(LC_FILADM *pFil,short *ngi,long *nko,unsigned short *info);
+   void   LC_WsGr(LC_FILADM *pFil);
+   void   LC_WsGrPart(LC_FILADM *pFil,long fra_punkt,long antall);
+   short  LC_EndreHode(LC_FILADM *pFil);
+   short  LC_RxGr(LC_BGR * pBgr,short les_sosi,short *ngi,long *nko,unsigned short *info);
+   short  LC_WxGr(short k_stat);
+   void   LC_RoundKoord(void);
+   long   LC_FiLastGr(LC_FILADM *pFil);
+   short  LC_NyGr (LC_FILADM *pFil,wchar_t *sosi,LC_BGR * pBgr,long *snr);
+   short  LC_CopyGr (LC_BGR * pBgr,short ngis,short *ngi,long *nko,unsigned short *info);
+   short  LC_CopyCoord(LC_BGR * pBgr,short retning,long til_linje,short *ngi,
+      long *nko,unsigned short *info);
+   short  LC_DelGr(void);
+   short  LC_SnuGr(void);
+   short  LC_SplittGr (long p1,long p2,LC_BGR * pBgr2);
+   short  LC_SammenfoyGr(LC_BGR * pFraBgr,short retning,short plassering,short metode,
+                         short *ngi,long *nko,unsigned short *info);
+   void   LC_ErstattReferanse (LC_FILADM *pFil,long lGmlSnr,long lNyttSnr, bool bSammeRetning);
+   bool   LC_ErSammeGr(LC_BGR *pBgr1, LC_BGR *pBgr2);
 
 
    /* Konstanter for SammenfoyGr() */
@@ -1278,191 +1361,434 @@ SK_EntPnt_FYBA void   LC_ErstattReferanse (LC_FILADM *pFil,long lGmlSnr,long lNy
 #define LC_SG_FJERN  4   /* Bare det ene av sammenføyings-punktene beholdes */
 
 
-SK_EntPnt_FYBA short  LC_InsGiL (short linje, short antall);
-SK_EntPnt_FYBA short  LC_AppGiL (void);
-SK_EntPnt_FYBA short  LC_DelGiL (short linje, short antall);
-SK_EntPnt_FYBA short  LC_DelGiNavn(char *pszEgenskapNavn);
-SK_EntPnt_FYBA long  LC_InsKoL (long linje, long antall);
-SK_EntPnt_FYBA long  LC_AppKoL (void);
-SK_EntPnt_FYBA long  LC_DelKoL (long linje, long antall);
-SK_EntPnt_FYBA void   LC_Save (void);
-SK_EntPnt_FYBA void   LC_OppdaterEndret(short endring);
-  #define O_GINFO   0  /* Oppdater tabeller i forhold til GINFO */
-  #define O_ENDRET  1  /* Merk for endret og oppdat. tab. */
-  #define O_SLETTET 2  /* Merk for slettet og oppdat. tab. */
+   short  LC_InsGiL (short linje, short antall);
+   short  LC_AppGiL (void);
+   short  LC_DelGiL (short linje, short antall);
+   short  LC_DelGiNavn(wchar_t *pszEgenskapNavn);
+   long  LC_InsKoL (long linje, long antall);
+   long  LC_AppKoL (void);
+   long  LC_DelKoL (long linje, long antall);
+   void   LC_Save (void);
+   void   LC_OppdaterEndret(short endring);
+#define O_GINFO   0  /* Oppdater tabeller i forhold til GINFO */
+#define O_ENDRET  1  /* Merk for endret og oppdat. tab. */
+#define O_SLETTET 2  /* Merk for slettet og oppdat. tab. */
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyli.c                       */
-/* ======================================================= */
-/* Brukttabellen */
-SK_EntPnt_FYBA void  LC_SetBt(LC_BGR * pGr,short kolonne);
-SK_EntPnt_FYBA void  LC_ClrBt(LC_BGR * pGr,short kolonne);
-SK_EntPnt_FYBA short LC_GetBt(LC_BGR * pGr,short kolonne);
-SK_EntPnt_FYBA void  LC_EraseBt(short fra_kol,short til_kol);
-SK_EntPnt_FYBA void  LC_CopyBt(short fra_kol,short til_kol,short operasjon);
-SK_EntPnt_FYBA void  LC_SetModusMerk(unsigned short usModus);
-SK_EntPnt_FYBA long  LC_MerkGr(short sKolonne,short sBryter);
-SK_EntPnt_FYBA void  LC_ClrPrioritet(LC_BGR * pGr,short kolonne);
-SK_EntPnt_FYBA void  LC_SetPrioritet(LC_BGR * pGr,short kolonne);
-SK_EntPnt_FYBA short LC_InqPrioritet(LC_BGR * pGr,short kolonne);
-SK_EntPnt_FYBA void  LC_ErasePrioritet(LC_BGR * pGr);
-SK_EntPnt_FYBA void  LC_EraseAllPrioritet(LC_FILADM *pFil);
-SK_EntPnt_FYBA void  LC_DumpBt(const char *pszMelding);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyli.c                       */
+   /* ======================================================= */
+   /* Brukttabellen */
+   void  LC_SetBt(LC_BGR * pGr,short kolonne);
+   void  LC_ClrBt(LC_BGR * pGr,short kolonne);
+   short LC_GetBt(LC_BGR * pGr,short kolonne);
+   void  LC_EraseBt(short fra_kol,short til_kol);
+   void  LC_CopyBt(short fra_kol,short til_kol,short operasjon);
+   void  LC_SetModusMerk(unsigned short usModus);
+   long  LC_MerkGr(short sKolonne,short sBryter);
+   void  LC_ClrPrioritet(LC_BGR * pGr,short kolonne);
+   void  LC_SetPrioritet(LC_BGR * pGr,short kolonne);
+   short LC_InqPrioritet(LC_BGR * pGr,short kolonne);
+   void  LC_ErasePrioritet(LC_BGR * pGr);
+   void  LC_EraseAllPrioritet(LC_FILADM *pFil);
+   void  LC_DumpBt(const wchar_t *pszMelding);
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyld.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA void   LC_DelIdx(char *szSosFil);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyld.c                       */
+   /* ======================================================= */
+   void  LC_DelIdx(const wchar_t *szSosFil);
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyta.c                       */
-/* ======================================================= */
-/* Tabellsystemet */
-SK_EntPnt_FYBA short  LC_InitTabel(long n_rec,short rec_len,void *buffer);
-SK_EntPnt_FYBA short  LC_PutTabel(long linje,void *buffer);
-SK_EntPnt_FYBA short  LC_GetTabel(long linje,void *buffer);
-SK_EntPnt_FYBA void   LC_CloseTabel(void);
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyln.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA char *LC_FormatterKvalitet(short sMetode,long lNoyaktighet,short sSynbarhet,
-                           short sHoydeMetode,long lHoydeNoyaktighet);
-SK_EntPnt_FYBA short LC_FinnNivo(const char *pszNavn);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyta.c                       */
+   /* ======================================================= */
+   /* Tabellsystemet */
+   short LC_InitTabel(const wchar_t *pszKatal, long n_rec,short rec_len,void *buffer);
+   short LC_PutTabel(long linje,void *buffer);
+   short LC_GetTabel(long linje,void *buffer);
+   void  LC_CloseTabel(void);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyln.c                       */
+   /* ======================================================= */
+   wchar_t *LC_FormatterKvalitet(short sMetode,long lNoyaktighet,short sSynbarhet,
+                                 short sHoydeMetode,long lHoydeNoyaktighet);
+   short LC_FinnNivo(const wchar_t *pszNavn);
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyls.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA void   LC_SBSn(LC_SNR_ADM *pSnrAdm,LC_FILADM *pFil,long lMinSnr,long lMaxSnr);
-SK_EntPnt_FYBA short  LC_MoveSn(LC_SNR_ADM *pSnrAdm,long lSnr,LC_BGR * pBgr);
-SK_EntPnt_FYBA short  LC_FiSn(LC_FILADM *pFil,long lSnr,LC_BGR * pBgr);
-SK_EntPnt_FYBA void   LC_FiArraySn(LC_FILADM *pFil,short antall,long *snr,long *bgr);
-SK_EntPnt_FYBA long   LC_FASn(LC_SNR_ADM *pSnrAdm);
-SK_EntPnt_FYBA short  LC_FFSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FNSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FPSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FLSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FFSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FNSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FPSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FLSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyls.c                       */
+   /* ======================================================= */
+   void   LC_SBSn(LC_SNR_ADM *pSnrAdm,LC_FILADM *pFil,long lMinSnr,long lMaxSnr);
+   short  LC_MoveSn(LC_SNR_ADM *pSnrAdm,long lSnr,LC_BGR * pBgr);
+   short  LC_FiSn(LC_FILADM *pFil,long lSnr,LC_BGR * pBgr);
+   void   LC_FiArraySn(LC_FILADM *pFil,short antall,long *snr,long *bgr);
+   long   LC_FASn(LC_SNR_ADM *pSnrAdm);
+   short  LC_FFSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
+   short  LC_FNSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
+   short  LC_FPSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
+   short  LC_FLSn(LC_SNR_ADM *pSnrAdm,LC_BGR *pBgr);
+   short  LC_FFSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
+   short  LC_FNSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
+   short  LC_FPSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
+   short  LC_FLSnBt(LC_SNR_ADM *pSnrAdm,short kolonne,LC_BGR *pBgr);
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fylr.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA short  LC_GetGrWin(LC_BGR *pBgr,double *nva,double *nvn,double *oha,double *ohn);
-/* Flate-søk */
-SK_EntPnt_FYBA void   LC_SBFlate(LC_GEO_STATUS *pGeoStat,unsigned short usLag,
-                                 double nv_a,double nv_n,double oh_a,double oh_n);
-SK_EntPnt_FYBA short  LC_FFFlate(LC_GEO_STATUS *pGeoStat,LC_BGR * pBgr);
-SK_EntPnt_FYBA short  LC_FNFlate(LC_GEO_STATUS *pGeoStat,LC_BGR * pBgr);
-/* Geografisk søk primær gruppe */
-SK_EntPnt_FYBA void   LC_SBGeo(LC_GEO_STATUS *pGeoStat,unsigned short usLag,
-                               double nv_a,double nv_n,double oh_a,double oh_n);
-SK_EntPnt_FYBA short  LC_FFGeo(LC_GEO_STATUS *pGeoStat,LC_BGR *pBgr);
-SK_EntPnt_FYBA short  LC_FNGeo(LC_GEO_STATUS *pGeoStat,LC_BGR *pBgr);
-SK_EntPnt_FYBA long   LC_FAGeo(LC_GEO_STATUS *pGeoStat);
-SK_EntPnt_FYBA short LC_FFGeoFil(LC_GEO_STATUS *pGeoStat,LC_FILADM *pFil,LC_BGR *pBgr);
-SK_EntPnt_FYBA short LC_FNGeoFil(LC_GEO_STATUS *pGeoStat,LC_FILADM *pFil,LC_BGR *pBgr);
-SK_EntPnt_FYBA void LC_AvsluttSok(LC_GEO_STATUS *pGeoStat);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylr.c                       */
+   /* ======================================================= */
+   short  LC_GetGrWin(LC_BGR *pBgr,double *nva,double *nvn,double *oha,double *ohn);
+   /* Flate-søk */
+   void   LC_SBFlate(LC_GEO_STATUS *pGeoStat,unsigned short usLag,
+      double nv_a,double nv_n,double oh_a,double oh_n);
+   short  LC_FFFlate(LC_GEO_STATUS *pGeoStat,LC_BGR * pBgr);
+   short  LC_FNFlate(LC_GEO_STATUS *pGeoStat,LC_BGR * pBgr);
+   /* Geografisk søk primær gruppe */
+   void   LC_SBGeo(LC_GEO_STATUS *pGeoStat,unsigned short usLag,
+      double nv_a,double nv_n,double oh_a,double oh_n);
+   short  LC_FFGeo(LC_GEO_STATUS *pGeoStat,LC_BGR *pBgr);
+   short  LC_FNGeo(LC_GEO_STATUS *pGeoStat,LC_BGR *pBgr);
+   long   LC_FAGeo(LC_GEO_STATUS *pGeoStat);
+   short LC_FFGeoFil(LC_GEO_STATUS *pGeoStat,LC_FILADM *pFil,LC_BGR *pBgr);
+   short LC_FNGeoFil(LC_GEO_STATUS *pGeoStat,LC_FILADM *pFil,LC_BGR *pBgr);
+   void LC_AvsluttSok(LC_GEO_STATUS *pGeoStat);
 
-/* Vindustest mm */
-SK_EntPnt_FYBA short  LC_WTst(double nva,double nvn,double oha,double ohn);
-SK_EntPnt_FYBA short  LC_PTst(double a,double n);
-SK_EntPnt_FYBA short  LC_PTstOmkrets(double a,double n);
+   /* Vindustest mm */
+   short  LC_WTst(double nva,double nvn,double oha,double ohn);
+   short  LC_PTst(double a,double n);
+   short  LC_PTstOmkrets(double a,double n);
 
-/* Debugformål */
-SK_EntPnt_FYBA void LC_DumpGeoRtre(LC_FILADM *pFil);
-
-
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fylu.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA LC_UT_ADM *  LC_OpenQuery(void);
-SK_EntPnt_FYBA void    LC_CloseQuery(LC_UT_ADM *pUtAdm);
-//SK_EntPnt_FYBA short   LC_PutQueryLine(LC_UT_ADM *pUtAdm,char *qulin);
-SK_EntPnt_FYBA short   LC_PutQueryLine(LC_UT_ADM *pUtAdm,const char *qulin,short sType);
-SK_EntPnt_FYBA void    LC_PutQueryRegel(LC_UTVALG *pU,const char *navn);
-SK_EntPnt_FYBA short   LC_LesUtvalg(LC_UT_ADM *pUtAdm,const char *pszKomFil);
-SK_EntPnt_FYBA char   *LC_GetUtRegelNavn(LC_UT_ADM *pUtAdm,short *ist);
-SK_EntPnt_FYBA char   *LC_GruppeUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *sstat,char **regelnavn);
-SK_EntPnt_FYBA short   LU_GiTestUtvalg(LC_UT_ADM *pUtAdm,LC_UTVALG * pU);
-SK_EntPnt_FYBA void    LC_PunktUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *psStat,long lPnr,char **ppszRegel);
-SK_EntPnt_FYBA LC_UTVALG *LC_FinnPinfoUtvalg(LC_UT_ADM *pUtAdm,const char *pszNavn);
-SK_EntPnt_FYBA short   LC_PiTestUtvalg(LC_UT_ADM *pUtAdm,LC_UTVALG * pU,long lPnr);
-SK_EntPnt_FYBA short   LC_GiQuery(LC_UT_ADM  *pUtAdm);
-SK_EntPnt_FYBA long    LC_FAGiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag);
-SK_EntPnt_FYBA long    LC_FAPiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag);
-SK_EntPnt_FYBA long    LC_FAGiKombinertFlateQuery(LC_UT_ADM *pUtAdmFlate,LC_UT_ADM *pUtAdmOmkrets,
-											                 unsigned short usLag,short sMetode);
-SK_EntPnt_FYBA short   LC_QueryGP(char *qulin,unsigned short iniv,unsigned short *univ,short *ulin,char **para);
-SK_EntPnt_FYBA short   LC_InqMaxPrioritet(LC_UT_ADM *pUA);
-SK_EntPnt_FYBA short   LC_TestPrioritetBrukt(LC_UT_ADM *pUtAdm,short sPrioritet);
-SK_EntPnt_FYBA void    LC_UtvalgPrioritet(LC_UT_ADM *pUtAdm);
-SK_EntPnt_FYBA void    LC_LoggPrioritetUtvalg(LC_UT_ADM *pUtAdm);
-SK_EntPnt_FYBA void    LU_FrigiUE(LC_UTVALG_ELEMENT *pUE);
-SK_EntPnt_FYBA short   LU_AppUE (LC_UTVALG *pU,short sNiv,const char *pszTx);
-SK_EntPnt_FYBA void    LC_PutLag(LC_UT_ADM *pUtAdm,LC_UTVALG *pU,const char *navn);
-SK_EntPnt_FYBA bool    LC_ErLik_Avrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet);
-SK_EntPnt_FYBA bool    LC_ErLik_IkkeAvrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet);
-SK_EntPnt_FYBA bool    LC_ErReferert(void);
-SK_EntPnt_FYBA long    LC_ErReferertFraAntall(void);
+   /* Debugformål */
+   void LC_DumpGeoRtre(LC_FILADM *pFil);
 
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fylp.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA void LC_POL_InitPolygon(LC_POLYGON *pPolygon);
-SK_EntPnt_FYBA void LC_POL_FrigiPolygon(LC_POLYGON *pPolygon);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylu.c                       */
+   /* ======================================================= */
+   LC_UT_ADM *  LC_OpenQuery(void);
+   void    LC_CloseQuery(LC_UT_ADM *pUtAdm);
+   //short   LC_PutQueryLine(LC_UT_ADM *pUtAdm,wchar_t *qulin);
+   short   LC_PutQueryLine(LC_UT_ADM *pUtAdm,const wchar_t *qulin,short sType);
+   void    LC_PutQueryRegel(LC_UTVALG *pU,const wchar_t *navn);
+   short   LC_LesUtvalg(LC_UT_ADM *pUtAdm,const wchar_t *pszKomFil);
+   wchar_t   *LC_GetUtRegelNavn(LC_UT_ADM *pUtAdm,short *ist);
+   wchar_t   *LC_GruppeUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *sstat,wchar_t **regelnavn);
+   short   LU_GiTestUtvalg(LC_UT_ADM *pUtAdm,LC_UTVALG * pU);
+   void    LC_PunktUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *psStat,long lPnr,wchar_t **ppszRegel);
+   LC_UTVALG *LC_FinnPinfoUtvalg(LC_UT_ADM *pUtAdm,const wchar_t *pszNavn);
+   short   LC_PiTestUtvalg(LC_UT_ADM *pUtAdm,LC_UTVALG * pU,long lPnr);
+   short   LC_GiQuery(LC_UT_ADM  *pUtAdm);
+   long    LC_FAGiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag);
+   long    LC_FAPiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag);
+   long    LC_FAGiKombinertFlateQuery(LC_UT_ADM *pUtAdmFlate,LC_UT_ADM *pUtAdmOmkrets,
+      unsigned short usLag,short sMetode);
+   short   LC_QueryGP(wchar_t *qulin,unsigned short iniv,unsigned short *univ,short *ulin,wchar_t **para);
+   short   LC_InqMaxPrioritet(LC_UT_ADM *pUA);
+   short   LC_TestPrioritetBrukt(LC_UT_ADM *pUtAdm,short sPrioritet);
+   void    LC_UtvalgPrioritet(LC_UT_ADM *pUtAdm);
+   void    LC_LoggPrioritetUtvalg(LC_UT_ADM *pUtAdm);
+   void    LU_FrigiUE(LC_UTVALG_ELEMENT *pUE);
+   short   LU_AppUE (LC_UTVALG *pU,short sNiv,const wchar_t *pszTx);
+   void    LC_PutLag(LC_UT_ADM *pUtAdm,LC_UTVALG *pU,const wchar_t *navn);
+   bool    LC_ErReferert(void);
+   long    LC_ErReferertFraAntall(void);
+   bool    LC_ErReferertFraReadOnly(void);
 
-SK_EntPnt_FYBA void LC_POL_InitOmkrets(LC_POL_OMKR *pPO);
-SK_EntPnt_FYBA LC_POL_ELEMENT * LC_POL_LeggTilGruppeOmkrets(LC_POL_OMKR *pPO,LC_BGR *pBgr,short sRetning,long lSnr);
-SK_EntPnt_FYBA void LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO);
-SK_EntPnt_FYBA void LC_POL_FjernGruppeOmkrets(LC_POL_OMKR *pPO, LC_POL_ELEMENT *pPE);
-SK_EntPnt_FYBA void LC_POL_FrigiOmkrets(LC_POL_OMKR *pPO);
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylp.c                       */
+   /* ======================================================= */
+   void LC_POL_InitPolygon(LC_POLYGON *pPolygon);
+   void LC_POL_FrigiPolygon(LC_POLYGON *pPolygon);
 
-SK_EntPnt_FYBA void LC_POL_InitOy(LC_OY_ADM *pOA);
-SK_EntPnt_FYBA void LC_POL_FrigiAlleOyer(LC_OY_ADM *pOA);
-SK_EntPnt_FYBA void LC_POL_FjernOy(LC_OY_ADM *pOA,LC_OY_ELEMENT *pOE);
-SK_EntPnt_FYBA void LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO);
+   void LC_POL_InitOmkrets(LC_POL_OMKR *pPO);
+   LC_POL_ELEMENT * LC_POL_LeggTilGruppeOmkrets(LC_POL_OMKR *pPO,LC_BGR *pBgr,short sRetning,long lSnr);
+   void LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO);
+   void LC_POL_FjernGruppeOmkrets(LC_POL_OMKR *pPO, LC_POL_ELEMENT *pPE);
+   void LC_POL_FrigiOmkrets(LC_POL_OMKR *pPO);
 
-SK_EntPnt_FYBA short LC_POL_TestBrukt(LC_POLYGON *pPolygon,LC_BGR *pBgr);
-SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon);
-SK_EntPnt_FYBA void  LC_POL_GetRef(LC_POLYGON *pPolygon);
-SK_EntPnt_FYBA void  LC_POL_GetRefOmkrets(LC_POL_OMKR *pPO);
-SK_EntPnt_FYBA short LC_POL_PTst(LC_POLYGON *pPolygon,double a,double n);
-SK_EntPnt_FYBA short LC_POL_PTstOmkrets(LC_POL_OMKR *pPO,double a,double n);
-SK_EntPnt_FYBA short LC_POL_OmkretsSkjaering(LC_POL_OMKR *pPO,double a,double n);
-SK_EntPnt_FYBA void  LC_POL_Box(LC_POL_OMKR *pPO,double *nva,double *nvn, double *oha,double*ohn);
-SK_EntPnt_FYBA short LC_ErLinjeRefLin(char *pszSosiLin, short sRefLin);
+   void LC_POL_InitOy(LC_OY_ADM *pOA);
+   void LC_POL_FrigiAlleOyer(LC_OY_ADM *pOA);
+   void LC_POL_FjernOy(LC_OY_ADM *pOA,LC_OY_ELEMENT *pOE);
+   void LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO);
+
+   short LC_POL_TestBrukt(LC_POLYGON *pPolygon, LC_BGR *pBgr,  bool bSjekkIndreGrense);
+   short LC_POL_PutRef(LC_POLYGON *pPolygon);
+   void  LC_POL_GetRef(LC_POLYGON *pPolygon);
+   void  LC_POL_GetRefOmkrets(LC_POL_OMKR *pPO);
+   short LC_POL_PTst(LC_POLYGON *pPolygon,double a,double n);
+   short LC_POL_PTstOmkrets(LC_POL_OMKR *pPO,double a,double n);
+   short LC_POL_OmkretsSkjaering(LC_POL_OMKR *pPO,double a,double n);
+   void  LC_POL_Box(LC_POL_OMKR *pPO,double *nva,double *nvn, double *oha,double*ohn);
+   short LC_ErLinjeRefLin(wchar_t *pszSosiLin, short sRefLin);
+   short LC_POL_OmkretsRetning(LC_POL_OMKR *pPO);
+   void  LC_POL_FjernLoop(LC_POL_OMKR *pPO);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyln.c                       */
+   /* ======================================================= */
+   const wchar_t *LC_GetElementNavn(LC_FILADM *pFil,short sNavnNr,bool *bBrukt);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyba.c                       */
+   /* ======================================================= */
+   wchar_t *LC_InqVer(void);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyle.c                       */
+   /* ======================================================= */
+   void LC_SetErrorHandler(void (*f) (short,const wchar_t*,const wchar_t*));
+   void LC_SetStartMessageHandler(void (*f)(const wchar_t*));
+   void LC_SetShowMessageHandler(void (*f)(double));
+   void LC_SetEndMessageHandler(void (*f)(void));
+   void LC_SetCancelHandler(short (*f)(void));
+
+
+
+
+private:
+   // Systemadministrasjon
+   LC_SYSTEMADM Sys;
+
+   LC_FEILMELDING err;
+
+   // Returstreng
+   wchar_t retur_str[LC_MAX_SOSI_LINJE_LEN];
+
+   /* Tabellsystem */
+   short fytab_open;
+
+   struct {
+      wchar_t szPath[_MAX_PATH];
+      FILE   *fpek;
+      size_t recl;
+      short  modus;
+      long   cur_lin;
+   } fytab;
+
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyho.c                       */
+   /* ======================================================= */
+   short ho_TestFyllKommentar(const char *pszTx);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylo.c                       */
+   /* ======================================================= */
+   void   LO_CloseSos(LC_BASEADM *pBase);
+   void   LO_ReopenSos(LC_FILADM *pFil);
+   void   LO_BeFt(LC_FILADM *pFil);
+   void   LO_TestFilpeker(LC_FILADM *pFil,wchar_t *pszRutineNavn);
+   LC_BASEADM * LO_AppBaseAdm(void);
+   short        LO_DelBaseAdm(LC_BASEADM * pBase);
+   LC_FILADM  * LO_AppFilAdm(LC_BASEADM * pBase);
+   void         LO_DelFilAdm(LC_FILADM *pFil);
+   short        LO_OpenKladd(LC_BASEADM * pBase);
+   short        LO_InklSos(LC_FILADM *pFil,short vising);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylb.c                       */
+   /* ======================================================= */
+   void    LB_Save(LC_FILADM *pFil);
+   void    LB_NyRp(void);
+   short   LB_RGru(LC_FILADM *pFil,UT_INT64 start,UT_INT64 *slutt);
+   void    LB_Swap(void);
+   wchar_t *LB_FormaterEnhet(wchar_t *streng,short sStrengMaxLen,wchar_t *SosiNavn,double enhet);
+   void    LB_ClGr (void);
+   short   LB_WGru (short strategi,long fra_punkt,long antall,
+      LC_FILADM *pFil,UT_INT64 ffipos,UT_INT64 *lfipos);
+   short   LB_Plass(LC_FILADM *pFil, UT_INT64 start, UT_INT64 *neste);
+   short   LB_WriteLine (FILE *fil,short sTegnsett,wchar_t *tx);
+   short   LB_WriteLine (FILE *fil, char *tx);
+   short   LB_GetSet(FILE *fil,LB_LESEBUFFER *pLb,LC_NAVNETABELL * pNavn);
+   void    LB_WriteBlank(FILE *fil,short sTegnsett,UT_INT64 ltilpos);
+   wchar_t *LB_GetParameter(LB_LESEBUFFER *plb);
+   short    LB_TestFyll(const wchar_t *pszTx);
+   void     LB_WriteRb(void);
+   short    LB_FlyttGrTilSlutt(LC_FILADM *pFil, UT_INT64 start, UT_INT64 *neste);
+   short    LB_RensOmkrets(LC_POL_OMKR * pPO,long lAktSnr,long lFraSnr);
+   void     LR_TestEndreBuepTilKurve(double dDeltaFi);
+   size_t   LB_EffektivStrenglengde(short sTegnsett, wchar_t *tx);
+   void     LB_FyllBuffer (FILE *fil,LB_LESEBUFFER *pLb);
+
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyli.c                       */
+   /* ======================================================= */
+   short   LI_TestIdx(wchar_t *szSosFil);
+   short   LI_OpenInit(LC_FILADM *pFil);
+   short   LI_OpenRead(LC_FILADM *pFil);
+   void    LI_Close(LC_FILADM *pFil,short s_stat);
+   void    LI_SaveAdm(LC_FILADM *pFil);
+
+   LC_R_LEAF * LI_GetGeo(LC_FILADM *pFil,long linje);
+   /*  void   LI_PutGeo(LC_FILADM *pFil,long linje,LC_GEOSOK_BOKS *geop); */
+
+   long   LI_GetSnr(LC_FILADM *pFil,long lSnr);
+   void   LI_PutSnr(LC_FILADM *pFil,long lSnr,long lGrNr);
+
+   LC_GRTAB_LINJE * LI_GetGrt(LC_FILADM *pFil,long linje);
+   LC_GRTAB_LINJE * LI_AppGrt(LC_FILADM *pFil,long linje);
+
+   unsigned long   LI_GetBt(LC_FILADM *pFil,long linje);
+   void   LI_PutBt(LC_FILADM *pFil,long linje,unsigned long bt_val);
+
+   void    LI_SetBt(LC_FILADM *pFil,long lGrNr,short kolonne);
+   void    LI_ClrBt(LC_FILADM *pFil,long lGrNr,short kolonne);
+   short   LI_InqBt(LC_FILADM *pFil,long lGrNr,short kolonne);
+   void    LI_EraseBt(short fra_kol,short til_kol);
+
+   void LI_WriteRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
+      wchar_t *pszGi, unsigned long ulGiLen,
+      double *pdAust, double *pdNord,
+      LB_INFO * pInfo, long lNko,
+      wchar_t *pszPi, unsigned long ulPiLen);
+   void LI_ReadRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
+      wchar_t *pszGi, unsigned long ulGiLen,
+      double *pdAust, double *pdNord,
+      LB_INFO * pInfo, long lNko,
+      wchar_t *pszPi, unsigned long ulPiLen);
+   void LI_ReadCoordRb(LC_FILADM *pFil, UT_INT64 n64FilPos, unsigned long ulGiLen,
+      double *pdAust, double *pdNord,
+      LB_INFO * pInfo, long lNko,
+      wchar_t *pszPi, unsigned long ulPiLen);
+   long LI_BerBufferLen(unsigned long ulGiLen,long lNko,unsigned long ulPiLen);
+
+   FILE *LI_OpenIdxFil(LC_FILADM *pFil, const wchar_t *pszNavn, const wchar_t *pszType);
+   FILE *LI_OpenAdm(LC_FILADM *pFil);
+   FILE *LI_OpenGrt(LC_FILADM *pFil);
+   FILE *LI_OpenGeo(LC_FILADM *pFil);
+   FILE *LI_OpenSnr(LC_FILADM *pFil);
+   FILE *LI_OpenBt(LC_FILADM *pFil);
+   void  LI_OpenRb(LC_FILADM *pFil,UT_INT64 n64FilPos,short sModus);
+   short LI_ReadAdm(LC_FILADM *pFil);
+   void  LI_CreateIdx(LC_FILADM *pFil);
+   void  LI_FrigiIdx(LC_FILADM *pFil);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyln.c                       */
+   /* ======================================================= */
+   void  LN_InitTab(LC_NAVNETABELL *pLn);
+   short LN_Enhet(LC_NAVNETABELL *pLn,wchar_t *ginfo_linje);
+   short LN_EnhetHoyde(LC_NAVNETABELL *pLn,wchar_t *ginfo_linje);
+   short LN_EnhetDybde(LC_NAVNETABELL *pLn,wchar_t *ginfo_linje);
+   short LN_TestOy(wchar_t *ginfo_linje);
+   short LN_PakkNavn(LC_NAVNETABELL *pLn,wchar_t *navn,short *navn_nr,
+      short *ant_par);
+   short LN_FinnNavn(LC_NAVNETABELL *pLn,wchar_t *navn,short *navn_nr);
+   wchar_t *LN_GetNavn(LC_NAVNETABELL *pLn,short navn);
+   wchar_t *LN_VisNavn(LC_NAVNETABELL *pLn,short navn);
+   void  LN_TolkKvalitet(wchar_t *pszParameter,short *psMetode,long *plNoyaktighet,
+      short *psSynbarhet,short *psHoydeMetode,long *plHoydeNoyaktighet);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyls.c                       */
+   /* ======================================================= */
+   void    LS_Indx(void);
+   void    LS_PutSn(LC_FILADM *pFil,long lGrNr,long lSnr);
+   wchar_t *  LS_VisSn(LC_FILADM *pFil,long lin);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylu.c                       */
+   /* ======================================================= */
+   void  LU_FrigiUtvalg(LC_UTVALG *pU);
+   void  LU_DelLastQuery(LC_UTVALG_BLOKK *pUB);
+   short LU_TolkUtvalgslinje(LC_UTVALG_ELEMENT * pUE,const wchar_t *pszTx);
+   short LU_PiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,long lPnr);
+   short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr);
+   //short LU_GiTestUtvalg(LC_UT_ADM * pUtAdm,LC_UTVALG *pU);
+   short LU_GiTestDelutvalg(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE);
+   short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
+                        short *gilin,wchar_t **apara);
+   short LU_ParaTest(LC_UTVALG_ELEMENT * pUE,wchar_t *para,wchar_t *pszAktPara,short sMaxLen);
+   void  LU_JustPara(wchar_t *para,short ledd,short start,short slutt,
+                     wchar_t *akt_para,short max_len);
+   short LU_LesULinje(FILE *pKomFil,short sMaxTxLen,wchar_t *pszTx,
+                      short *psNiv);
+   void LU_AppUtvalg (LC_UTVALG_BLOKK *pUtBlokk,wchar_t *pszNavn);
+   void LU_PakkPrioritet(LC_UT_ADM * pUtAdm);
+   void LU_HuskPrior(short *NyPrior,short *sAntPrior,short sPrior);
+   void LU_SjekkDatatype(wchar_t *pszVerdi,wchar_t szMetode,short *sType);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylr.c                       */
+   /* ======================================================= */
+   /* Indeksoppbygging */
+   void  LR_Indx(void);
+   void  LR_IndxFlate(void);
+   short LR_PTstGruppe(LC_BGR * pBgr,double a,double n);
+   void LR_R_Delete(LC_R_LEAF * pCL);
+   LC_R_LEAF * LR_InsertGeo(LC_FILADM *pFil,long lNr,LC_BOKS * pB);
+   void LR_R_FrigiGren(LC_R_NODE *pRN);
+   LC_R_LEAF * LR_R_Insert(long lGrNr,LC_BOKS * pB,LC_R_NODE * pFar,LC_R_NODE * pRN,LC_R_NODE * *ppNyRN);
+   LC_R_NODE * LR_R_CreateRNode( LC_R_NODE * pFar,short sSonType);
+   LC_R_LEAF * LR_R_CreateRLeaf(long lGrNr, LC_BOKS * pB,LC_R_NODE * pFar);
+   void LR_R_BoksSum(LC_BOKS * pB1,LC_BOKS * pB2);
+   double LR_BoksDeltaArealSum(LC_BOKS * pB1,LC_BOKS * pB2);
+   void LR_LeggTilKB(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,long lNr);
+   short LR_R_BoksTestIntersect(LC_BOKS * pB1,LC_BOKS * pB2);
+   void LR_R_SjekkNode(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN);
+   void LR_R_SjekkNodeFlate(LC_GEO_STATUS * pGeoStat,LC_BOKS * pB,LC_FILADM *pFil,LC_R_NODE * pRN);
+   void LR_VelgMetode(LC_GEO_STATUS * pGeoStat);
+
+   //#ifdef TEST
+   //#include <string.h>
+   // void LR_R_DumpNode(LC_R_NODE * pRN, int iNivo);
+   void LR_R_DumpLov(LC_R_LEAF * pRL, LC_FILADM *pDumpFil, int iNivo, double dA, double dN,long *plAntBarn);
+   void LR_R_DumpNode(LC_R_NODE * pRN, LC_FILADM *pDumpFil, int iNivo, double dA, double dN, double dLengde,long *plAntBarn);
+   //#endif
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylx.c                       */
+   /* ======================================================= */
+   void   LX_PutSn(long snr);
+   void   LX_CreGiPeker(LC_GINFO_BUFFER *pGinfo,short ngi);
+   wchar_t *LX_GetGi(short lin_nr);
+   long LX_GetRefOmkrets(LC_GR_STATUS *pGRS,long *ref_array,
+                         unsigned char *ref_status,long max_ref);
+   long LX_GetRefOy(LC_GRF_STATUS * pGS,long *ref_array,
+                    unsigned char *ref_status,long max_ref);
+   void LX_CreatePibuf(long lPnr);
+   double LX_ArealGruppe(LC_BGR * pBgr,short retning);
+   void LX_PutGi(short lin_nr, const wchar_t *szGinfo);
+   void LX_VisUlovligPnr(wchar_t *pszRutine, long lPnr);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylp.c                       */
+   /* ======================================================= */
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fylh.c                       */
+   /* ======================================================= */
+   wchar_t* LH_GetNgisLag(void);
+
+   /* ======================================================= */
+   /*  Funksjonsdefinisjoner for fyho.c                       */
+   /* ======================================================= */
+   void  ho_New(FILE *fil,short koosys,double origo_a,double origo_n,
+                double enhet,double enhet_h,double enhet_d,
+                double nv_a,double nv_n,double oh_a,double oh_n);
+   short ho_TestSOSI(FILE *fil,UT_INT64 *sluttpos);
+   wchar_t *ho_GetVal(FILE *fil,wchar_t *sosi_navn,short *sett_nr);
+   short ho_GetKvalitet(FILE *fil,short *psMetode,long *plNoyaktighet,
+                        short *psSynbarhet,short *psHoydeMetode,long *plHoydeNoyaktighet);
+   short ho_GetTrans(FILE *fil,short *koosys,double *origo_a,
+                     double *origo_n,double *enhet,double *enhet_h,double *enhet_d);
+   short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans);
+   short ho_GetOmr(FILE *fil,double *nv_a,double *nv_n,double *oh_a,double *oh_n);
+   short ho_GetTegnsett(FILE *pfFil,short *psTegnsett);
+   short ho_FinnHode(FILE *pFil, UT_INT64 *lHodepos);
+
+};
+
 
 /* ======================================================= */
-/*  Funksjonsdefinisjoner for fyln.c                       */
+/*  Funksjonsdefinisjoner for fyle.cpp                     */
 /* ======================================================= */
-SK_EntPnt_FYBA const char *LC_GetElementNavn(LC_FILADM *pFil,short sNavnNr,bool *bBrukt);
+SK_EntPnt_FYBA short LC_StrError(short feil_nr,wchar_t **feilmelding);
 
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyba.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA char *LC_InqVer(void);
-
-/* ======================================================= */
-/*  Funksjonsdefinisjoner for fyle.c                       */
-/* ======================================================= */
-SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding);
-
-SK_EntPnt_FYBA void LC_SetErrorHandler(void (*f) (short,const char*,const char*));
-SK_EntPnt_FYBA void LC_SetStartMessageHandler(void (*f)(const char*));
-SK_EntPnt_FYBA void LC_SetShowMessageHandler(void (*f)(double));
-SK_EntPnt_FYBA void LC_SetEndMessageHandler(void (*f)(void));
-SK_EntPnt_FYBA void LC_SetCancelHandler(short (*f)(void));
 
 //////////////////////////////////////////////////////////////////////////
 //
 // Når FYBA brukes som LIB må følgende funksjoner finnes definert
 //
 //////////////////////////////////////////////////////////////////////////
-void  LC_Error (short ifeilnr, const char logtx[], const char vartx[]);
-void  LC_StartMessage(const char *cfil);
+void  LC_Error (short ifeilnr, const wchar_t logtx[], const wchar_t vartx[]);
+void  LC_StartMessage(const wchar_t *cfil);
 void  LC_ShowMessage(double prosent);
 void  LC_EndMessage(void);
 short LC_Cancel(void);
@@ -1475,8 +1801,8 @@ short LC_Cancel(void);
 // Hvis disse ikke blir aktivert brukes enkle rutiner som ligger i DLL-en.
 //
 //////////////////////////////////////////////////////////////////////////
-void   LC_ErrorHandler (short ifeilnr, const char* logtx, const char* vartx);
-void   LC_StartMessageHandler(const char *cfil);
+void   LC_ErrorHandler (short ifeilnr, const wchar_t* logtx, const wchar_t* vartx);
+void   LC_StartMessageHandler(const wchar_t *cfil);
 void   LC_ShowMessageHandler(double prosent);
 void   LC_EndMessageHandler(void);
 short  LC_CancelHandler(void);

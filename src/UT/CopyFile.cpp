@@ -20,9 +20,6 @@
 #  include<windows.h>
 #endif
 
-#ifdef BORLAND
-#endif
-
 //#include "StdAfx.h"
 #include "fyut.h"
 
@@ -36,8 +33,8 @@ CD
 CD PARAMETERLISTE:
 CD Type   Navn               I/U Merknad
 CD ------------------------------------------------------------------
-CD char  *pszFraFilnavn       i  Kopier fra denne filen
-CD char  *pszTilFilnavn       i  Kopier til denne filen
+CD wchar_t  *pszFraFilnavn       i  Kopier fra denne filen
+CD wchar_t  *pszTilFilnavn       i  Kopier til denne filen
 CD short  sFeilHvisEksisterer i  Hva skal skje hvis resultatfilen finnes fra før:
 CD                                  UT_TRUE = Avbryter
 CD                                  UT_FALSE = Overskriver  
@@ -48,7 +45,7 @@ CD
 CD Bruk:  sStatus = UT_CopyFile(pszFraFilnavn,pszTilFilnavn,UT_TRUE);
    ==================================================================
 */
-SK_EntPnt_UT short UT_CopyFile(char *pszFraFilnavn,char *pszTilFilnavn,short sFeilHvisEksisterer)
+SK_EntPnt_UT short UT_CopyFile(const wchar_t *pszFraFilnavn, const wchar_t *pszTilFilnavn, short sFeilHvisEksisterer)
 {
 #ifdef WIN32
    if (CopyFile( pszFraFilnavn, pszTilFilnavn, sFeilHvisEksisterer)) {
@@ -68,10 +65,6 @@ SK_EntPnt_UT short UT_CopyFile(char *pszFraFilnavn,char *pszTilFilnavn,short sFe
 #endif
 
 #ifdef OS216
-      return UT_FALSE;
-#endif
-
-#ifdef BORLAND
       return UT_FALSE;
 #endif
 

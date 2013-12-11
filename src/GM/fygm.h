@@ -1,12 +1,12 @@
 /******************************************************************************
 *
-* STATENS KARTVERK  -  FYSAK
+* KARTVERKET  -  FYSAK
 *
 * Filename: fygm.h
 * 
 * Content: Prototyper for generelle geometrirutiner.
 *
-* Copyright (c) 1990-2011 Statens kartverk
+* Copyright (c) 1990-2011 Kartverket
 *
 * Permission is hereby granted, free of charge, to any person obtaining a
 * copy of this software and associated documentation files (the "Software"),
@@ -30,21 +30,21 @@
 #pragma once
 
 #ifdef WIN32
-#ifdef _DEBUG
- #pragma comment (lib, "GmD.lib")
-#else
- #pragma comment (lib, "Gm.lib")
-#endif
+#  ifdef _DEBUG
+#    pragma comment (lib, "GmD.lib")
+#  else
+#    pragma comment (lib, "Gm.lib")
+#  endif
 #endif
 
 #ifndef SK_EntPnt_GM
 #  define SK_EntPnt_GM
 #endif
 
-
 /* --- Konstanter -- */
 //#define PI  3.14159265358979324
-#define PI  3.14159265358979323846
+//#define PI  3.14159265358979323846
+#define PI  3.141592653589793238462643383279502884197169
 #define PIHALV (PI/2.0)
 #define TOPI   (PI*2.0)
 
@@ -54,6 +54,37 @@
 
 #define Deg2Rad(Deg) ((Deg/180)*PI)
 #define Gon2Rad(Gon) ((Gon/200)*PI)
+
+
+// Måleenhet for koordinater
+enum koordinatUOM { MeterDesimal,      // Meter i kartprojeksjon               
+   GradDesimal,       // 360
+   GradMinSek,
+   GradBuesekund,
+   GonDesimal,        // 400
+   GonMinSek,
+   GonBuesekund };
+
+
+SK_EntPnt_GM void GM_KonvGradBuesekundTilGradMinSek(double dNordBue, double dAustBue, 
+   short *sGraderNord, short *sMinutterNord, double *dSekunderNord,
+   short *sGraderAust, short *sMinutterAust, double *dSekunderAust);
+
+SK_EntPnt_GM void GM_KonvGradMinSekTilGradBuesekund(short sGraderNord, short sMinutterNord, double dSekunderNord,
+   short sGraderAust, short sMinutterAust, double dSekunderAust,
+   double *dNordBue, double *dAustBue);
+
+SK_EntPnt_GM void GM_KonvGradDesimalTilGradMinSek(double dNordGrad, double dAustGrad, 
+   short *sGraderNord, short *sMinutterNord, double *dSekunderNord,
+   short *sGraderAust, short *sMinutterAust, double *dSekunderAust);
+
+SK_EntPnt_GM void GM_KonvGradMinSekTilGradDesimal(short sGraderNord, short sMinutterNord, double dSekunderNord,
+   short sGraderAust, short sMinutterAust, double dSekunderAust,
+   double *dNordGrad, double *dAustGrad);
+
+SK_EntPnt_GM void GM_KonvGradBuesekundTilGradDesimal(double dNordBue, double dAustBue, double *dNordGrad, double *dAustGrad);
+
+SK_EntPnt_GM void GM_KonvGradDesimalTilGradBuesekund(double dNordGrad, double dAustGrad, double *dNordBue, double *dAustBue);
 
 
 /* ---- Funksjonsdefinisjoner for fygm.c -- */
@@ -127,3 +158,5 @@ SK_EntPnt_GM short GM_BueTilKorder (double as,double ns,double r,double fi,doubl
                                  double delta,short mpu,double *a_arr,double *n_arr);
 SK_EntPnt_GM void GM_PktTilOktagon (double dAs,double dNs,double dAreal,double *a_arr,double *n_arr);
 SK_EntPnt_GM void GM_TynnDared(double dMaxAvst,double dMaxPil,long *nko, double *pA,double *pN);
+SK_EntPnt_GM bool GM_ErLik_Avrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet);
+SK_EntPnt_GM bool GM_ErLik_IkkeAvrundet(double dA1,double dN1,double dA2, double dN2, double dEnhet);

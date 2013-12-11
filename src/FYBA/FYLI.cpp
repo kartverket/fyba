@@ -1,5 +1,5 @@
 /* === 910828 ============================================================= */
-/*  STATENS KARTVERK  -  FYSAK-PC                                           */
+/*  KARTVERKET  -  FYSAK-PC                                           */
 /*  Fil: fyli.c                                                             */
 /*  Innhold: Lagring og henting av indekstabeller                           */
 /* ======================================================================== */
@@ -20,22 +20,6 @@
 #define SKRIV 2
 
 
-/* Globale strukturer for fyba */
-extern LC_SYSTEMADM    Sys;
-
-
-/* Lokale rutiner */
-static FILE *LI_OpenIdxFil(LC_FILADM *pFil, const char *pszNavn, const char *pszType);
-static FILE *LI_OpenAdm(LC_FILADM *pFil);
-static FILE *LI_OpenGrt(LC_FILADM *pFil);
-static FILE *LI_OpenGeo(LC_FILADM *pFil);
-static FILE *LI_OpenSnr(LC_FILADM *pFil);
-static FILE *LI_OpenBt(LC_FILADM *pFil);
-static void  LI_OpenRb(LC_FILADM *pFil,UT_INT64 n64FilPos,short sModus);
-static short LI_ReadAdm(LC_FILADM *pFil);
-static void  LI_CreateIdx(LC_FILADM *pFil);
-static void  LI_FrigiIdx(LC_FILADM *pFil);
-
 
 /*
 AR-910928
@@ -47,7 +31,7 @@ CD
 CD Parametre:
 CD Type    Navn      I/U   Forklaring
 CD --------------------------------------------------------------------------
-CD char   *szSosFil   i    SOSI-fil
+CD wchar_t   *szSosFil   i    SOSI-fil
 CD short   status     r    Status
 CD                          UT_TRUE = OK
 CD                          UT_FALSE = Fil mangler
@@ -56,11 +40,11 @@ CD Bruk:
 CD status = LI_TestIdx(szSosFil);
    ==========================================================================
 */
-short LI_TestIdx(char *szSosFil)
+short CFyba::LI_TestIdx(wchar_t *szSosFil)
 {
    UT_INT64 Size;
-   char fil[_MAX_PATH];
-   char drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+   wchar_t fil[_MAX_PATH];
+   wchar_t drive[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
 
 
    // Hvis det er valgt spesiell indekskatalog skal indeksen alltid bygges opp på nytt
@@ -76,30 +60,30 @@ short LI_TestIdx(char *szSosFil)
 
    /* Sjekk at indeksfilene finnes */
    /* -------------- Adm ------------- */
-   UT_makepath(fil,drive,dir,"Adm",".Idx");
+   UT_makepath(fil,drive,dir,L"Adm",L".Idx");
    if (UT_InqPathSize_i64(fil,&Size) != 0)  return UT_FALSE;
 
    /* -------------- Gruppetabell ------------- */
-   UT_makepath(fil,drive,dir,"Grt",".Idx");
+   UT_makepath(fil,drive,dir,L"Grt",L".Idx");
    if (UT_InqPathSize_i64(fil,&Size) != 0)  return UT_FALSE;
 
    /* -------------- RB ------------- */
-   UT_makepath(fil,drive,dir,"Rb",".Idx");
+   UT_makepath(fil,drive,dir,L"Rb",L".Idx");
    if (UT_InqPathSize_i64(fil,&Size) != 0)  return UT_FALSE;
 
    /* -------------- SNR ------------- */
-   UT_makepath(fil,drive,dir,"Snr",".Idx");
+   UT_makepath(fil,drive,dir,L"Snr",L".Idx");
    if (UT_InqPathSize_i64(fil,&Size) != 0)  return UT_FALSE;
    
    /* -------------- BT -------------- */
-   UT_makepath(fil,drive,dir,"Bt",".Idx");
+   UT_makepath(fil,drive,dir,L"Bt",L".Idx");
    if (UT_InqPathSize_i64(fil,&Size) != 0)  return UT_FALSE;
    
    /* -------------- GEO ------------- */
-   UT_makepath(fil,drive,dir,"Geo",".Idx");
+   UT_makepath(fil,drive,dir,L"Geo",L".Idx");
    if (UT_InqPathSize_i64(fil,&Size) != 0)  return UT_FALSE;
 
-   /* printf("\nIndeksfilene finnes."); */
+   /* printf(L"\nIndeksfilene finnes."); */
    return UT_TRUE;
 }
 
@@ -123,11 +107,11 @@ CD Bruk:
 CD status = LI_OpenInit(pFil);
    ==========================================================================
 */
-short LI_OpenInit(LC_FILADM *pFil)
+short CFyba::LI_OpenInit(LC_FILADM *pFil)
 {
-   char fil[_MAX_PATH];
-   char drive1[_MAX_DRIVE],dir1[_MAX_DIR],fname1[_MAX_FNAME],ext1[_MAX_EXT];
-   char drive2[_MAX_DRIVE],dir2[_MAX_DIR],fname2[_MAX_FNAME],ext2[_MAX_EXT];
+   wchar_t fil[_MAX_PATH];
+   wchar_t drive1[_MAX_DRIVE],dir1[_MAX_DIR],fname1[_MAX_FNAME],ext1[_MAX_EXT];
+   wchar_t drive2[_MAX_DRIVE],dir2[_MAX_DIR],fname2[_MAX_FNAME],ext2[_MAX_EXT];
    FILE *pF;
 
 
@@ -140,17 +124,17 @@ short LI_OpenInit(LC_FILADM *pFil)
    // Gitt sti for indeksfilene
    if ( *Sys.szIdxPath != 0) {
       UT_splitpath(Sys.szIdxPath,drive2,dir2,fname2,ext2);
-      UT_makepath(fil,drive2,dir2,fname1,"");
+      UT_makepath(fil,drive2,dir2,fname1,L"");
 
    } else {
-      UT_makepath(fil,drive1,dir1,fname1,"");
+      UT_makepath(fil,drive1,dir1,fname1,L"");
    }
 
    // ----- Lag subdirectory hvis det ikke finnes fra før
    // Sjekk at navnet er lovlig (ikke blanke siste i navnet)
-   if (fil[strlen(fil)-1] == ' ')
+   if (fil[wcslen(fil)-1] == ' ')
    {
-      LC_Error(120,"(LI_OpenInit)",pFil->pszNavn);
+      LC_Error(120,L"(LI_OpenInit)",pFil->pszNavn);
       exit(99);
    }
 
@@ -169,10 +153,10 @@ short LI_OpenInit(LC_FILADM *pFil)
    pFil->ulPid = 0;
    pFil->sIdxOpen = UT_TRUE;
    pFil->ulPid = UT_GETPID();
-   //pFil->ulPid = GetCurrentProcessId();   // Bruke _getpid() i stede?
+   //pFil->ulPid = GetCurrentProcessId();   // Bruke UT_GETPID() i stede
 
    if (fwrite(pFil,sizeof(*pFil),1,pF) != 1) {
-      LC_Error(112,"(LI_OpenInit)","");
+      LC_Error(112,L"(LI_OpenInit)",L"");
       exit(99);
    }
 
@@ -226,7 +210,7 @@ CD Bruk:
 CD status = LI_OpenRead(pFil);
    ==========================================================================
 */
-short LI_OpenRead(LC_FILADM *pFil)
+short CFyba::LI_OpenRead(LC_FILADM *pFil)
 {
    FILE *pF;
    long linje;
@@ -258,8 +242,8 @@ short LI_OpenRead(LC_FILADM *pFil)
    for (linje = 0; linje<pFil->lAntGr; linje++) {
       pGrt = LI_AppGrt(pFil,linje);
       if (fread(pGrt,sizeof(*pGrt),1,pF) != 1) { /* Les */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %ld",pFil->pszNavn,linje);
-         LC_Error(111,"(LI_OpenRead): ",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %ld",pFil->pszNavn,linje);
+         LC_Error(111,L"(LI_OpenRead): ",err.tx);
          exit(99);
       }
    }
@@ -273,8 +257,8 @@ short LI_OpenRead(LC_FILADM *pFil)
       lSnr++;
    }
    if (! feof(pF)) {
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %ld",lSnr);
-      LC_Error(111,"(LI_OpenRead): ",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %ld",lSnr);
+      LC_Error(111,L"(LI_OpenRead): ",err.tx);
       exit(99);
    }
    fclose(pF);
@@ -284,8 +268,8 @@ short LI_OpenRead(LC_FILADM *pFil)
    pF = LI_OpenBt(pFil);
    for (linje = 0; linje<pFil->lAntGr; linje++) {
       if (fread(&bt,sizeof(bt),1,pF) != 1) {   /* Les */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %ld",pFil->pszNavn,linje);
-         LC_Error(111,"(LI_OpenRead): ",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %ld",pFil->pszNavn,linje);
+         LC_Error(111,L"(LI_OpenRead): ",err.tx);
          exit(99);
       }
       LI_PutBt(pFil,linje,bt);
@@ -296,8 +280,8 @@ short LI_OpenRead(LC_FILADM *pFil)
    pF = LI_OpenGeo(pFil);
    for (linje = 0; linje<pFil->lAntGr; linje++) {
       if (fread(&Boks,sizeof(Boks),1,pF) != 1) { /* Les */
-         UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %ld",pFil->pszNavn,linje);
-         LC_Error(111,"(LI_OpenRead): ",err().tx);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %ld",pFil->pszNavn,linje);
+         LC_Error(111,L"(LI_OpenRead): ",err.tx);
          exit(99);
       }
 
@@ -329,10 +313,13 @@ CD Bruk:
 CD LI_CreateIdx(pFil);
    ==========================================================================
 */
-static void LI_CreateIdx(LC_FILADM *pFil)
+void CFyba::LI_CreateIdx(LC_FILADM *pFil)
 {
-	pFil->pIdx = (LC_IDX_TABELL *) UT_MALLOC(sizeof(LC_IDX_TABELL));
-	memset(pFil->pIdx,'\0',sizeof(LC_IDX_TABELL));
+	pFil->pIdx = (LC_IDX_TABELL *) malloc(sizeof(LC_IDX_TABELL));
+	memset(pFil->pIdx, 0, sizeof(LC_IDX_TABELL));
+#ifdef BRUK_MAP_SNR
+   pFil->pIdx->SerieNrAdm = new MapSerieNr();
+#endif
 }
 
 
@@ -352,39 +339,49 @@ CD Bruk:
 CD LI_FrigiIdx(pFil);
    ==========================================================================
 */
-static void LI_FrigiIdx(LC_FILADM *pFil)
+void CFyba::LI_FrigiIdx(LC_FILADM *pFil)
 {
    int i;
-   LC_GRTAB_LINJE * *ppGt = pFil->pIdx->GtAdm;
-   long **pplSnr;
+   LC_GRTAB_LINJE **ppGt;
    unsigned long **ppulBt;
-
 
    if (pFil->pIdx != NULL) {
       ppGt = pFil->pIdx->GtAdm;
-      pplSnr = pFil->pIdx->SnrAdm;
+#ifndef BRUK_MAP_SNR
+      long ** pplSnr = pFil->pIdx->SnrAdm;
+#else
+      MapSerieNr *plSnr = pFil->pIdx->SerieNrAdm;
+#endif
       ppulBt = pFil->pIdx->BtAdm;
 
       for (i=0; i<LC_ANT_IDX_BLOKK; i++) {
          /* Gruppetabellen */
 			if (*ppGt != NULL) {
-				UT_FREE(*ppGt);
+				free(*ppGt);
 			}
          ppGt++;
 
+#ifndef BRUK_MAP_SNR
          /* SNR-tabellen */
 			if (*pplSnr != NULL) {
-				UT_FREE(*pplSnr);
+				free(*pplSnr);
          }
          pplSnr++;
-
+#endif
          /* Brukt-tabellen */
-			if (*ppulBt != NULL) {
-				UT_FREE(*ppulBt);
+         if (*ppulBt != NULL) {
+             free(*ppulBt);
          }
          ppulBt++;
 
       }
+
+#ifdef BRUK_MAP_SNR
+      /* SNR-map */
+      if (plSnr != NULL) {
+         delete plSnr;
+      }
+#endif
 
       /* Frigi GEO-tabellen */
       if (pFil->pGeoRN != NULL) {
@@ -392,7 +389,7 @@ static void LI_FrigiIdx(LC_FILADM *pFil)
       }
 		
       /* Frigir topp-blokken */
-		UT_FREE(pFil->pIdx);
+		free(pFil->pIdx);
 
 		pFil->pIdx = NULL;
 	}
@@ -418,7 +415,7 @@ CD Bruk:
 CD LI_Close(pFil,SAVE_IDX);
    ==========================================================================
 */
-void LI_Close(LC_FILADM *pFil,short s_stat)
+void CFyba::LI_Close(LC_FILADM *pFil,short s_stat)
 {
    long lGrNr,lSnr;
    unsigned long flag;
@@ -439,7 +436,7 @@ void LI_Close(LC_FILADM *pFil,short s_stat)
       pF = LI_OpenGrt(pFil);     /* Åpne og posisjoner */
       for (lGrNr=0; lGrNr<pFil->lAntGr; lGrNr++) {
 			if (fwrite(LI_GetGrt(pFil,lGrNr),sizeof (LC_GRTAB_LINJE),1,pF) != 1) {
-            LC_Error(112,"(LI_Close)","");
+            LC_Error(112,L"(LI_Close)",L"");
             exit(99);
          }
       }
@@ -450,7 +447,7 @@ void LI_Close(LC_FILADM *pFil,short s_stat)
       for (lGrNr=0; lGrNr<pFil->lAntGr; lGrNr++) {
          flag = LI_GetBt(pFil,lGrNr);
          if (fwrite(&flag,sizeof flag,1,pF) != 1) {
-				LC_Error(112,"(LI_Close)","");
+				LC_Error(112,L"(LI_Close)",L"");
             exit(99);
          }
       }
@@ -461,8 +458,8 @@ void LI_Close(LC_FILADM *pFil,short s_stat)
       for (lSnr=0; lSnr<=pFil->lMaxSnr; lSnr++) {
          lGrNr = LI_GetSnr(pFil,lSnr);
          if (fwrite(&lGrNr,sizeof lGrNr,1,pF) != 1) {
-            LC_Error(112,"(LI_Close)","");
-				exit(99);
+            LC_Error(112,L"(LI_Close)",L"");
+                exit(99);
          }
       }
       fclose(pF);
@@ -475,13 +472,13 @@ void LI_Close(LC_FILADM *pFil,short s_stat)
          if (pRL == NULL) {
             Boks.dMaxAust = (double)LONG_MAX;
             if (fwrite(&Boks,sizeof (LC_BOKS),1,pF) != 1) {
-               LC_Error(112,"(LI_Close)","");
+               LC_Error(112,L"(LI_Close)",L"");
                exit(99);
             }
 
          } else {
             if (fwrite(&(pRL->Boks),sizeof (LC_BOKS),1,pF) != 1) {
-               LC_Error(112,"(LI_Close)","");
+               LC_Error(112,L"(LI_Close)",L"");
                exit(99);
             }
          }
@@ -500,7 +497,6 @@ void LI_Close(LC_FILADM *pFil,short s_stat)
 	 *  Frigi overordnet struktur for indekstabeller
     */
    LI_FrigiIdx(pFil);
-
 }
 
 
@@ -515,19 +511,19 @@ CD Parametre:
 CD Type        Navn    I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_FILADM  *pFil     i    Peker til FilAdm
-CD const char *pszNavn  i    Filnavn
-CD const char *pszType  i    Filtype
+CD const wchar_t *pszNavn  i    Filnavn
+CD const wchar_t *pszType  i    Filtype
 CD
 CD Bruk:
-CD pF = LI_OpenIdxFil(pFil,"Adm",".Idx");
+CD pF = LI_OpenIdxFil(pFil,L"Adm",L".Idx");
    ==========================================================================
 */
-static FILE *LI_OpenIdxFil(LC_FILADM *pFil, const char *pszNavn, const char *pszType)
+FILE * CFyba::LI_OpenIdxFil(LC_FILADM *pFil, const wchar_t *pszNavn, const wchar_t *pszType)
 {
    short ierr;
-   char fil[_MAX_PATH];
-   char drive1[_MAX_DRIVE],dir1[_MAX_DIR],fname1[_MAX_FNAME],ext1[_MAX_EXT];
-   char drive2[_MAX_DRIVE],dir2[_MAX_DIR],fname2[_MAX_FNAME],ext2[_MAX_EXT];
+   wchar_t fil[_MAX_PATH];
+   wchar_t drive1[_MAX_DRIVE],dir1[_MAX_DIR],fname1[_MAX_FNAME],ext1[_MAX_EXT];
+   wchar_t drive2[_MAX_DRIVE],dir2[_MAX_DIR],fname2[_MAX_FNAME],ext2[_MAX_EXT];
 
    FILE *pF;
 
@@ -551,12 +547,12 @@ static FILE *LI_OpenIdxFil(LC_FILADM *pFil, const char *pszNavn, const char *psz
    }
 
 	// Åner filen
-   pF = UT_OpenFile(fil,"",UT_UPDATE,UT_UNKNOWN,&ierr);
+   pF = UT_OpenFile(fil,L"",UT_UPDATE,UT_UNKNOWN,&ierr);
    if (ierr != UT_OK){
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,ierr);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",fil,szError);
-      LC_Error(6,"(LI_OpenIdxFil)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",fil,szError);
+      LC_Error(6,L"(LI_OpenIdxFil)",err.tx);
       exit(2);
    }
 
@@ -583,9 +579,9 @@ CD Bruk:
 CD pF = LI_OpenAdm(pFil);
    ==========================================================================
 */
-static FILE *LI_OpenAdm(LC_FILADM *pFil)
+FILE * CFyba::LI_OpenAdm(LC_FILADM *pFil)
 {
-   FILE *fi = LI_OpenIdxFil(pFil,"Adm",".Idx");
+   FILE *fi = LI_OpenIdxFil(pFil,L"Adm",L".Idx");
    fseek(fi,0L,SEEK_SET);
 
    return fi;
@@ -608,9 +604,9 @@ CD Bruk:
 CD pF = LI_OpenGrt(pFil);
    ==========================================================================
 */
-static FILE *LI_OpenGrt(LC_FILADM *pFil)
+FILE * CFyba::LI_OpenGrt(LC_FILADM *pFil)
 {
-   FILE *fi = LI_OpenIdxFil(pFil,"Grt",".Idx");
+   FILE *fi = LI_OpenIdxFil(pFil,L"Grt",L".Idx");
    fseek(fi,0L,SEEK_SET);
 
    return fi;
@@ -633,9 +629,9 @@ CD Bruk:
 CD pF = LI_OpenGeo(pFil);
    ==========================================================================
 */
-static FILE *LI_OpenGeo(LC_FILADM *pFil)
+FILE * CFyba::LI_OpenGeo(LC_FILADM *pFil)
 {
-   FILE *fi = LI_OpenIdxFil(pFil,"Geo",".Idx");
+   FILE *fi = LI_OpenIdxFil(pFil,L"Geo",L".Idx");
    fseek(fi,0L,SEEK_SET);
 
    return fi;
@@ -658,9 +654,9 @@ CD Bruk:
 CD pF = LI_OpenSnr(pFil);
    ==========================================================================
 */
-static FILE *LI_OpenSnr(LC_FILADM *pFil)
+FILE * CFyba::LI_OpenSnr(LC_FILADM *pFil)
 {
-   FILE *fi = LI_OpenIdxFil(pFil,"Snr",".Idx");
+   FILE *fi = LI_OpenIdxFil(pFil,L"Snr",L".Idx");
    fseek(fi,0L,SEEK_SET);
 
    return fi;
@@ -683,9 +679,9 @@ CD Bruk:
 CD pF = LI_OpenBt(pFil);
    ==========================================================================
 */
-static FILE *LI_OpenBt(LC_FILADM *pFil)
+FILE * CFyba::LI_OpenBt(LC_FILADM *pFil)
 {
-   FILE *fi = LI_OpenIdxFil(pFil,"Bt",".Idx");
+   FILE *fi = LI_OpenIdxFil(pFil,L"Bt",L".Idx");
    fseek(fi,0L,SEEK_SET);
 
    return fi;
@@ -710,7 +706,7 @@ CD Bruk:
 CD geop = LI_GetGeo(pFil,linje);
    ==========================================================================
 */
-LC_R_LEAF * LI_GetGeo(LC_FILADM *pFil,long linje)
+LC_R_LEAF * CFyba::LI_GetGeo(LC_FILADM *pFil,long linje)
 {
    LC_GRTAB_LINJE * pGT;
 
@@ -738,15 +734,16 @@ CD Bruk:
 CD lGrNr = LI_GetSnr(pFil,lSnr);
    ==========================================================================
 */
-long LI_GetSnr(LC_FILADM *pFil,long lSnr)
+long CFyba::LI_GetSnr(LC_FILADM *pFil,long lSnr)
 {
+#ifndef BRUK_MAP_SNR
    long **pplGrNr;
 
    if (pFil->pIdx != NULL) {
       /* Lovlig serienummer? */
       if (lSnr <= pFil->lMaxSnr) {
          /* Finner starten av aktuell blokk */
-			pplGrNr = pFil->pIdx->SnrAdm + (lSnr / LC_IDX_LIN_BLOKK);
+         pplGrNr = pFil->pIdx->SnrAdm + (lSnr / LC_IDX_LIN_BLOKK);
          /* Er denne blokken brukt? */
          if (*pplGrNr != NULL) {
             /* Hent aktuell linje i denne blokken */
@@ -754,8 +751,17 @@ long LI_GetSnr(LC_FILADM *pFil,long lSnr)
          }
       }
    }
-
    return  INGEN_GRUPPE;
+#else
+   if (pFil->pIdx->SerieNrAdm != NULL) {
+      MapSerieNr::iterator it;
+      it = pFil->pIdx->SerieNrAdm->find(lSnr);
+      if(it != pFil->pIdx->SerieNrAdm->end())
+         return it->second;
+   }
+   
+   return INGEN_GRUPPE;   
+#endif
 }
 
 
@@ -777,12 +783,13 @@ CD Bruk:
 CD LI_PutSnr(pFil,lSnr,lGrNr);
    ==========================================================================
 */
-void LI_PutSnr(LC_FILADM *pFil,long lSnr,long lGrNr)
+void CFyba::LI_PutSnr(LC_FILADM *pFil,long lSnr,long lGrNr)
 {
+#ifndef BRUK_MAP_SNR
    long **pplGrNr,*pL;
    int antall;
 
-	if (pFil->pBase->sType == LC_BASE) {
+	if (pFil->pBase->type == LC_BASE) {
       if (pFil->pIdx != NULL) {
          if (lSnr < LC_MAX_GRU) {
             /* Finner starten av aktuell blokk */
@@ -791,7 +798,7 @@ void LI_PutSnr(LC_FILADM *pFil,long lSnr,long lGrNr)
             /* Blokken finnes ikke, lag ny blokk */ 
 				if (*pplGrNr == NULL)
 				{
-					*pplGrNr = (long *) UT_MALLOC(sizeof(long)*LC_IDX_LIN_BLOKK);
+					*pplGrNr = (long *) malloc(sizeof(long)*LC_IDX_LIN_BLOKK);
 
                for (pL=*pplGrNr,antall=0; antall<LC_IDX_LIN_BLOKK; pL++,antall++) {
 						*pL = INGEN_GRUPPE;
@@ -802,16 +809,27 @@ void LI_PutSnr(LC_FILADM *pFil,long lSnr,long lGrNr)
             *(*pplGrNr + (lSnr % LC_IDX_LIN_BLOKK)) = lGrNr;
 
          } else {
-				UT_SNPRINTF(err().tx,LC_ERR_LEN,"%ld",lSnr);
-            LC_Error(61,"(LI_PutSnr): ",err().tx);
+            UT_SNPRINTF(err.tx,LC_ERR_LEN,L"%ld",lSnr);
+            LC_Error(61,L"(LI_PutSnr): ",err.tx);
             exit(99);
          }
 
       } else {
-         LC_Error(75,"(LI_PutSnr): ","");
+         LC_Error(75,L"(LI_PutSnr): ",L"");
          exit(99);
       }
    }
+#else
+   if (pFil->pBase->type == LC_BASE) {
+      if (pFil->pIdx->SerieNrAdm != NULL) {         
+         (*pFil->pIdx->SerieNrAdm)[lSnr] = lGrNr;
+      }
+      else {
+         LC_Error(75,L"(LI_PutSnr): ",L"");
+         exit(99);
+      }
+   }
+#endif
 }
 
 
@@ -833,7 +851,7 @@ CD Bruk:
 CD grtp = LI_GetGrt(pFil,linje);
    ==========================================================================
 */
-LC_GRTAB_LINJE * LI_GetGrt(LC_FILADM *pFil,long linje)
+LC_GRTAB_LINJE * CFyba::LI_GetGrt(LC_FILADM *pFil,long linje)
 {
    LC_GRTAB_LINJE * *ppGt;
 
@@ -847,8 +865,8 @@ LC_GRTAB_LINJE * LI_GetGrt(LC_FILADM *pFil,long linje)
       }
    }
 
-   UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %ld",pFil->pszNavn,linje);
-   LC_Error(111,"(LI_GetGrt): ",err().tx);
+   UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %ld",pFil->pszNavn,linje);
+   LC_Error(111,L"(LI_GetGrt): ",err.tx);
    exit(99);
 
    return  NULL;
@@ -873,7 +891,7 @@ CD Bruk:
 CD pgrt = LI_AppGrt(pFil,linje,geop);
    ==========================================================================
 */
-LC_GRTAB_LINJE * LI_AppGrt(LC_FILADM *pFil,long linje)
+LC_GRTAB_LINJE * CFyba::LI_AppGrt(LC_FILADM *pFil,long linje)
 {
    LC_GRTAB_LINJE * *ppGt;
 
@@ -882,15 +900,15 @@ LC_GRTAB_LINJE * LI_AppGrt(LC_FILADM *pFil,long linje)
       ppGt = pFil->pIdx->GtAdm + (linje / LC_IDX_LIN_BLOKK);
       if (*ppGt == NULL) {
 			/* Blokken finnes ikke, lag ny blokk */
-			*ppGt = (LC_GRTAB_LINJE *)UT_MALLOC(sizeof(LC_GRTAB_LINJE)*LC_IDX_LIN_BLOKK);
-			memset(*ppGt,'\0',sizeof(LC_GRTAB_LINJE)*LC_IDX_LIN_BLOKK);
+			*ppGt = (LC_GRTAB_LINJE *)malloc(sizeof(LC_GRTAB_LINJE)*LC_IDX_LIN_BLOKK);
+			memset(*ppGt, 0, sizeof(LC_GRTAB_LINJE)*LC_IDX_LIN_BLOKK);
 		}
 
 		/* Finn aktuell linje i blokken */
       return  (*ppGt + (linje % LC_IDX_LIN_BLOKK));    /* Funnet ===> */
 
    } else {
-      LC_Error(75,"(LI_PutGrt): ",err().tx);
+      LC_Error(75,L"(LI_PutGrt): ",err.tx);
       exit(99);
    }
 
@@ -916,7 +934,7 @@ CD Bruk:
 CD bt_val = LI_GetBt(pFil,linje);
    ==========================================================================
 */
-unsigned long LI_GetBt(LC_FILADM *pFil,long linje)
+unsigned long CFyba::LI_GetBt(LC_FILADM *pFil,long linje)
 {
    unsigned long **ppulFlag;
 
@@ -930,8 +948,8 @@ unsigned long LI_GetBt(LC_FILADM *pFil,long linje)
       }
    }
 
-   UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %ld",pFil->pszNavn,linje);
-   LC_Error(111,"(LI_GetBt): ",err().tx);
+   UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %ld",pFil->pszNavn,linje);
+   LC_Error(111,L"(LI_GetBt): ",err.tx);
    exit(99);
 
    return  0L;
@@ -956,7 +974,7 @@ CD Bruk:
 CD LI_PutBt(pFil,linje,bt_val);
    ==========================================================================
 */
-void LI_PutBt(LC_FILADM *pFil,long linje,unsigned long bt_val)
+void CFyba::LI_PutBt(LC_FILADM *pFil,long linje,unsigned long bt_val)
 {
    unsigned long **ppulFlag;
 
@@ -967,15 +985,15 @@ void LI_PutBt(LC_FILADM *pFil,long linje,unsigned long bt_val)
       /* Blokken finnes ikke, lag ny blokk */ 
 		if (*ppulFlag == NULL)
 		{
-			*ppulFlag =	(unsigned long *) UT_MALLOC(sizeof(unsigned long)*LC_IDX_LIN_BLOKK);
-			memset(*ppulFlag,'\0',sizeof(unsigned long)*LC_IDX_LIN_BLOKK);
+			*ppulFlag =	(unsigned long *) malloc(sizeof(unsigned long)*LC_IDX_LIN_BLOKK);
+			memset(*ppulFlag, 0, sizeof(unsigned long)*LC_IDX_LIN_BLOKK);
 		}
 
       /* Legg inn aktuell linje i blokken */
       *(*ppulFlag + (linje % LC_IDX_LIN_BLOKK)) = bt_val;
 
    } else {
-      LC_Error(75,"(LI_PutBt): ",err().tx);
+      LC_Error(75,L"(LI_PutBt): ",err.tx);
       exit(99);
    }
 }
@@ -999,10 +1017,10 @@ CD Bruk:
 CD LC_SetBt(pGr,kolonne);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_SetBt(LC_BGR * pGr,short kolonne)
+void CFyba::LC_SetBt(LC_BGR * pGr,short kolonne)
 {
-   /* LO_TestFilpeker(pGr->pFil,"LC_SetBt"); */
-   LO_TestFilpeker(pGr->pFil,"SetBt");
+   /* LO_TestFilpeker(pGr->pFil,L"LC_SetBt"); */
+   LO_TestFilpeker(pGr->pFil,L"SetBt");
 
                                            /* Lovlig gruppe */
    if (pGr->lNr >= 0L && pGr->lNr < pGr->pFil->lAntGr) {
@@ -1013,9 +1031,9 @@ SK_EntPnt_FYBA void LC_SetBt(LC_BGR * pGr,short kolonne)
        }
 
    } else{                                 /* Ulovlig gruppe */
-      char errtx[50];
-      UT_SNPRINTF(errtx,50," %ld",pGr->lNr);
-      LC_Error(72,"(LC_SetBt)",errtx);
+      wchar_t errtx[50];
+      UT_SNPRINTF(errtx,50,L" %ld",pGr->lNr);
+      LC_Error(72,L"(LC_SetBt)",errtx);
    }
 }
 
@@ -1038,10 +1056,10 @@ CD Bruk:
 CD LC_ClrBt(pGr,kolonne);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_ClrBt(LC_BGR * pGr,short kolonne)
+void CFyba::LC_ClrBt(LC_BGR * pGr,short kolonne)
 {
-   /* LO_TestFilpeker(pGr->pFil,"LC_ClrBt"); */
-   LO_TestFilpeker(pGr->pFil,"ClrBt");
+   /* LO_TestFilpeker(pGr->pFil,L"LC_ClrBt"); */
+   LO_TestFilpeker(pGr->pFil,L"ClrBt");
 
                                            /* Lovlig gruppe */
    if (pGr->lNr >= 0L && pGr->lNr < pGr->pFil->lAntGr) {
@@ -1052,9 +1070,9 @@ SK_EntPnt_FYBA void LC_ClrBt(LC_BGR * pGr,short kolonne)
        }
 
    } else{                                 /* Ulovlig gruppe */
-      char errtx[50];
-      UT_SNPRINTF(errtx,50," %ld",pGr->lNr);
-      LC_Error(72,"(LC_ClrBt)",errtx);
+      wchar_t errtx[50];
+      UT_SNPRINTF(errtx,50,L" %ld",pGr->lNr);
+      LC_Error(72,L"(LC_ClrBt)",errtx);
    }
 }
 
@@ -1078,10 +1096,10 @@ CD Bruk:
 CD merke = LC_GetBt(pGr,kolonne);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_GetBt(LC_BGR * pGr,short kolonne)
+short CFyba::LC_GetBt(LC_BGR * pGr,short kolonne)
 {
-   /* LO_TestFilpeker(pGr->pFil,"LC_GetBt"); */
-   LO_TestFilpeker(pGr->pFil,"GetBt");
+   /* LO_TestFilpeker(pGr->pFil,L"LC_GetBt"); */
+   LO_TestFilpeker(pGr->pFil,L"GetBt");
 
                                            /* Lovlig gruppe */
    if (pGr->lNr >= 0L && pGr->lNr < pGr->pFil->lAntGr) {
@@ -1092,9 +1110,9 @@ SK_EntPnt_FYBA short LC_GetBt(LC_BGR * pGr,short kolonne)
        }
 
    } else{                                 /* Ulovlig gruppe */
-      char errtx[50];
-      UT_SNPRINTF(errtx,50," %ld",pGr->lNr);
-      LC_Error(72,"(LC_GetBt)",errtx);
+      wchar_t errtx[50];
+      UT_SNPRINTF(errtx,50,L" %ld",pGr->lNr);
+      LC_Error(72,L"(LC_GetBt)",errtx);
    }
 
    return UT_FALSE;                            /* Retur ved feil */
@@ -1120,7 +1138,7 @@ CD Bruk:
 CD LC_EraseBt(fra_kol,til_kol);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_EraseBt(short fra_kol,short til_kol)
+void CFyba::LC_EraseBt(short fra_kol,short til_kol)
 {
                        /* Beregner lovlige kolonner */
    fra_kol = max(fra_kol,BT_MIN_USER);
@@ -1149,7 +1167,7 @@ CD Bruk:
 CD LI_SetBt(pFil,lGrNr,kolonne);
    ==========================================================================
 */
-void LI_SetBt(LC_FILADM *pFil,long lGrNr,short kolonne)
+void CFyba::LI_SetBt(LC_FILADM *pFil,long lGrNr,short kolonne)
 {
    LI_PutBt (pFil,lGrNr,LI_GetBt(pFil,lGrNr) | (0x1UL << kolonne));
 }
@@ -1174,7 +1192,7 @@ CD Bruk:
 CD LI_ClrBt(pFil,lGrNr,kolonne);
    ==========================================================================
 */
-void LI_ClrBt(LC_FILADM *pFil,long lGrNr,short kolonne)
+void CFyba::LI_ClrBt(LC_FILADM *pFil,long lGrNr,short kolonne)
 {
    LI_PutBt(pFil,lGrNr,LI_GetBt(pFil,lGrNr) & (~ (0x1UL << kolonne) ));
 }
@@ -1200,7 +1218,7 @@ CD Bruk:
 CD merke = LI_InqBt(pFil,lGrNr,kolonne);
    ==========================================================================
 */
-short LI_InqBt(LC_FILADM *pFil,long lGrNr,short kolonne)
+short CFyba::LI_InqBt(LC_FILADM *pFil,long lGrNr,short kolonne)
 {
    return ((LI_GetBt(pFil,lGrNr) & (0x1UL << kolonne)) == 0)?  UT_FALSE : UT_TRUE;
 }
@@ -1223,7 +1241,7 @@ CD Bruk:
 CD LI_EraseBt(fra_kol,til_kol);
    ==========================================================================
 */
-void LI_EraseBt(short fra_kol,short til_kol)
+void CFyba::LI_EraseBt(short fra_kol,short til_kol)
 {
    long lNr;
    unsigned long maske;
@@ -1275,7 +1293,7 @@ CD Bruk:
 CD LC_CopyBt(fra_kol,til_kol,operasjon);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_CopyBt(short fra_kol,short til_kol,short operasjon)
+void CFyba::LC_CopyBt(short fra_kol,short til_kol,short operasjon)
 {
    long lNr;
    unsigned long maske_fra,maske_til;
@@ -1371,7 +1389,7 @@ CD Bruk:
 CD LI_SaveAdm(pFil);
    ==========================================================================
 */
-void LI_SaveAdm(LC_FILADM *pFil)
+void CFyba::LI_SaveAdm(LC_FILADM *pFil)
 {
    UT_INT64 Size;
    FTID FilTid;
@@ -1397,7 +1415,7 @@ void LI_SaveAdm(LC_FILADM *pFil)
    pFil->sIdxOpen = UT_FALSE;
    pFil->ulPid = 0;
    if (fwrite(pFil,sizeof(*pFil),1,pF) != 1) {
-      LC_Error(112,"(LI_SaveAdm)","");
+      LC_Error(112,L"(LI_SaveAdm)",L"");
       exit(99);
    }
 
@@ -1428,14 +1446,14 @@ CD Bruk:
 CD sStatus = LI_ReadAdm(pFil);
    ==========================================================================
 */
-static short LI_ReadAdm(LC_FILADM *pFil)
+short CFyba::LI_ReadAdm(LC_FILADM *pFil)
 {
    unsigned short  usLag;
    FTID SosiTid;
    UT_INT64 SosiSize;
    short  sAccess;         
    short sTegnsett;
-   char  *pszNavn;
+   wchar_t  *pszNavn;
    LC_IDX_TABELL *pIdx;
    LC_FILADM *pNesteFil;
    LC_BASEADM *pBase;   
@@ -1465,7 +1483,7 @@ static short LI_ReadAdm(LC_FILADM *pFil)
    /* Leser adm */
    if (fread(pFil,sizeof(*pFil),1,pF) != 1)
    {
-      /* printf("\nFeil lengde lest."); */
+      /* printf(L"\nFeil lengde lest."); */
       sStatus = LI_LESEFEIL;
    }
    
@@ -1485,7 +1503,7 @@ static short LI_ReadAdm(LC_FILADM *pFil)
             {
                // Programmet finnes / er aktivt nå
                CloseHandle(hProgram);
-               // printf("\nFilen er åpen i et annet program.");
+               // printf(L"\nFilen er åpen i et annet program.");
                sStatus = LI_OPPTATT;
             }
          }
@@ -1496,18 +1514,18 @@ static short LI_ReadAdm(LC_FILADM *pFil)
       if (sStatus == UT_OK)
       {
          /* Sjekk versjonsnummer */
-         if (strcmp(FYBA_INDEKS_VERSJON,pFil->szIdxVer) != 0) {
-            /* printf("\nFeil indeksversjon"); */
+         if (wcscmp(FYBA_INDEKS_VERSJON,pFil->szIdxVer) != 0) {
+            /* printf(L"\nFeil indeksversjon"); */
             sStatus = LI_FEIL_INDEKSVERSJON;
 
          /* Sjekk størrelse for SOSI-filen */
          } else if (pFil->SosiBytes != SosiSize) {
-            /* printf("\nFeil størrelse på SOSI-filen."); */
+            /* printf(L"\nFeil størrelse på SOSI-filen."); */
             sStatus = LI_FEIL_STORRELSE;
 
          /* Sjekk oppdateringstid for SOSI-filen */
          } else if (memcmp(&pFil->SosiTid,&SosiTid,sizeof(FTID)) != 0) {
-            /* printf("\nFeil oppdateringstid"); */
+            /* printf(L"\nFeil oppdateringstid"); */
             sStatus = LI_FEIL_OPPDATTID;
          }
       }
@@ -1536,17 +1554,13 @@ static short LI_ReadAdm(LC_FILADM *pFil)
 
    // Marker at basen er åpnet
    pFil->sIdxOpen = UT_TRUE;
-#ifdef LINUX
-   pFil->ulPid = getpid();
-#else
-   pFil->ulPid = _getpid();
-#endif
+   pFil->ulPid = UT_GETPID();
 
    // Skriv
    fseek(pF,0L,SEEK_SET);
    if (fwrite(pFil,sizeof(*pFil),1,pF) != 1) 
    {
-      LC_Error(112,"(LI_ReadAdm)","");
+      LC_Error(112,L"(LI_ReadAdm)",L"");
       exit(99);
    }
 
@@ -1569,13 +1583,13 @@ CD Type            Navn     I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm
 CD UT_INT64        n64FilPos i    Startposisjon i buffer-filen.
-CD char           *pszGi     iu   Ginfo-buffer
+CD wchar_t           *pszGi     iu   Ginfo-buffer
 CD unsigned long   ulGiLen   i    Ant tegn som skal skrives
 CD double         *pdAust    iu   Koord
 CD double         *pdNord    iu   Koord
 CD LB_INFO *        pInfo     iu   Høyde, KP og PINFO-ofsett
 CD long            lNko      i    Ant koord
-CD char           *pszPi     iu   Pinfo-buffer
+CD wchar_t           *pszPi     iu   Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal skrives
 CD
 CD Bruk:
@@ -1584,11 +1598,11 @@ CD            Sys.pdAust, Sys.pdNord, Sys.pInfo, Sys.pGrInfo->nko,
 CD            Sys.pszPinfo, Sys.pGrInfo->ulPiLen);
    ==========================================================================
 */
-void LI_WriteRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
-                char *pszGi, unsigned long ulGiLen,
+void CFyba::LI_WriteRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
+                wchar_t *pszGi, unsigned long ulGiLen,
                 double *pdAust, double *pdNord,
                 LB_INFO * pInfo, long lNko,
-                char *pszPi, unsigned long ulPiLen)
+                wchar_t *pszPi, unsigned long ulPiLen)
 {
    short sSkrivefeil = UT_FALSE;
    FILE *pF;
@@ -1599,7 +1613,7 @@ void LI_WriteRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
 
    /* GINFO */
    if (ulGiLen > 0) {
-      if (fwrite(pszGi,(sizeof(char))*ulGiLen,1,pF) != 1) {
+      if (fwrite(pszGi,(sizeof(wchar_t))*ulGiLen,1,pF) != 1) {
          sSkrivefeil = UT_TRUE;
       }
    }
@@ -1622,15 +1636,15 @@ void LI_WriteRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
 
       /* PINFO */
       if (ulPiLen > 0) {
-         if (fwrite(pszPi,(sizeof(char))*ulPiLen,1,pF) != 1) {
+         if (fwrite(pszPi,(sizeof(wchar_t))*ulPiLen,1,pF) != 1) {
             sSkrivefeil = UT_TRUE;
          }
       }
    }
 
    if (sSkrivefeil == UT_TRUE) {
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %lld",pFil->pszNavn,n64FilPos);
-      LC_Error(74,"(LI_WriteRb): ",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %lld",pFil->pszNavn,n64FilPos);
+      LC_Error(74,L"(LI_WriteRb): ",err.tx);
       exit(99);
    }
 
@@ -1650,13 +1664,13 @@ CD Type            Navn     I/U   Forklaring
 CD --------------------------------------------------------------------------
 CD LC_FILADM      *pFil      i    Peker til FilAdm for filen det skal leses fra.
 CD UT_INT64        n64FilPos i    Startposisjon i buffer-filen.
-CD char           *pszGi     iu   Ginfo-buffer
+CD wchar_t           *pszGi     iu   Ginfo-buffer
 CD unsigned long   ulGiLen   i    Ant tegn som skal leses til buffer
 CD double         *pdAust    iu   Koord
 CD double         *pdNord    iu   Koord
 CD LB_INFO *        pInfo     iu   Høyde, KP og PINFO-ofsett
 CD long            lNko      i    Ant koord
-CD char           *pszPi     iu   Pinfo-buffer
+CD wchar_t           *pszPi     iu   Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal leses til buffer
 CD
 CD Bruk:
@@ -1665,11 +1679,11 @@ CD           Sys.pdAust, Sys.pdNord, Sys.pInfo, Sys.pGrInfo->nko,
 CD           Sys.pszPinfo, Sys.pGrInfo->ulPiLen);
    ==========================================================================
 */
-void LI_ReadRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
-               char *pszGi, unsigned long ulGiLen,
+void CFyba::LI_ReadRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
+               wchar_t *pszGi, unsigned long ulGiLen,
                double *pdAust, double *pdNord,
                LB_INFO * pInfo, long lNko,
-               char *pszPi, unsigned long ulPiLen)
+               wchar_t *pszPi, unsigned long ulPiLen)
 {
    short sLesefeil = UT_FALSE;
    FILE *pF;
@@ -1680,20 +1694,20 @@ void LI_ReadRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
 
    /* Leser GINFO */
    if (ulGiLen > 0) {
-      if (fread(pszGi,(sizeof(char))*ulGiLen,1,pF) != 1) {
+      if (fread(pszGi,(sizeof(wchar_t))*ulGiLen,1,pF) != 1) {
          sLesefeil = UT_TRUE;
       }
       // AR:2004-05-14 - Test
       /*
-      int antall = fread(pszGi,(sizeof(char))*ulGiLen,1,pF);
+      int antall = fread(pszGi,(sizeof(wchar_t))*ulGiLen,1,pF);
       if (antall != 1) {
          sLesefeil = UT_TRUE;
          // Bygger streng for feilvisning
-         char szError[256];
+         wchar_t szError[256];
          strerror_s(szError,256,errno);
-         UT_SNPRINTF(err().tx,LC_ERR_LEN,"%s",szError);
+         UT_SNPRINTF(err.tx,LC_ERR_LEN,L"%s",szError);
          if (feof(pF)) {
-            UT_SNPRINTF(err().tx,LC_ERR_LEN,"Filslutt");
+            UT_SNPRINTF(err.tx,LC_ERR_LEN,L"Filslutt");
          }
       }
       */
@@ -1717,16 +1731,16 @@ void LI_ReadRb(LC_FILADM *pFil, UT_INT64 n64FilPos,
 
       /* Leser PINFO */
       if (ulPiLen > 0) {
-         if (fread(pszPi,(sizeof(char))*ulPiLen,1,pF) != 1) {
+         if (fread(pszPi,(sizeof(wchar_t))*ulPiLen,1,pF) != 1) {
             sLesefeil = UT_TRUE;
          }
       }
    }
 
    if (sLesefeil == UT_TRUE) {
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %lld",pFil->pszNavn,n64FilPos);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %lld",pFil->pszNavn,n64FilPos);
 
-      LC_Error(73,"(LI_ReadRb): ",err().tx);
+      LC_Error(73,L"(LI_ReadRb): ",err.tx);
       exit(99);
    }
 
@@ -1751,7 +1765,7 @@ CD double         *pdAust    iu   Koord
 CD double         *pdNord    iu   Koord
 CD LB_INFO *        pInfo     iu   Høyde, KP og PINFO-ofsett
 CD long            lNko      i    Ant koord
-CD char           *pszPi     iu   Pinfo-buffer
+CD wchar_t           *pszPi     iu   Pinfo-buffer
 CD unsigned long   ulPiLen   i    Ant tegn som skal leses til buffer
 CD
 CD Bruk:
@@ -1760,16 +1774,16 @@ CD           Sys.pdAust, Sys.pdNord, Sys.pInfo, Sys.pGrInfo->nko,
 CD           Sys.pszPinfo, Sys.pGrInfo->ulPiLen);
    ==========================================================================
 */
-void LI_ReadCoordRb(LC_FILADM *pFil, UT_INT64 n64FilPos, unsigned long ulGiLen,
+void CFyba::LI_ReadCoordRb(LC_FILADM *pFil, UT_INT64 n64FilPos, unsigned long ulGiLen,
                double *pdAust, double *pdNord,
                LB_INFO * pInfo, long lNko,
-               char *pszPi, unsigned long ulPiLen)
+               wchar_t *pszPi, unsigned long ulPiLen)
 {
    short sLesefeil = UT_FALSE;
    FILE *pF;
 
    /* Åpner RB-fil, og posisjonerer */
-   LI_OpenRb(pFil,n64FilPos+(UT_INT64)ulGiLen,LES);
+   LI_OpenRb(pFil,n64FilPos+(UT_INT64)(ulGiLen*sizeof(wchar_t)),LES);
    pF = pFil->pBase->pfRb;
 
    if (lNko > 0) {
@@ -1790,15 +1804,15 @@ void LI_ReadCoordRb(LC_FILADM *pFil, UT_INT64 n64FilPos, unsigned long ulGiLen,
 
       /* Leser PINFO */
       if (ulPiLen > 0) {
-         if (fread(pszPi,(sizeof(char))*ulPiLen,1,pF) != 1) {
+         if (fread(pszPi,(sizeof(wchar_t))*ulPiLen,1,pF) != 1) {
             sLesefeil = UT_TRUE;
          }
       }
    }
 
    if (sLesefeil == UT_TRUE) {
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s : %lld",pFil->pszNavn,n64FilPos);
-      LC_Error(73,"(LI_ReadCoordRb): ",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s : %lld",pFil->pszNavn,n64FilPos);
+      LC_Error(73,L"(LI_ReadCoordRb): ",err.tx);
       exit(99);
    }
 
@@ -1827,23 +1841,23 @@ CD lLen = LI_BerBufferLen(Sys.pGrInfo->ulGiLen,Sys.pGrInfo->nko,
 CD                        Sys.pGrInfo->ulPiLen);
    ==========================================================================
 */
-long LI_BerBufferLen(unsigned long ulGiLen,long lNko,unsigned long ulPiLen)
+long CFyba::LI_BerBufferLen(unsigned long ulGiLen,long lNko,unsigned long ulPiLen)
 {
             /* GINFO */
             /* Koordinat Ø og N */
             /* Høyde, KP og PINFO-ofsett */
             /* PINFO */
-   return  ((long)sizeof(char) * (long)ulGiLen) +
+   return  ((long)sizeof(wchar_t) * (long)ulGiLen) +
            (2L * (long)sizeof(double) * lNko) +
            ((long)sizeof(LB_INFO) * lNko) +
-           ((long)sizeof(char) * (long)ulPiLen);
+           ((long)sizeof(wchar_t) * (long)ulPiLen);
 
 
 #ifdef TEST
    long lLen;
 
    /* GINFO */
-   lLen = (sizeof(char)) * ulGiLen;
+   lLen = (sizeof(wchar_t)) * ulGiLen;
 
    /* Koordinat Ø og N */
    lLen += 2L * (sizeof(double)) * lNko;
@@ -1852,7 +1866,7 @@ long LI_BerBufferLen(unsigned long ulGiLen,long lNko,unsigned long ulPiLen)
    lLen += (sizeof(LB_INFO)) * lNko;
 
    /* PINFO */
-   lLen += (sizeof(char)) * ulPiLen;
+   lLen += (sizeof(wchar_t)) * ulPiLen;
 
    return lLen;
 #endif
@@ -1877,7 +1891,7 @@ CD Bruk:
 CD void LI_OpenRb(pFil,lFilPos);
    ==========================================================================
 */
-static void LI_OpenRb(LC_FILADM *pFil,UT_INT64 n64FilPos,short sModus)
+void CFyba::LI_OpenRb(LC_FILADM *pFil,UT_INT64 n64FilPos,short sModus)
 {
    if (pFil->pBase->pCurRb != pFil) {
       // ----- Feil fil er åpen, stenger denne og åpner rett fil
@@ -1888,7 +1902,7 @@ static void LI_OpenRb(LC_FILADM *pFil,UT_INT64 n64FilPos,short sModus)
       }
 
       // Byggr opp fullt filnavn til Rb-filen og åpner filen
-      pFil->pBase->pfRb = LI_OpenIdxFil(pFil, "Rb", ".Idx");
+      pFil->pBase->pfRb = LI_OpenIdxFil(pFil, L"Rb", L".Idx");
 
       // Husk current filnummer
       pFil->pBase->pCurRb = pFil;
@@ -1925,7 +1939,7 @@ CD Bruk:
 CD LC_SetModusMerk(1);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_SetModusMerk(unsigned short usModus)
+void CFyba::LC_SetModusMerk(unsigned short usModus)
 {
    Sys.usMerkRefGr = usModus;
 }
@@ -1951,7 +1965,7 @@ CD Bruk:
 CD lAntall = LC_MerkGr(sKolonne,sBryter);
    ==========================================================================
 */
-SK_EntPnt_FYBA long LC_MerkGr(short sKolonne,short sBryter)
+long CFyba::LC_MerkGr(short sKolonne,short sBryter)
 {
    LC_BGR AktBgr,Bgr;
    long lAntRef;
@@ -1984,7 +1998,7 @@ SK_EntPnt_FYBA long LC_MerkGr(short sKolonne,short sBryter)
 
             /* Hent og merk refererte grupper */
 				lAntRef = LC_InqAntRef();
-				plRefArr = (long *) UT_MALLOC(lAntRef * sizeof(long));
+				plRefArr = (long *) malloc(lAntRef * sizeof(long));
 				sGiLin = 2;
 				sRefPos = 0;
 				LC_GetRef(plRefArr,lAntRef,&sGiLin,&sRefPos);
@@ -1996,7 +2010,7 @@ SK_EntPnt_FYBA long LC_MerkGr(short sKolonne,short sBryter)
                   }
                }
             }
-				UT_FREE(plRefArr);
+				free(plRefArr);
 
             /* Les tilbake aktuell gruppe */
             LC_RxGr(&AktBgr,LES_OPTIMALT,&ngi,&nko,&info);
@@ -2026,12 +2040,12 @@ CD Bruk:
 CD LC_ClrPrioritet(pGr,kolonne);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_ClrPrioritet(LC_BGR * pGr,short kolonne)
+void CFyba::LC_ClrPrioritet(LC_BGR * pGr,short kolonne)
 {
    short s;
    LC_GRTAB_LINJE * pGrt;
 
-   LO_TestFilpeker(pGr->pFil,"ClrPrioritet");
+   LO_TestFilpeker(pGr->pFil,L"ClrPrioritet");
 
    /* Lovlig gruppe */
    if (pGr->lNr >= 0L && pGr->lNr < pGr->pFil->lAntGr) {
@@ -2047,9 +2061,9 @@ SK_EntPnt_FYBA void LC_ClrPrioritet(LC_BGR * pGr,short kolonne)
       }
 
    } else{                                 /* Ulovlig gruppe */
-      char errtx[50];
-      UT_SNPRINTF(errtx,50," %ld",pGr->lNr);
-      LC_Error(72,"(LC_ClrPrioritet)",errtx);
+      wchar_t errtx[50];
+      UT_SNPRINTF(errtx,50,L" %ld",pGr->lNr);
+      LC_Error(72,L"(LC_ClrPrioritet)",errtx);
    }
 }
 
@@ -2072,12 +2086,12 @@ CD Bruk:
 CD LC_SetPrioritet(pGr,kolonne);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_SetPrioritet(LC_BGR * pGr,short kolonne)
+void CFyba::LC_SetPrioritet(LC_BGR * pGr,short kolonne)
 {
    short s;
    LC_GRTAB_LINJE * pGrt;
 
-   LO_TestFilpeker(pGr->pFil,"SetPrioritet");
+   LO_TestFilpeker(pGr->pFil,L"SetPrioritet");
 
    /* Lovlig gruppe */
    if (pGr->lNr >= 0L && pGr->lNr < pGr->pFil->lAntGr) {
@@ -2092,9 +2106,9 @@ SK_EntPnt_FYBA void LC_SetPrioritet(LC_BGR * pGr,short kolonne)
       }
 
    } else {                                 /* Ulovlig gruppe */
-      char errtx[50];
-      UT_SNPRINTF(errtx,50," %ld",pGr->lNr);
-      LC_Error(72,"(LC_SetPrioritet)",errtx);
+      wchar_t errtx[50];
+      UT_SNPRINTF(errtx,50,L" %ld",pGr->lNr);
+      LC_Error(72,L"(LC_SetPrioritet)",errtx);
    }
 }
 
@@ -2118,12 +2132,12 @@ CD Bruk:
 CD sAvPaa = LC_InqPrioritet(pGr,kolonne);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_InqPrioritet(LC_BGR * pGr,short kolonne)
+short CFyba::LC_InqPrioritet(LC_BGR * pGr,short kolonne)
 {
    short s;
    LC_GRTAB_LINJE * pGrt;
 
-   LO_TestFilpeker(pGr->pFil,"InqPrioritet");
+   LO_TestFilpeker(pGr->pFil,L"InqPrioritet");
 
    /* Lovlig gruppe */
    if (pGr->lNr >= 0L && pGr->lNr < pGr->pFil->lAntGr) {
@@ -2138,9 +2152,9 @@ SK_EntPnt_FYBA short LC_InqPrioritet(LC_BGR * pGr,short kolonne)
       }
 
    } else {                                 /* Ulovlig gruppe */
-      char errtx[50];
-      UT_SNPRINTF(errtx,50," %ld",pGr->lNr);
-      LC_Error(72,"(LC_SetPrioritet)",errtx);
+      wchar_t errtx[50];
+      UT_SNPRINTF(errtx,50,L" %ld",pGr->lNr);
+      LC_Error(72,L"(LC_SetPrioritet)",errtx);
    }
 
    return UT_FALSE;
@@ -2163,11 +2177,11 @@ CD Bruk:
 CD LC_ErasePrioritet(pGr);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_ErasePrioritet(LC_BGR * pGr)
+void CFyba::LC_ErasePrioritet(LC_BGR * pGr)
 {
    LC_GRTAB_LINJE * pGrt;
 
-   LO_TestFilpeker(pGr->pFil,"ErasePrioritet");
+   LO_TestFilpeker(pGr->pFil,L"ErasePrioritet");
 
    /* Lovlig gruppe */
    if (pGr->lNr >= 0L && pGr->lNr < pGr->pFil->lAntGr) {
@@ -2181,9 +2195,9 @@ SK_EntPnt_FYBA void LC_ErasePrioritet(LC_BGR * pGr)
       pGrt->ulPrior[3] = 0x0UL;
 
    } else {                                 /* Ulovlig gruppe */
-      char errtx[50];
-      UT_SNPRINTF(errtx,50," %ld",pGr->lNr);
-      LC_Error(72,"(LC_SetPrioritet)",errtx);
+      wchar_t errtx[50];
+      UT_SNPRINTF(errtx,50,L" %ld",pGr->lNr);
+      LC_Error(72,L"(LC_SetPrioritet)",errtx);
    }
 }
 
@@ -2204,12 +2218,12 @@ CD Bruk:
 CD LC_EraseAllPrioritet(pFil);
    ==========================================================================
 */
-SK_EntPnt_FYBA void LC_EraseAllPrioritet(LC_FILADM *pFil)
+void CFyba::LC_EraseAllPrioritet(LC_FILADM *pFil)
 {
    LC_GRTAB_LINJE * pGrt;
    long lNr;
 
-   LO_TestFilpeker(pFil,"EraseAllPrioritet");
+   LO_TestFilpeker(pFil,L"EraseAllPrioritet");
 
    for (lNr=0L; lNr<pFil->lAntGr; lNr++) {
 
@@ -2239,32 +2253,32 @@ CD Bruk:
 CD LC_DumpBt();
    =============================================================================
 */
-SK_EntPnt_FYBA void LC_DumpBt(const char *pszMelding)
+void CFyba::LC_DumpBt(const wchar_t *pszMelding)
 {
    short ngi,s;
    long nko;
    unsigned short info;
    LC_BGR Bgr,AktBgr;
-   char szTx[1024],szOrd[30];
+   wchar_t szTx[1024],szOrd[30];
    LC_FILADM *pAktuellFil = NULL;
 
 
    LC_GetGrNr(&AktBgr);
 
-   UT_FPRINTF(stderr,"\n=================================================\n");
-   UT_FPRINTF(stderr,"Dump av brukt-tabellen i FYBA: %s\n", pszMelding);
-   UT_FPRINTF(stderr,"=================================================\n");
+   UT_FPRINTF(stderr,L"\n=================================================\n");
+   UT_FPRINTF(stderr,L"Dump av brukt-tabellen i FYBA: %s\n", pszMelding);
+   UT_FPRINTF(stderr,L"=================================================\n");
 
-   UT_StrCopy(szTx,"\n    Snr  ",1024);
+   UT_StrCopy(szTx,L"\n    Snr  ",1024);
 
    for (s=BT_MIN_BT; s<=BT_MAX_BT; ++s)
    {
-      UT_SNPRINTF(szOrd,30,"%3hd",s);
+      UT_SNPRINTF(szOrd,30,L"%3hd",s);
       UT_StrCat(szTx,szOrd,1024);
    }
-   UT_FPRINTF(stderr,"%s\n",szTx);
+   UT_FPRINTF(stderr,L"%s\n",szTx);
 
-   UT_FPRINTF(stderr,"---------------------------------------------------------------------------------------------------------\n");
+   UT_FPRINTF(stderr,L"---------------------------------------------------------------------------------------------------------\n");
 
    LC_InitNextBgr(&Bgr);
 
@@ -2274,22 +2288,22 @@ SK_EntPnt_FYBA void LC_DumpBt(const char *pszMelding)
       // Filnavn
       if (Bgr.pFil != pAktuellFil)
       {
-         UT_FPRINTF(stderr,"%s\n",Bgr.pFil->pszNavn);
+         UT_FPRINTF(stderr,L"%s\n",Bgr.pFil->pszNavn);
          pAktuellFil = Bgr.pFil;
       }
       // Snr
-      UT_SNPRINTF(szTx,1024,"%7ld: ", LC_GetSn());
+      UT_SNPRINTF(szTx,1024,L"%7ld: ", LC_GetSn());
 
       for (s=BT_MIN_BT; s<=BT_MAX_BT; ++s)
       {
-         UT_SNPRINTF(szOrd,30,"%3hd",LC_GetBt(&Bgr,s));
+         UT_SNPRINTF(szOrd,30,L"%3hd",LC_GetBt(&Bgr,s));
          UT_StrCat(szTx,szOrd,1024);
       }
 
-      UT_FPRINTF(stderr,"%s\n",szTx);
+      UT_FPRINTF(stderr,L"%s\n",szTx);
    }
 
-   UT_FPRINTF(stderr,"\n=================================================\n");
+   UT_FPRINTF(stderr,L"\n=================================================\n");
 
    if (AktBgr.lNr != INGEN_GRUPPE) {
       LC_RxGr(&AktBgr,LES_OPTIMALT,&ngi,&nko,&info);

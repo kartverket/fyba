@@ -12,25 +12,25 @@ CD Dette blir ødelagt ved neste kall til en "feil-rutine". For å ta vare på
 CD strengen må den kopieres over til egen streng. (Bruk UT_StrCopy).
 CD
 CD Parametre:
-CD Type     Navn        I/U  Forklaring
+CD Type      Navn        I/U  Forklaring
 CD --------------------------------------------------------------------------
-CD short    feil_nr      i   Feilmeldingsnummer
-CD char   **feilmelding  u   Peker til feilmeldingstekst avslutta med '\0'.
-CD short   *strategi     r   Feilnivå (0-4)
-CD                           0 = Ikke i bruk. (Utkoblet, testmeldinger mm.)
-CD                           1 = Lite alvorlig. Vises kort.
-CD                           2 = Normal feilmelding. Vises ca. 1 sekund.
-CD                           3 = Alvorlig. Krev tastetrykk for å fortsette.
-CD                           4 = Svært alvorlig. Programmet bør avbrytes.
+CD short     feil_nr      i   Feilmeldingsnummer
+CD wchar_t **feilmelding  u   Peker til feilmeldingstekst avslutta med '\0'.
+CD short    *strategi     r   Feilnivå (0-4)
+CD                            0 = Ikke i bruk. (Utkoblet, testmeldinger mm.)
+CD                            1 = Lite alvorlig. Vises kort.
+CD                            2 = Normal feilmelding. Vises ca. 1 sekund.
+CD                            3 = Alvorlig. Krev tastetrykk for å fortsette.
+CD                            4 = Svært alvorlig. Programmet bør avbrytes.
 CD
 CD Bruk:
 CD strategi = LC_StrError(ckap,feil_nr,&feilmeldingspeker);
    ==========================================================================
 */
-SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
+SK_EntPnt_FYBA short LC_StrError(short feil_nr,wchar_t **feilmelding)
 {
 #define MAX_FEIL_LEN  200
-   static char feil[MAX_FEIL_LEN];      /* Feilmeldings-streng */
+   static wchar_t feil[MAX_FEIL_LEN];      /* Feilmeldings-streng */
    short strategi = 0;
 
 
@@ -76,10 +76,6 @@ SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
          strategi = 2;
          UT_StrCopy(feil,FYBA_STRING_BASE_INDEX_ABORTED,MAX_FEIL_LEN);
          break;
-      case 13:
-         strategi = 3;
-         UT_StrCopy(feil,FYBA_STRING_FILE_PERM_DENIED,MAX_FEIL_LEN);
-         break;
       case 101:
          strategi = 3;
          UT_StrCopy(feil,FYBA_STRING_BASE_OPEN_FAILED,MAX_FEIL_LEN);
@@ -107,10 +103,20 @@ SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
          UT_StrCopy(feil,FYBA_STRING_OPEN_BASE_IS_KLADDE,MAX_FEIL_LEN);
          break;
 
+      case 107:
+         strategi = 3;
+         UT_StrCopy(feil,FYBA_STRING_INVALID_PRIKKNIVO,MAX_FEIL_LEN);
+         break;
+
+
 /* --------------------- HO --------------------------- */
       case 12:
          strategi = 4;
-         UT_StrCopy(feil,FYBA_STRING_FILE_READ_ERROR_HODE,MAX_FEIL_LEN);
+         UT_StrCopy(feil, FYBA_STRING_FILE_READ_ERROR_HODE, MAX_FEIL_LEN);
+         break;
+      case 13:
+         strategi = 3;
+         UT_StrCopy(feil, FYBA_STRING_FILE_PERM_DENIED, MAX_FEIL_LEN);
          break;
       case 14:
          strategi = 4;
@@ -307,7 +313,10 @@ SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
          strategi = 4;
          UT_StrCopy(feil,FYBA_STRING_READ_LINE_TOO_LONG,MAX_FEIL_LEN);
          break;
-
+      case 165:
+         strategi = 3;
+         UT_StrCopy(feil,FYBA_STRING_FILE_INVALID_TEGNSETT,MAX_FEIL_LEN);
+         break;
 
 /* --------------------- LX --------------------------- */
       case 51:

@@ -1,7 +1,7 @@
 /******************************************************************^$date;
 *                                                                           *
 *       Hjelpebiblioteket   U T  (Utilities)                                *
-*       Lars Staurset, Statens Kartverk / FYSAK-prosjektet, januar 1990     *
+*       Lars Staurset, KARTVERKET / FYSAK-prosjektet, januar 1990     *
 *       Fil: UT4.C: Handtering av flag-tabell                               *
 *                                                                           *
 ****************************************************************************/
@@ -43,8 +43,8 @@ SK_EntPnt_UT unsigned long *UT_InitFlag(short sNlin)
    unsigned long *plFlag;
 
    unsigned long ulAntUL = UT_RoundDL(ceil((double)(sNlin + 1) / (double)(sizeof(unsigned long) * 8)));
-	plFlag = (unsigned long *)UT_MALLOC((size_t)((ulAntUL+1) * (sizeof(unsigned long))));
-   memset(plFlag,0,(size_t)((ulAntUL+1) * (sizeof(unsigned long))));
+	plFlag = (unsigned long *)malloc((size_t)((ulAntUL+1) * (sizeof(unsigned long))));
+   memset(plFlag, 0, (size_t)((ulAntUL+1) * (sizeof(unsigned long))));
 
    *plFlag = (unsigned long)sNlin;
 
@@ -69,7 +69,7 @@ CD UT_CloseFlag(plFlag);
 */
 SK_EntPnt_UT void UT_CloseFlag(unsigned long *plFlag)
 {
-	UT_FREE((void *)(plFlag));
+	free(plFlag);
 	plFlag = NULL;
 }
 
@@ -95,7 +95,7 @@ CD bStatus = UT_SetFlag(plFlag,sLine)
 SK_EntPnt_UT bool UT_SetFlag(unsigned long *plFlag,short sLine)
 {
 
-   // char szErrMsg[80];
+   // wchar_t szErrMsg[80];
 
         /* Maksimalt: antall long * 32 - 1 for bit 0 i første */
    /*
@@ -137,11 +137,11 @@ CD UT_GetFlag(plFlag,sNlines,sLine)
 */
 SK_EntPnt_UT short UT_GetFlag(unsigned long *plFlag,short sLine)
 {
-   char szErrMsg[80];
+   wchar_t szErrMsg[80];
 
         /* Maksimalt: antall long * 32 - 1 for bit 0 i første */
    if (sLine >= (short)*plFlag){
-      UT_SNPRINTF(szErrMsg,80,"For mange -linjer %hd, maksimalt: %hd",sLine,(short)*plFlag-1);
+      UT_SNPRINTF(szErrMsg,80,L"For mange -linjer %hd, maksimalt: %hd",sLine,(short)*plFlag-1);
    }
    return ((*(plFlag + (sLine / (sizeof(unsigned long) * 8)) + 1)  &
             (0x00000001L << (sLine % (sizeof(unsigned long) * 8)))) == 0)?

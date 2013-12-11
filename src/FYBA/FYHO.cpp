@@ -1,12 +1,12 @@
-/*
+ï»¿/*
 AR-920214
 CH FYHO                                       "Direkte" hoderutiner
 CD =================================================================
 CD
-CD Eier.......: STATENS KARTVERK / FYSAK-prosjektet
-CD Ansvarlig..: Georg Langerak / Andreas Røstad
+CD Eier.......: KARTVERKET / FYSAK-prosjektet
+CD Ansvarlig..: Georg Langerak / Andreas RÃ¸stad
 CD
-CD Rutiner for å handtere hodet på SOSI-filer direkte på filen.
+CD Rutiner for Ã¥ handtere hodet pÃ¥ SOSI-filer direkte pÃ¥ filen.
 CD  ==============================================================
 */
 
@@ -18,34 +18,26 @@ CD  ==============================================================
 #include <fcntl.h>
               
 
-/* --- Globale strukturer ---------------------- */
-extern LC_SYSTEMADM Sys;
-
-extern char retur_str[LC_MAX_SOSI_LINJE_LEN];     /* Returstreng */
-
-// ----- Lokale rutiner -----
-static short ho_TestFyllKommentar(const char *pszTx);
-
 /*
 AR:2000-10-07
 CH HO_GetTransEx                                       Finner .TRANSPAR i hodet
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Henter ut innholdet under ..TRANSPAR fra fra filhodet.
 CD
 CD Parametre:
 CD Type            Navn      I/U  Forklaring
 CD --------------------------------------------------------------------------
-CD char           *pszFil     i   Fullstendig filnavn
+CD wchar_t           *pszFil     i   Fullstendig filnavn
 CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
 CD                                [Ut] Viser hvilke deler av TRANSPAR som er funnet/hentet.
-CD                                Følgende konstanter er definert:
+CD                                FÃ¸lgende konstanter er definert:
 CD                                  LC_TR_ALLT - Alle deler av ..TRANSPAR hentes
 CD                                  LC_TR_KOORDSYS - Koordsys
 CD                                  LC_TR_TRANSSYS - Transsys
 CD                                  LC_TR_GEOSYS - Geosys
 CD                                  LC_TR_GEOKOORD - Geokoord
-CD                                  LC_TR_ORIGO - Origo-nø
+CD                                  LC_TR_ORIGO - Origo-nÃ¸
 CD                                  LC_TR_ENHET - Enhet
 CD                                  LC_TR_ENHETH - Enhet-h
 CD                                  LC_TR_ENHETD - Enhet-d
@@ -59,30 +51,30 @@ CD
 CD Bruk:
 CD unsigned short usMaske = LC_TR_ALLT;
 CD LC_TRANSPAR Trans;
-CD ist = HO_GetTransEx("Test.sos",&usMaske,&Trans);
+CD ist = HO_GetTransEx(L"Test.sos",&usMaske,&Trans);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short HO_GetTransEx(const char *pszFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
+short CFyba::HO_GetTransEx(const wchar_t *pszFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
 {
    short sStatus;
    FILE * pFil;
 
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"SOS",UT_READ,UT_OLD,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"SOS",UT_READ,UT_OLD,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Hent verdier */
       sStatus = ho_GetTransEx(pFil,pusMaske,pTrans);
       fclose (pFil);
 
-	/* Åpningsfeil på kladdefilen */
+	/* Ã…pningsfeil pÃ¥ kladdefilen */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_GetTransEx)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_GetTransEx)",err.tx);
       memset(pTrans,0,sizeof(LC_TRANSPAR));
       *pusMaske = 0;
       sStatus = UT_FALSE;
@@ -104,13 +96,13 @@ CD --------------------------------------------------------------------------
 CD FILE           *pFil       i   Filpeker til sosi-fil.
 CD unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
 CD                                [Ut] Viser hvilke deler av TRANSPAR som er funnet/hentet.
-CD                                Følgende konstanter er definert:
+CD                                FÃ¸lgende konstanter er definert:
 CD                                  LC_TR_ALLT - Alle deler av ..TRANSPAR hentes
 CD                                  LC_TR_KOORDSYS - Koordsys
 CD                                  LC_TR_TRANSSYS - Transsys
 CD                                  LC_TR_GEOSYS - Geosys
 CD                                  LC_TR_GEOKOORD - Geokoord
-CD                                  LC_TR_ORIGO - Origo-nø
+CD                                  LC_TR_ORIGO - Origo-nÃ¸
 CD                                  LC_TR_ENHET - Enhet
 CD                                  LC_TR_ENHETH - Enhet-h
 CD                                  LC_TR_ENHETD - Enhet-d
@@ -127,10 +119,10 @@ CD LC_TRANSPAR Trans;
 CD ist = ho_GetTransEx(pFil,&usMaske,&Trans);
    =============================================================================
 */
-short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
+short CFyba::ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
 {
    short lin,itxi;
-   char *cp;
+   wchar_t *cp;
    short ist = UT_TRUE;
    unsigned short usMaskeInn = *pusMaske;
 
@@ -147,8 +139,8 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    /* ----- Div. kontroller ----- */
    /* Transpar */
    lin=2;
-   if ( ! ho_GetVal(pFil,"..TRANSPAR",&lin)) {
-       LC_Error(14," (HO_GetTrans) "," ");
+   if ( ! ho_GetVal(pFil,L"..TRANSPAR",&lin)) {
+       LC_Error(14,L" (HO_GetTrans) ",L" ");
        return UT_FALSE;
    }
 
@@ -157,10 +149,10 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    /* Koordsys */
    if ((usMaskeInn & LC_TR_KOORDSYS) != 0) {
       lin = 2;
-      cp = ho_GetVal(pFil,"...KOORDSYS",&lin);
+      cp = ho_GetVal(pFil,L"...KOORDSYS",&lin);
       if (cp == NULL) {
          lin=2;
-         ho_GetVal(pFil,"..KOORDSYS",&lin);
+         ho_GetVal(pFil,L"..KOORDSYS",&lin);
       }
       if (cp != NULL) {
          *pusMaske |= LC_TR_KOORDSYS;
@@ -173,22 +165,22 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    /* Transsys */
    if ((usMaskeInn & LC_TR_TRANSSYS) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...TRANSSYS",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...TRANSSYS",&lin)) != NULL) {
          *pusMaske |= LC_TR_TRANSSYS;
          UT_StrShort(cp,0,&itxi,&pTrans->sTranssysTilsys);
-         UT_StrDbl(cp,itxi,&itxi,'.',&pTrans->dTranssysKonstA1);
-         UT_StrDbl(cp,itxi,&itxi,'.',&pTrans->dTranssysKonstB1);
-         UT_StrDbl(cp,itxi,&itxi,'.',&pTrans->dTranssysKonstA2);
-         UT_StrDbl(cp,itxi,&itxi,'.',&pTrans->dTranssysKonstB2);
-         UT_StrDbl(cp,itxi,&itxi,'.',&pTrans->dTranssysKonstC1);
-         UT_StrDbl(cp,itxi,&itxi,'.',&pTrans->dTranssysKonstC2);
+         UT_StrDbl(cp,itxi,&itxi,L'.',&pTrans->dTranssysKonstA1);
+         UT_StrDbl(cp,itxi,&itxi,L'.',&pTrans->dTranssysKonstB1);
+         UT_StrDbl(cp,itxi,&itxi,L'.',&pTrans->dTranssysKonstA2);
+         UT_StrDbl(cp,itxi,&itxi,L'.',&pTrans->dTranssysKonstB2);
+         UT_StrDbl(cp,itxi,&itxi,L'.',&pTrans->dTranssysKonstC1);
+         UT_StrDbl(cp,itxi,&itxi,L'.',&pTrans->dTranssysKonstC2);
       }
    }
 
    /* Geosys */
    if ((usMaskeInn & LC_TR_GEOSYS) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...GEOSYS",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...GEOSYS",&lin)) != NULL) {
          *pusMaske |= LC_TR_GEOSYS;
          UT_StrShort(cp,0,&itxi,&pTrans->sGeosysDatum);
          UT_StrShort(cp,itxi,&itxi,&pTrans->sGeosysProj);
@@ -199,7 +191,7 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    /* Geokoord */ 
    if ((usMaskeInn & LC_TR_GEOKOORD) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...GEOKOORD",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...GEOKOORD",&lin)) != NULL) {
          *pusMaske |= LC_TR_GEOKOORD;
          UT_StrShort(cp,0,&itxi,&pTrans->sGeoKoord);
       }
@@ -208,30 +200,30 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    /* Origo */
    if ((usMaskeInn & LC_TR_ORIGO) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...ORIGO-NØ",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...ORIGO-NÃ˜",&lin)) != NULL) {
          *pusMaske |= LC_TR_ORIGO;
-         UT_StrDbl(cp,0,&itxi,'.',&pTrans->Origo.dNord);
-         UT_StrDbl(cp,itxi,&itxi,'.',&pTrans->Origo.dAust);
+         UT_StrDbl(cp,0,&itxi,L'.',&pTrans->Origo.dNord);
+         UT_StrDbl(cp,itxi,&itxi,L'.',&pTrans->Origo.dAust);
       }
    }
 
    /* Enhet */
    if ((usMaskeInn & LC_TR_ENHET) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...ENHET",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...ENHET",&lin)) != NULL) {
          *pusMaske |= LC_TR_ENHET;
-         pTrans->dEnhet = strtod(cp,&cp);
+         pTrans->dEnhet = wcstod(cp,&cp);
       }
    }
 
    /* Enhet-h */
    if ((usMaskeInn & LC_TR_ENHETH) != 0) {
       lin=2;
-      if ((cp = ho_GetVal(pFil,"...ENHET-H",&lin)) == NULL) {
+      if ((cp = ho_GetVal(pFil,L"...ENHET-H",&lin)) == NULL) {
         pTrans->dEnhet_h = pTrans->dEnhet;
       } else {
         *pusMaske |= LC_TR_ENHETH;
-        pTrans->dEnhet_h = strtod(cp,&cp);
+        pTrans->dEnhet_h = wcstod(cp,&cp);
       }
    }
 
@@ -239,18 +231,18 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    if ((usMaskeInn & LC_TR_ENHETD) != 0) {
       /* Enhet-d */
       lin=2;
-      if ((cp = ho_GetVal(pFil,"...ENHET-D",&lin)) == NULL) {
+      if ((cp = ho_GetVal(pFil,L"...ENHET-D",&lin)) == NULL) {
         pTrans->dEnhet_d = pTrans->dEnhet;
       } else {
         *pusMaske |= LC_TR_ENHETD;
-        pTrans->dEnhet_d = strtod(cp,&cp);
+        pTrans->dEnhet_d = wcstod(cp,&cp);
       }
    }
 
    /* Vert-datum */
    if ((usMaskeInn & LC_TR_VERTDATUM) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...VERT-DATUM",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...VERT-DATUM",&lin)) != NULL) {
          *pusMaske |= LC_TR_VERTDATUM;
          UT_StrToken(cp,0,&itxi,7,pTrans->szVertdatHref);
          UT_StrToken(cp,itxi,&itxi,6,pTrans->szVertdatDref);
@@ -262,7 +254,7 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    /* Vert-int */
    if ((usMaskeInn & LC_TR_VERTINT) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...VERT-INT",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...VERT-INT",&lin)) != NULL) {
          *pusMaske |= LC_TR_VERTINT;
          UT_StrShort(cp,0,&itxi,&pTrans->sVertintHref);
          UT_StrShort(cp,itxi,&itxi,&pTrans->sVertintDref);
@@ -273,7 +265,7 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    /* Vert-delta */
    if ((usMaskeInn & LC_TR_VERTDELTA) != 0) {
       lin = 2;
-      if ((cp = ho_GetVal(pFil,"...VERT-DELTA",&lin)) != NULL) {
+      if ((cp = ho_GetVal(pFil,L"...VERT-DELTA",&lin)) != NULL) {
          *pusMaske |= LC_TR_VERTDELTA;
          UT_StrShort(cp,0,&itxi,&pTrans->sVdeltaMin);
          UT_StrShort(cp,itxi,&itxi,&pTrans->sVdeltaMax);
@@ -291,7 +283,7 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
           (*pusMaske & LC_TR_TRANSSYS) == 0  &&
           (*pusMaske & LC_TR_GEOSYS) == 0 ) {
          /* Ikke noe koordinatsystem funnet */
-         LC_Error(15,"(ho_GetTransEx)","");
+         LC_Error(15,L"(ho_GetTransEx)",L"");
          ist = UT_FALSE;
       }
    }
@@ -300,7 +292,7 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    if ((usMaskeInn & LC_TR_ORIGO) != 0 &&  
        (*pusMaske & LC_TR_ORIGO) == 0 ) {
       /* Origo mangler */
-      LC_Error(16,"(ho_GetTransEx)","");
+      LC_Error(16,L"(ho_GetTransEx)",L"");
       ist = UT_FALSE;
    }
 
@@ -308,7 +300,7 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
    if ((usMaskeInn & LC_TR_ENHET) != 0  &&  
        (*pusMaske & LC_TR_ENHET) == 0 ) {
       /* Enhet mangler */
-      LC_Error(17,"(ho_GetTransEx)","");
+      LC_Error(17,L"(ho_GetTransEx)",L"");
       ist = UT_FALSE;
    }
 
@@ -321,17 +313,17 @@ short ho_GetTransEx(FILE *pFil,unsigned short *pusMaske, LC_TRANSPAR * pTrans)
 AR:1999-07-12
 CH HO_GetTrans                                         Finner .TRANSPAR i hodet
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Henter transformasjonsparametrene fra filhodet.
 CD
 CD OBS! Denne rutinen opprettholdes bare for bakoverkompatibilitet.
-CD      For nye programmer bør HO_GetTransEx benyttes. HO_GetTransEx er
+CD      For nye programmer bÃ¸r HO_GetTransEx benyttes. HO_GetTransEx er
 CD      kompatibel med nye versjoner av SOSI.
 CD
 CD Parametre:
 CD Type     Navn       I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD char    *pszFil      i   Fullstendig filnavn
+CD wchar_t    *pszFil      i   Fullstendig filnavn
 CD short   *koosys      u   Koordinatsystem
 CD double  *origo_a     u   ..ORIGO-AUST
 CD double  *origo_n     u   ..ORIGO-NORD
@@ -344,27 +336,27 @@ CD Bruk:
 CD sStatus = HO_GetTrans(fil,&koosys,&origo_a,&origo_n,&enhet,&enhet_h,&enhet_d);
    =============================================================================
 */
-SK_EntPnt_FYBA short HO_GetTrans(const char *pszFil,short *koosys,double *origo_a,
+short CFyba::HO_GetTrans(const wchar_t *pszFil,short *koosys,double *origo_a,
 					  double *origo_n,double *enhet,double *enhet_h,double *enhet_d)
 {
    short sStatus;
    FILE * pFil;
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_READ,UT_OLD,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"",UT_READ,UT_OLD,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Hent verdier */
       sStatus = ho_GetTrans(pFil,koosys,origo_a,origo_n,enhet,enhet_h,enhet_d);
       fclose (pFil);
 
-	/* Åpningsfeil på kladdefilen */
+	/* Ã…pningsfeil pÃ¥ kladdefilen */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_GetTrans)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_GetTrans)",err.tx);
       sStatus = UT_FALSE;
    }
 
@@ -377,7 +369,7 @@ GL-880427
 AR-900314
 CH ho_GetTrans                                         Finner .TRANSPAR i hodet
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Henter transformasjonsparametrene fra filhodet.
 CD
 CD Parametre:
@@ -396,64 +388,65 @@ CD Bruk:
 CD ho_GetTrans(pFil,&koosys,&origo_a,&origo_n,&enhet,&enhet_h,&enhet_d);
    =============================================================================
 */
-short ho_GetTrans(FILE *pFil,short *koosys,double *origo_a,
+short CFyba::ho_GetTrans(FILE *pFil,short *koosys,double *origo_a,
 					  double *origo_n,double *enhet,double *enhet_h,double *enhet_d)
 {
    short lin;
-   char *cp;
+   wchar_t *cp;
 
 
    /* Sjekk hvilket tegnsett som skal brukes */
 	ho_GetTegnsett(pFil,&Sys.BufAdm.sTegnsett);
 
    lin=2;
-   if ( ! ho_GetVal(pFil,"..TRANSPAR",&lin)) {
-       LC_Error(14," (HO_GetTrans) "," ");
+   if ( ! ho_GetVal(pFil,L"..TRANSPAR",&lin)) {
+       LC_Error(14,L" (HO_GetTrans) ",L" ");
        return UT_FALSE;
    }
 
    
    *koosys=0;
    lin=2;
-   cp = ho_GetVal(pFil,"...KOORDSYS",&lin);
+   cp = ho_GetVal(pFil,L"...KOORDSYS",&lin);
    if (cp == NULL) {
    lin=2;
-   ho_GetVal(pFil,"..KOORDSYS",&lin);
+   ho_GetVal(pFil,L"..KOORDSYS",&lin);
    }
    if (cp == NULL) {
-    LC_Error(15," (HO_GetTrans) "," ");
+    LC_Error(15,L" (HO_GetTrans) ",L" ");
     return UT_FALSE;
 
    } else {
-     *koosys = (short)atoi(cp);
+     wchar_t *ep;
+     *koosys = (short)wcstol(cp,&ep,10);
    }
 
    lin=2;
-   if ((cp = ho_GetVal(pFil,"...ORIGO-NØ",&lin)) == NULL) {
-    LC_Error(16," (HO_GetTrans) "," ");
+   if ((cp = ho_GetVal(pFil,L"...ORIGO-NÃ˜",&lin)) == NULL) {
+    LC_Error(16,L" (HO_GetTrans) ",L" ");
     return UT_FALSE;
 
    } else {
-     *origo_n = strtod(cp,&cp);
-     *origo_a = strtod(cp,&cp);
+     *origo_n = wcstod(cp,&cp);
+     *origo_a = wcstod(cp,&cp);
      lin=2;
-     if ((cp = ho_GetVal(pFil,"...ENHET",&lin)) == NULL) {
-        LC_Error(17," (HO_GetTrans) "," ");
+     if ((cp = ho_GetVal(pFil,L"...ENHET",&lin)) == NULL) {
+        LC_Error(17,L" (HO_GetTrans) ",L" ");
         return UT_FALSE;
      } else {
-        *enhet = strtod(cp,&cp);
+        *enhet = wcstod(cp,&cp);
      }
      lin=2;
-     if ((cp = ho_GetVal(pFil,"...ENHET-H",&lin)) == NULL) {
+     if ((cp = ho_GetVal(pFil,L"...ENHET-H",&lin)) == NULL) {
          *enhet_h = *enhet;
      } else {
-         *enhet_h = strtod(cp,&cp);
+         *enhet_h = wcstod(cp,&cp);
      }
      lin=2;
-     if ((cp = ho_GetVal(pFil,"...ENHET-D",&lin)) == NULL) {
+     if ((cp = ho_GetVal(pFil,L"...ENHET-D",&lin)) == NULL) {
          *enhet_d = *enhet;
      } else {
-         *enhet_d = strtod(cp,&cp);
+         *enhet_d = wcstod(cp,&cp);
      }
    }
 
@@ -463,15 +456,15 @@ short ho_GetTrans(FILE *pFil,short *koosys,double *origo_a,
 
 /*
 AR-890823
-CH HO_GetOmr                                            Finner ..OMRÅDE i hodet
+CH HO_GetOmr                                            Finner ..OMRÃ…DE i hodet
 CD =============================================================================
-CD Formål:
-CD Henter områdeangivelsen fra filhodet.
+CD FormÃ¥l:
+CD Henter omrÃ¥deangivelsen fra filhodet.
 CD
 CD Parametre:
 CD Type     Navn        I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD char    *pszFil      i   Fullstendig filnavn
+CD wchar_t    *pszFil      i   Fullstendig filnavn
 CD double  *nv_a        u
 CD double  *nv_n        u
 CD double  *oh_a        u
@@ -482,27 +475,27 @@ CD Bruk:
 CD sStatus = HO_GetOmr(pszFil,&nv_a,&nv_n,&oh_a,&oh_n);
 	=============================================================================
 */
-SK_EntPnt_FYBA short HO_GetOmr(const char * pszFil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
+short CFyba::HO_GetOmr(const wchar_t * pszFil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
 {
    short sStatus;
    FILE * pFil;
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_READ,UT_OLD,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"",UT_READ,UT_OLD,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Hent verdier */
       ho_GetOmr(pFil,nv_a,nv_n,oh_a,oh_n);
       fclose (pFil);
       sStatus = UT_TRUE;
 
-	/* Åpningsfeil */
+	/* Ã…pningsfeil */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_GetOmr)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_GetOmr)",err.tx);
       sStatus = UT_FALSE;
    }
 
@@ -512,10 +505,10 @@ SK_EntPnt_FYBA short HO_GetOmr(const char * pszFil,double *nv_a,double *nv_n,dou
 
 /*
 AR-890823
-CH ho_GetOmr                                            Finner ..OMRÅDE i hodet
+CH ho_GetOmr                                            Finner ..OMRÃ…DE i hodet
 CD =============================================================================
-CD Formål:
-CD Henter områdeangivelsen fra filhodet.
+CD FormÃ¥l:
+CD Henter omrÃ¥deangivelsen fra filhodet.
 CD
 CD Parametre:
 CD Type     Navn        I/U   Forklaring
@@ -531,10 +524,10 @@ CD Bruk:
 CD sStatus = ho_GetOmr(fil,&nv_a,&nv_n,&oh_a,&oh_n);
 	=============================================================================
 */
-short ho_GetOmr(FILE *fil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
+short CFyba::ho_GetOmr(FILE *fil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
 {
    short lin,i;
-   char *cp;
+   wchar_t *cp;
    short sStatus = UT_TRUE;
 
 
@@ -543,8 +536,8 @@ short ho_GetOmr(FILE *fil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
 
 
    lin=2;
-   if (ho_GetVal(fil,"..OMRÅDE",&lin) == NULL) {
-      LC_Error(7,"(HO_GetOmr)","");
+   if (ho_GetVal(fil,L"..OMRÃ…DE",&lin) == NULL) {
+      LC_Error(7,L"(HO_GetOmr)",L"");
       *nv_n = -9999999.0;
       *nv_a = -9999999.0;
       *oh_n =  9999999.0;
@@ -553,36 +546,36 @@ short ho_GetOmr(FILE *fil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
 
 
    } else {
-      /* Min-NØ */
+      /* Min-NÃ˜ */
       i = lin;
-	   if ((cp = ho_GetVal(fil,"...MIN-NØ",&i)) == NULL ) {
-         LC_Error(8,"(HO_GetOmr)","");
+	   if ((cp = ho_GetVal(fil,L"...MIN-NÃ˜",&i)) == NULL ) {
+         LC_Error(8,L"(HO_GetOmr)",L"");
          *nv_n = -9999999.0;
          *nv_a = -9999999.0;
          sStatus = UT_FALSE;
       
       } else {
-         *nv_n = strtod(cp,&cp);
-         *nv_a = strtod(cp,&cp);
+         *nv_n = wcstod(cp,&cp);
+         *nv_a = wcstod(cp,&cp);
       }
       
-		/* Max-NØ */
+		/* Max-NÃ˜ */
       i = lin;
-      if ((cp = ho_GetVal(fil,"...MAX-NØ",&i)) == NULL) {
-         LC_Error(9,"(HO_GetOmr)","");
+      if ((cp = ho_GetVal(fil,L"...MAX-NÃ˜",&i)) == NULL) {
+         LC_Error(9,L"(HO_GetOmr)",L"");
          *oh_n = 999999.0;
          *oh_a = 9999999.0;
          sStatus = UT_FALSE;
       
       } else{
-         *oh_n = strtod(cp,&cp);
-         *oh_a = strtod(cp,&cp);
+         *oh_n = wcstod(cp,&cp);
+         *oh_a = wcstod(cp,&cp);
       }
    }
 
-   /* Sjekker at området har utstrekning */
+   /* Sjekker at omrÃ¥det har utstrekning */
    //if (*oh_a-*nv_a < 0.001  ||  *oh_n-*nv_n < 0.001) {
-   //   LC_Error(104,"(HO_GetOmr)","");
+   //   LC_Error(104,L"(HO_GetOmr)",L"");
    //   *nv_n = -9999999.0;
    //   *nv_a = -9999999.0;
    //   *oh_n =  9999999.0;
@@ -592,31 +585,29 @@ short ho_GetOmr(FILE *fil,double *nv_a,double *nv_n,double *oh_a,double *oh_n)
    return sStatus;
 }
 
-
-
-
+ 
 /*
 AR:1999-07-12
 CH HO_GetKvalitet                                 Finner kvalitetsopplysninger
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Finne kvalitetsopplysninger i filhode.
 CD (Ikke aktuellt etter SOSI v. 4.00.)
 CD
 CD Parametre:
 CD Type    Navn              I/U  Forklaring
 CD -----------------------------------------------------------------------------
-CD char   *pszFil             i  Fullstendig filnavn
+CD wchar_t   *pszFil             i  Fullstendig filnavn
 CD short  *psMetode           u  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *pLNnoyaktighet     u  Registreringsnøyaktighet
-CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
+CD long   *pLNnoyaktighet     u  RegistreringsnÃ¸yaktighet
+CD                                 KVAL_NOY_UKJENT  nÃ¸yaktighet er ukjent.
 CD short  *psSynbarhet        u  Synbarhet i bilde
 CD                                 KVAL_SYN_UNDEF  synbarhet er udefinert.
-CD short  *psHoydeMetode      u  Hvordan høyden er registrert.
+CD short  *psHoydeMetode      u  Hvordan hÃ¸yden er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
-CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
+CD long   *plHoydeNoyaktighet u  RegistreringsnÃ¸yaktighet
+CD                                 KVAL_NOY_UKJENT  nÃ¸yaktighet er ukjent.
 CD short   ist                r  Statusvariabel: UT_TRUE  - OK, ..KVALITET er funnet
 CD                                               UT_FALSE - ikke funnet
 CD
@@ -625,40 +616,39 @@ CD      ist = HO_GetKvalitet(fil,&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                           &sHoydeMetode,&lHoydeNoyaktighet);
 CD =============================================================================
 */
-SK_EntPnt_FYBA short HO_GetKvalitet(const char *pszFil,short *psMetode,long *plNoyaktighet,
+short CFyba::HO_GetKvalitet(const wchar_t *pszFil,short *psMetode,long *plNoyaktighet,
                      short *psSynbarhet,short *psHoydeMetode,long *plHoydeNoyaktighet)
 {
    short sStatus;
    FILE * pFil;
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_READ,UT_OLD,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"",UT_READ,UT_OLD,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Hent verdier */
       sStatus = ho_GetKvalitet(pFil,psMetode,plNoyaktighet,psSynbarhet,psHoydeMetode,plHoydeNoyaktighet);
       fclose (pFil);
 
-	/* Åpningsfeil */
+	/* Ã…pningsfeil */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_GetKvalitet)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_GetKvalitet)",err.tx);
       sStatus = UT_FALSE;
    }
 
    return sStatus;
 }
-
-
+  
 
 /*
 OJ-891123
 CH ho_GetKvalitet                                 Finner kvalitetsopplysninger
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Finne kvalitetsopplysninger i filhode.
 CD (Ikke aktuellt etter SOSI v. 4.00.)
 CD
@@ -668,14 +658,14 @@ CD -----------------------------------------------------------------------------
 CD FILE   *pFil               i  Filpeker til sosi-fil.
 CD short  *psMetode           u  Hvordan data er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *pLNnoyaktighet     u  Registreringsnøyaktighet
-CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
+CD long   *pLNnoyaktighet     u  RegistreringsnÃ¸yaktighet
+CD                                 KVAL_NOY_UKJENT  nÃ¸yaktighet er ukjent.
 CD short  *psSynbarhet        u  Synbarhet i bilde
 CD                                 KVAL_SYN_UNDEF  synbarhet er udefinert.
-CD short  *psHoydeMetode      u  Hvordan høyden er registrert.
+CD short  *psHoydeMetode      u  Hvordan hÃ¸yden er registrert.
 CD                                 KVAL_MET_UNDEF  metode er udefinert.
-CD long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
-CD                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
+CD long   *plHoydeNoyaktighet u  RegistreringsnÃ¸yaktighet
+CD                                 KVAL_NOY_UKJENT  nÃ¸yaktighet er ukjent.
 CD short   ist                r  Statusvariabel: UT_TRUE  - OK, ..KVALITET er funnet
 CD                                               UT_FALSE - ikke funnet
 CD
@@ -684,11 +674,11 @@ CD      ist = ho_GetKvalitet(fil,&sMetode,&lNoyaktighet,&sSynbarhet,
 CD                           &sHoydeMetode,&lHoydeNoyaktighet);
 CD =============================================================================
 */
-short ho_GetKvalitet(FILE *pFil,short *psMetode,long *plNoyaktighet,
+short CFyba::ho_GetKvalitet(FILE *pFil,short *psMetode,long *plNoyaktighet,
                      short *psSynbarhet,short *psHoydeMetode,long *plHoydeNoyaktighet)
 {
 	short lin;
-   char *cp;
+   wchar_t *cp;
    short ist = UT_FALSE;
 
 
@@ -696,7 +686,7 @@ short ho_GetKvalitet(FILE *pFil,short *psMetode,long *plNoyaktighet,
    ho_GetTegnsett(pFil,&Sys.BufAdm.sTegnsett);
 
    lin=2;
-   if ((cp = ho_GetVal(pFil,"..KVALITET",&lin)) != NULL) {     /* Kvalitet */
+   if ((cp = ho_GetVal(pFil,L"..KVALITET",&lin)) != NULL) {     /* Kvalitet */
       ist = UT_TRUE;
    }
 
@@ -705,7 +695,7 @@ short ho_GetKvalitet(FILE *pFil,short *psMetode,long *plNoyaktighet,
                    psHoydeMetode,plHoydeNoyaktighet);
 
 
-   /* Handter manglende høyde-kvalitet spesiellt */
+   /* Handter manglende hÃ¸yde-kvalitet spesiellt */
 	if (*psHoydeMetode == KVAL_MET_UNDEF)      *psHoydeMetode      = *psMetode;
    if (*plHoydeNoyaktighet == KVAL_NOY_UKJENT) *plHoydeNoyaktighet = *plNoyaktighet;
 
@@ -713,51 +703,52 @@ short ho_GetKvalitet(FILE *pFil,short *psMetode,long *plNoyaktighet,
 }
 
 
-
 /*
 AR-920331
 CH HO_GetTegnsett                                            Finner tegnsett
 CD ==========================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Finne tegnsett i filhodet.
 CD
 CD Parametre:
-CD Type     Navn      I/U  Forklaring
+CD Type      Navn       I/U  Forklaring
 CD --------------------------------------------------------------------------
-CD char   *pszFil      i   Fullstendig filnavn
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
-CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
-CD                            TS_ND7     = Norsk Data 7-bits
-CD                            TS_DECM8   = DEC multinasjonal 8-bits
-CD                            TS_ISO8859 = ISO8859-10 Norsk/samisk tegnsett
-CD                            TS_DECN7   = DEC norsk 7-bits
-CD short   sStatus     r   Status: UT_TRUE  = Funnet
-CD                                 UT_FALSE = Ikke funnet
+CD wchar_t  *pszFil      i   Fullstendig filnavn
+CD short    *psTegnsett  u   Tegnsett, konstanter definert:
+CD                             TS_UKJENT  = Fikk ikke sjekket tegnsett
+CD                             TS_DOSN8   = DOS norsk 8-bits(standardverdi)
+CD                             TS_ND7     = Norsk Data 7-bits
+CD                             TS_DECM8   = DEC multinasjonal 8-bits
+CD                             TS_ISO8859 = ISO8859-10 Norsk/samisk tegnsett
+CD                             TS_DECN7   = DEC norsk 7-bits
+CD                             TS_UTF8    = UTF-8
+CD short     sStatus     r   Status: UT_TRUE  = Funnet
+CD                                   UT_FALSE = Ikke funnet
 CD
 CD Bruk:
 CD      sStatus = HO_GetTegnsett(pszFil,&sTegnsett);
 CD ==========================================================================
 */
-SK_EntPnt_FYBA short HO_GetTegnsett(const char *pszFil,short *psTegnsett)
+short CFyba::HO_GetTegnsett(const wchar_t *pszFil,short *psTegnsett)
 {
    short sStatus;
    FILE * pFil;
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_READ,UT_OLD,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"",UT_READ,UT_OLD,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Hent verdier */
       sStatus = ho_GetTegnsett(pFil,psTegnsett);
       fclose (pFil);
 
-	/* Åpningsfeil */
+	/* Ã…pningsfeil */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_GetTegnsett)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_GetTegnsett)",err.tx);
       sStatus = UT_FALSE;
    }
 
@@ -769,7 +760,7 @@ SK_EntPnt_FYBA short HO_GetTegnsett(const char *pszFil,short *psTegnsett)
 AR-920331
 CH ho_GetTegnsett                                            Finner tegnsett
 CD ==========================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Finne tegnsett i filhodet.
 CD
 CD Parametre:
@@ -777,11 +768,13 @@ CD Type     Navn      I/U  Forklaring
 CD --------------------------------------------------------------------------
 CD FILE    *fil        i   Filpeker til sosi-fil.
 CD short  *psTegnsett  u   Tegnsett, konstanter definert:
+CD                            TS_UKJENT  = Fikk ikke sjekket tegnsett
 CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
 CD                            TS_ND7     = Norsk Data 7-bits
 CD                            TS_DECM8   = DEC multinasjonal 8-bits
 CD                            TS_ISO8859 = ISO8859-10 Norsk/samisk tegnsett
 CD                            TS_DECN7   = DEC norsk 7-bits
+CD                            TS_UTF8    = UTF-8
 CD short   sStatus     r   Status: UT_TRUE  = Funnet
 CD                                 UT_FALSE = Ikke funnet
 CD
@@ -789,36 +782,127 @@ CD Bruk:
 CD      sStatus = ho_GetTegnsett(fil,&sTegnsett);
 CD ==========================================================================
 */
-short ho_GetTegnsett(FILE *pFil,short *psTegnsett)
+short CFyba::ho_GetTegnsett(FILE *pFil,short *psTegnsett)
 {
-   short lin;
-   char *cp;
+   char tx[LC_MAX_SOSI_LINJE_LEN];
+   UT_INT64 startpos;
+   char *cp, *ce;
+   short ierr;
    short ist = UT_FALSE;
+   bool bFerdig = false;
 
-   *psTegnsett = TS_DOSN8;       
-   lin=2;                        
+   *psTegnsett = TS_UKJENT;       
+ 
 
-   if ((cp = ho_GetVal(pFil,"..TEGNSETT",&lin)) != NULL) {     /* Tegnsett */
-      ist = UT_TRUE;
-		UT_StrUpper(cp);
-      if (strcmp(cp,"ISO8859-10") == 0) {
-         *psTegnsett = TS_ISO8859;
+   // SÃ¸k fram til .HODE
+   if (ho_FinnHode(pFil, &startpos) == UT_TRUE)
+   {
+      // Leser hodet
+      UT_SetPos_i64(pFil,startpos);
+      UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx);
 
-      } else if (strcmp(cp,"ISO8859-1") == 0) {
-         *psTegnsett = TS_ISO8859;
+      // Skann resten av hodet
+      do 
+      {
+         // Les en linje - Overser blanke, fyll (!!!!!!) og kommentar
+         do
+         {
+            if ((ierr = UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx)) != UT_OK)
+            {
+               return UT_FALSE;     // ===>  Retur pga. lesefeil
+            }
+         } while (ho_TestFyllKommentar(tx) == UT_TRUE);
 
-      } else if (strcmp(cp,"ANSI") == 0) {
-         *psTegnsett = TS_ISO8859;
+         // Hopp over ledende blanke
+         cp = &tx[0];
+         while (UT_IsSpace(*cp))  ++cp;
 
-      } else if (strcmp(cp,"ND7") == 0) {
-         *psTegnsett = TS_ND7;
+         // Sjekk linjen om det er ..TEGNSETT
+         if (strncmp(cp,"..TEGNSETT ",11) == 0) 
+         {
+            bFerdig = true;
+                     
+            // Hopp fram til fÃ¸rste ikkje-blanke etter navnet
+            cp += 11;
+            while (UT_IsSpace(*cp))  ++cp;
 
-      } else if (strcmp(cp,"DECN7") == 0) {
-         *psTegnsett = TS_DECN7;
+            // Hvis strengen ikke er ferdigbehandla
+            if (*cp != '\0')
+            {  
 
-      } else if (strcmp(cp,"DECM8") == 0) {
-         *psTegnsett = TS_DECM8;
-		}
+               // Avgrensa av doble hermeteikn
+               if (*cp == '"')
+               {
+                  ce = cp + 1;
+                  while (*ce != '\0'  && *ce != '"')  ++ce;
+                  if (*ce == '"')  ++cp;
+                  *ce = '\0';
+               } 
+
+               // Avgrensa av enkle hermeteikn
+               else if (*cp == '\'')
+               {
+                  ce = cp + 1;
+                  while (*ce != '\0'  && *ce != '\'')  ++ce;
+                  if (*ce == '\'')  ++cp;
+                  *ce = '\0';
+               } 
+
+               // Vanlig ord
+               else
+               {
+                  ce = cp + 1;
+                  while (*ce != '\0'  &&  ( ! UT_IsSpace(*ce)))  ++ce;
+                  *ce = '\0';
+               }
+            }
+         }
+      } while ( ! bFerdig );
+
+
+      if (*cp != '\0')
+      {
+         if (strcmp(cp,"ISO8859-10") == 0) {
+            *psTegnsett = TS_ISO8859;
+            ist = UT_TRUE;
+
+         } else if (strcmp(cp,"DOSN8") == 0) {
+            *psTegnsett = TS_DOSN8;
+            ist = UT_TRUE;
+
+         } else if (strcmp(cp,"ISO8859-1") == 0) {
+            *psTegnsett = TS_ISO8859;
+            ist = UT_TRUE;
+
+         } else if (strcmp(cp,"ANSI") == 0) {
+            *psTegnsett = TS_ISO8859;
+            ist = UT_TRUE;
+
+         } else if (strcmp(cp,"ND7") == 0) {
+            *psTegnsett = TS_ND7;
+            ist = UT_TRUE;
+
+         } else if (strcmp(cp,"DECN7") == 0) {
+            *psTegnsett = TS_DECN7;
+            ist = UT_TRUE;
+
+         } else if (strcmp(cp,"DECM8") == 0) {
+            *psTegnsett = TS_DECM8;
+            ist = UT_TRUE;
+
+         } else if (strcmp(cp,"UTF-8") == 0) {
+            *psTegnsett = TS_UTF8;
+            ist = UT_TRUE;
+         }
+         else
+         {
+            wchar_t wszTegnsett[100];
+            UT_KonverterTegnsett_8_16(TS_ISO8859,cp,wszTegnsett);
+            LC_Error(165, L"(HO_GetTegnsett)", wszTegnsett);
+            ist = UT_FALSE;
+         }
+
+      }
    }
 
    return ist;
@@ -829,49 +913,49 @@ short ho_GetTegnsett(FILE *pFil,short *psTegnsett)
 AR:1999-07-14
 CH HO_GetVal                                      Finn verdien til et SOSI-navn
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Henter parametrene til et SOSI-navn.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
-CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
-CD strengen må den kopieres over til egen streng. (Bruk strcpy).
+CD Dette blir Ã¸delagt ved neste kall til en "get-rutine". For Ã¥ ta vare pÃ¥
+CD strengen mÃ¥ den kopieres over til egen streng. (Bruk strcpy).
 CD
 CD Parametre:
 CD Type     Navn        I/U  Forklaring
 CD -----------------------------------------------------------------------------
-CD char    *pszFil       i   Fullstendig filnavn
-CD char    *sosi_navn    i   SOSI-navn det skal finnes verdi til
-CD short   *sett_nr     i/u  i: "Sett nummer"(linjenummer) for start søking (min 1)
+CD wchar_t    *pszFil       i   Fullstendig filnavn
+CD wchar_t    *sosi_navn    i   SOSI-navn det skal finnes verdi til
+CD short   *sett_nr     i/u  i: "Sett nummer"(linjenummer) for start sÃ¸king (min 1)
 CD                           u: Ved tilslag returneres "Sett nummer" for
 CD                              tilslaget.
-CD char    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
+CD wchar_t    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
 CD                           Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
 CD Bruk:
 CD para_peker = HO_GetVal(fil,sosi_navn,&sett_nr);
 	=============================================================================
 */
-SK_EntPnt_FYBA char *HO_GetVal(const char *pszFil,char *sosi_navn,short *sett_nr)
+wchar_t * CFyba::HO_GetVal(const wchar_t *pszFil,wchar_t *sosi_navn,short *sett_nr)
 {
    short sStatus;
    FILE * pFil;
-   char *rp = NULL;               /* Retur peker */
+   wchar_t *rp = NULL;               /* Retur peker */
 
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_READ,UT_OLD,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"",UT_READ,UT_OLD,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Hent verdier */
       rp = ho_GetVal(pFil,sosi_navn,sett_nr);
       fclose (pFil);
 
-	/* Åpningsfeil */
+	/* Ã…pningsfeil */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_GetVal)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_GetVal)",err.tx);
       sStatus = UT_FALSE;
    }
 
@@ -884,28 +968,28 @@ GL:1988-04-27
 AR:1989-08-23
 CH ho_GetVal                                      Finn verdien til et SOSI-navn
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Henter parametrene til et SOSI-navn.
 CD Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
-CD Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
-CD strengen må den kopieres over til egen streng. (Bruk strcpy).
+CD Dette blir Ã¸delagt ved neste kall til en "get-rutine". For Ã¥ ta vare pÃ¥
+CD strengen mÃ¥ den kopieres over til egen streng. (Bruk strcpy).
 CD
 CD Parametre:
 CD Type     Navn        I/U   Forklaring
 CD -----------------------------------------------------------------------------
 CD FILE    *pFil         i   Filpeker til sosi-fil.
-CD char    *sosi_navn    i   SOSI-navn det skal finnes verdi til
-CD short   *sett_nr     i/u  i: "Sett nummer"(linjenummer) for start søking (min 1)
+CD wchar_t *sosi_navn    i   SOSI-navn det skal finnes verdi til
+CD short   *sett_nr     i/u  i: "Sett nummer"(linjenummer) for start sÃ¸king (min 1)
 CD                           u: Ved tilslag returneres "Sett nummer" for
 CD                              tilslaget.
-CD char    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
+CD wchar_t    *para_peker   r   Peker til parameter-streng avslutta med '\0'.
 CD                           Hvis SOSI-navnet ikke er funnet returneres NULL.
 CD
 CD Bruk:
 CD para_peker = ho_GetVal(pFil,sosi_navn,&sett_nr);
 	=============================================================================
 */
-char *ho_GetVal(FILE *pFil,char *sosi_navn,short *sett_nr)
+wchar_t * CFyba::ho_GetVal(FILE *pFil,wchar_t *sosi_navn,short *sett_nr)
 {
    UT_INT64 startpos;
    short ant_par,navn_nr,type;
@@ -913,18 +997,17 @@ char *ho_GetVal(FILE *pFil,char *sosi_navn,short *sett_nr)
    short ferdig = 0;
    short sett = 0;
    LB_LESEBUFFER * pLb = &(Sys.BufAdm);
-   char *rp = NULL;               /* Retur peker */
+   wchar_t *rp = NULL;               /* Retur peker */
 
 
-   // Søk fram til .HODE
+   // SÃ¸k fram til .HODE
    if (ho_FinnHode(pFil, &startpos) == UT_TRUE) {
       // Finn riktig info
       // SOSI-navnet
       LN_PakkNavn(&(Sys.SosiNavn),sosi_navn,&navn_nr,&ant_par);
 
-      /* Sikkrer at ny lesing startes */
+      /* Sikrer at ny lesing startes */
       pLb->sStatus = LESEBUFFER_TOM;
-      //_fseeki64(pFil,startpos,SEEK_SET);
       UT_SetPos_i64(pFil,startpos);
 
       do {
@@ -946,7 +1029,7 @@ char *ho_GetVal(FILE *pFil,char *sosi_navn,short *sett_nr)
             }
          }
          pLb->set_brukt = SET_BRUKT;
-      } while ( ! ferdig  &&  ! funnet);       /* Søk etter navnet */
+      } while ( ! ferdig  &&  ! funnet);       /* SÃ¸k etter navnet */
    }
 
    pLb->sStatus = LESEBUFFER_TOM;
@@ -959,24 +1042,24 @@ GL-880303
 AR-891124
 CH  HO_New                                                   Lager nytt hode
 CD  =========================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Genererer et nytt SOSI-filhode.
-CD Hvis område ikke har noen utstrekning justeres
+CD Hvis omrÃ¥de ikke har noen utstrekning justeres
 CD dette med 1 meter i hver retning. 
 CD
 CD Parametre:
 CD Type     Navn         I/U    Forklaring
 CD --------------------------------------------------------------------------
-CD char    *pszFil        i    Fullstendig filnavn
+CD wchar_t    *pszFil        i    Fullstendig filnavn
 CD short    koosys        i    Koordinatsystem
-CD double   origo_a       i    Origo øst
+CD double   origo_a       i    Origo Ã¸st
 CD double   origo_n       i    Origo nord
 CD double   enhet         i    Enhet
 CD double   enhet_h       i    Enhet-H
 CD double   enhet_d       i    Enhet-D
-CD double   nv_a          i    Område:  Nedre venstre hjørne
+CD double   nv_a          i    OmrÃ¥de:  Nedre venstre hjÃ¸rne
 CD double   nv_n          i
-CD double   oh_a          i             Øvre høyre hjørne
+CD double   oh_a          i             Ã˜vre hÃ¸yre hjÃ¸rne
 CD double   oh_n          i
 CD short    sStatus       r    Status: UT_TRUE  = Funnet
 CD                                     UT_FALSE = Ikke funnet
@@ -986,7 +1069,7 @@ CD sStatus = HO_New(fil,koosys,origo_a,origo_n,enhet,enhet_h-enhet_d,
 CD                  nv_a,nv_n,oh_a,oh_n);
 CD =============================================================================
 */
-SK_EntPnt_FYBA short HO_New(const char *pszFil,short koosys,double origo_a,double origo_n,
+short CFyba::HO_New(const wchar_t *pszFil,short koosys,double origo_a,double origo_n,
             double enhet,double enhet_h,double enhet_d,
             double nv_a,double nv_n,double oh_a,double oh_n)
 {
@@ -995,10 +1078,10 @@ SK_EntPnt_FYBA short HO_New(const char *pszFil,short koosys,double origo_a,doubl
    FILE * pFil;
 
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_UPDATE,UT_UNKNOWN,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"",UT_UPDATE,UT_UNKNOWN,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Skriv nytt hode */
       ho_New(pFil, koosys, origo_a, origo_n, enhet, enhet_h, enhet_d,
@@ -1007,12 +1090,12 @@ SK_EntPnt_FYBA short HO_New(const char *pszFil,short koosys,double origo_a,doubl
       fclose (pFil);
       sStatus = UT_TRUE;
 
-	/* Åpningsfeil */
+	/* Ã…pningsfeil */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_New)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_New)",err.tx);
       sStatus = UT_FALSE;
    }
 
@@ -1025,9 +1108,9 @@ GL-880303
 AR-891124
 CH  ho_New                                                   Lager nytt hode
 CD  =========================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Genererer et nytt SOSI-filhode.
-CD Hvis område ikke har noen utstrekning justeres
+CD Hvis omrÃ¥de ikke har noen utstrekning justeres
 CD dette med 1 meter i hver retning. 
 CD
 CD Parametre:
@@ -1035,14 +1118,14 @@ CD Type     Navn         I/U    Forklaring
 CD --------------------------------------------------------------------------
 CD FILE    *fil           i   Filpeker til sosi-fil.
 CD short    koosys        i    Koordinatsystem
-CD double   origo_a       i    Origo øst
+CD double   origo_a       i    Origo Ã¸st
 CD double   origo_n       i    Origo nord
 CD double   enhet         i    Enhet
 CD double   enhet_h       i    Enhet-H
 CD double   enhet_d       i    Enhet-D
-CD double   nv_a          i    Område:  Nedre venstre hjørne
+CD double   nv_a          i    OmrÃ¥de:  Nedre venstre hjÃ¸rne
 CD double   nv_n          i
-CD double   oh_a          i             Øvre høyre hjørne
+CD double   oh_a          i             Ã˜vre hÃ¸yre hjÃ¸rne
 CD double   oh_n          i
 CD
 CD Bruk:
@@ -1050,43 +1133,41 @@ CD     ho_New(fil,koosys,origo_a,origo_n,enhet,enhet_h-enhet_d,
 CD            nv_a,nv_n,oh_a,oh_n);
 CD =============================================================================
 */
-void ho_New(FILE *fil,short koosys,double origo_a,double origo_n,
+void CFyba::ho_New(FILE *fil,short koosys,double origo_a,double origo_n,
             double enhet,double enhet_h,double enhet_d,
             double nv_a,double nv_n,double oh_a,double oh_n)
 {
-   char tx[LC_MAX_SOSI_LINJE_LEN];
+   wchar_t tx[LC_MAX_SOSI_LINJE_LEN];
 
 
-   //_fseeki64(fil,0,SEEK_SET);
    UT_SetPos_i64(fil,0);
 
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,".HODE\r\n");
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,"..TEGNSETT ISO8859-10\r\n");
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,"..TRANSPAR\r\n");
-   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,"...KOORDSYS  %d\r\n",koosys);
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,L".HODE\r\n");
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,L"..TEGNSETT ISO8859-10\r\n");
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,L"..TRANSPAR\r\n");
+   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,L"...KOORDSYS  %d\r\n",koosys);
    LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
-   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,"...ORIGO-NØ  %.0f  %.0f\r\n",origo_n,origo_a);
+   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,L"...ORIGO-NÃ˜  %.0f  %.0f\r\n",origo_n,origo_a);
    LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
    
-   //UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,"...ENHET  %-.3f\r\n",enhet);
-   LB_FormaterEnhet(tx,LC_MAX_SOSI_LINJE_LEN,"...ENHET",enhet);
-   UT_StrCat(tx,"\r\n",LC_MAX_SOSI_LINJE_LEN);
+   LB_FormaterEnhet(tx,LC_MAX_SOSI_LINJE_LEN,L"...ENHET",enhet);
+   UT_StrCat(tx,L"\r\n",LC_MAX_SOSI_LINJE_LEN);
    LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
    
    if (fabs(enhet-enhet_h)>0.000001) {
-      LB_FormaterEnhet(tx,LC_MAX_SOSI_LINJE_LEN,"...ENHET-H",enhet_h);
-      UT_StrCat(tx,"\r\n",LC_MAX_SOSI_LINJE_LEN);
+      LB_FormaterEnhet(tx,LC_MAX_SOSI_LINJE_LEN,L"...ENHET-H",enhet_h);
+      UT_StrCat(tx,L"\r\n",LC_MAX_SOSI_LINJE_LEN);
       LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
    }
    
    if (fabs(enhet-enhet_d)>0.000001) {
-      LB_FormaterEnhet(tx,LC_MAX_SOSI_LINJE_LEN,"...ENHET-D",enhet_d);
-      UT_StrCat(tx,"\r\n",LC_MAX_SOSI_LINJE_LEN);
+      LB_FormaterEnhet(tx,LC_MAX_SOSI_LINJE_LEN,L"...ENHET-D",enhet_d);
+      UT_StrCat(tx,L"\r\n",LC_MAX_SOSI_LINJE_LEN);
       LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
    }
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,"..OMRÅDE\r\n");
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,L"..OMRÃ…DE\r\n");
    
-   // Hvis nødvendig justeres område
+   // Hvis nÃ¸dvendig justeres omrÃ¥de
    if (fabs(oh_n-nv_n) < 0.000001) {
       nv_n -= 1.0;
       oh_n += 1.0;
@@ -1096,21 +1177,21 @@ void ho_New(FILE *fil,short koosys,double origo_a,double origo_n,
       oh_a += 1.0;
    }
 
-   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,"...MIN-NØ   %.0f     %.0f\r\n",nv_n,nv_a);
+   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,L"...MIN-NÃ˜   %.0f     %.0f\r\n",nv_n,nv_a);
    LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
-   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,"...MAX-NØ   %.0f     %.0f\r\n",oh_n,oh_a);
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
-
-   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,"..SOSI-VERSJON %.2f\r\n",((double)FYBA_SOSI_VERSJON)/100.0);
+   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,L"...MAX-NÃ˜   %.0f     %.0f\r\n",oh_n,oh_a);
    LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
 
-   UT_StrCopy(tx,"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n",LC_MAX_SOSI_LINJE_LEN);
+   UT_SNPRINTF(tx,LC_MAX_SOSI_LINJE_LEN,L"..SOSI-VERSJON %.2f\r\n",((double)FYBA_SOSI_VERSJON)/100.0);
    LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
-   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,".SLUTT\r\n");
 
-   /* chsize(fileno(fil),ftell(fil)-1); */    /* Sett filstørrelse */
+   UT_StrCopy(tx,L"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n",LC_MAX_SOSI_LINJE_LEN);
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,tx);
+   LB_WriteLine(fil,LC_INTERNT_TEGNSETT,L".SLUTT\r\n");
+
+   /* chsize(fileno(fil),ftell(fil)-1); */    /* Sett filstÃ¸rrelse */
 }
 
 
@@ -1118,13 +1199,13 @@ void ho_New(FILE *fil,short koosys,double origo_a,double origo_n,
 AR:1999-07-14
 CH HO_TestSOSI                                              Tester SOSI-filen
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Sjekker at filen er en SOSI-fil, og finner posisjonen for .SLUTT.
 CD
 CD Parametre:
 CD Type      Navn       I/U   Forklaring
 CD -----------------------------------------------------------------------------
-CD char     *pszFil      i    Fullstendig filnavn
+CD wchar_t     *pszFil      i    Fullstendig filnavn
 CD UT_INT64 *sluttpos    u    Posisjon for .SLUTT
 CD short     ist         r    Status: UT_TRUE  = OK
 CD                                  UT_FALSE = feil
@@ -1133,27 +1214,27 @@ CD Bruk:
 CD     ist = HO_TestSOSI(pszFil,&sluttpos);
 CD =============================================================================
 */
-SK_EntPnt_FYBA short HO_TestSOSI(const char *pszFil,UT_INT64 *sluttpos)
+short CFyba::HO_TestSOSI(const wchar_t *pszFil,UT_INT64 *sluttpos)
 {
    short sStatus;
    FILE * pFil;
 
 
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_READ,UT_OLD,&sStatus);
+   /* Ã…pner filen */
+   pFil = UT_OpenFile(pszFil,L"",UT_READ,UT_OLD,&sStatus);
 
-   /* Åpnet OK ? */
+   /* Ã…pnet OK ? */
    if (sStatus == UT_OK) {
       /* Sjekk filen */
       sStatus = ho_TestSOSI(pFil,sluttpos);
       fclose (pFil);
 
-	/* Åpningsfeil */
+	/* Ã…pningsfeil */
    } else {
-      char szError[256];
+      wchar_t szError[256];
       UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_TestSOSI)",err().tx);
+      UT_SNPRINTF(err.tx,LC_ERR_LEN,L" %s - %s",pszFil,szError);
+      LC_Error(101,L"(HO_TestSOSI)",err.tx);
       sStatus = UT_FALSE;
    }
 
@@ -1165,7 +1246,7 @@ SK_EntPnt_FYBA short HO_TestSOSI(const char *pszFil,UT_INT64 *sluttpos)
 AR-891205
 CH ho_TestSOSI                                              Tester SOSI-filen
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Sjekker at filen er en SOSI-fil, og finner posisjonen for .SLUTT.
 CD
 CD Parametre:
@@ -1180,7 +1261,7 @@ CD Bruk:
 CD     ist = ho_TestSOSI(pFil,&sluttpos);
 CD =============================================================================
 */
-short ho_TestSOSI(FILE *pFil,UT_INT64 *sluttpos)
+short CFyba::ho_TestSOSI(FILE *pFil,UT_INT64 *sluttpos)
 {
    short ferdig;
    char tx[LC_MAX_SOSI_LINJE_LEN];
@@ -1190,36 +1271,41 @@ short ho_TestSOSI(FILE *pFil,UT_INT64 *sluttpos)
 
    *sluttpos = 0;
    
-   // ----- Sjekk at filen starter med .HODE og søk fram til .HODE
-   if (ho_FinnHode(pFil, &startpos) == UT_TRUE) {
-      ist = UT_FALSE;
-
-      // Skann siste del av filen for å finne .SLUTT
+   // ----- Sjekk at filen starter med .HODE og sÃ¸k fram til .HODE
+   if (ho_FinnHode(pFil, &startpos) == UT_TRUE)
+   {
+      // Skann siste del av filen for Ã¥ finne .SLUTT
       ferdig = 0;
       _fseeki64(pFil,-200,SEEK_END);
       UT_GetPos_i64(pFil,&filpos);
 
-      while (!ferdig  &&  UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx) == UT_OK) {
-         if (*tx == '.' &&  *(tx+1) == 'S') {
-            if (strncmp(tx,".SLUTT",6) == 0) {  /* .SLUTT er funnet */
+      while (!ferdig  &&  UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx) == UT_OK)
+      {
+         if (*tx == '.' &&  *(tx+1) == 'S')
+         {
+            if (strncmp(tx,".SLUTT",6) == 0)
+            {  /* .SLUTT er funnet */
                *sluttpos = filpos;
                ferdig = 1;
                ist = UT_TRUE;
             }
          }
-         //UT_GetPos(pFil,&filpos);
-         filpos = _ftelli64(pFil);
+         UT_GetPos_i64(pFil,&filpos);
       }
                  
-      if (ist == UT_FALSE) {
+      if (ist == UT_FALSE)
+      {
          // .SLUTT ikke er funnet, skann hele filen fra hodet 
          ferdig = 0;
          filpos = startpos;
          UT_SetPos_i64(pFil,filpos);
   
-         while (!ferdig  &&  UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx) == UT_OK) {
-            if (*tx == '.' &&  *(tx+1) == 'S') {
-               if (strncmp(tx,".SLUTT",6) == 0) {  /* .SLUTT er funnet */
+         while (!ferdig  &&  UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx) == UT_OK)
+         {
+            if (*tx == '.' &&  *(tx+1) == 'S') 
+            {
+               if (strncmp(tx,".SLUTT",6) == 0)
+               {  /* .SLUTT er funnet */
                   *sluttpos = filpos;
                   ferdig = 1;
                   ist = UT_TRUE;
@@ -1231,7 +1317,7 @@ short ho_TestSOSI(FILE *pFil,UT_INT64 *sluttpos)
    }
 
 
-   /* Sjekk at hodet har transpar og fornuftig område */   
+   /* Sjekk at hodet har transpar og fornuftig omrÃ¥de */   
    if (ist == UT_TRUE) {
       unsigned short usMaske = LC_TR_ALLT;
       LC_TRANSPAR Trans;
@@ -1247,145 +1333,6 @@ short ho_TestSOSI(FILE *pFil,UT_INT64 *sluttpos)
 
 
 /*
-HT:1998-05-19
-CH HO_SjekkTegnsett                              Sjekker tegnsett på SOSI-filen
-CD =============================================================================
-CD Formål:
-CD Sjekker faktisk tegnsett i .HODE.
-CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
-CD -----------------------------------------------------------------------------
-CD char   *pszFil      i   Fullstendig filnavn
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
-CD                            TS_UKJENT  = Fikk ikke sjekket tegnsett
-CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
-CD                            TS_ND7     = Norsk Data 7-bits
-CD                            TS_DECM8   = DEC multinasjonal 8-bits
-CD                            TS_ISO8859 = ISO8859-10 Norsk/samisk tegnsett
-CD                            TS_DECN7   = DEC norsk 7-bits
-CD short   sStatus     r   Status:  0  = Ikke funnet
-CD                                  1  = Ett tegnsett funnet
-CD                                  2  = Flere tegnsett funnet
-CD Bruk:
-CD     sStatus = HO_SjekkTegnsett(fpek,tegnsett);
-CD =============================================================================
-*/
-SK_EntPnt_FYBA short HO_SjekkTegnsett(const char *pszFil,short *psTegnsett)
-{
-   short sStatus;
-   FILE * pFil;
-
-
-   /* Åpner filen */
-   pFil = UT_OpenFile(pszFil,"",UT_READ,UT_OLD,&sStatus);
-
-   /* Åpnet OK ? */
-   if (sStatus == UT_OK) {
-      /* Sjekk filen */
-      sStatus = ho_SjekkTegnsett(pFil,psTegnsett);
-      fclose (pFil);
-
-	/* Åpningsfeil */
-   } else {
-      char szError[256];
-      UT_strerror(szError,256,sStatus);
-      UT_SNPRINTF(err().tx,LC_ERR_LEN," %s - %s",pszFil,szError);
-      LC_Error(101,"(HO_SjekkTegnsett)",err().tx);
-      sStatus = 0;
-   }
-
-   return sStatus;
-}
-
-
-/*
-HT-980519
-CH ho_SjekkTegnsett                              Sjekker tegnsett på SOSI-filen
-CD =============================================================================
-CD Formål:
-CD Sjekker faktisk tegnsett i .HODE.
-CD
-CD Parametre:
-CD Type    Navn       I/U   Forklaring
-CD -----------------------------------------------------------------------------
-CD FILE   *fil         i   Filpeker til sosi-fil.
-CD short  *psTegnsett  u   Tegnsett, konstanter definert:
-CD                            TS_UKJENT  = Fikk ikke sjekket tegnsett
-CD                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
-CD                            TS_ND7     = Norsk Data 7-bits
-CD                            TS_DECM8   = DEC multinasjonal 8-bits
-CD                            TS_ISO8859 = ISO8859-10 Norsk/samisk tegnsett
-CD                            TS_DECN7   = DEC norsk 7-bits
-CD short   sStatus     r   Status:  0  = Ikke funnet
-CD                                  1  = Ett tegnsett funnet
-CD                                  2  = Flere tegnsett funnet
-CD Bruk:
-CD     sStatus = ho_SjekkTegnsett(fpek,tegnsett);
-CD =============================================================================
-*/
-short ho_SjekkTegnsett(FILE *fil,short *psTegnsett)
-{
-   char *ch, tx[LC_MAX_SOSI_LINJE_LEN];
-   short tegnsett, lesefeil;
-   short ferdig = 0;
-   short ant = 0; 
-
-/*          Æ   Ø   Å   æ   ø   å 
-TS_DOSN8   146 157 143 145 155 134 
-TS_ND7      91  92  93 123 124 125 
-TS_ISO8859 198 216 197 230 248 229 */
-   static unsigned char atab[256] =
-   { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 19 */
-     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 39 */
-     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 59 */
-     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 79 */
-     0,0,0,0,0,0,0,0,0,0,0,TS_ND7,TS_ND7,TS_ND7,0,0,0,0,0,0, /* 99 */
-     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 119 */
-     0,0,0,TS_ND7,TS_ND7,TS_ND7,0,0,0,0,0,0,0,0,TS_DOSN8,0,0,0,0,0, /* 139 */
-     0,0,0,TS_DOSN8,0,TS_DOSN8,TS_DOSN8,0,0,0,0,0,0,0,0,TS_DOSN8,0,TS_DOSN8,0,0, /* 159 */
-     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, /* 179 */
-     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,TS_ISO8859,TS_ISO8859,0, /* 199 */
-     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,TS_ISO8859,0,0,0, /* 219 */
-     0,0,0,0,0,0,0,0,0,TS_ISO8859,TS_ISO8859,0,0,0,0,0,0,0,0,0, /* 239 */
-     0,0,0,0,0,0,0,0,TS_ISO8859,0,0,0,0,0,0,0 };
-
-
-   tegnsett = TS_UKJENT;
-
-   /* Sjekker hva som faktisk er tegnsettet i .HODE,
-      starter først på filen og leser  */
-   UT_SetPos_i64(fil,0);
-   
-   /* Leser første linje i .HODE */
-   lesefeil = UT_ReadLineNoComm(fil,LC_MAX_SOSI_LINJE_LEN,tx);
-   while (!ferdig  &&  ! lesefeil ){
-
-      /* Sjekker tegnsett*/
-      for (ch=tx; *ch; ch++) {
-                  
-         /* Hvis vi har fått sjekket tegnsettet, og det
-         ikke er funnet tidligere tas det vare på nå */
-         if (atab[(unsigned char)*ch] && !(atab[(unsigned char)*ch] & tegnsett)) {
-            tegnsett |= atab[(unsigned char)*ch];
-            ant++;
-         }
-      }
-
-      /* Leser eventuellt neste linje i .HODE */
-      if (!ferdig) lesefeil = UT_ReadLineNoComm(fil,LC_MAX_SOSI_LINJE_LEN,tx);
-      
-      /* Slutt på .HODE? */
-      ferdig = *(tx+1) != '.';  
-   }
-
-   *psTegnsett = tegnsett;
- 
-   return ant;
-}
-
-
-/*
 AR:2004-05-05
 !---------------------------------------------------------------!
 ! ho_TestFyllKommentar - Tester om en streng er fyll/kommentar. !
@@ -1395,7 +1342,7 @@ AR:2004-05-05
 !                                                               !
 !---------------------------------------------------------------!
 */
-static short ho_TestFyllKommentar(const char *pszTx)
+short CFyba::ho_TestFyllKommentar(const char *pszTx)
 {
    for (; *pszTx; ++pszTx) {
       if (!UT_IsSpace(*pszTx)  &&  *pszTx != '!')  return (UT_FALSE);
@@ -1413,16 +1360,16 @@ AR:2004-05-05
 !                                                                     !
 ! Retur:  UT_TRUE  = Lovlig hode er funnet                            !
 !         UT_FALSE = .HODE er ikke funnet,                            !
-!                    eller .HODE er ikke første logiske info i filen. !
+!                    eller .HODE er ikke fÃ¸rste logiske info i filen. !
 !                                                                     !
 !---------------------------------------------------------------------!
 */
-short ho_FinnHode(FILE *pFil, UT_INT64 *lHodepos)
+short CFyba::ho_FinnHode(FILE *pFil, UT_INT64 *n64Hodepos)
 {
    char tx[LC_MAX_SOSI_LINJE_LEN], *cp;
    short ierr;
 
-   *lHodepos = 0L;
+   *n64Hodepos = 0L;
    
    // ----- Sjekk at filen starter med .HODE
    UT_SetPos_i64(pFil,0);
@@ -1430,25 +1377,41 @@ short ho_FinnHode(FILE *pFil, UT_INT64 *lHodepos)
    do
    {
       // Husk filposisjonen
-      *lHodepos =  _ftelli64(pFil);
-      // Les
-      if ((ierr = UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx)) != UT_OK) {
+      UT_GetPos_i64(pFil,n64Hodepos);
 
+      // Les
+      if ((ierr = UT_ReadLine(pFil,LC_MAX_SOSI_LINJE_LEN,tx)) != UT_OK)
+      {
          return UT_FALSE;     // ===>  Retur pga. lesefeil
       }
    } while (ho_TestFyllKommentar(tx) == UT_TRUE);
 
 
-   // ----- Har nå funnet en linje som inneholder logisk informasjon
+   // ----- Har nÃ¥ funnet en linje som inneholder logisk informasjon
 
-   // Hopp over blanke på starten av linjen
+   // Hopp over blanke pÃ¥ starten av linjen
    cp = &tx[0];
-   while (UT_IsSpace(*cp)) {
+   while (UT_IsSpace(*cp))
+   {
       ++cp;
-      ++(*lHodepos);
+      ++(*n64Hodepos);
    }
 
-   if (strncmp(cp,".HODE",5) == 0) {
+   // Starten av filen, hopp over eventuelt byte order mark (BOM)
+   if (*n64Hodepos == 0)
+   {
+      if (strlen(cp) > 2  &&
+         (unsigned char)(*cp) == 0xEF  &&
+         (unsigned char)(*(cp+1)) == 0xBB  &&
+         (unsigned char)(*(cp+2)) == 0xBF )
+      {
+         cp += 3;
+         (*n64Hodepos) += 3;
+      }
+   }
+
+   if (strncmp(cp,".HODE",5) == 0) 
+   {
          return UT_TRUE;      // ===>  Retur, .HODE er funnet
    }
          

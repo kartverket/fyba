@@ -34,11 +34,6 @@
 #  include<time.h>
 #endif
 
-#ifdef BORLAND
-#  include<sys/stat.h>
-#  include<time.h>
-#endif
-
 #ifdef LINUX
 #   include <time.h>
 #endif
@@ -55,14 +50,14 @@ CD
 CD PARAMETERLISTE:
 CD Type      Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char     *pszPath   i   Filnavn
+CD wchar_t     *pszPath   i   Filnavn
 CD PFTID     pFilTid   u   Oppdateringstid
 CD short     sStatus   r   Status; 0=OK, annen verdi er feil.
 CD
 CD Bruk:  sStatus = UT_InqPathTid(szPath,&FilTid);
    ==================================================================
 */
-SK_EntPnt_UT short UT_InqPathTid(char *pszPath,PFTID pFilTid)
+SK_EntPnt_UT short UT_InqPathTid(const wchar_t *pszPath,PFTID pFilTid)
 {
 #ifdef LINUX
     struct stat buf; 
@@ -160,7 +155,7 @@ SK_EntPnt_UT short UT_InqPathTid(char *pszPath,PFTID pFilTid)
 	 time_t temp;
 
 	 /* Hent filopplysninger */
-	 sStatus = _stat32i64(pszPath,&buf);
+	 sStatus = _wstat32i64(pszPath,&buf);
 
     /* Endringstidspunktet */
 	 temp = buf.st_mtime;                 
@@ -168,31 +163,6 @@ SK_EntPnt_UT short UT_InqPathTid(char *pszPath,PFTID pFilTid)
     if (temp == -1)  temp = buf.st_ctime;
 
 	 localtime_s(&ntime,&temp);
-
-	 if (sStatus == 0) {
-        pFilTid->usAar  = (unsigned short)ntime.tm_year;
-		  pFilTid->usMnd  = (unsigned short)ntime.tm_mon;
-		  pFilTid->usDag  = (unsigned short)ntime.tm_mday;
-		  pFilTid->usTime = (unsigned short)ntime.tm_hour;
-		  pFilTid->usMin  = (unsigned short)ntime.tm_min;
-		  pFilTid->usSek  = (unsigned short)ntime.tm_sec;
-	 }
-
-	 return (short)sStatus;
-#endif
-
-#ifdef BORLAND
-	 struct stat buf;
-	 struct tm ntime;
-	 int sStatus;
-	 time_t temp;
-
-	 /* Hent filopplysninger */
-	 sStatus = stat(pszPath,&buf);
-
-	 temp = buf.st_mtime;
-
-	 localtime(&ntime,&temp);
 
 	 if (sStatus == 0) {
         pFilTid->usAar  = (unsigned short)ntime.tm_year;

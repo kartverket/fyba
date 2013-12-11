@@ -36,10 +36,6 @@
 #  include <LIMITS.H>
 #endif
 
-#ifdef BORLAND
-#  include <windows.h>
-#endif
-
 #include "fyut.h"
 
 /*
@@ -52,14 +48,14 @@ CD
 CD PARAMETERLISTE:
 CD Type          Navn     I/U  Merknad
 CD ------------------------------------------------------------------
-CD char           *pszPath        i   Filnavn inkl. full sti.
+CD wchar_t           *pszPath        i   Filnavn inkl. full sti.
 CD unsigned long  *pulLedigPlass  u   Ledig plass på disken
 CD short           sStatus        r   Status; 0=OK, annen verdi er feil.
 CD
 CD Bruk:  sStatus = UT_InqAvailSize(pszPath,&ulLedigPLass);
    ==================================================================
 */
-SK_EntPnt_UT short UT_InqAvailSize(char *pszPath,unsigned long *pulLedigPlass)
+SK_EntPnt_UT short UT_InqAvailSize(const wchar_t *pszPath,unsigned long *pulLedigPlass)
 {
 #ifdef UNIX
    int rc;
@@ -96,7 +92,7 @@ SK_EntPnt_UT short UT_InqAvailSize(char *pszPath,unsigned long *pulLedigPlass)
 
 #ifdef OS232
    unsigned long ulDisk;
-   char disk[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+   wchar_t disk[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
    APIRET rc;
    FSALLOCATE drive;
 
@@ -121,7 +117,7 @@ SK_EntPnt_UT short UT_InqAvailSize(char *pszPath,unsigned long *pulLedigPlass)
 
 #ifdef OS216
    unsigned short usDisk;
-   char disk[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+   wchar_t disk[_MAX_DRIVE],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
    int rc;
    FSALLOCATE drive;
 
@@ -145,7 +141,7 @@ SK_EntPnt_UT short UT_InqAvailSize(char *pszPath,unsigned long *pulLedigPlass)
 
 
 #ifdef WIN32
-         char disk[_MAX_DRIVE+1],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
+         wchar_t disk[_MAX_DRIVE+1],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
          DWORD  SectorsPerCluster;       // address of sectors per cluster
          DWORD  BytesPerSector;     // address of bytes per sector
          DWORD  FreeClusters;       // address of number of free clusters
@@ -155,7 +151,7 @@ SK_EntPnt_UT short UT_InqAvailSize(char *pszPath,unsigned long *pulLedigPlass)
 
         // Finn disk
         UT_splitpath(pszPath,disk,dir,fname,ext);
-        strcat_s(disk,"\\");
+        UT_StrCat(disk, L"\\", _MAX_DRIVE);
         //Hent filopplysninger
         if (GetDiskFreeSpace((LPCTSTR)disk,
                               (LPDWORD)&SectorsPerCluster,
@@ -172,28 +168,4 @@ SK_EntPnt_UT short UT_InqAvailSize(char *pszPath,unsigned long *pulLedigPlass)
    return 1;
 #endif
 
-#ifdef BORLAND
-         char disk[_MAX_DRIVE+1],dir[_MAX_DIR],fname[_MAX_FNAME],ext[_MAX_EXT];
-         DWORD  SectorsPerCluster;      /* address of sectors per cluster */
-         DWORD  BytesPerSector;     /* address of bytes per sector */
-         DWORD  FreeClusters;       /* address of number of free clusters */
-         DWORD  Clusters;               /* address of total number of clusters */
-
-        /* Finn disk */
-        UT_splitpath(pszPath,disk,dir,fname,ext);
-        UT_StrCat(disk,"\\",_MAX_DRIVE+1);
-
-        /* Hent filopplysninger */
-        if (GetDiskFreeSpace((LPCTSTR)disk,
-                                                (LPDWORD)&SectorsPerCluster,
-                                                (LPDWORD)&BytesPerSector,
-                                                (LPDWORD)&FreeClusters,
-                                                (LPDWORD)&Clusters  ) ) {
-
-                 *pulLedigPlass = FreeClusters * SectorsPerCluster * BytesPerSector;
-                 return 0;
-        }
-
-        return 1;
-#endif
 }
