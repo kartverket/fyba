@@ -40,6 +40,11 @@ file for your system with autotools first:
 
 autoreconf --force --install 
 
+** Mac OS X **
+
+See issue #12. Replace any include of vfs.h with mount.h, then proceed with as per the Linux instructions. 
+Patches welcome.
+
 ** Windows **
 
 On Windows all three libs of the FYBA library (GM.lib, UT.lib, and FYBA.lib) 
