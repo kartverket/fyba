@@ -29,7 +29,7 @@
 FYBA is a library to handle searching, reading and updating of
 <A TARGET="top"  HREF="http://www.statkart.no/nor/sosi/" target="_new">SOSI</A>-files.
 FYBA is now compatible with the <A TARGET="top" HREF="http://www.statkart.no/nor/sosi/" target="_new">SOSI</A>-format
-versjon 4.0, and will be adapted newer <A TARGET="top" HREF="http://www.statkart.no/nor/sosi/" target="_new"">SOSI</A>-versions.
+versjon 4.0, and will be adapted to newer <A TARGET="top" HREF="http://www.statkart.no/nor/sosi/" target="_new"">SOSI</A>-versions.
 <BR>
 This user manual is made for people who are familiar with SOSI and C-programming.
 
@@ -54,7 +54,7 @@ various UNIX varieties (POSIX, HPUX, Silicon graphics).
 <A ID="O2"NAME="O2"></A><H1>2 Overview of the Functionality of FYBA</H1>
 
 </PRE>
-FYBA is a library that establishes and manitains "index-files" (.IDX) with the necessary information for
+FYBA is a library that establishes and maintains "index-files" (.IDX) with the necessary information for
 reading, writing, searching and manipulation of data in SOSI files.
 
 As an overview, the following figure can explain the relationship between the
@@ -349,7 +349,7 @@ SK_EntPnt_FYBA void LC_MaxSkriv(long antall)
 <A ID="LC_InqMaxSkriv"NAME="LC_InqMaxSkriv"></A><H2>LC_InqMaxSkriv</H2>
 <BIG><I><B>Maximum number of times to write before writing to the SOSI file</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Gets the maximum number of times to write before writing to the SOSI file.
 (0 = everything is written directly to the SOSI file.)
 Parameters:
@@ -490,7 +490,7 @@ SK_EntPnt_FYBA short LC_GetUtvidModus(void)
 <BR>
 <BR>
 <BR>
-<A ID="O6"NAME="O6"></A><H1>6 Åpning av base og sosi-filer</H1>
+<A ID="O6"NAME="O6"></A><H1>6 Opening Base and SOSI files</H1>
 
 <BR>
 <BR>
@@ -498,26 +498,26 @@ SK_EntPnt_FYBA short LC_GetUtvidModus(void)
 <BR>
 <BR>
 <A ID="LC_OpenBase"NAME="LC_OpenBase"></A><H2>LC_OpenBase</H2>
-<BIG><I><B>Åpner ny base</I></B></BIG><PRE>
+<BIG><I><B>Opens a new base</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Åpner en base, nullstiller tabellene.
-Hvis basen er kladdebase opprettes en SOSI-fil med en gruppe i basen,
-denne brukes som buffer for les / skriv.
-Kladdefilen legges på current directory.
-Kladdebase brukes bare når alle SOSI-filer åpnes med sekvensiell les/skriv.
+Purpose:
+Opens a new base, resets the tables.
+If the base is a draft base, a SOSI file with one group is created in the base.
+This is used as a buffer for read / write.
+The draft file is stored in the current directory.
+The draft base is only used when all SOSI files are opened with a sequential read / write.
  
-Den nye basen velges som aktuell base.
-Parametre:
-Type        Navn      I/U  Forklaring
+The new base is chosen as the active base.
+Parameters:
+Type        Name      I/O  Explanation
 --------------------------------------------------------------------------
-short       sBaseType  i   Basetype. Konstanter definert:
-                            LC_BASE  = Vanlig base.
-                            LC_KLADD = Kladdebase. Brukes bare i spesielle
-                                       tilfeller hvis ingen fil åpnes
-                                       som LC_BASE_xx.
-LC_BASEADM * pBase      r   Basepeker.
-Bruk:
+short       sBaseType  i   Base type. Constants defined:
+                            LC_BASE  = Standard base.
+                            LC_KLADD = Draft base. Only used in special
+                                       circumstances if no files is opened
+                                       as a LC_BASE_xx.
+LC_BASEADM * pBase      r   Base pointer.
+Usage:
 pBase = LC_OpenBase(sBaseType);
 	==========================================================================
  
@@ -529,22 +529,22 @@ SK_EntPnt_FYBA LC_BASEADM * LC_OpenBase(short sBaseType)
 <BR>
 <BR>
 <A ID="LC_CloseBase"NAME="LC_CloseBase"></A><H2>LC_CloseBase</H2>
-<BIG><I><B>Steng base</I></B></BIG><PRE>
+<BIG><I><B>Close base</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Stenger alle filer i basen, og frigir baseadministrasjonsblokken.
-Hvis aktuell base blir stengt blir første base i systemet valgt som ny
-aktuell base.
-Parametre:
-Type       Navn   I/U Forklaring
+Purpose:
+Closes all the files in the base, and releases the basee administration block.
+If the active base is closed, the first base in the system is chosen as
+the new active base.
+Parameters:
+Type       Name   I/O Explanation
 --------------------------------------------------------------------------
-PLCBASEADM pBase   i  Peker tilBaseAdm
-short      s_stat  i  Slutt-status
-                      RESET_IDX = Fjern indeksfilene
-                      SAVE_IDX  = Lagrer indeksfilene.
-                      ABORT     = Fjerner indeksfilene (ved avbrutt
-                                  indeks oppbygging).  
-Bruk:
+PLCBASEADM pBase   i  Pointer to baseAdm
+short      s_stat  i  Close-status
+                      RESET_IDX = Removes the index files
+                      SAVE_IDX  = Saves the index files
+                      ABORT     = Saves the index files (for cancelled index
+                                  generation)
+Usage:
 LC_CloseBase(pBase,s_stat);
    ==========================================================================
  
@@ -556,15 +556,15 @@ SK_EntPnt_FYBA void LC_CloseBase(LC_BASEADM * pBase,short s_stat)
 <BR>
 <BR>
 <A ID="LC_SelectBase"NAME="LC_SelectBase"></A><H2>LC_SelectBase</H2>
-<BIG><I><B>Velg aktuell base</I></B></BIG><PRE>
+<BIG><I><B>Selects active base</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Velger ny aktuell base.
-Parametre:
-Type        Navn      I/U  Forklaring
+Purpose:
+Selects the active base.
+Parameters:
+Type        Name      I/O  Explanation
 --------------------------------------------------------------------------
-LC_BASEADM * pBase      i   Peker til BasAdm.
-Bruk:
+LC_BASEADM * pBase      i   Pointer to baseAdm
+Usage:
 LC_SelectBase(pBase);
    ==========================================================================
  
@@ -576,15 +576,15 @@ SK_EntPnt_FYBA void LC_SelectBase(LC_BASEADM * pBase)
 <BR>
 <BR>
 <A ID="LC_InqCurBase"NAME="LC_InqCurBase"></A><H2>LC_InqCurBase</H2>
-<BIG><I><B>Aktuell base</I></B></BIG><PRE>
+<BIG><I><B>Gets the active base</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Spørr etter aktuell base.
-Parametre:
-Type        Navn      I/U  Forklaring
+Purpose:
+Gets the active base.
+Parameters:
+Type        Name      I/O  Explanation
 --------------------------------------------------------------------------
-LC_BASEADM * pBase      r   Basepeker.
-Bruk:
+LC_BASEADM * pBase      r   Base pointer
+Usage:
 pBase = LC_InqCurBase();
    =============================================================================
  
@@ -599,7 +599,7 @@ SK_EntPnt_FYBA LC_BASEADM * LC_InqCurBase(void)
 <A ID="LC_OpenSos"NAME="LC_OpenSos"></A><H2>LC_OpenSos</H2>
 <BIG><I><B>Åpner og sjekker SOSI-fil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Åpner en ny fil i aktuell base.
 Allokerer minne til ny filadministrasjonsblokk og initierer denne.
 Åpner SOSI-filen og legger navn mm. inn i fil-adm.
@@ -607,8 +607,8 @@ Leser hodet og tolker det inn i filtabellen.
 Hode blir ikke generert for nye filer. Dette kan lages med LC_PutGi, eller
 LC_NyttHode eller kopieres fra annen fil, og skrives med LC_WsGr
 eller LC_WxGr.
-Parametre:
-Type    Navn   I/U  Forklaring
+Parameters:
+Type    Name   I/O  Explanation
 --------------------------------------------------------------------
 char   *fil        i   Filnavn inkl. sti og fil-type
                        (Hvis fil-type mangler forutsettes  .SOS)
@@ -657,10 +657,10 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
 <A ID="LC_CloseSos"NAME="LC_CloseSos"></A><H2>LC_CloseSos</H2>
 <BIG><I><B>Steng SOSI-fil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Stenger en SOSI-fil, og fjerner den fra basen.
-Parametre:
-Type        Navn   I/U  Forklaring
+Parameters:
+Type        Name   I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM  *pFil     i   Peker til FilAdm-blokk
 short       s_stat  i   Slutt-status
@@ -680,10 +680,10 @@ SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
 <A ID="LC_DelIdx"NAME="LC_DelIdx"></A><H2>LC_DelIdx</H2>
 <BIG><I><B>Sletter indeksfilene</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sletter indeksfilene for gitt SOSI-fil.
-Parametre:
-Type  Navn     I/U Forklaring
+Parameters:
+Type  Name     I/O Explanation
 --------------------------------------------------------------------------
 char *szSosFil  i  SOSI-filnavn
 Bruk:
@@ -700,15 +700,15 @@ SK_EntPnt_FYBA void LC_DelIdx(char *szSosFil)
 <A ID="LC_FcloseSos"NAME="LC_FcloseSos"></A><H2>LC_FcloseSos</H2>
 <BIG><I><B>Steng åpen SOSI-fil i filsystemet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Denne rutinen brukes til å sikre at en fil er oppdatert og stengt i filsystemet,
 slik at SOSI-filen kan leses fra andre program.
 OBS!
 Stenger bare filen i filsystemet.
 Filen er fortsatt åpen i basen.
 FYBA åpner automatisk filen på nytt når det er behov for dette.
-Parametre:
-Type        Navn    I/U   Forklaring
+Parameters:
+Type        Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM  *pFil     i   Peker til FilAdm-blokk
 Bruk:
@@ -739,11 +739,11 @@ SK_EntPnt_FYBA void LC_FcloseSos(LC_FILADM *pFil)
 <A ID="LC_GetBaOm"NAME="LC_GetBaOm"></A><H2>LC_GetBaOm</H2>
 <BIG><I><B>Hent baseområde</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter baseområdet for aktuell base (Sum av filhodene).
 Sekvensielle filer regnes ikke med.
-Parametre:
-Type           Navn    I/U   Forklaring
+Parameters:
+Type           Name    I/O   Explanation
 --------------------------------------------------------------------------
 unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
                               LC_FRAMGR og /eller LC_BAKGR
@@ -768,11 +768,11 @@ SK_EntPnt_FYBA short LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,dou
 <A ID="LC_GetFiOm"NAME="LC_GetFiOm"></A><H2>LC_GetFiOm</H2>
 <BIG><I><B>Hent område fra fil-hode</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Hent område for en SOSI-fil i basen.
 Fungerer ikke mot sekvensielle filer.
-Parametre:
-Type       Navn  I/U  Forklaring
+Parameters:
+Type       Name  I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM *pFil   i   Peker til FilAdm
 double     nva    u   Nedre venstre øst
@@ -794,10 +794,10 @@ SK_EntPnt_FYBA short LC_GetFiOm(LC_FILADM *pFil,double *nva,double *nvn,double *
 <A ID="LC_GetFiNr"NAME="LC_GetFiNr"></A><H2>LC_GetFiNr</H2>
 <BIG><I><B>Get fil nummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker alle filer i aktuell base om noen av den har det gitte filnavnet.
-Parametre:
-Type        Navn     I/U  Forklaring
+Parameters:
+Type        Name     I/O  Explanation
 --------------------------------------------------------------------------
 char        fil_navn  i   Filnavn
 LC_FILADM  *pFil      r   Peker til FilAdm for filen. (NULL = ukjent fil)
@@ -815,13 +815,13 @@ SK_EntPnt_FYBA LC_FILADM *LC_GetFiNr(const char *fil_navn)
 <A ID="LC_GetFiNa"NAME="LC_GetFiNa"></A><H2>LC_GetFiNa</H2>
 <BIG><I><B>Hent filnavn</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter filnavnet for en fil i basen. Fungerer både for basefiler
 og for sekvensielle filer.
 OBS! Hvis du skal endre på filnavnet må du først kopiere det 
      til en lokale varialel.
-Parametre:
-Type        Navn      I/U   Forklaring
+Parameters:
+Type        Name      I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM  *pFil       i    Peker til FilAdm
 char       *fil_navn   r    Peker til filnavn 
@@ -839,11 +839,11 @@ SK_EntPnt_FYBA char *LC_GetFiNa(LC_FILADM *pFil)
 <A ID="LC_GetTegnsett"NAME="LC_GetTegnsett"></A><H2>LC_GetTegnsett</H2>
 <BIG><I><B>Finner tegnsett</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finne tegnsett i ginfo i aktuell gruppe.
 OBS! Forutsetter at aktuell gruppe er et SOSI-filhode.
-Parametre:
-Type    Navn       I/U  Forklaring
+Parameters:
+Type    Name       I/O  Explanation
 --------------------------------------------------------------------------
 short  *psTegnsett  u   Tegnsett, konstanter definert:
                            TS_DOSN8   = DOS norsk 8-bits(standardverdi)
@@ -867,10 +867,10 @@ SK_EntPnt_FYBA short LC_GetTegnsett(short *psTegnsett)
 <A ID="LC_InqLag"NAME="LC_InqLag"></A><H2>LC_InqLag</H2>
 <BIG><I><B>Finn hvilet lag aktuell gruppe tilhører</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn hvilket lag aktuell gruppe tilhører.
-Parametre:
-Type            Navn    I/U   Forklaring
+Parameters:
+Type            Name    I/O   Explanation
 --------------------------------------------------------------------------
 unsigned short *usLag    u    "Lag":  LC_FRAMGR eller LC_BAKGR
 short           status   r    UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
@@ -888,10 +888,10 @@ SK_EntPnt_FYBA short LC_InqLag(unsigned short *usLag)
 <A ID="LC_InqFilLag"NAME="LC_InqFilLag"></A><H2>LC_InqFilLag</H2>
 <BIG><I><B>Finn hvilet lag en fil tilhører</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn hvilket lag en fil tilhører.
-Parametre:
-Type            Navn    I/U   Forklaring
+Parameters:
+Type            Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM      *pFil     i    Filpeker
 unsigned short  usLag    r    "Lag":  LC_FRAMGR eller LC_BAKGR
@@ -909,10 +909,10 @@ SK_EntPnt_FYBA unsigned short LC_InqFilLag(LC_FILADM *pFil)
 <A ID="LC_SetFilLag"NAME="LC_SetFilLag"></A><H2>LC_SetFilLag</H2>
 <BIG><I><B>Velg hvilet lag en fil tilhører</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Velg hvilket lag en fil tilhører.
-Parametre:
-Type            Navn    I/U   Forklaring
+Parameters:
+Type            Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM      *pFil     i    Filpeker
 unsigned short  usLag    i    "Lag":  LC_FRAMGR eller LC_BAKGR
@@ -930,10 +930,10 @@ SK_EntPnt_FYBA void LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag)
 <A ID="LC_FiLastGr"NAME="LC_FiLastGr"></A><H2>LC_FiLastGr</H2>
 <BIG><I><B>Finn siste gruppe i filen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner gruppenummer for siste gruppe i filen.
-Parametre:
-Type       Navn  I/U   Forklaring
+Parameters:
+Type       Name  I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM *pFil   i    Peker til FilAdm
 bgr        long   r    Gruppenummer
@@ -951,10 +951,10 @@ SK_EntPnt_FYBA long LC_FiLastGr(LC_FILADM *pFil)
 <A ID="LC_ErFilBase"NAME="LC_ErFilBase"></A><H2>LC_ErFilBase</H2>
 <BIG><I><B>Sjekker om en fil er i basen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om en fil er i basen.
-Parametre:
-Type    Navn   I/U  Forklaring
+Parameters:
+Type    Name   I/O  Explanation
 --------------------------------------------------------------------
 char   *fil     i   Filnavn inkl. sti og fil-type
                     (Hvis fil-type mangler forutsettes  .SOS)
@@ -974,10 +974,10 @@ SK_EntPnt_FYBA short LC_ErFilBase(const char *fil)
 <A ID="LC_ErKoordsysLik"NAME="LC_ErKoordsysLik"></A><H2>LC_ErKoordsysLik</H2>
 <BIG><I><B>Sjekker KOORDSYS</I></B></BIG><PRE>
 =======================================================================
-Formål:
+Purpose:
 Sjekk at alle filene i basen har samme koordinatsystem.
-Parametre:
-Type    Navn   I/U  Forklaring
+Parameters:
+Type    Name   I/O  Explanation
 -----------------------------------------------------------------------
 short   status  r   Status: UT_TRUE = KOORDSYS er lik.
                             UT_FALSE = KOORDSYS er IKKE lik.
@@ -995,10 +995,10 @@ SK_EntPnt_FYBA short LC_ErKoordsysLik(void)
 <A ID="LC_ErVertdatumLik"NAME="LC_ErVertdatumLik"></A><H2>LC_ErVertdatumLik</H2>
 <BIG><I><B>Sjekker VERT-DATUM</I></B></BIG><PRE>
 =======================================================================
-Formål:
+Purpose:
 Sjekk at alle filene i basen har samme VERT-DATUM.
-Parametre:
-Type    Navn   I/U  Forklaring
+Parameters:
+Type    Name   I/O  Explanation
 -----------------------------------------------------------------------
 short   status  r   Status: UT_TRUE = VERT-DATUM er lik.
                             UT_FALSE = VERT-DATUM er IKKE lik.
@@ -1016,13 +1016,13 @@ SK_EntPnt_FYBA short LC_ErVertdatumLik(void)
 <A ID="LC_Backup"NAME="LC_Backup"></A><H2>LC_Backup</H2>
 <BIG><I><B>Lag backup av gitt SOSI-fil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Lag backup av gitt SOSI-fil.
 Kopien legges på en underkatlog med navn "Backup" under den katalogen
 SOSI-filen ligger på. Kopien navnes "Filnavn.nnn" der nnn er et
 fortløpende nummer fra 000 og oppover. Det første ledige numret blir brukt.
-Parametre:
-Type         Navn          I/U  Forklaring
+Parameters:
+Type         Name          I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM   *pFil           i   Filpeker
 char        *pszBackupPath  i   Katalognavn for lagring av backup.
@@ -1042,13 +1042,13 @@ SK_EntPnt_FYBA short LC_Backup(LC_FILADM *pFil, const char *pszBackupPath)
 <A ID="LC_GetNgisLag"NAME="LC_GetNgisLag"></A><H2>LC_GetNgisLag</H2>
 <BIG><I><B>Hent NGIS-LAG </I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter NGIS-LAG for gitt fil.
 Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 strengen må den kopieres over til egen streng. (Bruk strcpy).
-Parametre:
-Type       Navn    I/U  Forklaring
+Parameters:
+Type       Name    I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM *pFil     i   Fil det ønskes opplsninger om.
 char*  pszNgisLag   r   NGIS-lag. 
@@ -1068,12 +1068,12 @@ SK_EntPnt_FYBA char* LC_GetNgisLag(LC_FILADM *pFil)
 <A ID="LC_SetFilType"NAME="LC_SetFilType"></A><H2>LC_SetFilType</H2>
 <BIG><I><B>Setter filtype for en sosifil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Setter filtype for en fil.
 Denne rutinen er primært tenkt brukt i GabEdit hvor det er behov for å 
 definere flere typer arbeidsfil.
-Parametre:
-Type         Navn   I/U  Forklaring
+Parameters:
+Type         Name   I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM *  pFil	   i   Peker til filen
 short        type    i   Filtypen som skal settes
@@ -1105,10 +1105,10 @@ SK_EntPnt_FYBA void LC_SetFilType(LC_FILADM *pFil, short sType)
 <A ID="LC_GetFilType"NAME="LC_GetFilType"></A><H2>LC_GetFilType</H2>
 <BIG><I><B>Henter filtype for en sosifil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner filtypen for en fil.
-Parametre:
-Type         Navn   I/U  Forklaring
+Parameters:
+Type         Name   I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM *  pFil	   i   Peker til filen
 short        type    r   Filtypen som skal settes
@@ -1140,11 +1140,11 @@ SK_EntPnt_FYBA short LC_GetFilType(LC_FILADM *pFil)
 <A ID="LC_ErLik_Avrundet"NAME="LC_ErLik_Avrundet"></A><H2>LC_ErLik_Avrundet</H2>
 <BIG><I><B>Rund av og sjekk om sammenfallende punkt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Runder av til valgt enhet, og sjekker om de to punktene er sammenfallende. 
 (Avviket er mindre enn 1/10 enhet både nord og øst)
-Parametre:
-Type     Navn    I/U Forklaring
+Parameters:
+Type     Name    I/O Explanation
 ---------------------------------------------------------------------------
 double   dA1      i  P1
 double   dN1      i
@@ -1167,12 +1167,12 @@ SK_EntPnt_FYBA bool LC_ErLik_Avrundet(double dA1,double dN1,double dA2, double d
 <A ID="LC_ErLik_IkkeAvrundet"NAME="LC_ErLik_IkkeAvrundet"></A><H2>LC_ErLik_IkkeAvrundet</H2>
 <BIG><I><B>Sjekk om sammenfallende punkt (uten avrunding)</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om de to punktene er sammenfallende innen gitt nøyaktighet. 
 Det skjer ingen avrunding av koordinatene før sammenligningen.
 (Avviket er mindre enn 1/10 enhet både nord og øst)
-Parametre:
-Type     Navn    I/U Forklaring
+Parameters:
+Type     Name    I/O Explanation
 ---------------------------------------------------------------------------
 double   dA1      i  P1
 double   dN1      i
@@ -1195,10 +1195,10 @@ SK_EntPnt_FYBA bool LC_ErLik_IkkeAvrundet(double dA1,double dN1,double dA2, doub
 <A ID="LC_ErReferert"NAME="LC_ErReferert"></A><H2>LC_ErReferert</H2>
 <BIG><I><B>Sjekk om gruppe er referert</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om aktuell gruppe er referert fra andre grupper.
-Parametre:
-Type  Navn      I/U Forklaring
+Parameters:
+Type  Name      I/O Explanation
 ---------------------------------------------------------------------------
 bool  bReferert  r  Det finnes referanser til gruppen
 Bruk:
@@ -1220,10 +1220,10 @@ SK_EntPnt_FYBA bool LC_ErReferert(void)
 <A ID="LC_GetGrNr"NAME="LC_GetGrNr"></A><H2>LC_GetGrNr</H2>
 <BIG><I><B>Hent gruppe-nummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter gruppenummer for aktuell gruppe.
-Parametre:
-Type    Navn     I/U   Forklaring
+Parameters:
+Type    Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR * pBgr      iu   Peker til gruppestruktur der gruppenummer lagres
 short   status    r    Status  UT_TRUE=OK, UT_FALSE=ingen aktuell gruppe
@@ -1241,10 +1241,10 @@ SK_EntPnt_FYBA short LC_GetGrNr(LC_BGR * pBgr)
 <A ID="LC_GetGrPara"NAME="LC_GetGrPara"></A><H2>LC_GetGrPara</H2>
 <BIG><I><B>Hent gruppe-parametre</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter diverse opplysninger om aktuell gruppe.
-Parametre:
-Type    Navn   I/U   Forklaring
+Parameters:
+Type    Name   I/O   Explanation
 ------------------------------------------------------------------------
 short   *ngi    u    Antall linjer GINFO
 long    *nko    u    Antall koordinater
@@ -1273,10 +1273,10 @@ SK_EntPnt_FYBA short LC_GetGrPara(short *ngi,long *nko,unsigned short *info)
 <A ID="LC_GetGrParaBgr"NAME="LC_GetGrParaBgr"></A><H2>LC_GetGrParaBgr</H2>
 <BIG><I><B>Hent gruppe-parametre for gruppe</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter diverse opplysninger om gitt gruppenummer.
-Parametre:
-Type            Navn I/U  Forklaring
+Parameters:
+Type            Name I/O  Explanation
 -----------------------------------------------------------------------------
 LC_BGR *         pBgr  i   Gruppenummer det ønskes opplysninger om.
 short          *ngi   u   Antall linjer GINFO  (0=sletta eller ulovlig nummer)
@@ -1306,10 +1306,10 @@ SK_EntPnt_FYBA short LC_GetGrParaBgr(LC_BGR * pBgr,short *ngi,long *nko,unsigned
 <A ID="LC_GetGrFi"NAME="LC_GetGrFi"></A><H2>LC_GetGrFi</H2>
 <BIG><I><B>Hent gruppe-filnr</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter peker til FilAdm for aktuell gruppe.
-Parametre:
-Type         Navn    I/U   Forklaring
+Parameters:
+Type         Name    I/O   Explanation
 -----------------------------------------------------------------------------
 LC_FILADM * *ppFil    u   Peker til FilAdm-peker
 short        status   r   UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
@@ -1327,11 +1327,11 @@ SK_EntPnt_FYBA short LC_GetGrFi(LC_FILADM **ppFil)
 <A ID="LC_SetEndringsstatus"NAME="LC_SetEndringsstatus"></A><H2>LC_SetEndringsstatus</H2>
 <BIG><I><B>Setter endringsstatus for aktuell gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Setter endringsstatus for aktuell gruppe.
 NB! Denne rutinen bør normalt ikke brukes av vanlige klient-program!
-Parametre:
-Type   Navn      I/U  Forklaring
+Parameters:
+Type   Name      I/O  Explanation
 --------------------------------------------------------------------------
 short  sStatus    i   Kode for endring:
                         END_UENDRA  0   Ikke endra
@@ -1356,9 +1356,9 @@ SK_EntPnt_FYBA void LC_SetEndringsstatus(short sStatus)
 <A ID="LC_NyttHode"NAME="LC_NyttHode"></A><H2>LC_NyttHode</H2>
 <BIG><I><B>Lager nytt hode</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn et standard SOSI-filhode i ginfo i aktuell gruppe.
-Parametre:
+Parameters:
     ingen
 Bruk:
     LC_NyttHode();
@@ -1374,10 +1374,10 @@ SK_EntPnt_FYBA void LC_NyttHode(void)
 <A ID="LC_TestHode"NAME="LC_TestHode"></A><H2>LC_TestHode</H2>
 <BIG><I><B>Tester SOSI-hodet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker at ginfo i aktuell gruppe er et lovlig SOSI-filhode.
-Parametre:
- Type    Navn    I/U   Forklaring
+Parameters:
+ Type    Name    I/O   Explanation
 --------------------------------------------------------------------------
  short   ist      r    status: UT_TRUE=OK, UT_FALSE=feil
 Bruk:
@@ -1394,11 +1394,11 @@ SK_EntPnt_FYBA short LC_TestHode(void)
 <A ID="LC_GetOmr"NAME="LC_GetOmr"></A><H2>LC_GetOmr</H2>
 <BIG><I><B>Finner ..OMRÅDE i hodet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut område fra ginfo i aktuell gruppe.
 OBS! Forutsetter at aktuell gruppe er et SOSI-filhode.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 double  *nv_a       u    Område
 double  *nv_n       u
@@ -1419,13 +1419,13 @@ SK_EntPnt_FYBA short LC_GetOmr(double *nv_a,double *nv_n,double *oh_a,double *oh
 <A ID="LC_PutOmr"NAME="LC_PutOmr"></A><H2>LC_PutOmr</H2>
 <BIG><I><B>Legger inn ..OMRÅDE i hodet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn område i ginfo i aktuell gruppe.
 Hvis område ikke har noen utstrekning justeres
 dette med 1 meter i hver retning. 
 OBS! Forutsetter at aktuell gruppe er et SOSI-filhode av ny type.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 double   nv_a       i    Område
 double   nv_n       i
@@ -1446,14 +1446,14 @@ SK_EntPnt_FYBA short LC_PutOmr(double nv_a,double nv_n,double oh_a,double oh_n)
 <A ID="LC_GetTrans"NAME="LC_GetTrans"></A><H2>LC_GetTrans</H2>
 <BIG><I><B>Finner ..TRANSPAR i hodet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut transformasjonsparametrene fra ginfo i aktuell gruppe.
 Forutsetter at aktuell gruppe er et SOSI-filhode.
 OBS! Denne rutinen opprettholdes bare for bakoverkompatibilitet.
      For nye programmer bør LC_GetTransEx benyttes. LC_GetTransEx er
      kompatibel med nye versjoner av SOSI.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 short   *koosys     u    Koordinatsystem
 double  *origo_a    u    Origo øst
@@ -1477,7 +1477,7 @@ SK_EntPnt_FYBA short LC_GetTrans(short *koosys,double *origo_a,double *origo_n,d
 <A ID="LC_GetTransEx"NAME="LC_GetTransEx"></A><H2>LC_GetTransEx</H2>
 <BIG><I><B>Henter ..TRANSPAR fra hodet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut innholdet under ..TRANSPAR fra ginfo i aktuell gruppe.
 OBS! Forutsetter at aktuell gruppe er et SOSI-filhode.
 Må velge mellom KOORDSYS, TRANSSYS eller GEOSYS. Kun en av disse kan benyttes i filhodet. 
@@ -1485,8 +1485,8 @@ KOORDSYS er den mest vanlige måte å definere referansesystem.
 GEOKOORD skal benyttes for GEOSYS og for TRANSSYS 
 Må velge mellom VERT-DATUM eller VERT-INT.
 VERT-DATUM er den mest vanlige beskrivelsesmåten. 
-Parametre:
-Type            Navn      I/U   Forklaring
+Parameters:
+Type            Name      I/O   Explanation
 --------------------------------------------------------------------------
 unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
                                [Ut]  Viser hvilke deler av TRANSPAR som er funnet/hentet.
@@ -1521,14 +1521,14 @@ SK_EntPnt_FYBA short LC_GetTransEx(unsigned short *pusMaske, LC_TRANSPAR * pTran
 <A ID="LC_PutTrans"NAME="LC_PutTrans"></A><H2>LC_PutTrans</H2>
 <BIG><I><B>Legger inn ..TRANSPAR i hodet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn transformasjonsparametrene i ginfo i aktuell gruppe.
 Forutsetter at aktuell gruppe er et SOSI-filhode versjon 3.x.
 OBS! Denne rutinen opprettholdes bare for bakoverkompatibilitet.
      For nye programmer bør LC_PutTransEx benyttes. LC_PutTransEx er
      kompatibel med nye versjoner av SOSI.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 short    koosys     i    Koordinatsystem
 double   origo_a    i    Origo øst
@@ -1552,7 +1552,7 @@ SK_EntPnt_FYBA short LC_PutTrans(short koosys,double origo_a,double origo_n,
 <A ID="LC_PutTransEx"NAME="LC_PutTransEx"></A><H2>LC_PutTransEx</H2>
 <BIG><I><B>Legger inn ..TRANSPAR i hodet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn innholdet under ..TRANSPAR i ginfo i aktuell gruppe.
 OBS! Forutsetter at aktuell gruppe er et SOSI-filhode versjon 3.x.
 Må velge mellom KOORDSYS, TRANSSYS eller GEOSYS.
@@ -1574,8 +1574,8 @@ Følgende kompaktifisering brukes:
     ...VERT-DATUM <HØYDE-REF> <DYBDE-REF> <FRISEIL-REF> <HØYDE-TYPE> 
     ...VERT-INT <H-REF-INT> <D-REF-INT> <F-REF-INT> 
     ...VERT-DELTA <V-DELTA-MIN> <V-DELTA-MAX>
-Parametre:
-Type           Navn    I/U  Forklaring
+Parameters:
+Type           Name    I/O  Explanation
 --------------------------------------------------------------------------
 unsigned short usMaske  i   Maske som styrer hvilke deler av TRANSPAR som brukt
                             Følgende konstanter er definert:       
@@ -1617,12 +1617,12 @@ SK_EntPnt_FYBA short LC_PutTransEx(unsigned short usMaske, LC_TRANSPAR * pTrans)
 <A ID="HO_New"NAME="HO_New"></A><H2>HO_New</H2>
 <BIG><I><B>Lager nytt hode</I></B></BIG><PRE>
  =========================================================================
-Formål:
+Purpose:
 Genererer et nytt SOSI-filhode.
 Hvis område ikke har noen utstrekning justeres
 dette med 1 meter i hver retning. 
-Parametre:
-Type     Navn         I/U    Forklaring
+Parameters:
+Type     Name         I/O    Explanation
 --------------------------------------------------------------------------
 char    *pszFil        i    Fullstendig filnavn
 short    koosys        i    Koordinatsystem
@@ -1654,10 +1654,10 @@ SK_EntPnt_FYBA short HO_New(const char *pszFil,short koosys,double origo_a,doubl
 <A ID="HO_TestSOSI"NAME="HO_TestSOSI"></A><H2>HO_TestSOSI</H2>
 <BIG><I><B>Tester SOSI-filen</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Sjekker at filen er en SOSI-fil, og finner posisjonen for .SLUTT.
-Parametre:
-Type      Navn       I/U   Forklaring
+Parameters:
+Type      Name       I/O   Explanation
 -----------------------------------------------------------------------------
 char     *pszFil      i    Fullstendig filnavn
 UT_INT64 *sluttpos    u    Posisjon for .SLUTT
@@ -1677,11 +1677,11 @@ SK_EntPnt_FYBA short HO_TestSOSI(const char *pszFil,UT_INT64 *sluttpos)
 <A ID="HO_GetKvalitet"NAME="HO_GetKvalitet"></A><H2>HO_GetKvalitet</H2>
 <BIG><I><B>Finner kvalitetsopplysninger</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Finne kvalitetsopplysninger i filhode.
 (Ikke aktuellt etter SOSI v. 4.00.)
-Parametre:
-Type    Navn              I/U  Forklaring
+Parameters:
+Type    Name              I/O  Explanation
 -----------------------------------------------------------------------------
 char   *pszFil             i  Fullstendig filnavn
 short  *psMetode           u  Hvordan data er registrert.
@@ -1712,10 +1712,10 @@ SK_EntPnt_FYBA short HO_GetKvalitet(const char *pszFil,short *psMetode,long *plN
 <A ID="HO_GetTegnsett"NAME="HO_GetTegnsett"></A><H2>HO_GetTegnsett</H2>
 <BIG><I><B>Finner tegnsett</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finne tegnsett i filhodet.
-Parametre:
-Type     Navn      I/U  Forklaring
+Parameters:
+Type     Name      I/O  Explanation
 --------------------------------------------------------------------------
 char   *pszFil      i   Fullstendig filnavn
 short  *psTegnsett  u   Tegnsett, konstanter definert:
@@ -1740,13 +1740,13 @@ SK_EntPnt_FYBA short HO_GetTegnsett(const char *pszFil,short *psTegnsett)
 <A ID="HO_GetVal"NAME="HO_GetVal"></A><H2>HO_GetVal</H2>
 <BIG><I><B>Finn verdien til et SOSI-navn</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter parametrene til et SOSI-navn.
 Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 strengen må den kopieres over til egen streng. (Bruk strcpy).
-Parametre:
-Type     Navn        I/U  Forklaring
+Parameters:
+Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 char    *pszFil       i   Fullstendig filnavn
 char    *sosi_navn    i   SOSI-navn det skal finnes verdi til
@@ -1769,13 +1769,13 @@ SK_EntPnt_FYBA char *HO_GetVal(const char *pszFil,char *sosi_navn,short *sett_nr
 <A ID="HO_GetTrans"NAME="HO_GetTrans"></A><H2>HO_GetTrans</H2>
 <BIG><I><B>Finner .TRANSPAR i hodet</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter transformasjonsparametrene fra filhodet.
 OBS! Denne rutinen opprettholdes bare for bakoverkompatibilitet.
      For nye programmer bør HO_GetTransEx benyttes. HO_GetTransEx er
      kompatibel med nye versjoner av SOSI.
-Parametre:
-Type     Navn       I/U   Forklaring
+Parameters:
+Type     Name       I/O   Explanation
 -----------------------------------------------------------------------------
 char    *pszFil      i   Fullstendig filnavn
 short   *koosys      u   Koordinatsystem
@@ -1800,10 +1800,10 @@ SK_EntPnt_FYBA short HO_GetTrans(const char *pszFil,short *koosys,double *origo_
 <A ID="HO_GetTransEx"NAME="HO_GetTransEx"></A><H2>HO_GetTransEx</H2>
 <BIG><I><B>Finner .TRANSPAR i hodet</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter ut innholdet under ..TRANSPAR fra fra filhodet.
-Parametre:
-Type            Navn      I/U  Forklaring
+Parameters:
+Type            Name      I/O  Explanation
 --------------------------------------------------------------------------
 char           *pszFil     i   Fullstendig filnavn
 unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal hentes
@@ -1839,10 +1839,10 @@ SK_EntPnt_FYBA short HO_GetTransEx(const char *pszFil,unsigned short *pusMaske, 
 <A ID="HO_GetOmr"NAME="HO_GetOmr"></A><H2>HO_GetOmr</H2>
 <BIG><I><B>Finner ..OMRÅDE i hodet</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter områdeangivelsen fra filhodet.
-Parametre:
-Type     Navn        I/U   Forklaring
+Parameters:
+Type     Name        I/O   Explanation
 -----------------------------------------------------------------------------
 char    *pszFil      i   Fullstendig filnavn
 double  *nv_a        u
@@ -1864,10 +1864,10 @@ SK_EntPnt_FYBA short HO_GetOmr(const char * pszFil,double *nv_a,double *nv_n,dou
 <A ID="HO_SjekkTegnsett"NAME="HO_SjekkTegnsett"></A><H2>HO_SjekkTegnsett</H2>
 <BIG><I><B>Sjekker tegnsett på SOSI-filen</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Sjekker faktisk tegnsett i .HODE.
-Parametre:
-Type    Navn       I/U   Forklaring
+Parameters:
+Type    Name       I/O   Explanation
 -----------------------------------------------------------------------------
 char   *pszFil      i   Fullstendig filnavn
 short  *psTegnsett  u   Tegnsett, konstanter definert:
@@ -1902,15 +1902,15 @@ SK_EntPnt_FYBA short HO_SjekkTegnsett(const char *pszFil,short *psTegnsett)
 <A ID="LC_NyGr"NAME="LC_NyGr"></A><H2>LC_NyGr</H2>
 <BIG><I><B>Ny gruppe i basen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Lager en ny gruppe i basen, og tildeler serienummer.
 Sjekker at gruppenavnet er lovlig i denne versjon av FYBA.
 Ved feil navn vil ".LINJE" bli valgt.
 Legger inn gruppenavn i buffer.
 Gruppen blir "aktuell" gruppe.
 Sjekker ledig plass både for indeks-fil og sosi-fil.
-Parametre:
-Type       Navn    I/U   Forklaring
+Parameters:
+Type       Name    I/O   Explanation
 -----------------------------------------------------------------------------
 LC_FILADM  *pFil    i    Peker til FilAdm
 char       *sosi    i    Gruppenavn (Eks. ".KURVE")
@@ -1941,13 +1941,13 @@ SK_EntPnt_FYBA short LC_NyGr (LC_FILADM *pFil,char *sosi,LC_BGR * pBgr,long *snr
 <A ID="LC_RxGr"NAME="LC_RxGr"></A><H2>LC_RxGr</H2>
 <BIG><I><B>Les gruppe fra base</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Velger en gruppe som aktiv gruppe, og leser den fra SOSI-filen hvis den
 ikke er i RB fra før. (Styres også av les_sosi.)
 Hvis gruppen ikke finnes (sletta eller ulovlig gruppenummer) returneres
 ngi=0 og nko=0.
-Parametre:
-Type    Navn    I/U  Forklaring
+Parameters:
+Type    Name    I/O  Explanation
 --------------------------------------------------------------------------
 LC_BGR * pBgr     i   Peker til fil- og gruppenummer.
 short   les_sosi i   Lesemetode: Følgende konstanter er definert:
@@ -2008,13 +2008,13 @@ SK_EntPnt_FYBA short LC_RxGr(LC_BGR * pBgr,short les_sosi,short *ngi,long *nko,u
 <A ID="LC_WxGr"NAME="LC_WxGr"></A><H2>LC_WxGr</H2>
 <BIG><I><B>Skriv gruppe til base</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Skriver aktuell gruppe til tilhørende SOSI-fil.
 Brukerindeks og geografisk indeks oppdateres straks, uavhengig av kø.
 Ledig plass fram til neste gruppe blir blanket.
 Filhode blir ALLTID skrevet direkte til SOSI-filen.
-Parametre:
-Type  Navn    I/U  Forklaring
+Parameters:
+Type  Name    I/O  Explanation
 ------------------------------------------------------------------------
 short k_stat   i   Skrivemetode:  Følgende konstanter er definert:
                      SKRIV_OPTIMALT = Skriv mest effektivt kø/SOSI
@@ -2043,15 +2043,15 @@ SK_EntPnt_FYBA short LC_WxGr(short k_stat)
 <A ID="LC_RsGr"NAME="LC_RsGr"></A><H2>LC_RsGr</H2>
 <BIG><I><B>Les gruppe sekvensielt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Leser en datagruppe fra ekstern SOSI-fil inn i aktuell gruppe i ringbuffer.
 Rutinen tilsvarer put fra brukerprogram inn i ringbufferet, men rutinen
 tildeler selv nødvendig plass..
 Gruppen beholder serienummer tildelt i LC_NyGr.
 Brukerindeks og geografisk-indeks blir ikke oppdatert.
 (Dette skjer først når gruppen skrives til basen.)
-Parametre:
-Type             Navn   I/U  Forklaring
+Parameters:
+Type             Name   I/O  Explanation
 --------------------------------------------------------------------------
 short           *rstat  iu   Lesestatus
                                Inn: 1=Les fra starten, 0=Les neste
@@ -2090,15 +2090,15 @@ SK_EntPnt_FYBA short LC_RsGr(short *rstat,LC_FILADM *pFil,short *ngi,long *nko,
 <A ID="LC_RsHode"NAME="LC_RsHode"></A><H2>LC_RsHode</H2>
 <BIG><I><B>Les filhode sekvensiellt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Leser et filhode fra ekstern SOSI-fil inn i aktuell gruppe i ringbuffer.
 Rutinen tilsvarer put fra brukerprogram inn i ringbufret, men rutinen
 tildeler selv nødvendig plass i RB.
 Denne rutinen er stort sett lik LC_RsGr, men LC_RsHode forandrer
 ikke aktuell filposisjon på den sekvensielle filen.
 Gruppen beholder serienummer hodet hadde på SOSI-filen.
-Parametre:
-Type             Navn   I/U  Forklaring
+Parameters:
+Type             Name   I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM       *pFil    i   Peker til FilAdm
 short           *ngi     u   Antall linjer GINFO
@@ -2125,10 +2125,10 @@ short LC_RsHode(LC_FILADM *pFil,short *ngi,long *nko,unsigned short *info)
 <A ID="LC_WsGr"NAME="LC_WsGr"></A><H2>LC_WsGr</H2>
 <BIG><I><B>Skriv gruppe sekvensiellt</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Skriver aktuell gruppe til ekstern, sekvensiell SOSI-fil.
-Parametre:
-Type       Navn  I/U   Forklaring
+Parameters:
+Type       Name  I/O   Explanation
 -----------------------------------------------------------------------------
 LC_FILADM *pFil   i    Peker til FilAdm
 Bruk:
@@ -2145,10 +2145,10 @@ SK_EntPnt_FYBA void LC_WsGr(LC_FILADM *pFil)
 <A ID="LC_WsGrPart"NAME="LC_WsGrPart"></A><H2>LC_WsGrPart</H2>
 <BIG><I><B>Skriv del av gruppe sekvensiellt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Skriver en del av aktuell gruppe til ekstern, sekvensiell SOSI-fil.
-Parametre:
-Type       Navn     I/U   Forklaring
+Parameters:
+Type       Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM *pFil      i    Peker til FilAdm
 long       fra_punkt i    Punktnummer for første koordinat som skal skrives.
@@ -2169,7 +2169,7 @@ SK_EntPnt_FYBA void LC_WsGrPart(LC_FILADM *pFil,long fra_punkt,long antall)
 <A ID="LC_EndreHode"NAME="LC_EndreHode"></A><H2>LC_EndreHode</H2>
 <BIG><I><B>Endre hodet på eksisterende SOSI-fil</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Skriver aktuell gruppe til starten av sekvensiell SOSI-fil.
 Det er en forutsetning at aktuell gruppe er et filhode.
 Denne rutinen er stort sett lik LC_WsGr, men LC_EndreHode forandrer ikke
@@ -2178,8 +2178,8 @@ OBS!
 Det må være nok ledig plass før neste gruppe for tilbakeskrivingen.
 Det er ikke mulig å forandre koordinatsystem, enhet eller origo på fil
 som inneholder data.
-Parametre:
-Type       Navn      I/U   Forklaring
+Parameters:
+Type       Name      I/O   Explanation
 -----------------------------------------------------------------------------
 LC_FILADM *pFil       i    Peker til FilAdm
 short      oppdatert  r    Skrivestatus (1=OK, 0=Det er ikke plass
@@ -2206,15 +2206,15 @@ SK_EntPnt_FYBA short LC_EndreHode(LC_FILADM *pFil)
 <A ID="LC_DelGr"NAME="LC_DelGr"></A><H2>LC_DelGr</H2>
 <BIG><I><B>Slett gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Fjerner aktuell gruppe fra basen.
 Grupper som er tatt ut fra NGIS for oppdatering blir ikke sletta fra
 SOSI-filen, men de blir merka som sletta. (LC_SetNgisModus avgjør da om
 disse kan leses.)
 Det er ikke mulig å slette grupper fra sekvensielle filer, eller grupper
 som er brukt i flater.
-Parametre:
-Type   Navn    I/U   Forklaring
+Parameters:
+Type   Name    I/O   Explanation
 --------------------------------------------------------------------------
 short  sStatus  r    Status:  UT_TRUE  = OK
                               UT_FALSE = feil, ikke sletta
@@ -2240,9 +2240,9 @@ SK_EntPnt_FYBA short LC_DelGr(void)
 <A ID="LC_Save"NAME="LC_Save"></A><H2>LC_Save</H2>
 <BIG><I><B>Tøm skrivekøa</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Skriver gruppene som ligger i skrivekø ut til SOSI-fil.
-Parametre: ingen
+Parameters: ingen
 Bruk:
 LC_Save();
    ==========================================================================
@@ -2274,10 +2274,10 @@ med rutiner som LC_PuGi og LC_PuTK
 <A ID="LC_InsGiL"NAME="LC_InsGiL"></A><H2>LC_InsGiL</H2>
 <BIG><I><B>Skyt inn GINFO-linjer</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Skyter inn linjer GINFO-delen i en gruppe.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 -----------------------------------------------------------------------------
 short    linje    i    Linjenummer linjen skal skytes inn forran.
                        (Lovlig: 1  til  ngi+1)
@@ -2297,10 +2297,10 @@ SK_EntPnt_FYBA short LC_InsGiL(short linje, short antall)
 <A ID="LC_AppGiL"NAME="LC_AppGiL"></A><H2>LC_AppGiL</H2>
 <BIG><I><B>Heng på en GINFO-linje</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henger på en linje i GINFO-delen i en gruppe.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 -----------------------------------------------------------------------------
 short    ngi      r    Antall GINFO-linjer i gruppen etter utvidelsen.
                        (Linjenumret på den tilføyde linjen.)
@@ -2318,10 +2318,10 @@ SK_EntPnt_FYBA short LC_AppGiL()
 <A ID="LC_InsKoL"NAME="LC_InsKoL"></A><H2>LC_InsKoL</H2>
 <BIG><I><B>Skyt inn koordinatlinjer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Skyter inn linjer koordinatdelen i en gruppe.
-Parametre:
-Type    Navn    I/U   Forklaring
+Parameters:
+Type    Name    I/O   Explanation
 --------------------------------------------------------------------------
 long    linje    i    Linjenummer linjen skal skytes inn forran.
                        (Lovlig: 1  til  nko+1)
@@ -2341,10 +2341,10 @@ SK_EntPnt_FYBA long LC_InsKoL(long linje, long antall)
 <A ID="LC_AppKoL"NAME="LC_AppKoL"></A><H2>LC_AppKoL</H2>
 <BIG><I><B>Heng på en koordinatlinje</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henger på en linje i koordinatdelen i en gruppe.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 long    nko      r    Antall koordinater i gruppen etter utvidelsen.
 Bruk:
@@ -2361,10 +2361,10 @@ SK_EntPnt_FYBA long LC_AppKoL()
 <A ID="LC_DelGiL"NAME="LC_DelGiL"></A><H2>LC_DelGiL</H2>
 <BIG><I><B>Fjern GINFO-linjer</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Fjerner linjer i GINFO-delen i en gruppe.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 -----------------------------------------------------------------------------
 short    linje    i    Første linjenummer som skal fjernes.
                        (Lovlig: 2  til  ngi)
@@ -2384,10 +2384,10 @@ SK_EntPnt_FYBA short LC_DelGiL(short linje, short antall)
 <A ID="LC_DelKoL"NAME="LC_DelKoL"></A><H2>LC_DelKoL</H2>
 <BIG><I><B>Fjern koordinatlinjer</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Fjerner linjer koordinatdelen i en gruppe.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 -----------------------------------------------------------------------------
 long    linje    i    Første linje som skal fjernes.
                        (Lovlig: 1  til  nko)
@@ -2429,7 +2429,7 @@ OBS:  Etter at du er ferdig mned å legge inn nytt innhold må du
 <A ID="LC_CopyGr"NAME="LC_CopyGr"></A><H2>LC_CopyGr</H2>
 <BIG><I><B>Kopier gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Kopierer fra en annen gruppe inn i aktuell gruppe i buffer.
 Rutinen tilsvarer put fra brukerprogram inn i bufret, men rutinen
 tildeler selv nødvendig plass.
@@ -2439,8 +2439,8 @@ Enhet blir oppdatert slik at opprinnelig enhet blir bevart. Om nødvendig
 legges det inn ..ENHET i GINFO.
 Kvalitet og dato blir oppdatert hvis SOSI-VERSJON < 4.00.
 Hvis det er filhode som kopieres skjer det ingen endring av egenskaper.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR  *pBgr     i    Gruppenummer det skal kopieres fra.
 short    ngis     i    Behandling for ..NGIS-FLAGG:
@@ -2465,7 +2465,7 @@ SK_EntPnt_FYBA short LC_CopyGr (LC_BGR * pBgr,short ngis,short *ngi,long *nko,un
 <A ID="LC_CopyCoord"NAME="LC_CopyCoord"></A><H2>LC_CopyCoord</H2>
 <BIG><I><B>Kopier koordinater fra annen gruppe</I></B></BIG><PRE>
 ===========================================================================
-Formål:
+Purpose:
 Kopierer koordinater fra en annen gruppe inn i aktuell gruppe i ringbuffer.
 De kopierte koordinatene kommer som en utvidelse av gruppen.
 Rutinen tilsvarer put fra brukerprogram inn i ringbufret, men rutinen
@@ -2473,8 +2473,8 @@ tildeler selv nødvendig plass i RB.
 Geografisk-indeks blir ikke oppdatert før gruppen skrives til basen.
 Kvalitet og enhet blir automatisk oppdatert slik at gruppene ikke 
 mister informasjon.
-Parametre:
-Type    Navn     I/U   Forklaring
+Parameters:
+Type    Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_BGR *pBgr      i    Gruppenummer det skal kopieres fra.
 short   retning   i    Buffer-retning:
@@ -2506,15 +2506,15 @@ SK_EntPnt_FYBA short LC_CopyCoord(LC_BGR * pBgr,short retning,long til_linje,sho
 <A ID="LC_PutGi"NAME="LC_PutGi"></A><H2>LC_PutGi</H2>
 <BIG><I><B>Put GINFO-linje</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn GINFO-linje rent generellt.
 Dette omfatter også nytt gruppenavn (GINFO-linje 1)
 Ønsker du å endre serienummer må LC_PutSn benyttes.
 Referansenummer legges inn med LC_PutRef.
 Blanke på starten og slutten blir skrella vekk, og SOSI-navnet blir
 konvertert til "store" bokstaver, .ellers lagres det slik det er.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 char     *ginfo   i    GINFO-streng avslutta med '/0'
@@ -2532,12 +2532,12 @@ SK_EntPnt_FYBA void LC_PutGi(short lin_nr, const char *pszGinfo)
 <A ID="LC_PutGP"NAME="LC_PutGP"></A><H2>LC_PutGP</H2>
 <BIG><I><B>Put GINFO-parameter</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn et SOSI-navn med verdi.
 Denne rutinen kan brukes til å legge inn ginfo med nytt SOSI-navn.
 Rutinen kan endre antall ginfo-linjer.
-Parametre:
-Type     Navn        I/U   Forklaring
+Parameters:
+Type     Name        I/O   Explanation
 --------------------------------------------------------------------------
 char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 char     verdi        i    Streng som skal legges inn.
@@ -2557,11 +2557,11 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
 <A ID="LC_AppGP"NAME="LC_AppGP"></A><H2>LC_AppGP</H2>
 <BIG><I><B>Legg til GINFO-parameter</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger til et SOSI-navn med verdi i GINFO.
 Lik LC_PutGP, men legger alltid til ny linje i ginfo.
-Parametre:
-Type     Navn        I/U   Forklaring
+Parameters:
+Type     Name        I/O   Explanation
 --------------------------------------------------------------------------
 char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 char     verdi        i    Streng som skal legges inn.
@@ -2581,12 +2581,12 @@ SK_EntPnt_FYBA short LC_AppGP(const char *sosi_navn,const char *verdi,short *lin
 <A ID="LC_UpdateGP"NAME="LC_UpdateGP"></A><H2>LC_UpdateGP</H2>
 <BIG><I><B>Endre GINFO-parameter</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn parametren til et SOSI-navn.
 Rutinen handterer at det er flere SOSI-navn på samme linje.
 OBS! Denne rutinen kan ikke brukes til å legge inn nytt SOSI-navn.
-Parametre:
-Type     Navn        I/U   Forklaring
+Parameters:
+Type     Name        I/O   Explanation
 --------------------------------------------------------------------------
 short    linje_nr     i    Linjenummer som skal endres.
 char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
@@ -2606,15 +2606,15 @@ SK_EntPnt_FYBA short LC_UpdateGP(short linje_nr,const char *sosi_navn,const char
 <A ID="LC_UpdateGiEnhet"NAME="LC_UpdateGiEnhet"></A><H2>LC_UpdateGiEnhet</H2>
 <BIG><I><B>Oppdater ..ENHET i GINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Setter koordinat-enhet for gruppen.
 Oppdaterer ..ENHET / ..ENHET-H / ..ENHET-D i GINFO.
 Rutinen handterer selv tildeling eller sletting av GINFO-linje.
 Hvis verdien er lik filhodets verdi blir det ikke lagt inn verdi i GINFO.
 Enhet = 0.0 = bruk filhodets enhet, og fører til at det ikke legges inn
 i GINFO. Eventuell eksisterende linje jgernes.
-Parametre:
-Type        Navn    I/U   Forklaring
+Parameters:
+Type        Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM * pFil     i    Peker til FilAdm
 double      enhet    i    Grunnriss-enhet
@@ -2635,12 +2635,12 @@ SK_EntPnt_FYBA short LC_UpdateGiEnhet(LC_FILADM *pFil,double enhet,double enhet_
 <A ID="LC_UpdateGiKvalitet"NAME="LC_UpdateGiKvalitet"></A><H2>LC_UpdateGiKvalitet</H2>
 <BIG><I><B>Oppdaterer ..KVALITET i Ginfo</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Oppdaterer GINFO med ..KVALITET
-Parametre:
-Type       Navn            I/U  Forklaring
+Parameters:
+Type       Name            I/O  Explanation
 --------------------------------------------------------------------------
-Parametre:
+Parameters:
 LC_FILADM *pFil              i  Peker til FilAdm for sosifil kvalitet skal
                                 testes mot.
 short      sMetode           i  Metode i ..KVALITET
@@ -2665,10 +2665,10 @@ SK_EntPnt_FYBA short LC_UpdateGiKvalitet(LC_FILADM *pFil,short sMetode,long lNoy
 <A ID="LC_UpdatePiKvalitet"NAME="LC_UpdatePiKvalitet"></A><H2>LC_UpdatePiKvalitet</H2>
 <BIG><I><B>Oppdaterer ...KVALITET i Pinfo</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Oppdaterer PINFO med ...KVALITET
-Parametre:
-Type        Navn             I/U   Forklaring
+Parameters:
+Type        Name             I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM * pFil              i  Peker til FilAdm for sosifil kvalitet
                                  skal testes mot.
@@ -2696,12 +2696,12 @@ SK_EntPnt_FYBA short LC_UpdatePiKvalitet(LC_FILADM *pFil,long pnr,short sMetode,
 <A ID="LC_OppdaterEndret"NAME="LC_OppdaterEndret"></A><H2>LC_OppdaterEndret</H2>
 <BIG><I><B>Oppdater ..NGIS-FLAGG</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Oppdaterer ..NGIS-FLAGG i GINFO og ajourfører interne tabeller.
 Hvis endring = O_GINFO oppateres tabellene i forhold til
 eksisterende GINFO.
-Parametre:
-Navn     Type   I/U  Forklaring
+Parameters:
+Name     Type   I/O  Explanation
 --------------------------------------------------------------------------
 endring  short   i   Kode for endring:
                       O_GINFO   (0) = Oppdater interne tabeller i fht. GINFO
@@ -2718,21 +2718,21 @@ SK_EntPnt_FYBA void LC_OppdaterEndret(short endring)
 <HR>
 <BR>
 <BR>
-<A ID="LC_DelGiNavn"NAME="LC_DelGiNavn"></A><H2>LC_DelGiNavn</H2>
+<A ID="LC_DelGiName"NAME="LC_DelGiName"></A><H2>LC_DelGiName</H2>
 <BIG><I><B>Fjerner egenskap fra GINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Fjerner alle forekomster av gitt egenskap (SOSI-navn) fra GINFO.
-Parametre:
-Type     Navn             I/U   Forklaring
+Parameters:
+Type     Name             I/O   Explanation
 --------------------------------------------------------------------------
-char    *pszEgenskapNavn   i    SOSI-navn som skal slettes
+char    *pszEgenskapName   i    SOSI-navn som skal slettes
 short    ngi               r    Antall GINFO-linjer i gruppen etter setting
 Bruk:
-ngi = LC_DelGiNavn("..RADIUS");
+ngi = LC_DelGiName("..RADIUS");
    ==========================================================================
  
-SK_EntPnt_FYBA short LC_DelGiNavn(char *pszEgenskapNavn)
+SK_EntPnt_FYBA short LC_DelGiName(char *pszEgenskapName)
 </PRE>
 <BR>
 <BR>
@@ -2742,10 +2742,10 @@ SK_EntPnt_FYBA short LC_DelGiNavn(char *pszEgenskapNavn)
 <A ID="LC_FinnNivo"NAME="LC_FinnNivo"></A><H2>LC_FinnNivo</H2>
 <BIG><I><B>Beregn nivå</I></B></BIG><PRE>
 ==============================================================
-Formål:
+Purpose:
 Teller antall prikker i starten på egenskapsnavn.
 PARAMETERLISTE:
-Type     Navn      I/U   Merknad
+Type     Name      I/O   Merknad
 -------------------------------------------------------------
 char    *pszGinfo   i    Streng med egenskapsnavn i starten
 short    sNivo      r    Antall prikker 
@@ -2753,7 +2753,7 @@ Bruk:
 sNivo = LC_FinnNivo(pszGinfo);
   ================================================================
  
-SK_EntPnt_FYBA short LC_FinnNivo(const char * pszNavn)
+SK_EntPnt_FYBA short LC_FinnNivo(const char * pszName)
 </PRE>
 
 <BR>
@@ -2768,10 +2768,10 @@ SK_EntPnt_FYBA short LC_FinnNivo(const char * pszNavn)
 <A ID="LC_PutSn"NAME="LC_PutSn"></A><H2>LC_PutSn</H2>
 <BIG><I><B>Put Serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn nytt serienummer på aktuell gruppe.
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 long     snr      i    Serienummer
 Bruk:
@@ -2788,10 +2788,10 @@ SK_EntPnt_FYBA void LC_PutSn(long snr)
 <A ID="LC_PutRef"NAME="LC_PutRef"></A><H2>LC_PutRef</H2>
 <BIG><I><B>Legger inn referanser i GINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn et array med referanser til GINFO i aktuell gruppe.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 long     ref_array  i    Gruppenummer for refererte grupper.
                          Start øy, og slutt øy angis ved fiktive gruppenr.
@@ -2819,10 +2819,10 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
 <A ID="LC_PutTK"NAME="LC_PutTK"></A><H2>LC_PutTK</H2>
 <BIG><I><B>Put koordinat</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn et punkts koordinater (n,ø) i meter i terreng
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 double  aust       i    Øst-koordinat i meter i terreng
@@ -2841,10 +2841,10 @@ SK_EntPnt_FYBA void LC_PutTK(long punkt_nr,double aust,double nord)
 <A ID="LC_PutTH"NAME="LC_PutTH"></A><H2>LC_PutTH</H2>
 <BIG><I><B>Put høyde</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn et punkts høyde i meter i terreng
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 double  hoyde      i    Høyde i meter i terreng. Konstanten
@@ -2864,10 +2864,10 @@ SK_EntPnt_FYBA void LC_PutTH(long punkt_nr, double hoyde)
 <A ID="LC_PutTD"NAME="LC_PutTD"></A><H2>LC_PutTD</H2>
 <BIG><I><B>Put dybde</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn et punkts dybde i meter i terreng
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 double  hoyde      i    Dybde i meter i terreng. Konstanten
@@ -2892,11 +2892,11 @@ SK_EntPnt_FYBA void LC_PutTD(long punkt_nr, double dybde)
 <A ID="LC_PutKp"NAME="LC_PutKp"></A><H2>LC_PutKp</H2>
 <BIG><I><B>Put knutepunkt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn knutepunktverdi i punktet. Ny verdi skrives over eksisterende
 verdi. (Multiple KP er ikke mulig.)
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 short   kp         i    Knutepunkt (lovlig verdi 0 - SHRT_MAX)
@@ -2920,13 +2920,13 @@ SK_EntPnt_FYBA void LC_PutKp(long punkt_nr, short kp)
 <A ID="LC_PutPi"NAME="LC_PutPi"></A><H2>LC_PutPi</H2>
 <BIG><I><B>Put PINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn hele punktinformasjonen på angitte punkt
 Ny verdi skriver over eksisterende verdi.
 Verdi "" fjerner eksisterende PINFO.
 Knutepunkt legges inn med LC_PutKp.
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 char   *pinfo      i    PINFO-streng som skal legges inn
@@ -2975,14 +2975,14 @@ Det tenkes her spesiellt på kavlitetsopplysninger, dato etc.
 <A ID="LC_GetGi"NAME="LC_GetGi"></A><H2>LC_GetGi</H2>
 <BIG><I><B>Get GINFO-linje</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter en GINFO-linje som en streng rent generellt.
 Dette omfatter også serienummer og referansenummer.
 Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 strengen må den kopieres over til egen streng. (Bruk strcpy).
-Parametre:
-Type     Navn    I/U   Forklaring
+Parameters:
+Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 char    *ginfo    r    Peker til GINFO-streng avslutta med '/0'
@@ -3000,7 +3000,7 @@ SK_EntPnt_FYBA char *LC_GetGi(short lin_nr)
 <A ID="LC_GetGP"NAME="LC_GetGP"></A><H2>LC_GetGP</H2>
 <BIG><I><B>Get GINFO-parameter</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter parametrene til et SOSI-navn.
 Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
@@ -3025,8 +3025,8 @@ Komma flyttes 1 posisjon til venstre (divisjon med ti) og resultatet
 presenteres med 2 desimaler uten avrunding. Spesielt for dybdeverdier.
 Disse tilleggene kan kombineres, slik at  ..GID#2[1:2] betyr at det er
 tegn nummer 1 og 2 i det andre leddet (bruksnumret) som skal brukes.
-Parametre:
-Type     Navn        I/U   Forklaring
+Parameters:
+Type     Name        I/O   Explanation
 --------------------------------------------------------------------------
 char     sosi_navn    i    SOSI-navn det skal finnes verdi til.
                            Leddnummer, posisjon, skilletegn
@@ -3058,10 +3058,10 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
 <A ID="LC_GetSn"NAME="LC_GetSn"></A><H2>LC_GetSn</H2>
 <BIG><I><B>Get serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter serienummer for aktuell gruppe.
-Parametre:
-Type  Navn  I/U  Forklaring
+Parameters:
+Type  Name  I/O  Explanation
 --------------------------------------------------------------------
 long  snr    r   Serienr.  (INGEN_GRUPPE = ingen aktuell gruppe)
 Bruk:
@@ -3078,10 +3078,10 @@ SK_EntPnt_FYBA long LC_GetSn(void)
 <A ID="LC_GetRef"NAME="LC_GetRef"></A><H2>LC_GetRef</H2>
 <BIG><I><B>Hent referanser fra GINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut et array med referanser fra GINFO i aktuell gruppe.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    *ref_array  u    Serienr. for refererte grupper.
                          Start øy, og slutt øy angis ved fiktive gruppenr.
@@ -3106,12 +3106,12 @@ SK_EntPnt_FYBA long LC_GetRef(long *ref_array,long max_ref,short *gilin,short *r
 <A ID="LC_InqAntRef"NAME="LC_InqAntRef"></A><H2>LC_InqAntRef</H2>
 <BIG><I><B>Spørr om antall referanser</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Spørr om antall referanser i GINFO i aktuell gruppe.
 Dette kallet kan brukes til å finne hvor stor array som må allokeres før
 kall til LC_GetRef.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    ant_ref     r    Antall referanser i GINFO.
                            OBS! Start- og sluttparantes for øy blir regnet
@@ -3137,10 +3137,10 @@ SK_EntPnt_FYBA long LC_InqAntRef(void)
 <A ID="LC_InitGetRefFlate"NAME="LC_InitGetRefFlate"></A><H2>LC_InitGetRefFlate</H2>
 <BIG><I><B>Initierer status for GetRefFlate</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Initierer status for GetRefFlate.
-Parametre:
-Type           Navn     I/U   Forklaring
+Parameters:
+Type           Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_GRF_STATUS * pRefStat  iu   Struktur med statusopplysninger.
 Bruk:
@@ -3157,10 +3157,10 @@ SK_EntPnt_FYBA void LC_InitGetRefFlate(LC_GRF_STATUS * pGS)
 <A ID="LC_GetRefFlate"NAME="LC_GetRefFlate"></A><H2>LC_GetRefFlate</H2>
 <BIG><I><B>Hent referanser for flate fra GINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut et array med referanser for flate fra GINFO i aktuell gruppe.
-Parametre:
-Type            Navn      I/U  Forklaring
+Parameters:
+Type            Name      I/O  Explanation
 -------------------------------------------------------------------------
 LC_GRF_STATUS *  GrfStat    iu  Struktur med statusopplysninger.
 unsigned short  usHent     i   Hva skal hentes:
@@ -3220,7 +3220,7 @@ SK_EntPnt_FYBA long LC_GetRefFlate(LC_GRF_STATUS * GrfStat,unsigned short usHent
 Bruk:
 sRefLin = LC_ErLinjeRefLin(gp,sRefLin);
 parametere:
-Type    Navn        I/U  Forklaring
+Type    Name        I/O  Explanation
 -----------------------------------------------------------------------
 char   *pszGinfoLin  i   Peikar til GINFO-linje
 short   sRefLin      i   Flagg som viser om forrige linje inneholdt referanser
@@ -3243,7 +3243,7 @@ short LC_ErLinjeRefLin(char *pszSosiLin, short sRefLin)
 <A ID="LC_GetBuePar"NAME="LC_GetBuePar"></A><H2>LC_GetBuePar</H2>
 <BIG><I><B>Beregner parametre som definerer sirkelbue</I></B></BIG><PRE>
 ============================================================================
-Formål:                                                   fi
+Purpose:                                                   fi
 Sirkelbue defineres i SOSI ved en av                     /
 geometrielementene .SIRKEL, .SIRKELP,                  /
 .BUE, .BUEP.                                         /       /
@@ -3254,8 +3254,8 @@ delta for sluttpunktet uansett hvordan                   /
 buen er definert i SOSI.
 NB! Alle retninger i radianer, 0-retning i øst-aksen og positiv
 omløpsretning mot urviseren.
-Parametre:                                               
-Type     Navn        I/U   Forklaring
+Parameters:                                               
+Type     Name        I/O   Explanation
 ----------------------------------------------------------------------------
 short    buff_retning i    Buffer-retning (kun for BUE og BUEP)
                                  HENT_FORRFRA  (1) =  Vanlig
@@ -3288,10 +3288,10 @@ SK_EntPnt_FYBA short LC_GetBuePar(short buff_retning, double *as, double *ns, do
 <A ID="LC_GetBue"NAME="LC_GetBue"></A><H2>LC_GetBue</H2>
 <BIG><I><B>Hent bue</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut nødvendige opplysninger om en bue.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 short   retning     i    Buffer-retning:
                                HENT_FORRFRA ( 1) = vanlig,
@@ -3319,10 +3319,10 @@ SK_EntPnt_FYBA short LC_GetBue(short retning,double *a1,double *n1,double *a2,do
 <A ID="LC_GetBuep"NAME="LC_GetBuep"></A><H2>LC_GetBuep</H2>
 <BIG><I><B>Hent buep</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut nødvendige opplysninger om en buep.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 short   retning     i    Buffer-retning:
                                HENT_FORRFRA ( 1) = vanlig,
@@ -3350,10 +3350,10 @@ SK_EntPnt_FYBA short LC_GetBuep(short retning,double *a1,double *n1,double *a2,d
 <A ID="LC_GetSirkel"NAME="LC_GetSirkel"></A><H2>LC_GetSirkel</H2>
 <BIG><I><B>Hent silkel</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut nødvendige opplysninger om en sirkel.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 double  *as         u    Koordinat i sentrum
 double  *ns         u
@@ -3374,10 +3374,10 @@ SK_EntPnt_FYBA short LC_GetSirkel(double *as,double *ns,double *radius)
 <A ID="LC_GetSirkelp"NAME="LC_GetSirkelp"></A><H2>LC_GetSirkelp</H2>
 <BIG><I><B>Hent silkelp</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut nødvendige opplysninger om en sirkelp.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 --------------------------------------------------------------------------
 double  *a1         u    Koordinat i P1
 double  *n1         u
@@ -3402,11 +3402,11 @@ SK_EntPnt_FYBA short LC_GetSirkelp(double *a1,double *n1,double *a2,double *n2,
 <A ID="LC_GetKvalitet"NAME="LC_GetKvalitet"></A><H2>LC_GetKvalitet</H2>
 <BIG><I><B>Finner kvalitetsopplysninger</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finne kvalitetsopplysninger i filhode eller vanlig gruppe.
 (Tolker aktuell gruppe.)
-Parametre:
-Type     Navn       I/U   Forklaring
+Parameters:
+Type     Name       I/O   Explanation
 --------------------------------------------------------------------------
 short  *psMetode           u  Hvordan data er registrert.
                                 KVAL_MET_UNDEF  metode er udefinert.
@@ -3446,10 +3446,10 @@ SK_EntPnt_FYBA short LC_GetKvalitet(short *psMetode,long *plNoyaktighet,short *p
 <A ID="LC_GetTK"NAME="LC_GetTK"></A><H2>LC_GetTK</H2>
 <BIG><I><B>Get koordinat</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter et punkts koordinater (ø,n) i meter i terreng
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 double  *aust      u    Øst-koordinat i meter i terreng
@@ -3468,10 +3468,10 @@ SK_EntPnt_FYBA void LC_GetTK(long punkt_nr,double *aust,double *nord)
 <A ID="LC_GetArrayTK"NAME="LC_GetArrayTK"></A><H2>LC_GetArrayTK</H2>
 <BIG><I><B>Hent tabell med koordinater</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter tabell med koordinater (ø,n) i meter i terreng
-Parametre:
-Type    Navn       I/U   Forklaring
+Parameters:
+Type    Name       I/O   Explanation
 --------------------------------------------------------------------------
 short   retning     i    Buffer-retning:
                                HENT_FORRFRA ( 1) = vanlig,
@@ -3496,10 +3496,10 @@ SK_EntPnt_FYBA void LC_GetArrayTK(short retning,long max_antall,long fra_punkt,
 <A ID="LC_GetTH"NAME="LC_GetTH"></A><H2>LC_GetTH</H2>
 <BIG><I><B>Get høyde</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter et punkts høyde i meter i terreng. (Henter BARE FRA PUNKTET.)
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *hoyde      r    Høyde i meter i terreng. Konstanten
@@ -3519,10 +3519,10 @@ SK_EntPnt_FYBA double LC_GetTH(long punkt_nr)
 <A ID="LC_GetArrayTH"NAME="LC_GetArrayTH"></A><H2>LC_GetArrayTH</H2>
 <BIG><I><B>Hent tabell med høyder</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter tabell med høyder
-Parametre:
-Type    Navn       I/U   Forklaring
+Parameters:
+Type    Name       I/O   Explanation
 --------------------------------------------------------------------------
 short   retning     i    Buffer-retning:
                                HENT_FORRFRA ( 1) = vanlig,
@@ -3546,11 +3546,11 @@ SK_EntPnt_FYBA void LC_GetArrayTH(short retning,long max_antall,long fra_punkt,
 <A ID="LC_GetHoyde"NAME="LC_GetHoyde"></A><H2>LC_GetHoyde</H2>
 <BIG><I><B>Get høyde</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter et punkts høyde i meter i terreng. (Henter fra punktet eller fra
 GINFO.)
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *hoyde      r    Høyde i meter i terreng. Konstanten
@@ -3570,10 +3570,10 @@ SK_EntPnt_FYBA double LC_GetHoyde(long punkt_nr)
 <A ID="LC_GetTD"NAME="LC_GetTD"></A><H2>LC_GetTD</H2>
 <BIG><I><B>Get dybde</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter et punkts dybde i meter i terreng. (Henter BARE FRA PUNKTET.)
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *dybde      r    Dybde i meter i terreng. Konstanten
@@ -3593,11 +3593,11 @@ SK_EntPnt_FYBA double LC_GetTD(long punkt_nr)
 <A ID="LC_GetDybde"NAME="LC_GetDybde"></A><H2>LC_GetDybde</H2>
 <BIG><I><B>Get dybde</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter et punkts dybde i meter i terreng. (Henter fra punktet eller fra
 GINFO.)
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *hoyde      r    Dybde i meter i terreng. Konstanten
@@ -3622,10 +3622,10 @@ SK_EntPnt_FYBA double LC_GetDybde(long punkt_nr)
 <A ID="LC_GetKp"NAME="LC_GetKp"></A><H2>LC_GetKp</H2>
 <BIG><I><B>Get knutepunkt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter knutepunktverdi i punktet.
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 short   kp_type    r    Knutepunkttype (1-4095)
@@ -3644,10 +3644,10 @@ SK_EntPnt_FYBA short LC_GetKp(long punkt_nr)
 <A ID="LC_FinnKp"NAME="LC_FinnKp"></A><H2>LC_FinnKp</H2>
 <BIG><I><B>Finn knutepunkt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Skanner gruppe, og finner punkt som er knutepunkt.
-Parametre:
-Type     Navn        I/U   Forklaring
+Parameters:
+Type     Name        I/O   Explanation
 --------------------------------------------------------------------------
 long    *forste_punkt iu   Punktnummer for start søking.
                            (1 er første punkt i gruppen.)
@@ -3674,13 +3674,13 @@ short LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp)
 <A ID="LC_GetPi"NAME="LC_GetPi"></A><H2>LC_GetPi</H2>
 <BIG><I><B>Get PINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter punktinformasjon i angitte punkt som en streng.
 Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 strengen må den kopieres over til egen streng. (Bruk strcpy).
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 char   *pinfo      r    Peker til punktinformasjon eksklusiv knutepunkt
@@ -3698,10 +3698,10 @@ SK_EntPnt_FYBA char *LC_GetPi(long punkt_nr)
 <A ID="LC_InitPP"NAME="LC_InitPP"></A><H2>LC_InitPP</H2>
 <BIG><I><B>Initier PINFO-søk</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Initierer søk etter PINFO.
-Parametre:
-Type            Navn        I/U  Forklaring
+Parameters:
+Type            Name        I/O  Explanation
 --------------------------------------------------------------------------
 char            sosi_navn    i   Sosi-navn det skal finnes verdi til
 long            forste_punkt i   Første punkt. (1 er første pkt i gr)
@@ -3723,13 +3723,13 @@ SK_EntPnt_FYBA void LC_InitPP(char *sosi_navn,long forste_punkt,long siste_punkt
 <A ID="LC_GetPP"NAME="LC_GetPP"></A><H2>LC_GetPP</H2>
 <BIG><I><B>Utfør PINFO-søk</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter parametrene til et SOSI-navn definert i LC_InitPP.
 Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
 strengen må den kopieres over til egen streng. (Bruk strcpy).
-Parametre:
-Type     Navn               I/U   Forklaring
+Parameters:
+Type     Name               I/O   Explanation
 --------------------------------------------------------------------------
 long    *punkt             u  Ved tilslag returneres punktnummer for
                               tilslaget.
@@ -3756,7 +3756,7 @@ SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
 <A ID="LC_GetPiVerdi"NAME="LC_GetPiVerdi"></A><H2>LC_GetPiVerdi</H2>
 <BIG><I><B>Get PINFO-verdi</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter parametrene til et SOSI-navn.
 Strengen ligger i et felles "returbuffer" for alle get-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "get-rutine". For å ta vare på
@@ -3774,10 +3774,10 @@ angis ved ^x hvor x er det tegnet som skal skrives ut mellom leddene.
 Disse tilleggene kan kombineres, slik at  ...KVALITET#2[1:2] betyr at
 det er tegn nummer 1 og 2 i det andre leddet (nøyaktigheten) som skal
 brukes.
-Parametre:
-Type     Navn        I/U   Forklaring
+Parameters:
+Type     Name        I/O   Explanation
 --------------------------------------------------------------------------
-char     pszSosiNavn  i    SOSI-navn det skal finnes verdi til.
+char     pszSosiName  i    SOSI-navn det skal finnes verdi til.
                            Leddnummer posisjon og formateringskode kan
                            inngå som forlengelse av navnet.
                            OBS! Store og små bokstaver er signifikante.
@@ -3791,10 +3791,10 @@ short   *sSettNr      iu   PINFO-nummer   (1 er første sett i PINFO.)
 char    *pszVerdi     r    Peker til verdien avslutta med '/0'.
                            Hvis SOSI-navnet ikke er funnet returneres NULL.
 Bruk:
-pszVerdi = LC_GetPiVerdi(pszSosiNavn,lPnr,&sSettNr);
+pszVerdi = LC_GetPiVerdi(pszSosiName,lPnr,&sSettNr);
    ==========================================================================
  
-SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSettNr)
+SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiName,long lPnr,short *sSettNr)
 </PRE>
 <BR>
 <BR>
@@ -3804,12 +3804,12 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
 <A ID="LC_TestPi"NAME="LC_TestPi"></A><H2>LC_TestPi</H2>
 <BIG><I><B>Sjekk om punkt har PINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om et punkt har PINFO i en eller annen form.
 (PINFO, KP, høyde.)
 Høyde handteres ikke foreløpig.
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 short   sTestHoyde i    Bryter for å si om høyde skal regnes med i sjekken.
@@ -3833,10 +3833,10 @@ SK_EntPnt_FYBA short LC_TestPi(long punkt_nr,short sTestHoyde)
 <A ID="LC_GetCurEnhet"NAME="LC_GetCurEnhet"></A><H2>LC_GetCurEnhet</H2>
 <BIG><I><B>Hent enhet på angitt nivå</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter ut enhet fra filhode eller GINFO
-Parametre:
-Type        Navn    I/U   Forklaring
+Parameters:
+Type        Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM * pFil     i    Peker til FilAdm
 short      *nivaa    iu   angir nivå for henting, returnerer aktuelt nivå
@@ -3860,10 +3860,10 @@ SK_EntPnt_FYBA void LC_GetCurEnhet(LC_FILADM * pFil,short *nivaa, double *enhet,
 <A ID="LC_GetCurKvalitet"NAME="LC_GetCurKvalitet"></A><H2>LC_GetCurKvalitet</H2>
 <BIG><I><B>Finner kvalitetsopplysninger på angitt nivå</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finne kvalitetsopplysninger på angitt nivå, hode ginfo eller pinfo.
-Parametre:
-Type        Navn          I/U  Forklaring
+Parameters:
+Type        Name          I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM * pFil           i   Peker til FilAdm
 short      *nivaa         iu   Hvor skal det letes.
@@ -3903,10 +3903,10 @@ SK_EntPnt_FYBA short LC_GetCurKvalitet(LC_FILADM *pFil,short *nivaa,long pnr,
 <A ID="LC_GetObjtypeBgr"NAME="LC_GetObjtypeBgr"></A><H2>LC_GetObjtypeBgr</H2>
 <BIG><I><B>Hent objekttype</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter objekttype for gitt gruppenummer.
-Parametre:
-Type    Navn       I/U  Forklaring
+Parameters:
+Type    Name       I/O  Explanation
 -----------------------------------------------------------------------------
 LC_BGR *pBgr        i   Gruppenummer det ønskes opplysninger om.
 char   *pszObjtype  r   OBJTYPE
@@ -3922,10 +3922,10 @@ SK_EntPnt_FYBA const char *LC_GetObjtypeBgr(LC_BGR * pBgr)
 <HR>
 <BR>
 <BR>
-<A ID="LC_GetElementNavn"NAME="LC_GetElementNavn"></A><H2>LC_GetElementNavn</H2>
+<A ID="LC_GetElementName"NAME="LC_GetElementName"></A><H2>LC_GetElementName</H2>
 <BIG><I><B>Hent elementnavn</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Hent et elementnavn fra den interne navnetabellen i FYBA.
 Denne tabellen inneholder både gruppenavn (.LINJE, .KURVE, ...) og
 egenskapsnavn (..OBJTYPE, ..LTEMA, ...)
@@ -3936,28 +3936,28 @@ Tabellen har tre logiske deler:
                        indeksoppbygging.
 Selv om egenskapen blir fjernet fra SOSI-filen blir navnet fortsatt
 liggende i navnetabellen
-Parametre:
-Type        Navn    I/U  Forklaring
+Parameters:
+Type        Name    I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM  *pFil     i   Peker til FilAdm
-short       sNavnNr  i   Linjenummer i navnetabellen (0 - n)
+short       sNameNr  i   Linjenummer i navnetabellen (0 - n)
 bool       *bBrukt       Viser om navnet har/er brukt i filen
                          Hvis det har vært en gruppe som har brukt navnet blir
                          denne stående "true" selv om gruppen er slettet.
-const char *pszNavn  r   Peker til elementnavn, 
+const char *pszName  r   Peker til elementnavn, 
                          NULL = ukjent fil eller ulovlig linjenummer
 Bruk:
 // Går gjennom alle navnene ut over de forhåndsdefinerte navnene.
-short sNavnNr = L_KP+1; 
-while ((pszNavn = LC_GetElementNavn(pFil,sNavnNr)) != NULL)
+short sNameNr = L_KP+1; 
+while ((pszName = LC_GetElementName(pFil,sNameNr)) != NULL)
 {
    // Gjør noe med navnet
    ...
-   ++sNavnNr;
+   ++sNameNr;
 }
 =============================================================================
  
-SK_EntPnt_FYBA const char *LC_GetElementNavn(LC_FILADM *pFil,short sNavnNr,bool *bBrukt)
+SK_EntPnt_FYBA const char *LC_GetElementName(LC_FILADM *pFil,short sNameNr,bool *bBrukt)
 </PRE>
 
 <BR>
@@ -3975,10 +3975,10 @@ SK_EntPnt_FYBA const char *LC_GetElementNavn(LC_FILADM *pFil,short sNavnNr,bool 
 <A ID="LC_InitNextFil"NAME="LC_InitNextFil"></A><H2>LC_InitNextFil</H2>
 <BIG><I><B>Initier finn neste fil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Initierer pFil for bruk i finn neste fil.
-Parametre:
-Type           Navn   I/U  Forklaring
+Parameters:
+Type           Name   I/O  Explanation
 ------------------------------------------------------------------------
 LC_FILADM    **ppFil    u   Peker til FilAdm-peker
 Bruk:
@@ -3995,10 +3995,10 @@ SK_EntPnt_FYBA void LC_InitNextFil(LC_FILADM **ppFil)
 <A ID="LC_NextFil"NAME="LC_NextFil"></A><H2>LC_NextFil</H2>
 <BIG><I><B>Finn neste fil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn neste fil i aktuell base.
-Parametre:
-Type           Navn    I/U   Forklaring
+Parameters:
+Type           Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM    **ppFil   iu   Peker til FilAdm-peker
 unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
@@ -4010,7 +4010,7 @@ Bruk:
               Denne løkka går gjennom alle framgrunns-filene i basen
     LC_InitNextFil(&pFil)
     while (LC_NextFil(&pFil,LC_FRAMGR)) {
-      pszFilNavn = LC_GetFiNa(pFil);
+      pszFilName = LC_GetFiNa(pFil);
       .
       Behandle filnavnet
       .
@@ -4027,10 +4027,10 @@ SK_EntPnt_FYBA short LC_NextFil(LC_FILADM **ppFil,unsigned short usLag)
 <A ID="LC_InitNextBgr"NAME="LC_InitNextBgr"></A><H2>LC_InitNextBgr</H2>
 <BIG><I><B>Initier finn neste gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Initierer Bgr for bruk i finn neste gruppe.
-Parametre:
-Type           Navn   I/U  Forklaring
+Parameters:
+Type           Name   I/O  Explanation
 ------------------------------------------------------------------------
 LC_BGR *        pBgr    iu  Peker til gruppestruktur
 Bruk:
@@ -4047,11 +4047,11 @@ SK_EntPnt_FYBA void LC_InitNextBgr(LC_BGR * pBgr)
 <A ID="LC_NextBgr"NAME="LC_NextBgr"></A><H2>LC_NextBgr</H2>
 <BIG><I><B>Finn neste gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn neste gruppe i aktuell base.
 Sekvensielle filer blir ikke håndtert.
-Parametre:
-Type           Navn    I/U   Forklaring
+Parameters:
+Type           Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *        pBgr    iu   Peker til gruppestruktur der gruppenummer lagres
 unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
@@ -4088,11 +4088,11 @@ SK_EntPnt_FYBA short LC_NextBgr(LC_BGR * pBgr,unsigned short usLag)
 <A ID="LC_GetGrWin"NAME="LC_GetGrWin"></A><H2>LC_GetGrWin</H2>
 <BIG><I><B>Hent omskrevet rektangel for gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter omskrevet rektangel for gitt gruppe.
 For flater er refererte grupper medregnet.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pBgr      i    Gruppenummer
 double  *nva       u    Omskrevet rektangel for gruppen. Avrundet utover
@@ -4114,10 +4114,10 @@ SK_EntPnt_FYBA short LC_GetGrWin(LC_BGR * pBgr,double *nva,double *nvn,double *o
 <A ID="LC_SBFlate"NAME="LC_SBFlate"></A><H2>LC_SBFlate</H2>
 <BIG><I><B>Sett søkegrense for geografisk søk på flate</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Definerer punkt for geografisk søk på flate.
-Parametre:
-Type     Navn      I/U  Forklaring
+Parameters:
+Type     Name      I/O  Explanation
 -----------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 unsigned short usLag      i   Velg hvilke "lag" det skal søkes i.
@@ -4151,10 +4151,10 @@ SK_EntPnt_FYBA void LC_SBFlate(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
 <A ID="LC_FFFlate"NAME="LC_FFFlate"></A><H2>LC_FFFlate</H2>
 <BIG><I><B>Finn første ved flatesøk</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Finner første gruppe i det definerte området for flatesøk.
-Parametre:
-Type     Navn      I/U  Forklaring
+Parameters:
+Type     Name      I/O  Explanation
 -----------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
@@ -4173,10 +4173,10 @@ SK_EntPnt_FYBA short LC_FFFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 <A ID="LC_FNFlate"NAME="LC_FNFlate"></A><H2>LC_FNFlate</H2>
 <BIG><I><B>Finn neste ved flatesøk</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner neste gruppe i det definerte området for flatesøk.
-Parametre:
-Type     Navn      I/U  Forklaring
+Parameters:
+Type     Name      I/O  Explanation
 --------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
@@ -4195,10 +4195,10 @@ SK_EntPnt_FYBA short LC_FNFlate(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 <A ID="LC_SBGeo"NAME="LC_SBGeo"></A><H2>LC_SBGeo</H2>
 <BIG><I><B>Sett søkegrense for grov geografisk søk</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Definerer geografisk område for geografisk søk.
-Parametre:
-Type           Navn      I/U  Forklaring
+Parameters:
+Type           Name      I/O  Explanation
 -----------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus.
 unsigned short usLag      i   Velg hvilke "lag" det skal søkes i.
@@ -4232,10 +4232,10 @@ SK_EntPnt_FYBA void LC_SBGeo(LC_GEO_STATUS * pGeoStat,unsigned short usLag,
 <A ID="LC_FFGeo"NAME="LC_FFGeo"></A><H2>LC_FFGeo</H2>
 <BIG><I><B>Finn første ved geografisk søk</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner første gruppe i det definerte området for kombinert geografisk søk.
-Parametre:
-Type     Navn      I/U  Forklaring
+Parameters:
+Type     Name      I/O  Explanation
 --------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
@@ -4254,10 +4254,10 @@ SK_EntPnt_FYBA short LC_FFGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 <A ID="LC_FNGeo"NAME="LC_FNGeo"></A><H2>LC_FNGeo</H2>
 <BIG><I><B>Finn neste ved geografisk søk</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner neste gruppe i det definerte området for geografisk søk.
-Parametre:
-Type           Navn      I/U  Forklaring
+Parameters:
+Type           Name      I/O  Explanation
 --------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
@@ -4276,11 +4276,11 @@ SK_EntPnt_FYBA short LC_FNGeo(LC_GEO_STATUS * pGeoStat,LC_BGR * pBgr)
 <A ID="LC_FAGeo"NAME="LC_FAGeo"></A><H2>LC_FAGeo</H2>
 <BIG><I><B>Finn alle ved geografisk søk</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn alle i geografisk søkeområde.
 Tilslag merkes i brukttabellen kolonne BT_GEOSOK (15).
-Parametre:
-Type           Navn      I/U  Forklaring
+Parameters:
+Type           Name      I/O  Explanation
 --------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 long           lAntall    r   Antall funnet.
@@ -4301,11 +4301,11 @@ SK_EntPnt_FYBA long LC_FAGeo(LC_GEO_STATUS * pGeoStat)
 <A ID="LC_FFGeoFil"NAME="LC_FFGeoFil"></A><H2>LC_FFGeoFil</H2>
 <BIG><I><B>Finn første ved geografisk søk i en fil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner første gruppe i det definerte området for kombinert geografisk søk.
 Søker bare i en gitt fil.
-Parametre:
-Type           Navn       I/U  Forklaring
+Parameters:
+Type           Name       I/O  Explanation
 --------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat   iu   Peker til struktur for søkestatus
 LC_FILADM *    pOnsketFil  i   Filpeker til den filen det skal søkes i.
@@ -4325,11 +4325,11 @@ SK_EntPnt_FYBA short LC_FFGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pOnsketFil,
 <A ID="LC_FNGeoFil"NAME="LC_FNGeoFil"></A><H2>LC_FNGeoFil</H2>
 <BIG><I><B>Finn neste ved geografisk søk i en fil</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner neste gruppe i det definerte området for geografisk søk.
 Søker bare i en gitt fil.
-Parametre:
-Type           Navn      I/U  Forklaring
+Parameters:
+Type           Name      I/O  Explanation
 --------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_FILADM *    pFil      i    Filpeker til den filen det skal søkes i.
@@ -4351,10 +4351,10 @@ SK_EntPnt_FYBA short LC_FNGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,LC_BGR
 =======================================================================
 Bruk:
 parametere:
-Type            Navn     I/U   Forklaring
+Type            Name     I/O   Explanation
 -----------------------------------------------------------------------
 LC_GEO_STATUS *  pGeoStat  i    Peker til struktur for søkestatus
-Formål:
+Purpose:
 Avslutter geografisk søk, og frigir kjede med søkeresultat.
 =======================================================================
  
@@ -4369,12 +4369,12 @@ SK_EntPnt_FYBA void LC_AvsluttSok(LC_GEO_STATUS * pGeoStat)
 <A ID="LC_WTst"NAME="LC_WTst"></A><H2>LC_WTst</H2>
 <BIG><I><B>Vindustest</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekk om aktuell gruppe berører gitt vindu.
 Tar hensyn til gruppenavnet. Handterer (PUNKT, LINJE, KURVE, BUE,
 BUEP, SIRKEL, SIRKELP, SVERM, TRASE ).
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 double  nva        i    Avgrensing av vinduet
 double  nvn        i
@@ -4408,11 +4408,11 @@ SK_EntPnt_FYBA short LC_WTst(double nva,double nvn,double oha,double ohn)
 <A ID="LC_PTst"NAME="LC_PTst"></A><H2>LC_PTst</H2>
 <BIG><I><B>Polygontest</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om gitt punkt ligger innenfor polygon angitt av aktuell gruppe.
 Forutsetter at tabellen danner et lukket polygon
-Parametre:
-Type    Navn    I/U   Forklaring
+Parameters:
+Type    Name    I/O   Explanation
 --------------------------------------------------------------------------
 double  a        i    Punkt som skal sjekkes
 double  n        i
@@ -4444,12 +4444,12 @@ SK_EntPnt_FYBA short LC_PTst(double a,double n)
 <A ID="LC_PTstOmkrets"NAME="LC_PTstOmkrets"></A><H2>LC_PTstOmkrets</H2>
 <BIG><I><B>Sjekk om punkt ligger inni polygon</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om gitt punkt ligger innenfor yttergrensen for polygon angitt
 av aktuell gruppe.
 Forutsetter at tabellen danner et lukket polygon
-Parametre:
-Type    Navn    I/U   Forklaring
+Parameters:
+Type    Name    I/O   Explanation
 --------------------------------------------------------------------------
 double  a        i    Punkt som skal sjekkes
 double  n        i
@@ -4477,10 +4477,10 @@ SK_EntPnt_FYBA short LC_PTstOmkrets(double a,double n)
 <A ID="LC_SBSn"NAME="LC_SBSn"></A><H2>LC_SBSn</H2>
 <BIG><I><B>Sett søkegrense for serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Setter søkegrenser for serienummersøk.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_FILADM * pFil     i     Peker til FilAdm
@@ -4501,13 +4501,13 @@ SK_EntPnt_FYBA void LC_SBSn(LC_SNR_ADM * pSnrAdm,LC_FILADM *pFil,long lMinSnr,lo
 <A ID="LC_MoveSn"NAME="LC_MoveSn"></A><H2>LC_MoveSn</H2>
 <BIG><I><B>Flytt til gruppenummer for et serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn gruppenummer for et gitt serienummer i søkeområdet for serienummer.
 Intern "aktuellt serienummer" blir endret, slik at videre søk med
 neste/forrige nå tar utgangspunkt i dette serienummer.
 (Bare hvis snr er funnet).
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 long        lSnr     i     Serienummer som skal finnes
@@ -4527,11 +4527,11 @@ SK_EntPnt_FYBA short LC_MoveSn(LC_SNR_ADM * pSnrAdm,long lSnr,LC_BGR * pBgr)
 <A ID="LC_FiSn"NAME="LC_FiSn"></A><H2>LC_FiSn</H2>
 <BIG><I><B>Finn gruppenummer for et serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn gruppenummer for et gitt serienummer i søkeområdet for serienummer.
 Endrer IKKE "current gruppe".
-Parametre:
-Type        Navn    I/U    Forklaring
+Parameters:
+Type        Name    I/O    Explanation
 -----------------------------------------------------------------------------
 LC_FILADM  *pFil     i     Peker til FilAdm
 long        lSnr     i     Serienummer som skal finnes
@@ -4551,13 +4551,13 @@ SK_EntPnt_FYBA short LC_FiSn(LC_FILADM *pFil,long lSnr,LC_BGR * pBgr)
 <A ID="LC_FiArraySn"NAME="LC_FiArraySn"></A><H2>LC_FiArraySn</H2>
 <BIG><I><B>Finn gruppenummer for flere serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner gruppenummer for tabell med serienummer.
 Endrer IKKE "current gruppe".
 Serienummertabellen kan være "rå" slik den kommer fra GetRef. Linjer med
 start øy og slutt øy overses.
-Parametre:
-Type       Navn     I/U   Forklaring
+Parameters:
+Type       Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_FILADM *pFil     i     Peker til FilAdm
 short      antall   i     Antall linjer brukt i serienummertabellen
@@ -4578,11 +4578,11 @@ SK_EntPnt_FYBA void LC_FiArraySn(LC_FILADM *pFil,short antall,long *snr,long *bg
 <A ID="LC_FASn"NAME="LC_FASn"></A><H2>LC_FASn</H2>
 <BIG><I><B>Finn alle serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner alle grupper i fil/serienummer søkeområdet og merker i kolonne
 BT_SNRSOK i brukttabellen.
-Parametre:
-Type        Navn    I/U   Forklaring
+Parameters:
+Type        Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm  i    Peker til statusblokk for serienummersøk
 long        antall   r    Antall grupper funnet.
@@ -4600,10 +4600,10 @@ SK_EntPnt_FYBA long LC_FASn(LC_SNR_ADM * pSnrAdm)
 <A ID="LC_FFSn"NAME="LC_FFSn"></A><H2>LC_FFSn</H2>
 <BIG><I><B>Finn første serienummer</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Finner første gruppe i fil/serienummer søkeområdet.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR     *pBgr     u     Gruppenummer
@@ -4622,10 +4622,10 @@ SK_EntPnt_FYBA short LC_FFSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 <A ID="LC_FNSn"NAME="LC_FNSn"></A><H2>LC_FNSn</H2>
 <BIG><I><B>Finn neste serienummer</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner neste gruppe i fil/serienummer søkeområdet.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR *     pBgr     u     Gruppenummer
@@ -4644,10 +4644,10 @@ SK_EntPnt_FYBA short LC_FNSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 <A ID="LC_FPSn"NAME="LC_FPSn"></A><H2>LC_FPSn</H2>
 <BIG><I><B>Finn forige serienummer</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Finner forrige gruppe i fil/serienummer søkeområdet.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR     *pBgr     u     Gruppenummer
@@ -4666,10 +4666,10 @@ SK_EntPnt_FYBA short LC_FPSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 <A ID="LC_FLSn"NAME="LC_FLSn"></A><H2>LC_FLSn</H2>
 <BIG><I><B>Finn siste serienummer</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Finner siste gruppe i fil/serienummer søkeområdet.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR     *pBgr     u     Gruppenummer
@@ -4688,10 +4688,10 @@ SK_EntPnt_FYBA short LC_FLSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
 <A ID="LC_FFSnBt"NAME="LC_FFSnBt"></A><H2>LC_FFSnBt</H2>
 <BIG><I><B>Finn første serienummer med tilleggskrav</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner første gruppe som er merka i gitt kolonne i brukttabellen.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
@@ -4711,10 +4711,10 @@ SK_EntPnt_FYBA short LC_FFSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 <A ID="LC_FNSnBt"NAME="LC_FNSnBt"></A><H2>LC_FNSnBt</H2>
 <BIG><I><B>Finn neste serienummer med tilleggskrav</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner neste gruppe også er merka i gitt kolonne i brukttabellen.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
@@ -4734,11 +4734,11 @@ SK_EntPnt_FYBA short LC_FNSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 <A ID="LC_FPSnBt"NAME="LC_FPSnBt"></A><H2>LC_FPSnBt</H2>
 <BIG><I><B>Finn forige serienummer med tilleggskrav</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner forrige gruppe i fil/serienummer søkeområdet, som også er merka i
 gitt kolonne i brukttabellen.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
@@ -4758,11 +4758,11 @@ SK_EntPnt_FYBA short LC_FPSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 <A ID="LC_FLSnBt"NAME="LC_FLSnBt"></A><H2>LC_FLSnBt</H2>
 <BIG><I><B>Finn siste serienummer med tilleggskrav</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finner siste gruppe i fil/serienummer søkeområdet som også er merka i
 gitt kolonne i brukttabellen.
-Parametre:
-Type        Navn     I/U   Forklaring
+Parameters:
+Type        Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
@@ -4829,11 +4829,11 @@ Følgende metoder er definert:
 <A ID="LC_OpenQuery"NAME="LC_OpenQuery"></A><H2>LC_OpenQuery</H2>
 <BIG><I><B>Initier query</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Initierer query mot GINFO/PINFO.
 Tildeler administrasjonsblokk for utvalg.
-Parametre:
-Type         Navn   I/U  Forklaring
+Parameters:
+Type         Name   I/O  Explanation
 -----------------------------------------------------------------------
 LC_UT_ADM   *UtAdm   r   Peker til administrasjonsblokk for utvalg.
 Bruk:
@@ -4850,11 +4850,11 @@ SK_EntPnt_FYBA LC_UT_ADM *LC_OpenQuery(void)
 <A ID="LC_CloseQuery"NAME="LC_CloseQuery"></A><H2>LC_CloseQuery</H2>
 <BIG><I><B>Avslutter query</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Avslutter query mot GINFO/PINFO.
 Frigir minne brukt til administrasjon og utvalgstabeller.
-Parametre:
-Type       Navn    I/U   Forklaring
+Parameters:
+Type       Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_UT_ADM *UtAdm    i    Peker til administrasjonsblokk for utvalg.
 Bruk:
@@ -4871,10 +4871,10 @@ SK_EntPnt_FYBA void LC_CloseQuery(LC_UT_ADM * pUtAdm)
 <A ID="LC_PutQueryLine"NAME="LC_PutQueryLine"></A><H2>LC_PutQueryLine</H2>
 <BIG><I><B>Legg inn en query-linje</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn og tolker en linje med query-tekst.
-Parametre:
-Type       Navn  I/U   Forklaring
+Parameters:
+Type       Name  I/O   Explanation
 ------------------------------------------------------------------------
 LC_UT_ADM *UtAdm  i    Peker til administrasjonsblokk for utvalg.
 char      *qulin  i    Linje med query-tekst. (Uten prikker på første nivå).
@@ -4894,11 +4894,11 @@ SK_EntPnt_FYBA short LC_PutQueryLine(LC_UT_ADM *pUtAdm,const char *qulin,short s
 <A ID="LC_PutQueryRegel"NAME="LC_PutQueryRegel"></A><H2>LC_PutQueryRegel</H2>
 <BIG><I><B>Legg inn et regelnavn</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legger inn et regelnavn på siste linje i utvalgstabellen.
-(Navnet blir intern konvertert til "store" bokstaver.)
-Parametre:
-Type         Navn I/U   Forklaring
+(Nameet blir intern konvertert til "store" bokstaver.)
+Parameters:
+Type         Name I/O   Explanation
 ------------------------------------------------------------------------
 LC_UTVALG   *pU    i    Peker til utvalg
 char        *navn  i    Regelnavn. 
@@ -4916,11 +4916,11 @@ SK_EntPnt_FYBA void LC_PutQueryRegel(LC_UTVALG * pU,const char *navn)
 <A ID="LC_LesUtvalg"NAME="LC_LesUtvalg"></A><H2>LC_LesUtvalg</H2>
 <BIG><I><B>Les utvalg i kom.filen</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Leser og tolker gruppe og punktutvalg på kommandofilen og legger i tabell.
 Forutsetter at filen er åpnet på forhånd.
-Parametre:
-Type       Navn    I/U   Forklaring
+Parameters:
+Type       Name    I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM *pUtAdm   i    Peker til administrasjonsblokk for utvalg.
 FILE      *pKomFil  i    Peker til "handle" for åpnet kommandofil.
@@ -4936,24 +4936,24 @@ SK_EntPnt_FYBA short LC_LesUtvalg(LC_UT_ADM *pUtAdm,const char *pszKomFil)
 <HR>
 <BR>
 <BR>
-<A ID="LC_GetUtRegelNavn"NAME="LC_GetUtRegelNavn"></A><H2>LC_GetUtRegelNavn</H2>
+<A ID="LC_GetUtRegelName"NAME="LC_GetUtRegelName"></A><H2>LC_GetUtRegelName</H2>
 <BIG><I><B>Henter regelnavn</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter regelnavn for at programmet utenfor skal kunne sjekke
 at det er tilgjengelig videre behandling av alle definerte navn.
-Parametre:
-Type                         Navn I/U   Forklaring
+Parameters:
+Type                         Name I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM *pUtAdm     i     Peker til administrasjonsblokk for utvalg.
 short   *ist          iu    Status (Inn: 1=start,  0=neste)
                                    (Ut:  0=OK,    -1=ferdig);
 char    *regelpeker   r     Peker til utvalgsnavn.
 Bruk:
-regelpeker = LC_GetUtRegelNavn(pUtAdm,&ist);
+regelpeker = LC_GetUtRegelName(pUtAdm,&ist);
    =============================================================================
  
-SK_EntPnt_FYBA char *LC_GetUtRegelNavn(LC_UT_ADM *pUtAdm,short *ist)
+SK_EntPnt_FYBA char *LC_GetUtRegelName(LC_UT_ADM *pUtAdm,short *ist)
 </PRE>
 <BR>
 <BR>
@@ -4963,10 +4963,10 @@ SK_EntPnt_FYBA char *LC_GetUtRegelNavn(LC_UT_ADM *pUtAdm,short *ist)
 <A ID="LC_GruppeUtvalg"NAME="LC_GruppeUtvalg"></A><H2>LC_GruppeUtvalg</H2>
 <BIG><I><B>GINFO-utvalg</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker GINFO-delen av aktuell gruppe mot alle gruppeutvalg fra fil.
-Parametre:
-Type       Navn     I/U   Forklaring
+Parameters:
+Type       Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM *pUtAdm    i    Peker til administrasjonsblokk for utvalg.
 short      sPrior    i    Prioritet.
@@ -4976,7 +4976,7 @@ short     *sstat     iu   Søkestatus, Inn: 1=start søk, 0=fortsett søk
 char     **regelnavn  u   Peker til regelnavn
 char      *regelnavn  u   Peker til utvalgsnavn
 Bruk:
-pszUtvalgsNavn = LC_GruppeUtvalg(pUtAdm.sPrior,&sstat,&regel);
+pszUtvalgsName = LC_GruppeUtvalg(pUtAdm.sPrior,&sstat,&regel);
    =============================================================================
  
 SK_EntPnt_FYBA char *LC_GruppeUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *sstat,char **regelnavn)
@@ -4989,10 +4989,10 @@ SK_EntPnt_FYBA char *LC_GruppeUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *sstat
 <A ID="LC_PunktUtvalg"NAME="LC_PunktUtvalg"></A><H2>LC_PunktUtvalg</H2>
 <BIG><I><B>PUNKT-utvalg</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Sjekker PINFO-delen av aktuell gruppe for tilslag på PUNKT-UTVALG.
-Parametre:
-Type       Navn       I/U   Forklaring
+Parameters:
+Type       Name       I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM * pUtAdm      i    Peker til administrasjonsblokk for utvalg.
 short      sPrior      i    Prioritet.
@@ -5013,19 +5013,19 @@ SK_EntPnt_FYBA void LC_PunktUtvalg(LC_UT_ADM *pUtAdm,short sPrior,short *psStat,
 <BR>
 <A ID="LC_FinnPinfoUtvalg"NAME="LC_FinnPinfoUtvalg"></A><H2>LC_FinnPinfoUtvalg</H2>
 ==========================================================================
-Formål:
+Purpose:
 Finner et PINFO-UTVALG i kjeden av slike utvalg.
-Parametre:
-Type          Navn     I/U  Forklaring
+Parameters:
+Type          Name     I/O  Explanation
 --------------------------------------------------------------------------
 LC_UT_ADM *    pUtAdm    i   Peker til administrasjonsblokk for utvalg.
-char         *pszNavn   i   Utvalgsnavn
+char         *pszName   i   Utvalgsnavn
 LC_UTVALG *    pUtvalg   r   Peker til utvalget. (NULL = ikke funnet)
 Bruk:
-pUtvalg = LC_FinnPinfoUtvalg(pszNavn);
+pUtvalg = LC_FinnPinfoUtvalg(pszName);
    ==========================================================================
  
-SK_EntPnt_FYBA LC_UTVALG * LC_FinnPinfoUtvalg(LC_UT_ADM * pUtAdm,const char *pszNavn)
+SK_EntPnt_FYBA LC_UTVALG * LC_FinnPinfoUtvalg(LC_UT_ADM * pUtAdm,const char *pszName)
 </PRE>
 <BR>
 <BR>
@@ -5035,10 +5035,10 @@ SK_EntPnt_FYBA LC_UTVALG * LC_FinnPinfoUtvalg(LC_UT_ADM * pUtAdm,const char *psz
 <A ID="LC_PiTestUtvalg"NAME="LC_PiTestUtvalg"></A><H2>LC_PiTestUtvalg</H2>
 <BIG><I><B>Sjekk PUNKT/PINFO utvalg</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekk om PINFO i aktuellt punkt tilfredstiller et punkt-utvalg.
-Parametre:
-Type        Navn     I/U  Forklaring
+Parameters:
+Type        Name     I/O  Explanation
 --------------------------------------------------------------------------
 LC_UT_ADM *  pUtAdm    i   Administrasjonsblokk
 LC_UTVALG *  pU        i   Peker til utvalg
@@ -5058,10 +5058,10 @@ SK_EntPnt_FYBA short LC_PiTestUtvalg(LC_UT_ADM * pUtAdm,LC_UTVALG * pU,long lPnr
 <A ID="LC_GiQuery"NAME="LC_GiQuery"></A><H2>LC_GiQuery</H2>
 <BIG><I><B>Query mot aktuell ginfo</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Sjekker GINFO-delen av aktuell gruppe mot aktuellt query-oppsett.
-Parametre:
-Type       Navn     I/U   Forklaring
+Parameters:
+Type       Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM *pUtAdm    i    Peker til administrasjonsblokk for utvalg.
 short      status    r    Søkestatus, UT_TRUE=tilslag, UT_FALSE=ikke tilslag
@@ -5079,12 +5079,12 @@ SK_EntPnt_FYBA short LC_GiQuery(LC_UT_ADM *pUtAdm)
 <A ID="LC_FAGiQuery"NAME="LC_FAGiQuery"></A><H2>LC_FAGiQuery</H2>
 <BIG><I><B>Finn alle ved query mot ginfo</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Sjekker GINFO-delen av alle grupper mot aktuell queryopsett.
 Tilslag merkes i brukttabellen kolonne BT_GISOK (14).
 [Esc] avbryter utvalget, antall tilslag settes da til -1.
-Parametre:
-Type            Navn    I/U   Forklaring
+Parameters:
+Type            Name    I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM      *pUtAdm   i    Peker til administrasjonsblokk for utvalg.
 unsigned short  usLag    i    Velg hvilke "lag" det skal søkes i.
@@ -5104,14 +5104,14 @@ SK_EntPnt_FYBA long LC_FAGiQuery(LC_UT_ADM *pUtAdm,unsigned short usLag)
 <A ID="LC_FAGiKombinertFlateQuery"NAME="LC_FAGiKombinertFlateQuery"></A><H2>LC_FAGiKombinertFlateQuery</H2>
 <BIG><I><B>Finn alle ved query mot ginfo i flate og omkrets</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Sjekker GINFO-delen av alle flater mot aktuell queryopsett. Finner de flatene
 som har tilslag på utvalgsblokken pUtAdmFlate og har har referanser til grupper
 som har tilslag på utvalgsblokken pUtAdmOmkrets.
 Tilslag merkes i brukttabellen kolonne BT_GISOK (30).
 [Esc] avbryter utvalget, antall tilslag settes da til -1.
-Parametre:
-Type            Navn     I/U   Forklaring
+Parameters:
+Type            Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM  *pUtAdmFlate   i    Peker til administrasjonsblokk for utvalg for flata. 
 LC_UT_ADM  *pUtAdmOmkrets i    Peker til administrasjonsblokk for utvalg for omkrets.
@@ -5135,10 +5135,10 @@ SK_EntPnt_FYBA long LC_FAGiKombinertFlateQuery(LC_UT_ADM * pUtAdmFlate,LC_UT_ADM
 <A ID="LC_QueryGP"NAME="LC_QueryGP"></A><H2>LC_QueryGP</H2>
 <BIG><I><B>Søk i ginfo og finn verdi</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Bruker query-tekst for å finne linje der parameter skal hentes.
-Parametre:
-Type     Navn   I/U   Forklaring
+Parameters:
+Type     Name   I/O   Explanation
 ---------------------------------------------------------------------------
 char    *qulin   i    Linje med query-tekst.
 unsigned short    iniv    i    Nivå: Det er definert konstanter som henges
@@ -5165,10 +5165,10 @@ SK_EntPnt_FYBA short LC_QueryGP(char *qulin,unsigned short iniv,unsigned short *
 <A ID="LC_InqMaxPrioritet"NAME="LC_InqMaxPrioritet"></A><H2>LC_InqMaxPrioritet</H2>
 <BIG><I><B>Hent største prioritet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter største prioritet for gitt utvalgstype.
-Parametre:
-Type         Navn          I/U   Forklaring
+Parameters:
+Type         Name          I/O   Explanation
 ----------------------------------------------------------------------
 LC_UT_ADM *   pUA            i    Peker til administrasjonsblokk for utvalg.
 short        sMaxPrioritet  r    Max prioritet
@@ -5186,10 +5186,10 @@ SK_EntPnt_FYBA short LC_InqMaxPrioritet(LC_UT_ADM * pUA)
 <A ID="LC_TestPrioritetBrukt"NAME="LC_TestPrioritetBrukt"></A><H2>LC_TestPrioritetBrukt</H2>
 <BIG><I><B>Tester om en prioritet er brukt</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Tester om en prioritet er brukt.
-Parametre:
-Type        Navn      I/U   Forklaring
+Parameters:
+Type        Name      I/O   Explanation
 --------------------------------------------------------------------------
 LC_UT_ADM *  pUtAdm     i    Peker til administrasjonsblokk for utvalg.
 short       sPrioritet i    Prioritet som skal testes.
@@ -5208,11 +5208,11 @@ SK_EntPnt_FYBA short LC_TestPrioritetBrukt(LC_UT_ADM * pUtAdm,short sPrioritet)
 <A ID="LC_UtvalgPrioritet"NAME="LC_UtvalgPrioritet"></A><H2>LC_UtvalgPrioritet</H2>
 <BIG><I><B>Finn brukt prioritet</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker GINFO og PINFO for å finne hvilke prioriteter som "berører" aktuell
 gruppe. Resultatet markeres i Gruppetabellen ulPrior.
-Parametre:
-Type           Navn       I/U Forklaring
+Parameters:
+Type           Name       I/O Explanation
 ---------------------------------------------------------------------------
 LC_UT_ADM     *pUtAdm      i  Peker til administrasjonsblokk for utvalg.
 Bruk:
@@ -5237,10 +5237,10 @@ SK_EntPnt_FYBA void LC_UtvalgPrioritet(LC_UT_ADM *pUtAdm)
 <A ID="LC_SetBt"NAME="LC_SetBt"></A><H2>LC_SetBt</H2>
 <BIG><I><B>Sett merke i brukttabellen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Legg inn merke i brukttabellen.
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR * pGr       i    Gruppenummer
 short   kolonne   i    Kolonne som skal merkes.
@@ -5259,10 +5259,10 @@ SK_EntPnt_FYBA void LC_SetBt(LC_BGR * pGr,short kolonne)
 <A ID="LC_ClrBt"NAME="LC_ClrBt"></A><H2>LC_ClrBt</H2>
 <BIG><I><B>Slett merke i brukttabellen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Fjern merke i brukttabellen.
-Parametre:
-Navn     Type    I/U   Forklaring
+Parameters:
+Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal merkes.
@@ -5281,10 +5281,10 @@ SK_EntPnt_FYBA void LC_ClrBt(LC_BGR * pGr,short kolonne)
 <A ID="LC_GetBt"NAME="LC_GetBt"></A><H2>LC_GetBt</H2>
 <BIG><I><B>Hent merke i brukttabellen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Hent merke i brukttabellen.
-Parametre:
-Navn     Type    I/U   Forklaring
+Parameters:
+Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal brukes.
@@ -5304,10 +5304,10 @@ SK_EntPnt_FYBA short LC_GetBt(LC_BGR * pGr,short kolonne)
 <A ID="LC_EraseBt"NAME="LC_EraseBt"></A><H2>LC_EraseBt</H2>
 <BIG><I><B>Slett område i brukttabellen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Blanker en eller flere kolonner i brukttabellen i aktuell base.
-Parametre:
-Navn     Type    I/U   Forklaring
+Parameters:
+Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 fra_kol  short    i    Første kolonne som skal blankes.
                        (Lovlig BT_MIN_USER - BT_MAX_USER)
@@ -5327,11 +5327,11 @@ SK_EntPnt_FYBA void LC_EraseBt(short fra_kol,short til_kol)
 <A ID="LC_CopyBt"NAME="LC_CopyBt"></A><H2>LC_CopyBt</H2>
 <BIG><I><B>Kopier kolonne i brukttabellen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Kopier kolonne i brukttabellen.
 Samtidig er det mulig å utføre logiske operasjoner mellom de to kolonnene.
-Parametre:
-Type   Navn        I/U   Forklaring
+Parameters:
+Type   Name        I/O   Explanation
 --------------------------------------------------------------------------
 short  fra_kol      i    Kolonne det skal kopieres fra. (Lovlig 0 - BT_MAX_BT)
 short  til_kol      i    Kolonne det skal kopieres til. (Lovlig 1 - BT_MAX_USER)
@@ -5357,12 +5357,12 @@ SK_EntPnt_FYBA void LC_CopyBt(short fra_kol,short til_kol,short operasjon)
 <A ID="LC_SetModusMerk"NAME="LC_SetModusMerk"></A><H2>LC_SetModusMerk</H2>
 <BIG><I><B>Setter flag for merking av referert gruppe.</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Setter flag for merking av referert gruppe.
 Har innvirkning for virkemåten til:
 LC_FAGeo, LC_FASn, og LC_FAGiQuery
-Parametre:
-Type           Navn   I/U  Forklaring
+Parameters:
+Type           Name   I/O  Explanation
 -----------------------------------------------------------------------
 unsigned short modus   i   0 = Ikke merk referert gruppe.
                            1 = Merk referert gruppe.
@@ -5380,11 +5380,11 @@ SK_EntPnt_FYBA void LC_SetModusMerk(unsigned short usModus)
 <A ID="LC_MerkGr"NAME="LC_MerkGr"></A><H2>LC_MerkGr</H2>
 <BIG><I><B>Merk en gruppe brukttabellen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 CH Merk aktuell gruppe i brukttabellen. Hvis flag for merking av referert
 gruppe er satt, blir også eventuelle refererte grupper merket.
-Parametre:
-Type    Navn      I/U   Forklaring
+Parameters:
+Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 short   sKolonne   i    Kolonne som skal merkes.
                         (Lovlig BT_MIN_USER - BT_MAX_USER)
@@ -5461,10 +5461,10 @@ beskrielse av en flate. Eksempel på bruk er gitt under <A HREF="file:///LC_POL_G
 <A ID="LC_POL_InitPolygon"NAME="LC_POL_InitPolygon"></A><H2>LC_POL_InitPolygon</H2>
 <BIG><I><B>Initierer polygon-struktur</I></B></BIG><PRE>
 =======================================================================
-Formål:
+Purpose:
 Initierer polygon-struktur.
 Parametere:
-Type        Navn     I/U    Forklaring
+Type        Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POLYGON *pPolygon  I     Peikar til polygonbeskrivelse
 Bruk:
@@ -5482,10 +5482,10 @@ SK_EntPnt_FYBA void LC_POL_InitPolygon(LC_POLYGON *pPolygon)
 <A ID="LC_POL_FrigiPolygon"NAME="LC_POL_FrigiPolygon"></A><H2>LC_POL_FrigiPolygon</H2>
 <BIG><I><B>Frigi minne som er allokert til polygon</I></B></BIG><PRE>
 =======================================================================
-Formål:
+Purpose:
 Frigir minne som er allokert til polygon. (Både omkrets og hull.)
 Parametere:
-Type        Navn     I/U    Forklaring
+Type        Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POLYGON *pPolygon  I     Peikar til polygonbeskrivelse
 Bruk:
@@ -5507,9 +5507,9 @@ Bruk:
 POL_OMKR  YtrePolygon;
 LC_POL_InitOmkrets(YtrePolygon);
 parametere:
-Type         Navn     I/U    Forklaring
+Type         Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_POL_OMKR *pPO      I/U    Peikar til polygonadministrasjonsblokka
+LC_POL_OMKR *pPO      I/O    Peikar til polygonadministrasjonsblokka
 Initierer administrasjonsblokka for polygonelement
 =======================================================================
  
@@ -5527,9 +5527,9 @@ Bruk:
 LC_POL_OMKR  YtrePolygon;
 pElement = LC_POL_LeggTilGruppeOmkrets(YtrePolygon,pBgr,sRetning,lSnr);
 parametere:
-Type            Navn     I/U    Forklaring
+Type            Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_POL_OMKR *    pPO      I/U    Peikar til polygonadministrasjonsblokka
+LC_POL_OMKR *    pPO      I/O    Peikar til polygonadministrasjonsblokka
 LC_BGR *         pBgr      I     Gruppenummer
 short           sRetning  I     Nøsteretning (LC_MED_DIG eller LC_MOT_DIG)
 long            lSnr      I     Serienummer
@@ -5552,9 +5552,9 @@ Bruk:
 LC_POL_OMKR  YtrePolygon;
 LC_POL_FjernGruppeOmkrets(&YtrePolygon,);
 parametere:
-Type            Navn     I/U    Forklaring
+Type            Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_POL_OMKR    *pPO      I/U    Peikar til polygonadministrasjonsblokka
+LC_POL_OMKR    *pPO      I/O    Peikar til polygonadministrasjonsblokka
 LC_POL_ELEMENT *pPE       I      Peker til element som skal fjernes
 Fjernar et element i kjeden av polygonelement.
 =======================================================================
@@ -5573,9 +5573,9 @@ Bruk:
 LC_POL_OMKR  YtrePolygon;
 LC_POL_FjernSisteGruppeOmkrets(&YtrePolygon);
 parametere:
-Type         Navn     I/U    Forklaring
+Type         Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_POL_OMKR *  pPO      I/U    Peikar til polygonadministrasjonsblokka
+LC_POL_OMKR *  pPO      I/O    Peikar til polygonadministrasjonsblokka
 Fjernar siste element i kjeden av polygonelement.
 =======================================================================
  
@@ -5591,9 +5591,9 @@ SK_EntPnt_FYBA void LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO)
 =======================================================================
 Bruk:
 parametere:
-Type         Navn     I/U    Forklaring
+Type         Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_POL_OMKR *pPO      I/U    Peikar til polygonadministrasjonsblokka
+LC_POL_OMKR *pPO      I/O    Peikar til polygonadministrasjonsblokka
 Frigir minne som er allokert til kjede av polygonelement.
 =======================================================================
  
@@ -5611,9 +5611,9 @@ Bruk:
 LC_OY_ADM  OyKjede;
 LC_POL_InitOy(OyKjede);
 parametere:
-Type       Navn     I/U    Forklaring
+Type       Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_OY_ADM *pOA      I/U    Peikar til øyadministrasjonsblokka
+LC_OY_ADM *pOA      I/O    Peikar til øyadministrasjonsblokka
 Initierer øy-kjeden.
 =======================================================================
  
@@ -5631,9 +5631,9 @@ Bruk:
 LC_OY_ADM  OyKjede;
 LC_POL_FrigiAlleOyer(OyKjede);
 parametere:
-Type       Navn     I/U    Forklaring
+Type       Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_OY_ADM *pOA      I/U    Peikar til øyadministrasjonsblokka
+LC_OY_ADM *pOA      I/O    Peikar til øyadministrasjonsblokka
 Frigjer minne som er allokert til kjede av øy (i polygon) - element.
 =======================================================================
  
@@ -5651,10 +5651,10 @@ Bruk:
 LC_OY_ADM  OyKjede;
 LC_POL_FjernOy(OyKjede,OyElement);
 parametere:
-Type           Navn     I/U    Forklaring
+Type           Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_OY_ADM     *pOA      I/U    Peikar til øyadministrasjonsblokka
-LC_OY_ELEMENT *pOE      I/U    Peikar til kjede av oyar
+LC_OY_ADM     *pOA      I/O    Peikar til øyadministrasjonsblokka
+LC_OY_ELEMENT *pOE      I/O    Peikar til kjede av oyar
 Frigjer minne som er allokert til kjede av øy (i polygon) - element.
 =======================================================================
  
@@ -5672,9 +5672,9 @@ Bruk:
 LC_OY_ADM  OyKjede;
 LC_POL_LeggTilOy(&OyKjede,pPO);
 Parametere:
-Type         Navn     I/U    Forklaring
+Type         Name     I/O    Explanation
 -----------------------------------------------------------------------
-LC_OY_ADM   *pOyKjede I/U    Peikar til kjede av øyelement
+LC_OY_ADM   *pOyKjede I/O    Peikar til kjede av øyelement
 LC_POL_OMKR *pPO       I     Peikar til polygonadministrasjonsblokka
 Legg til eit element i kjeden av øyar (i polygon) - element.
 =======================================================================
@@ -5693,7 +5693,7 @@ SK_EntPnt_FYBA void LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO)
 Bruk:
 LC_POL_TestBrukt(pPolygon,&Bgr);
 parametere:
-Type        Navn     I/U    Forklaring
+Type        Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POLYGON *pPolygon  I     Peker til polygonbeskrivelse.
 LC_BGR     *pBgr      I     Peikar til gruppe
@@ -5712,10 +5712,10 @@ SK_EntPnt_FYBA short LC_POL_TestBrukt(LC_POLYGON *pPolygon,LC_BGR *pBgr)
 <A ID="LC_POL_PutRef"NAME="LC_POL_PutRef"></A><H2>LC_POL_PutRef</H2>
 <BIG><I><B>Legger inn referanser i GINFO</I></B></BIG><PRE>
 =======================================================================
-Formål:
+Purpose:
 Legger inn referanser i GINFO, ut fra beskrivelse i struktur.
 Parametere:
-Type        Navn     I/U    Forklaring
+Type        Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POLYGON *pPolygon  I     Polygonbeskrivelse
 short       ngi       r     Antall linjer GINFO
@@ -5733,10 +5733,10 @@ SK_EntPnt_FYBA short LC_POL_PutRef(LC_POLYGON *pPolygon)
 <A ID="LC_POL_GetRef"NAME="LC_POL_GetRef"></A><H2>LC_POL_GetRef</H2>
 <BIG><I><B>Hent referanser for flate fra GINFO</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter referanser fra GINFO til struktur.
-Parametre:
-Type         Navn      I/U  Forklaring
+Parameters:
+Type         Name      I/O  Explanation
 -----------------------------------------------------------------------
 LC_POLYGON  *pPolygon   I   Peker til adm. for polygonbeskrivelse
 Bruk:
@@ -5778,11 +5778,11 @@ SK_EntPnt_FYBA void LC_POL_GetRef(LC_POLYGON *pPolygon)
 <A ID="LC_POL_GetRefOmkrets"NAME="LC_POL_GetRefOmkrets"></A><H2>LC_POL_GetRefOmkrets</H2>
 <BIG><I><B>Hent referanser for omkretsen av flate</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter referanser fra GINFO til struktur.
 Rutinen initierer strukturen pPO, men frigir ikke eventuellt gammelt innhold.
-Parametre:
-Type          Navn    I/U  Forklaring
+Parameters:
+Type          Name    I/O  Explanation
 -------------------------------------------------------------------------
 LC_POL_OMKR  *pPO;     IU  Peker til kjede som beskriver omkretsen.
 Bruk:
@@ -5799,12 +5799,12 @@ SK_EntPnt_FYBA void LC_POL_GetRefOmkrets(LC_POL_OMKR *pPO)
 <A ID="LC_POL_PTst"NAME="LC_POL_PTst"></A><H2>LC_POL_PTst</H2>
 <BIG><I><B>Polygontest</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om gitt punkt ligger innenfor polygon angitt av pPolygon.
 Forutsetter at pPolygon danner et lukket polygon.
 Skifter ikke aktuell gruppe.
-Parametre:
-Type    Navn    I/U   Forklaring
+Parameters:
+Type    Name    I/O   Explanation
 --------------------------------------------------------------------------
 double  a        i    Punkt som skal sjekkes
 double  n        i
@@ -5824,15 +5824,15 @@ SK_EntPnt_FYBA short LC_POL_PTst(LC_POLYGON *pPolygon,double a,double n)
 <A ID="LC_POL_PTstOmkrets"NAME="LC_POL_PTstOmkrets"></A><H2>LC_POL_PTstOmkrets</H2>
 <BIG><I><B>Sjekk om punkt ligger inni polygonomkrets</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekker om gitt punkt ligger innenfor yttergrensen for polygon angitt
 av struktur.
 Forutsetter at tabellen danner et lukket polygon
 Skifter ikke aktuell gruppe.
-Parametre:
-Type          Navn  I/U   Forklaring
+Parameters:
+Type          Name  I/O   Explanation
 --------------------------------------------------------------------------
-LC_POL_OMKR  *pPO    I/U  Peker til beskrivelse av omkretsen
+LC_POL_OMKR  *pPO    I/O  Peker til beskrivelse av omkretsen
 double        a      i    Punkt som skal sjekkes
 double        n      i
 short         ist    r    status: UT_FALSE = punktet er utenfor flaten
@@ -5854,7 +5854,7 @@ SK_EntPnt_FYBA short LC_POL_PTstOmkrets(LC_POL_OMKR *pPO,double a,double n)
 Bruk:
 LC_POL_Box(pPA,&nva,&nvn,&oha,&ohn);
 parametere:
-Type          Navn     I/U    Forklaring
+Type          Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POL_OMKR  *pPO       I     Peikar til polygonadministrasjonsblokka
 double       *nva       U
@@ -5887,12 +5887,12 @@ SK_EntPnt_FYBA void LC_POL_Box(LC_POL_OMKR *pPO,double *nva,double *nvn, double 
 <A ID="LC_BerAreal"NAME="LC_BerAreal"></A><H2>LC_BerAreal</H2>
 <BIG><I><B>Beregn areal av aktuell FLATE</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Beregner arealet av aktuell gruppe hvis denne er flate.
 Referansene brukes for arealberegningen.
 Tar hensyn til fradrag for øyer.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   areal     u    Beregnet areal
 Bruk:
@@ -5909,12 +5909,12 @@ SK_EntPnt_FYBA double LC_BerAreal(void)
 <A ID="LC_BerLengde"NAME="LC_BerLengde"></A><H2>LC_BerLengde</H2>
 <BIG><I><B>Beregn horisontal lengde av aktuell gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Beregn horisontal lengde av aktuell gruppe.
 Tar ikke hensyn til høyde/dybde.
 Referansene brukes IKKE i beregningen.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde    u    Beregnet lengde
 Bruk:
@@ -5931,13 +5931,13 @@ SK_EntPnt_FYBA double LC_BerLengde(void)
 <A ID="LC_BerLengde3D"NAME="LC_BerLengde3D"></A><H2>LC_BerLengde3D</H2>
 <BIG><I><B>Beregn skrå lengde av aktuell gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Beregn skrå lengde av aktuell gruppe.
 Krever at det finnes høyde/dybde i alle punkt.
 Referansene brukes IKKE i beregningen.
 Beregner bare for LINJE og KURVE.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde    u    Beregnet lengde
 bool     beregnet  r    Status som viser om lengde er beregnet
@@ -5955,11 +5955,11 @@ SK_EntPnt_FYBA bool LC_BerLengde3D(double *skraa_lengde)
 <A ID="LC_BerAvgrensLengde"NAME="LC_BerAvgrensLengde"></A><H2>LC_BerAvgrensLengde</H2>
 <BIG><I><B>Beregn lengden av avgrensning av FLATE</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Beregn lengden av avgrensningen av aktuell gruppe hvis denne er flate.
 Både indre og ytre avgrensning beregnes.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde     u    Beregnet areal
 Bruk:
@@ -5976,11 +5976,11 @@ SK_EntPnt_FYBA double LC_BerAvgrensLengde(void)
 <A ID="LC_BerYtreAvgrensLengde"NAME="LC_BerYtreAvgrensLengde"></A><H2>LC_BerYtreAvgrensLengde</H2>
 <BIG><I><B>Beregn lengden av ytre avgrensning av FLATE</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Beregn lengden av ytre avgrensningen av aktuell gruppe hvis denne er flate.
 Bare ytre avgrensning beregnes.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde     u    Beregnet lengde
 Bruk:
@@ -5997,11 +5997,11 @@ SK_EntPnt_FYBA double LC_BerYtreAvgrensLengde(void)
 <A ID="LC_BerIndreAvgrensLengde"NAME="LC_BerIndreAvgrensLengde"></A><H2>LC_BerIndreAvgrensLengde</H2>
 <BIG><I><B>Beregn lengden av indre avgrensning av FLATE</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Beregn lengden av indre avgrensningen av aktuell gruppe hvis denne er flate.
 Bare indre avgrensning beregnes.
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde     u    Beregnet lengde
 Bruk:
@@ -6018,10 +6018,10 @@ SK_EntPnt_FYBA double LC_BerIndreAvgrensLengde(void)
 <A ID="LC_RoundKoord"NAME="LC_RoundKoord"></A><H2>LC_RoundKoord</H2>
 <BIG><I><B>Endre koordinatene i buffer til riktig enhet</I></B></BIG><PRE>
 ===========================================================================
-Formål:
+Purpose:
 Endrer koordinatene i aktuell gruppe i buffer til valgt enhet.
 (Rutinen blir utført fra LC_WxGr.)
-Parametre: ingen
+Parameters: ingen
 Bruk:
 LC_RoundKoord();
 ==============================================================================
@@ -6041,7 +6041,7 @@ SK_EntPnt_FYBA void LC_RoundKoord(void)
 <A ID="LC_SnuGr"NAME="LC_SnuGr"></A><H2>LC_SnuGr</H2>
 <BIG><I><B>Snu gruppe</I></B></BIG><PRE>
 ===========================================================================
-Formål:
+Purpose:
 Snur en gruppe.
 Rutinen tilsvarer put fra brukerprogram inn i ringbufret.
 Både koordinater, høyde, KP og PINFO blir behandlet.
@@ -6049,8 +6049,8 @@ For .BUE blir fortegnet på radius endret.
 Fortegnet på referanser til gruppen blir oppdatert.
 Det er ikke mulig å snu gruppe som er referert fra grupper som
 ikke kan oppdateres. (Flate/trase som er sjekket ut av andre i NGIS.) 
-Parametre:
-Type    Navn    I/U   Forklaring
+Parameters:
+Type    Name    I/O   Explanation
 -----------------------------------------------------------------------------
 short   sStatus  r    Status: UT_TRUE  = OK
                               UT_FALSE = feil, ikke splittet
@@ -6068,7 +6068,7 @@ SK_EntPnt_FYBA short LC_SnuGr(void)
 <A ID="LC_SammenfoyGr"NAME="LC_SammenfoyGr"></A><H2>LC_SammenfoyGr</H2>
 <BIG><I><B>Sammenføy grupper</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sammenføye to grupper.
 Kopierer koordinater fra gitt gruppe inn i aktuell gruppe.
 De kopierte koordinatene kommer som en utvidelse av gruppen.
@@ -6079,8 +6079,8 @@ Gruppen det kopieres fra blir slettet.
 Eventuelle referanser til gruppene blir oppdatert.
 Det er ikke mulig å sammenføye hvis en av gruppene er referert fra grupper
 som ikke kan oppdateres. (Flate/trase som er sjekket ut av andre i NGIS.) 
-Parametre:
-Type    Navn       I/U   Forklaring
+Parameters:
+Type    Name       I/O   Explanation
 -----------------------------------------------------------------------------
 LC_BGR * pFraBgr    i    Gruppenummer det skal kopieres fra.
 short   retning     i    Buffer-retning:
@@ -6114,7 +6114,7 @@ SK_EntPnt_FYBA short LC_SammenfoyGr(LC_BGR * pFraBgr,short retning,short plasser
 <A ID="LC_SplittGr"NAME="LC_SplittGr"></A><H2>LC_SplittGr</H2>
 <BIG><I><B>Splitt gruppe</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Splitter aktuell gruppe i to deler.
 Første del av gruppen beholdes som aktuell gruppe. Denne blir ikke
 skrevet til SOSI-filen, men buffer er oppdatert.
@@ -6125,8 +6125,8 @@ Hvis gruppen er BUEP og en av delene får bare to koordinater
 blir det lagt inn et nytt punkt midt på buen.
 Det er ikke mulig å splitte grupper som er referert fra grupper som
 ikke kan oppdateres. (Flate/trase som er sjekket ut av andre i NGIS.) 
-Parametre:
-Type     Navn   I/U   Forklaring
+Parameters:
+Type     Name   I/O   Explanation
 --------------------------------------------------------------------------
 long    sP1     i    Punktnummer 1.   (Må være større enn 1)
 long    sP2     i    Punktnummer 2.   (Må være mindre enn nko)
@@ -6147,10 +6147,10 @@ SK_EntPnt_FYBA short LC_SplittGr (long sP1,long sP2,LC_BGR * pBgr2)
 <A ID="LC_ErstattReferanse"NAME="LC_ErstattReferanse"></A><H2>LC_ErstattReferanse</H2>
 <BIG><I><B>Erstatt referanse </I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Erstatt referanse i alle grupper i gitt fil.
-Parametre:
-Type       Navn          I/U  Forklaring
+Parameters:
+Type       Name          I/O  Explanation
 --------------------------------------------------------------------------
 LC_FILADM *pFil           i   Fil som skal behandles
 long       lGmlSnr        i   Gruppe som skal byttes ut
@@ -6177,10 +6177,10 @@ SK_EntPnt_FYBA void LC_ErstattReferanse (LC_FILADM *pFil,long lGmlSnr,long lNytt
 <A ID="LC_InqAntFiler"NAME="LC_InqAntFiler"></A><H2>LC_InqAntFiler</H2>
 <BIG><I><B>Finn antall filer i basen</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Finn antall filer i aktuell base.
-Parametre:
-Type           Navn    I/U  Forklaring
+Parameters:
+Type           Name    I/O  Explanation
 -------------------------------------------------------------------
 unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
                               LC_FRAMGR og /eller LC_BAKGR
@@ -6207,10 +6207,10 @@ SK_EntPnt_FYBA short LC_InqAntFiler(unsigned short usLag)
 <A ID="LC_ClrPrioritet"NAME="LC_ClrPrioritet"></A><H2>LC_ClrPrioritet</H2>
 <BIG><I><B>Slett prioritets-bit</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Slett prioritets-bit.
-Parametre:
-Navn     Type    I/U   Forklaring
+Parameters:
+Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal merkes.
@@ -6229,10 +6229,10 @@ SK_EntPnt_FYBA void LC_ClrPrioritet(LC_BGR * pGr,short kolonne)
 <A ID="LC_SetPrioritet"NAME="LC_SetPrioritet"></A><H2>LC_SetPrioritet</H2>
 <BIG><I><B>Sett prioritets-bit</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sett prioritets-bit.
-Parametre:
-Navn     Type    I/U   Forklaring
+Parameters:
+Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal merkes.
@@ -6251,10 +6251,10 @@ SK_EntPnt_FYBA void LC_SetPrioritet(LC_BGR * pGr,short kolonne)
 <A ID="LC_InqPrioritet"NAME="LC_InqPrioritet"></A><H2>LC_InqPrioritet</H2>
 <BIG><I><B>Hent prioritets-bit</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Hent prioritets-bit.
-Parametre:
-Navn     Type    I/U   Forklaring
+Parameters:
+Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal hentes.
@@ -6274,10 +6274,10 @@ SK_EntPnt_FYBA short LC_InqPrioritet(LC_BGR * pGr,short kolonne)
 <A ID="LC_ErasePrioritet"NAME="LC_ErasePrioritet"></A><H2>LC_ErasePrioritet</H2>
 <BIG><I><B>Blank ut prioritets-bit</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Blank ut prioritets-bit.
-Parametre:
-Navn     Type    I/U   Forklaring
+Parameters:
+Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pGr      i    Gruppenummer
 Bruk:
@@ -6294,10 +6294,10 @@ SK_EntPnt_FYBA void LC_ErasePrioritet(LC_BGR * pGr)
 <A ID="LC_EraseAllPrioritet"NAME="LC_EraseAllPrioritet"></A><H2>LC_EraseAllPrioritet</H2>
 <BIG><I><B>Blank ut ALLE prioritets-bit</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Blank ut alle prioritets-bit på alle gruppene i denne filen.
-Parametre:
-Navn        Type    I/U   Forklaring
+Parameters:
+Name        Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM  *pFil     i    Filpeker
 Bruk:
@@ -6319,12 +6319,12 @@ SK_EntPnt_FYBA void LC_EraseAllPrioritet(LC_FILADM *pFil)
 <A ID="LC_FormatterKvalitet"NAME="LC_FormatterKvalitet"></A><H2>LC_FormatterKvalitet</H2>
 <BIG><I><B>Formatter KVALITET</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Formater parameterstrengen for KVALITET.
 Resultatet legges i en intern streng, og må kopieres over til andre
 variabler før endring.
-Parametre:
-Type    Navn         I/U   Forklaring
+Parameters:
+Type    Name         I/O   Explanation
 -------------------------------------------------------------------------
 short   sMetode           i Hvordan data er registrert.
                               KVAL_MET_UNDEF  metode er udefinert.
@@ -6364,10 +6364,10 @@ SK_EntPnt_FYBA char *LC_FormatterKvalitet(short sMetode,long lNoyaktighet,short 
 <A ID="LC_InitTabel"NAME="LC_InitTabel"></A><H2>LC_InitTabel</H2>
 <BIG><I><B>Åpner tabellsystemet</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Initierer tabellsystemet og åpner filen.
-Parametre:
-Type     Navn      I/U   Forklaring
+Parameters:
+Type     Name      I/O   Explanation
 -----------------------------------------------------------------------------
 long     n_rec      i    Antall reckords som skal nullstilles. Disse kan
                          etterpå brukes til tilfeldig aksess. Utvidelse
@@ -6404,10 +6404,10 @@ SK_EntPnt_FYBA short LC_InitTabel(long n_rec,short rec_len,void *buffer)
 <A ID="LC_PutTabel"NAME="LC_PutTabel"></A><H2>LC_PutTabel</H2>
 <BIG><I><B>Put tabell-linje</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Legg inn en linje fra tabellfilen.
-Parametre:
-Type      Navn   I/U   Forklaring
+Parameters:
+Type      Name   I/O   Explanation
 -----------------------------------------------------------------------------
 long      linje   i    Linjenummer som skal legges inn. (0 er første linje)
                        (Største lovlige er 1 større enn det største hittil.)
@@ -6427,10 +6427,10 @@ SK_EntPnt_FYBA short LC_PutTabel(long linje,void *buffer)
 <A ID="LC_GetTabel"NAME="LC_GetTabel"></A><H2>LC_GetTabel</H2>
 <BIG><I><B>Get tabell-linje</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Henter en linje fra tabellfilen.
-Parametre:
-Type      Navn   I/U   Forklaring
+Parameters:
+Type      Name   I/O   Explanation
 -----------------------------------------------------------------------------
 long      linje   i    Linjenummer som skal hentes.  (0 er første linje)
 void     *buffer  i    Peker til struktur som skal ta mot lest reckord.
@@ -6449,10 +6449,10 @@ SK_EntPnt_FYBA short LC_GetTabel(long linje,void *buffer)
 <A ID="LC_CloseTabel"NAME="LC_CloseTabel"></A><H2>LC_CloseTabel</H2>
 <BIG><I><B>Stenge tabellsystemet</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Avslutter tabellsystemet og stenger og sletter filen.
 Tabellen kan nå åpnes på nytt for annen bruk.
-Parametre: ingen
+Parameters: ingen
    
 Bruk:
 LC_CloseTabel();
@@ -6483,19 +6483,19 @@ med følgende rutiner:
 <A ID="LC_SetErrorHandler"NAME="LC_SetErrorHandler"></A><H2>LC_SetErrorHandler</H2>
 <BIG><I><B>Registrer feilmeldingsrutine</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Registrer feilmeldingsrutine.
 Feilmeldingsrutinen blir kallt hvis det oppstår feil.
-Parametre:
-Type   Navn                       I/U  Forklaring
+Parameters:
+Type   Name                       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f) (short ,char *,char *)  i   Peker til feilmeldingsrutine
 Bruk:
 LC_SetErrorHandler(ErrorHandler);
 Feilmeldingsrutinen skal ha følgende definisjon:
 void ErrorHandler(short feil_nr,const char *logtx,const char *vartx);
-Med følgende parametre:
-Type    Navn     I/U  Forklaring
+Med følgende Parameters:
+Type    Name     I/O  Explanation
 -----------------------------------------------------------------------------
 short   feil_nr   i   Feil-nummer
 char   *logtx     i   Tekst som bare skrives til logfil.
@@ -6513,19 +6513,19 @@ SK_EntPnt_FYBA void LC_SetErrorHandler(void (*f) (short,const char*,const char*)
 <A ID="LC_SetStartMessageHandler"NAME="LC_SetStartMessageHandler"></A><H2>LC_SetStartMessageHandler</H2>
 <BIG><I><B>Registrer initieringsrutine</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Registrer initieringsrutine.
 Initieringsrutinen blir kalt for å starte visning av framdrift.
-Parametre:
-Type   Navn       I/U  Forklaring
+Parameters:
+Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f)(char*)  i   Peker til initieringsrutine
 Bruk:
 LC_SetStartMessageHandler(StartMessageHandler);
 Initieringsrutinen skal ha følgende definisjon:
 void StartMessageHandler(char *pszFilnavn);
-Med følgende parametre:
-Type     Navn        I/U  Forklaring
+Med følgende Parameters:
+Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
 =============================================================================
@@ -6540,19 +6540,19 @@ SK_EntPnt_FYBA void LC_SetStartMessageHandler(void (*f)(const char*))
 <A ID="LC_SetShowMessageHandler"NAME="LC_SetShowMessageHandler"></A><H2>LC_SetShowMessageHandler</H2>
 <BIG><I><B>Registrer visningsrutine</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Registrer visningsrutine.
 Visningsrutine blir kalt for å vise framdrift ved indeks-oppbygging.
-Parametre:
-Type   Navn       I/U  Forklaring
+Parameters:
+Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f)(double)  i   Peker til visningsrutine
 Bruk:
 LC_SetShowMessageHandler(ShowMessageHandler);
 Visningsrutinen skal ha følgende definisjon:
 void ShowMessageHandler(double prosent);
-Med følgende parametre:
-Type     Navn        I/U  Forklaring
+Med følgende Parameters:
+Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 double   prosent      i   Prosent ferdig (0.0 - 100.0)
 =============================================================================
@@ -6567,11 +6567,11 @@ SK_EntPnt_FYBA void LC_SetShowMessageHandler(void (*f)(double))
 <A ID="LC_SetEndMessageHandler"NAME="LC_SetEndMessageHandler"></A><H2>LC_SetEndMessageHandler</H2>
 <BIG><I><B>Registrer avslutningsrutine</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Registrer avslutningsrutine.
 Avslutningsrutinen blir kalt for å avslutte visning av framdrift ved indeksoppbygging.
-Parametre:
-Type   Navn       I/U  Forklaring
+Parameters:
+Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f)(void)  i   Peker til avslutningsrutine
 Bruk:
@@ -6590,20 +6590,20 @@ SK_EntPnt_FYBA void LC_SetEndMessageHandler(void (*f)(void))
 <A ID="LC_SetCancelHandler"NAME="LC_SetCancelHandler"></A><H2>LC_SetCancelHandler</H2>
 <BIG><I><B>Registrer avbruddsstyring</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Registrer avbruddsstyring.
 Rutine for avbruddsstyring blir kalt for å sjekke om bruker ønsker
 å avbryte beregningen.
-Parametre:
-Type   Navn       I/U  Forklaring
+Parameters:
+Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 short  (*f)(void)  i   Peker til rutine for avbruddsstyring.
 Bruk:
 LC_SetCancelHandler(CancelHandler);
 Rutine for avbruddsstyring skal ha følgende definisjon:
 short CancelHandler(void);
-Med følgende parametre:
-Type   Navn      I/U  Forklaring
+Med følgende Parameters:
+Type   Name      I/O  Explanation
 -----------------------------------------------------------------------------
 short  sAvbrutt   r   UT_TRUE  = Cancel
                       UT_FALSE = ikke avbrudd
@@ -6624,10 +6624,10 @@ ikke blir aktivisert.
 <A ID="LC_StartMessage"NAME="LC_StartMessage"></A><H2>LC_StartMessage</H2>
 <BIG><I><B>Vise melding</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Starter vising av melding om baseoppbygging.
-Parametre:
-Type     Navn        I/U  Forklaring
+Parameters:
+Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
 Bruk:
@@ -6644,10 +6644,10 @@ void LC_StartMessage(const char *pszFilnavn)
 <A ID="LC_ShowMessage"NAME="LC_ShowMessage"></A><H2>LC_ShowMessage</H2>
 <BIG><I><B>Vise melding</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Vising av melding om baseoppbygging.
-Parametre:
-Type     Navn        I/U  Forklaring
+Parameters:
+Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 double   prosent      i   Prosent ferdig (0.0 - 100.0)
 Bruk:
@@ -6664,10 +6664,10 @@ void LC_ShowMessage(double prosent)
 <A ID="LC_EndMessage"NAME="LC_EndMessage"></A><H2>LC_EndMessage</H2>
 <BIG><I><B>Avslutt melding</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Avslutt melding om baseoppbygging.
-Parametre:
-Type     Navn        I/U  Forklaring
+Parameters:
+Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 Bruk:
 LC_EndMessage();
@@ -6683,10 +6683,10 @@ void LC_EndMessage(void)
 <A ID="LC_Cancel"NAME="LC_Cancel"></A><H2>LC_Cancel</H2>
 <BIG><I><B>Sjekk om Esc er trykket</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Sjekk om det er trykkt på Esc (Avbryte indeksoppbygging).
-Parametre:
-Type   Navn      I/U   Forklaring
+Parameters:
+Type   Name      I/O   Explanation
 --------------------------------------------------------------------------
 short  sAvbrutt   r    UT_TRUE  = Cancel
                        UT_FALSE = ikke avbrudd
@@ -6705,10 +6705,10 @@ short LC_Cancel(void)
 <A ID="LC_Error"NAME="LC_Error"></A><H2>LC_Error</H2>
 <BIG><I><B>Feilmeldingsrutine</I></B></BIG><PRE>
 =============================================================================
-Formål:
+Purpose:
 Standard feilmeldingsrutine.
-Parametre:
-Type     Navn        I/U  Forklaring
+Parameters:
+Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 short    feil_nr      i   Feil-nummer
 char    *logtx        i   Tekst som bare skrives til logfil.
@@ -6733,13 +6733,13 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
 <A ID="LC_StrError"NAME="LC_StrError"></A><H2>LC_StrError</H2>
 <BIG><I><B>Feilmeldingstekst</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Henter feilmeldingstekst og nivå for et feilmeldingsnummer.
 Strengen legges i en egen feilmeldingsstruktur for feil-rutiner i fyba.
 Dette blir ødelagt ved neste kall til en "feil-rutine". For å ta vare på
 strengen må den kopieres over til egen streng. (Bruk UT_StrCopy).
-Parametre:
-Type     Navn        I/U  Forklaring
+Parameters:
+Type     Name        I/O  Explanation
 --------------------------------------------------------------------------
 short    feil_nr      i   Feilmeldingsnummer
 char   **feilmelding  u   Peker til feilmeldingstekst avslutta med '/0'.
@@ -6768,10 +6768,10 @@ SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
 <A ID="LC_DumpTab"NAME="LC_DumpTab"></A><H2>LC_DumpTab</H2>
 <BIG><I><B>Dump interne tabeller til stderr</I></B></BIG><PRE>
 ==========================================================================
-Formål:
+Purpose:
 Dump interne tabeller til stderr
-Parametre:
-Type     Navn     I/U   Forklaring
+Parameters:
+Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 Bruk:
 LC_DumpTab();
