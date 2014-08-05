@@ -8,12 +8,12 @@
 <BR>
 <FONT COLOR="Red" SIZE="+6" FACE="Comic Sans MS"><I><B><CENTER>FYBA</CENTER></I></B></FONT>
 <BR>
-<FONT SIZE="+2" FACE="Comic Sans MS"><I><B><CENTER>Et lagringssystem for geodata på SOSI-format.</CENTER></I></B></FONT>
+<FONT SIZE="+2" FACE="Comic Sans MS"><I><B><CENTER>A storage system for geo data in SOSI-format.</CENTER></I></B></FONT>
 <BR>
 <BR>
 <BR>
 <BR>
-<FONT SIZE="-1"><CENTER>Sist oppdatert: 2013-10-09 av rosand</CENTER></FONT>
+<FONT SIZE="-1"><CENTER>Last updated: 2014-08-05 by rubund. Translated from the norwegian version dated 2013-10-09</CENTER></FONT>
 
 
 
@@ -23,28 +23,26 @@
 <BR>
 <BR>
 <BR>
-<A ID="O1"NAME="O1"></A><H1>1 Innledning</H1>
+<A ID="O1"NAME="O1"></A><H1>1 Introduction</H1>
 
 </PRE>
-FYBA er et rutinebibliotek for å kunne håndtere
-<A TARGET="top"  HREF="http://www.statkart.no/nor/sosi/" target="_new">SOSI</A>-filer på en
-mest mulig elegant måte, både mht. søking, lesing og oppdatering.
-FYBA er nå tilpasset <A TARGET="top" HREF="http://www.statkart.no/nor/sosi/" target="_new">SOSI</A>-format
-versjon 4.0, og blir fortløpende tilpasset nye <A TARGET="top" HREF="http://www.statkart.no/nor/sosi/" target="_new"">SOSI</A>-versjoner.
+FYBA is a library to handle searching, reading and updating of
+<A TARGET="top"  HREF="http://www.statkart.no/nor/sosi/" target="_new">SOSI</A>-files.
+FYBA is now compatible with the <A TARGET="top" HREF="http://www.statkart.no/nor/sosi/" target="_new">SOSI</A>-format
+versjon 4.0, and will be adapted newer <A TARGET="top" HREF="http://www.statkart.no/nor/sosi/" target="_new"">SOSI</A>-versions.
 <BR>
-Dene brukerveiledningen er laget for personell som er familiær med
-SOSI og C-programmering.
+This user manual is made for people who are familiar with SOSI and C-programming.
 
-Alle rutinegrensesnitt og konstanter er definert på filen FYBA.H.
-Denne filen bør derfor inkluderes i alle filer som skal bruke FYBA-rutinene.
+All functions and constants are defined in the file FYBA.H.
+This file should therefore be included in all files which use the FYBA-functions.
 
 <BR>
-FYBA er skrevet i ANSI C, og kan i utgangspunktet kompileres på alle
-platformer der det finnes en passende kompilator.
-Det er imidlertid en del hjelperutiner som er maskin/operativsystem-avhengig.
-Disse er skillt ut til et eget bibliotek (UT) som må tilpasses til
-maskin/opperativsystem. Dette er testet under DOS, OS/2-16, OS/2-32, Win16, Win32, X64 og
-div. UNIX varianter (POSIX, HPUX, Silicon graphics).
+FYBA is written in ANSI C and it should therefore be possible to compile it in all platforms where there is a suitable compiler.
+There are however some helper functions that are architecture-dependent.
+These functions were separated into a separate library (UT) and must be adapted to the architecture.
+They have been tested in
+DOS, OS/2-16, OS/2-32, Win16, Win32, X64 and
+various UNIX varieties (POSIX, HPUX, Silicon graphics).
 
 
 <BR>
@@ -53,34 +51,32 @@ div. UNIX varianter (POSIX, HPUX, Silicon graphics).
 <BR>
 <BR>
 <BR>
-<A ID="O2"NAME="O2"></A><H1>2 Oversikt over funksjonaliteten til FYBA</H1>
+<A ID="O2"NAME="O2"></A><H1>2 Overview of the Functionality of FYBA</H1>
 
 </PRE>
-FYBA et rutinebibliotek som etablerer og vedlikeholder
-egne "indeks-filer" (.IDX) med nødvendige opplysninger for
-lesing,skriving,søk og manipulering av data på SOSI-filene.
+FYBA is a library that establishes and manitains "index-files" (.IDX) with the necessary information for
+reading, writing, searching and manipulation of data in SOSI files.
 
-
-Som en oversikt kan følgende figur forklare sammenhengen mellom
-SOSI-filene ,biblioteket og brukerprogrammene.
+As an overview, the following figure can explain the relationship between the
+SOSI-files, the library and programs linked with the library.
 
 <PRE>
                          !---------------!
-       !---------------->! Indeks-filer  !<-------!
+       !---------------->!  Index-files  !<-------!
        !                 !---------------!        !
        !                        ^                 !
        !                        !                 !
        !                    !---!-----!           !   !-----------------!
        !                    !         !           !-->!                 !
        !                    ! Buffer  !               !                 !
-!------!------!  LC_Rxxxx   !         !  LC_PutXxx    ! Bruker-program  !
-! SOSI-fil(er)!<----------- ! internt !<------------- !                 !
+!------!------!  LC_Rxxxx   !         !  LC_PutXxx    ! User-program    !
+! SOSI-file(s)!<----------- !internal !<------------- !                 !
 !             ! ----------->!         !               !                 !
-!-------------!  LC_Wxxxx   ! i       ! ------------->!                 !
+!-------------!  LC_Wxxxx   ! in      ! ------------->!                 !
                             !         !  LC_GetXxx    !                 !
-                            ! FYBA-   !               !                 !
+                            ! the FYBA!               !                 !
                             !         !               !                 !
-                            ! rutinene!               !-----------------!
+                            ! routines!               !-----------------!
                             !         !
                             !---------!
 
@@ -91,23 +87,23 @@ SOSI-filene ,biblioteket og brukerprogrammene.
 <BR>
 <BR>
 <BR>
-<A ID="O3"NAME="O3"></A><H1>3 Indeks-systemets oppbygning</H1>
+<A ID="O3"NAME="O3"></A><H1>3 The Internal Workings of the Index System</H1>
 
-Indeks-systemet er bygt opp av en hel rekke tabeller. Disse ligger
-delevis i minnet, og delevis som filer på disken.
+The index system consists of a bunch of tables. These are partly kept in RAM, and
+partly as files on the hard drive.
 
-Nedenfor følger en tegning av aktuelle tabeller.
-Dette bare til informasjon. Bruker behøver stort-sett ikke
-kjenne til oppbygningen av disse:
+Below, there is a drawing of these tables.
+This is only for your information. It is not necessary to know them in detail to be able
+to use the library:
 
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
-<A ID="Gruppetabell"NAME="Gruppetabell"></A><H2>Gruppetabell</H2>
-<BIG><I><B>Gruppetabell</I></B></BIG><PRE>
-Dette er hovedtabellen med informasjon om hver enkelt gruppe på SOSI-filen. 
+<A ID="Gruppetabell"NAME="Gruppetabell"></A><H2>Group table</H2>
+<BIG><I><B>Group table</I></B></BIG><PRE>
+This is the main table with the information about every single group in the SOSI file.
 
 !------------------------------:-----------------------------------------------*
 !Start  !Start !Ant.   !Ant.   !            Gruppeinnhold                      !
@@ -131,23 +127,23 @@ Dette er hovedtabellen med informasjon om hver enkelt gruppe på SOSI-filen.
 <HR>
 <BR>
 <BR>
-<A ID="Brukttabell"NAME="Brukttabell"></A><H2>Brukttabell</H2>
-<BIG><I><B>Merking av grupper</I></B></BIG><PRE>
-Denne tabellen brukes delevis internt av FYBA, og delevis av brukerprogrammet.
+<A ID="Brukttabell"NAME="Brukttabell"></A><H2>Used table</H2>
+<BIG><I><B>Marking of groups</I></B></BIG><PRE>
+This table is partly used internally by FYBA and partly by the user program.
 
-Følgende bit er definert:
--------------------------------------------------------------------------
- 31  Gruppen er funnet ved geografisk søk   -----! Brukere kan lese/bruke
- 30  Gruppen er funnet ved GINFO-utvalg          ! disse, men det er ikke
- 29  Gruppen er funnet ved serienummer-søk       ! lov til å endre dem.
- 28  Gruppen er i ringbufferet                   !
- 27  Referanser er brukt i omskrevet blokk ------!
+The following bits are defined:
+--------------------------------------------------------------------------------------
+ 31  The group has been found after a geographical search        -----! Users can read/use    
+ 30  The group has been found with a GINFO selection                  ! these, but it is not  
+ 29  The group has been found after a serial number search            ! allowed to change them.
+ 28  The group is in the ring buffer                                  !
+ 27  The group is used in a rewritten block                     ------!
  26                              -----!
-  .                                   ! Brukere har
-  .                                   ! full tilgang
-  2                                   ! til disse.
+  .                                   ! Users have  
+  .                                   ! full access 
+  2                                   ! to these.
   1                              -----!
-  0  Gruppen ligger i kø for skriving til SOSI-filen
+  0  The group is waiting in a line to be written to the SOSI-file
 </PRE>
 
 <BR>
@@ -155,15 +151,15 @@ Følgende bit er definert:
 <HR>
 <BR>
 <BR>
-<A ID="SOSI-buffer"NAME="SOSI-buffer"></A><H2>SOSI-buffer</H2>
-<BIG><I><B>Binær kopi av SOSI-filen</I></B></BIG><PRE>
-For å øke hastigheten holder FYBA en binær kopi av SOSI-filen.
-Denne kopien ligger delevis i minne og delevis på disk.
+<A ID="SOSI-buffer"NAME="SOSI-buffer"></A><H2>SOSI buffer</H2>
+<BIG><I><B>Binary copy of the SOSI-file</I></B></BIG><PRE>
+In order to increase the speed, the library makes a binary copy of the SOSI file.
+This copy is partly stored in RAM and partly on the hard drive.
 
-Denne kopien består av gruppeinformasjon, koordinater og punktinformasjon.
+The copy consists of group information, coordinates and point information.
 
-Gruppeinformasjonen for en gruppe handteres som en lang streng med pekere
-til startposisjon for hver GINFO-linje.
+The group information for one group is treated as a long string with pointers
+to the start position for every GINFO-line
 
 !-----------:-----------:----------:----------------------------------!
 !  GINFO 1  !  GINFO 2  ! GINFO 3  ! .....                            !
@@ -174,19 +170,19 @@ til startposisjon for hver GINFO-linje.
 !--------! !  !           !
 ! GINFO  ! !  !           !
 !--------! !  !           !
-! ofset  !-!  !           !
+! offset !-!  !           !
 !        !-----           !
 !        !-----------------
 
-Koordinatene lagres i egne array. Punktinformasjonen lagres som
-en lang streng for hele gruppen med peker for hvert punkt til startposisjon
-for PINFO for hvert punkt på samme måte som GINFO.
+The coordinates are stored in separate arrays. The point information is stored
+as a long string for the entire group with pointers to every point to the start
+position for PINFO for every point in the same way as GINFO.
 
-!--------! !--------! !--------:-------:--------!
-! Øst    ! ! Nord   ! ! Høyde  !  KP   ! PINFO  !
-!--------! !--------! !--------!-------!--------!
-! double ! ! double ! ! double ! short ! ushort !
-!   m    ! !   m    ! !   m    !       !  ofset !
+!--------! !--------! !----------:-------:--------!
+! East   ! ! North  ! ! Altitude !  KP   ! PINFO  !
+!--------! !--------! !----------!-------!--------!
+! double ! ! double ! ! double   ! short ! ushort !
+!   m    ! !   m    ! !   m      !       !  ofset !
 </PRE>
 
 <BR>
@@ -194,10 +190,10 @@ for PINFO for hvert punkt på samme måte som GINFO.
 <HR>
 <BR>
 <BR>
-<A ID="Serienummer-tabell"NAME="Serienummer-tabell"></A><H2>Serienummer-tabell</H2>
+<A ID="Serienummer-tabell"NAME="Serienummer-tabell"></A><H2>Serial number table</H2>
 !-------------*
-! Gruppenummer!
-!-------------!       Linjenummer i tabellen er serienummer.
+! Group number!
+!-------------!       The line number in the table is the serial number.
 !  lGrNr      !
 !  (long)     !
 *-------------*
@@ -208,16 +204,16 @@ for PINFO for hvert punkt på samme måte som GINFO.
 <HR>
 <BR>
 <BR>
-<A ID="Geografisk-søketabell"NAME="Geografisk-søketabell"></A><H2>Geografisk-søketabell</H2>
-<BIG><I><B>Geografisk søketabell</I></B></BIG><PRE>
+<A ID="Geografisk-søketabell"NAME="Geografisk-søketabell"></A><H2>Geographical search table</H2>
+<BIG><I><B>Geographical search table</I></B></BIG><PRE>
 
-Geografisk søk er basert på omskrevet boks.
-Boksene organiseres i et R-tre. 
+Geopgraphical search is based on a rewritten box.
+The boxes are organised in an R-tree.
 
 !-----------------------------------*
-!      Omskreven boks               !
+!      Rewritte box                 !
 !                                   !
-! min-N  ! min-Ø  ! max-N  ! max-Ø  !
+! min-N  ! min-E  ! max-N  ! max-E  !
 !        !        !        !        !
 !--------!--------!--------!--------!
 !dMinNord!dMinAust!dMaxNord!dMaxAust!
@@ -232,15 +228,15 @@ Boksene organiseres i et R-tre.
 <BR>
 <BR>
 <BR>
-<A ID="O4"NAME="O4"></A><H1>4 Navnekonvensjoner</H1>
+<A ID="O4"NAME="O4"></A><H1>4 Naming Conventions</H1>
 
 </PRE>
-Variabelnavn er fritt valgt for å si mest mulig om hva variabelen inneholder.
+The variable names are freely chosen to say as much about what the variables contain. Many of the names are in Norwegian because of the origin of the library.
 <BR>
-De fleste rutiner i brukergrensesnittet starter med "LC_":
+Most of the functions in the user interface begin with "LC_":
 <BR>
-I tillegg kommer noen spesielle rutiner for å lese filhodet direkte fra
-SOSI-fil. Disse har navn som starter med "HO_":
+In addition, there are some special functions that are used to read the file header directly from a SOSI file.
+These have names that start with "HO_":
 
 <BR>
 <BR>
@@ -248,7 +244,7 @@ SOSI-fil. Disse har navn som starter med "HO_":
 <BR>
 <BR>
 <BR>
-<A ID="O5"NAME="O5"></A><H1>5 Initiering og styring</H1>
+<A ID="O5"NAME="O5"></A><H1>5 Initialisation and Control</H1>
 
 <BR>
 <BR>
@@ -256,14 +252,14 @@ SOSI-fil. Disse har navn som starter med "HO_":
 <BR>
 <BR>
 <A ID="LC_Init"NAME="LC_Init"></A><H2>LC_Init</H2>
-<BIG><I><B>Initierer FYBA</I></B></BIG><PRE>
+<BIG><I><B>Initialises FYBA</I></B></BIG><PRE>
 =============================================================================
-Formål:
-Initierer FYBA.
-Parametre:
-Type     Navn      I/U   Forklaring
+Purpose:
+Initialises FYBA.
+Parameters:
+Type     Name      I/O   Explanation
 -----------------------------------------------------------------------------
-Bruk:
+Usage:
 LC_Init();
    =============================================================================
  
@@ -275,10 +271,10 @@ SK_EntPnt_FYBA void LC_Init(void)
 <BR>
 <BR>
 <A ID="LC_InqVer"NAME="LC_InqVer"></A><H2>LC_InqVer</H2>
-<BIG><I><B>Identifikasjon</I></B></BIG><PRE>
+<BIG><I><B>Identification</I></B></BIG><PRE>
 =============================================================================
-Formål:
-Henter versjons-identifikasjon for dette biblioteket.
+Purpose:
+Gets the version of this library.
    =============================================================================
  
 SK_EntPnt_FYBA char *LC_InqVer(void)
@@ -289,14 +285,14 @@ SK_EntPnt_FYBA char *LC_InqVer(void)
 <BR>
 <BR>
 <A ID="LC_Close"NAME="LC_Close"></A><H2>LC_Close</H2>
-<BIG><I><B>Stenger ned FYBA</I></B></BIG><PRE>
+<BIG><I><B>Closes FYBA</I></B></BIG><PRE>
 =============================================================================
-Formål:
-Stenger ned FYBA.
-Parametre:
-Type     Navn      I/U   Forklaring
+Purpose:
+Closes FYBA.
+Parameters:
+Type     Name      I/O   Explanation
 -----------------------------------------------------------------------------
-Bruk:
+Usage:
 LC_Close();
 	=============================================================================
  
@@ -308,16 +304,16 @@ SK_EntPnt_FYBA void LC_Close(void)
 <BR>
 <BR>
 <A ID="LC_ErInitiert"NAME="LC_ErInitiert"></A><H2>LC_ErInitiert</H2>
-<BIG><I><B>Er FYBA initiert</I></B></BIG><PRE>
+<BIG><I><B>Is FYBA initialised</I></B></BIG><PRE>
 =============================================================================
-Formål:
-Sjekker om FYBA er initiert / tilgjengelig for bruk.
-Parametre:
-Type   Navn     I/U   Forklaring
+Purpose:
+Checks if FYBA has been initialised / is available.
+Parameters:
+Type   Name     I/O   Explanation
 -----------------------------------------------------------------------------
-short  sStaus    r    0=ikke initiert, eller FYBA er stengt ned
-                      1=initiert
-Bruk:
+short  sStaus    r    0=not initialised, or closed
+                      1=initialised
+Usage:
 sStatus = LC_ErInitiert();
    =============================================================================
  
@@ -330,17 +326,17 @@ SK_EntPnt_FYBA short LC_ErInitiert(void)
 <BR>
 <BR>
 <A ID="LC_MaxSkriv"NAME="LC_MaxSkriv"></A><H2>LC_MaxSkriv</H2>
-<BIG><I><B>Max skriv før lagring</I></B></BIG><PRE>
+<BIG><I><B>Maximum number of times to write before writing to the SOSI file</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Setter max antall skriv uten lagring til SOSI-filen.
-(0 = allt skrives direkte til SOSI-filen.)
-Parametre:
-Type     Navn      I/U   Forklaring
+Purpose:
+Sets the maximum number of times to write before writing to the SOSI file
+(0 = everything is written directly to the SOSI file.)
+Parameters:
+Type     Name      I/O   Explanation
 -----------------------------------------------------------------------------
-long     antall     i    Max antall skriv uten lagring til SOSI-filen
-Bruk:
-LC_MaxSkriv(antall);
+long     number     i    Maxium number of times to write before writing to the SOSI file
+Usage:
+LC_MaxSkriv(number);
    =============================================================================
  
 SK_EntPnt_FYBA void LC_MaxSkriv(long antall)
@@ -351,17 +347,17 @@ SK_EntPnt_FYBA void LC_MaxSkriv(long antall)
 <BR>
 <BR>
 <A ID="LC_InqMaxSkriv"NAME="LC_InqMaxSkriv"></A><H2>LC_InqMaxSkriv</H2>
-<BIG><I><B>Max skriv før lagring</I></B></BIG><PRE>
+<BIG><I><B>Maximum number of times to write before writing to the SOSI file</I></B></BIG><PRE>
 ==========================================================================
 Formål:
-Spørr etter max antall skriv uten lagring til SOSI-filen.
-(0 = allt skrives direkte til SOSI-filen.)
-Parametre:
-Type     Navn      I/U   Forklaring
+Gets the maximum number of times to write before writing to the SOSI file.
+(0 = everything is written directly to the SOSI file.)
+Parameters:
+Type     Name      I/O   Explanation
 -----------------------------------------------------------------------------
-long     antall     i    Max antall skriv uten lagring til SOSI-filen
-Bruk:
-antall = LC_InqMaxSkriv();
+long     number     i    Maxium number of times to write before writing to the SOSI file 
+Usage:
+number = LC_InqMaxSkriv();
    =============================================================================
  
 SK_EntPnt_FYBA long LC_InqMaxSkriv(void)
@@ -372,19 +368,19 @@ SK_EntPnt_FYBA long LC_InqMaxSkriv(void)
 <BR>
 <BR>
 <A ID="LC_SetNgisModus"NAME="LC_SetNgisModus"></A><H2>LC_SetNgisModus</H2>
-<BIG><I><B>Velg NGIS modus</I></B></BIG><PRE>
+<BIG><I><B>Choose NGIS mode</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Velger handteringsmåte for grupper som er merket for oppdatering av NGIS.
-Standardverdi fra LC_Init er NGIS_NORMAL.
-Parametre:
-Type   Navn  I/U  Forklaring
+Purpose:
+Sets the way to handle groups that are marked for update by NGIS.
+The default value after LC_Init is NGIS_NORMAL.
+Parameters:
+Type   Name  I/O  Explanation
 --------------------------------------------------------------------------
-short  modus  i   Behandlingsmåte:
-					    NGIS_NORMAL  (0) = Vanlig handtering
-						 NGIS_SPESIAL (1) = Spesialmodus der det er mulig å lese
-                                      grupper som er merka som sletta.
-Bruk:
+short  mode   i   The way to handle:
+                        NGIS_NORMAL  (0) = Normal
+                        NGIS_SPESIAL (1) = Special mode where it is possible to read
+                                           groups that have been marked as deleted
+Usage:
 LC_SetNgisModus(NGIS_NORMAL);
    ==========================================================================
  
@@ -397,16 +393,15 @@ SK_EntPnt_FYBA void LC_SetNgisModus(short modus)
 <BR>
 <BR>
 <A ID="LC_SetDefLpfi"NAME="LC_SetDefLpfi"></A><H2>LC_SetDefLpfi</H2>
-<BIG><I><B>Ledig plass mellom grupper</I></B></BIG><PRE>
+<BIG><I><B>Available space between groups</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Legger inn standardverdi for antall tegn ledig plass bak gruppe
-på .SOS-fil.
-Parametre:
-Type     Navn      I/U   Forklaring
------------------------------------------------------------------------------
-short    ant_tegn   i    Antall tegn ledig plass.
-Bruk:
+Purpose:
+Adds default value for the number of letters available behind groups in a .SOS-file
+Parameters:
+Type     Name         I/O   Explanation
+--------------------------------------------------------------------------------
+short    num_letters   i    Number of letters available space.
+Usage:
 LC_SetDefLpfi(ant_tegn);
    =============================================================================
  
@@ -418,16 +413,15 @@ SK_EntPnt_FYBA void LC_SetDefLpfi(short ant_tegn)
 <BR>
 <BR>
 <A ID="LC_InqDefLpfi"NAME="LC_InqDefLpfi"></A><H2>LC_InqDefLpfi</H2>
-<BIG><I><B>Hent ledig plass mellom grupper</I></B></BIG><PRE>
+<BIG><I><B>Gets the available space between groups</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Henter ut standardverdi for antall tegn ledig plass bak gruppe
-på .SOS-fil.
-Parametre:
-Type     Navn      I/U   Forklaring
------------------------------------------------------------------------------
-short    ant_tegn   r    Antall tegn ledig plass.
-Bruk:
+Purpose
+Gets the default value for the number of letters available behind groups in a .SOS-file
+Parameters:
+Type     Name           I/O   Explanation
+----------------------------------------------------------------------------------
+short    num_letters     r    Number of letters available space. 
+Usage:
 ant_tegn = LC_InqDefLpfi();
    =============================================================================
  
@@ -440,23 +434,23 @@ SK_EntPnt_FYBA short LC_InqDefLpfi(void)
 <BR>
 <BR>
 <A ID="LC_SetUtvidModus"NAME="LC_SetUtvidModus"></A><H2>LC_SetUtvidModus</H2>
-<BIG><I><B>Velg utvis modus</I></B></BIG><PRE>
+<BIG><I><B>Set the expanding mode</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Velger handteringsmåte for utvidelse av SOSI-filer.
-Standardverdi fra LC_Init er LC_UTVID_SIKKER.
-Parametre:
-Type   Navn  I/U  Forklaring
+Purpose:
+Set the way to handle expanding of SOSI files.
+The default value after LC_Init is LC_UTVID_SIKKER.
+Parameters:
+Type   Name  I/O  Explanation
 --------------------------------------------------------------------------
-short  modus  i   Behandlingsmåte:
-					    LC_UTVID_SIKKER (0) = SOSI-filen stenges og filstørrelsen
-                                         oppdateres etter hver gruppe som er
-                                         skrevet på slutten av filen.
-						 LC_UTVID_RASK   (1) = SOSI-filen stenges IKKE etter hver
-                                         gruppe som er skrevet på slutten
-                                         av filen.
-                                         (Må bare brukes i spesielle tilfeller.)
-Bruk:
+short  mode   i   Way to handle:
+                    LC_UTVID_SIKKER (0) = The SOSI file is closed and the file size
+                                          is updated after every group that is 
+                                          written in the end of the file.
+                    LC_UTVID_RASK   (1) = The SOSI file is not closed after each
+                                          group that is written at the end
+                                          of the file.
+                                          (Only to be used in special circumstances.)
+Usage:
 LC_SetUtvidModus(LC_UTVID_SIKKER);
    ==========================================================================
  
@@ -468,22 +462,22 @@ SK_EntPnt_FYBA void LC_SetUtvidModus(short modus)
 <BR>
 <BR>
 <A ID="LC_GetUtvidModus"NAME="LC_GetUtvidModus"></A><H2>LC_GetUtvidModus</H2>
-<BIG><I><B>Hent utvis modus</I></B></BIG><PRE>
+<BIG><I><B>Get the expanding mode</I></B></BIG><PRE>
 ==========================================================================
-Formål:
-Henter valgt handteringsmåte for utvidelse av SOSI-filer.
-Parametre:
-Type   Navn  I/U  Forklaring
+Purpose:
+Get the way to handle expanding of SOSI files.
+Parameters:
+Type   Name  I/O  Explanation
 --------------------------------------------------------------------------
-short  modus  r   Behandlingsmåte:
-					    LC_UTVID_SIKKER (0) = SOSI-filen stenges og filstørrelsen
-                                         oppdateres etter hver gruppe som er
-                                         skrevet på slutten av filen.
-						 LC_UTVID_RASK   (1) = SOSI-filen stenges IKKE etter hver
-                                         gruppe som er skrevet på slutten
-                                         av filen.
-                                         (Må bare brukes i spesielle tilfeller.)
-Bruk:
+short  mode   r   Way to handle:
+                    LC_UTVID_SIKKER (0) = The SOSI file is closed and the file size
+                                          is updated after every group that is 
+                                          written in the end of the file.
+                    LC_UTVID_RASK   (1) = The SOSI file is not closed after each
+                                          group that is written at the end
+                                          of the file.
+                                          (Only to be used in special circumstances.)
+Usage:
 short sModus = LC_GetUtvidModus();
    ==========================================================================
  
