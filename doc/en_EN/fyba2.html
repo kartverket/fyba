@@ -600,52 +600,48 @@ SK_EntPnt_FYBA LC_BASEADM * LC_InqCurBase(void)
 <BIG><I><B>Åpner og sjekker SOSI-fil</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
-Åpner en ny fil i aktuell base.
-Allokerer minne til ny filadministrasjonsblokk og initierer denne.
-Åpner SOSI-filen og legger navn mm. inn i fil-adm.
-Leser hodet og tolker det inn i filtabellen.
-Hode blir ikke generert for nye filer. Dette kan lages med LC_PutGi, eller
-LC_NyttHode eller kopieres fra annen fil, og skrives med LC_WsGr
-eller LC_WxGr.
+Opens a new file in active base.
+Allocates memory for a new file administration block and initialises it.
+Opens the SOSI file and adds names etc into the file administration block.
+Reads the header and interprets it in the file table.
+The header is not generated for new files. It can be generated with LC_PutGi, or
+LC_NyttHode or copied from another file, and written with LC_WsGr or LC_WxGr.
 Parameters:
 Type    Name   I/O  Explanation
 --------------------------------------------------------------------
-char   *fil        i   Filnavn inkl. sti og fil-type
-                       (Hvis fil-type mangler forutsettes  .SOS)
-short   sModus     i   Filmodus
-                       LC_BASE_FRAMGR = Framgrunnsfil
-                       LC_BASE_BAKGR  = Bakgrunnsfil (Bare les)
-                       LC_SEKV_LES    = Sekvensiell, les
-                       LC_SEKV_SKRIV  = Sekvensiell, skriv
-                       LC_SEKV_UTVID  = Sekvensiell, utvid gammel fil
-short   sNyIdx     i   Indeksgenerering:
-                       LC_NY_IDX  = Tvungen nygenerering 
-                       LC_GML_IDX = Bruk gammel .idx hvis den er OK
-short   sVisStatus i  Vis indeksoppbygging
-                       LC_VIS_STATUS   = Vis status
-                       LC_INGEN_STATUS = Ikke vis status
-LC_FILADM **pFil   u  Peker til FilAdm blokk. 
-short  *o_stat     u  Detaljert åpningsstatus:
-                         0: Åpning og hode OK
-                        >0: Åpningsfeil feilmelding
-                        -1: Åpning OK, tom fil / ikke SOSI-fil
-                        -2: Ikke åpnet, kan ikke bruke append på
-                            tom fil / ikke sosi-fil
-                        -3: (LC_CANCEL): Ikke åpnet,
-                            indeksoppbygging avbrutt med [Esc],
-                            eller feil på filen.
-                        -4: (LC_DUBLIKAT): Filen er i basen fra før (pFil)
-                        -5: (LC_OPPTATT): Filen er åpen i annet program 
-short   status     r  Åpningsstatus: UT_TRUE = OK
-                                     UT_FALSE = Feil, (o_stat gir detalj)
-Bruk:
+char   *fil        i   Filename including path and file type
+                       (If the file type is missing, it assumes .SOS) 
+short   sModus     i   File mode
+                       LC_BASE_FRAMGR = Foreground file
+                       LC_BASE_BAKGR  = Background file (Only read)
+                       LC_SEKV_LES    = Sequential, read
+                       LC_SEKV_SKRIV  = Sequential, write
+                       LC_SEKV_UTVID  = Sequential, expand old file
+short   sNyIdx     i   Index generation:
+                       LC_NY_IDX  = Forced new generation
+                       LC_GML_IDX = Use old .idx if it is OK
+short   sVisStatus i  Show the index
+                       LC_VIS_STATUS   = Show status
+                       LC_INGEN_STATUS = Hide status
+LC_FILADM **pFil   u  Pointer to file administration block.
+short  *o_stat     u  Detailed open status:
+                         0: Opening and header OK
+                        >0: Error when opening
+                        -1: Opening OK, empty file / not a SOSI file
+                        -2: Not opened, append can not be used on
+                            an empty file / not SOSI file
+                        -3: (LC_CANCEL): Not opened,
+                            index generation cancelled with [Esc].
+                            or a file error.
+                        -4: (LC_DUBLIKAT): The file is already in the base (pFil)
+                        -5: (LC_OPPTATT): The file is opened in another program
+short   status     r  Opening status: UT_TRUE = OK
+                                      UT_FALSE = Error, (o_stat contains the details)
+Usage:
 ist=LC_OpenSos(fil,LC_BASE_FRAMGR,LC_NY_IDX,LC_VIS_STATUS,&pFil,&o_stat);
 ist=LC_OpenSos(fil,LC_SEKV_LES,LC_NY_IDX,LC_INGEN_STATUS,&pFil,&o_stat);
    ==========================================================================
  
-/// <summary><c>LC_OpenSos</c> Åpner og sjekker SOSI-fil <c>FYBA</c> biblioteket.
-/// </summary>
-/// <param name="fil">Filnavn inkl. sti og fil-type (Hvis fil-type mangler forutsettes  .SOS)</param>
 SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short sVisStatus,
                                 LC_FILADM **pFil, short *o_stat)
 </PRE>
@@ -655,18 +651,18 @@ SK_EntPnt_FYBA short LC_OpenSos(const char *fil,short sModus,short sNyIdx,short 
 <BR>
 <BR>
 <A ID="LC_CloseSos"NAME="LC_CloseSos"></A><H2>LC_CloseSos</H2>
-<BIG><I><B>Steng SOSI-fil</I></B></BIG><PRE>
+<BIG><I><B>Close SOSI file</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
-Stenger en SOSI-fil, og fjerner den fra basen.
+Closes a SOSI file, and removes it from the base.
 Parameters:
 Type        Name   I/O  Explanation
 --------------------------------------------------------------------------
-LC_FILADM  *pFil     i   Peker til FilAdm-blokk
-short       s_stat  i   Slutt-status
-                        RESET_IDX = Fjern indeksfilene
-                        SAVE_IDX  = Lagrer indeksfilene.
-Bruk:
+LC_FILADM  *pFil     i   Pointer to a filAdm-block
+short       s_stat  i   End-status
+                        RESET_IDX = Remove the index files
+                        SAVE_IDX  = Saves the index files
+Usage:
 LC_CloseSos(pFil,SAVE_IDX);
    ==========================================================================
  
@@ -678,15 +674,15 @@ SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
 <BR>
 <BR>
 <A ID="LC_DelIdx"NAME="LC_DelIdx"></A><H2>LC_DelIdx</H2>
-<BIG><I><B>Sletter indeksfilene</I></B></BIG><PRE>
+<BIG><I><B>Delete the index files</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
-Sletter indeksfilene for gitt SOSI-fil.
+Deletes the index files for a specified SOSI file
 Parameters:
 Type  Name     I/O Explanation
 --------------------------------------------------------------------------
-char *szSosFil  i  SOSI-filnavn
-Bruk:
+char *szSosFil  i  SOSI filename
+Usage:
 LC_DelIdx(szSosFil);
    ==========================================================================
  
@@ -698,20 +694,20 @@ SK_EntPnt_FYBA void LC_DelIdx(char *szSosFil)
 <BR>
 <BR>
 <A ID="LC_FcloseSos"NAME="LC_FcloseSos"></A><H2>LC_FcloseSos</H2>
-<BIG><I><B>Steng åpen SOSI-fil i filsystemet</I></B></BIG><PRE>
+<BIG><I><B>Close an opened SOSI file in the file system</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
-Denne rutinen brukes til å sikre at en fil er oppdatert og stengt i filsystemet,
-slik at SOSI-filen kan leses fra andre program.
-OBS!
-Stenger bare filen i filsystemet.
-Filen er fortsatt åpen i basen.
-FYBA åpner automatisk filen på nytt når det er behov for dette.
+This function is used to ensure that a file is updated and closed in the file system,
+such that the SOSI file can be read from another program.
+Note!
+Only closes the file in the file system.
+The file is still open in the base.
+FYBA will automatically reopen the file when it is needed.
 Parameters:
 Type        Name    I/O   Explanation
 --------------------------------------------------------------------------
-LC_FILADM  *pFil     i   Peker til FilAdm-blokk
-Bruk:
+LC_FILADM  *pFil     i   Pointer to FilAdm-block
+Usage:
 LC_FcloseSos(pFil);
 ==========================================================================
  
@@ -725,35 +721,35 @@ SK_EntPnt_FYBA void LC_FcloseSos(LC_FILADM *pFil)
 <BR>
 <BR>
 <BR>
-<A ID="O7"NAME="O7"></A><H1>7 Hjelpefunksjoner</H1>
+<A ID="O7"NAME="O7"></A><H1>7 Helper functions</H1>
 
 <BR>
 <BR>
 <BR>
-<A ID="O8"NAME="O8"></A><H2>7.1 Base og fil</H2>
+<A ID="O8"NAME="O8"></A><H2>7.1 Base og file</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_GetBaOm"NAME="LC_GetBaOm"></A><H2>LC_GetBaOm</H2>
-<BIG><I><B>Hent baseområde</I></B></BIG><PRE>
+<BIG><I><B>Get the base area</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
-Henter baseområdet for aktuell base (Sum av filhodene).
-Sekvensielle filer regnes ikke med.
+Gets the base area for the active base (Summary of the headers).
+Sequential files are not included.
 Parameters:
 Type           Name    I/O   Explanation
 --------------------------------------------------------------------------
-unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
-                              LC_FRAMGR og /eller LC_BAKGR
-                              (Bruk "|" for å kombinere.)
-double        *nva      u    Nedre venstre øst
-double        *nvn      u    Nedre venstre nord
-double        *oha      u    Øvre høyre øst
-double        *ohn      u    Øvre høyre nord
-short          sStatus  r    UT_TRUE=OK, UT_FALSE=ingen fil
-Bruk:
+unsigned short usLag    i   Choose which "layers" to be searched in.
+                              LC_FRAMGR and /or LC_BAKGR
+                              (Use "|" to combine.)
+double        *nva      u    Lower left east
+double        *nvn      u    Lower left north
+double        *oha      u    Upper right east
+double        *ohn      u    Upper right north
+short          sStatus  r    UT_TRUE=OK, UT_FALSE=No file
+Usage:
 sStatus = LC_GetBaOm(LC_FRAMGR,&nva,&nvn,&oha,&ohn);
    ==========================================================================
  
@@ -780,7 +776,7 @@ double     nvn    u   Nedre venstre nord
 double     oha    u   Øvre høyre øst
 double     ohn    u   Øvre høyre nord
 short      ist    r   Status (UT_TRUE=OK, UT_FALSE=sekvensiell fil)
-Bruk:
+Usage:
 ist = LC_GetFiOm(pFil,&nva,&nvn,&oha,&ohn);
    ==========================================================================
  
@@ -801,7 +797,7 @@ Type        Name     I/O  Explanation
 --------------------------------------------------------------------------
 char        fil_navn  i   Filnavn
 LC_FILADM  *pFil      r   Peker til FilAdm for filen. (NULL = ukjent fil)
-Bruk:
+Usage:
 pFil = LC_GetFiNr(fil_navn);
    ==========================================================================
  
@@ -825,7 +821,7 @@ Type        Name      I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM  *pFil       i    Peker til FilAdm
 char       *fil_navn   r    Peker til filnavn 
-Bruk:
+Usage:
 fil_navn = LC_GetFiNa(pFil);
    ==========================================================================
  
@@ -853,7 +849,7 @@ short  *psTegnsett  u   Tegnsett, konstanter definert:
                            TS_DECN7   = DEC norsk 7-bits
 short   sStatus     r   Status: UT_TRUE  = Funnet
                                  UT_FALSE = Ikke funnet
-Bruk:
+Usage:
      sStatus = LC_GetTegnsett(&sTegnsett);
 ==========================================================================
  
@@ -874,7 +870,7 @@ Type            Name    I/O   Explanation
 --------------------------------------------------------------------------
 unsigned short *usLag    u    "Lag":  LC_FRAMGR eller LC_BAKGR
 short           status   r    UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
-Bruk:
+Usage:
     status = LC_InqLag(&usLag);
    ==========================================================================
  
@@ -895,7 +891,7 @@ Type            Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM      *pFil     i    Filpeker
 unsigned short  usLag    r    "Lag":  LC_FRAMGR eller LC_BAKGR
-Bruk:
+Usage:
     usLag = LC_InqFilLag(pFil);
    ==========================================================================
  
@@ -916,7 +912,7 @@ Type            Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM      *pFil     i    Filpeker
 unsigned short  usLag    i    "Lag":  LC_FRAMGR eller LC_BAKGR
-Bruk:
+Usage:
     LC_SetFilLag(pFil,LC_FRAMGR);
    ==========================================================================
  
@@ -937,7 +933,7 @@ Type       Name  I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM *pFil   i    Peker til FilAdm
 bgr        long   r    Gruppenummer
-Bruk:
+Usage:
 bgr = LC_FiLastGr(pFil);
    ==========================================================================
  
@@ -960,7 +956,7 @@ char   *fil     i   Filnavn inkl. sti og fil-type
                     (Hvis fil-type mangler forutsettes  .SOS)
 short   status  r   Status: UT_TRUE = Filen er med i basen.
                             UT_FALSE = Filen er IKKE med i basen.
-Bruk:
+Usage:
 ist = LC_ErFilBase(fil);
    ==========================================================================
  
@@ -981,7 +977,7 @@ Type    Name   I/O  Explanation
 -----------------------------------------------------------------------
 short   status  r   Status: UT_TRUE = KOORDSYS er lik.
                             UT_FALSE = KOORDSYS er IKKE lik.
-Bruk:
+Usage:
 ist = LC_ErKoordsysLik();
 	=======================================================================
  
@@ -1002,7 +998,7 @@ Type    Name   I/O  Explanation
 -----------------------------------------------------------------------
 short   status  r   Status: UT_TRUE = VERT-DATUM er lik.
                             UT_FALSE = VERT-DATUM er IKKE lik.
-Bruk:
+Usage:
 ist = LC_ErVertdatumLik();
 	=======================================================================
  
@@ -1028,7 +1024,7 @@ LC_FILADM   *pFil           i   Filpeker
 char        *pszBackupPath  i   Katalognavn for lagring av backup.
 short        sStatus        r   UT_TRUE = OK
                                 UT_FALSE = Feil.
-Bruk:
+Usage:
     sStatus = LC_Backup(pFil, szBackupPath);
    ==========================================================================
  
@@ -1054,7 +1050,7 @@ LC_FILADM *pFil     i   Fil det ønskes opplsninger om.
 char*  pszNgisLag   r   NGIS-lag. 
                           Tom streng = ..NGIS-LAG er ikke funnet
                           "0"  = Bare leseaksess (..NGIS-LAG 0)
-Bruk:
+Usage:
 pszNgisLag = LC_GetNgisLag(pFil);
    ==========================================================================
  
@@ -1091,7 +1087,7 @@ short        type    i   Filtypen som skal settes
                             LC_FILTYPE_KIRKESOGN
                             LC_FILTYPE_TETTSTED
                             LC_FILTYPE_VALGKRETS
-Bruk:
+Usage:
 LC_SetFilType(pFil,type);
 =============================================================================
  
@@ -1126,7 +1122,7 @@ short        type    r   Filtypen som skal settes
                             LC_FILTYPE_KIRKESOGN
                             LC_FILTYPE_TETTSTED
                             LC_FILTYPE_VALGKRETS
-Bruk:
+Usage:
 type = LC_GetFilType(pFil);
 =============================================================================
  
@@ -1153,7 +1149,7 @@ double   dN2      i
 double   dEnhet   i  Enhet som skal brukes i sammenligningen
 bool     bErLike  r  Status: true  = Samme koordinat 
                              false = Ikke samme koordinat
-Bruk:
+Usage:
 bSammenfallende = LC_ErLik(dA1,dN1,dA2,dN2,dEnhet);
    ===========================================================================
  
@@ -1181,7 +1177,7 @@ double   dN2      i
 double   dEnhet   i  Enhet som skal brukes i sammenligningen
 bool     bErLike  r  Status: true  = Samme koordinat 
                              false = Ikke samme koordinat
-Bruk:
+Usage:
 bSammenfallende = LC_ErLik(dA1,dN1,dA2,dN2,dEnhet);
    ===========================================================================
  
@@ -1201,7 +1197,7 @@ Parameters:
 Type  Name      I/O Explanation
 ---------------------------------------------------------------------------
 bool  bReferert  r  Det finnes referanser til gruppen
-Bruk:
+Usage:
 bReferert = LC_ErReferert();
 ===========================================================================
  
@@ -1227,7 +1223,7 @@ Type    Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR * pBgr      iu   Peker til gruppestruktur der gruppenummer lagres
 short   status    r    Status  UT_TRUE=OK, UT_FALSE=ingen aktuell gruppe
-Bruk:
+Usage:
     status = LC_GetGrNr(&Bgr)
    ==========================================================================
  
@@ -1259,7 +1255,7 @@ short   *info   u    Diverse informasjon. En sum av følgende:
                        GI_SLETTA    = gruppen er sletta (merka som sletta)
                        GI_READ_ONLY = gruppen kan ikke endres.
 short   gnavn   r    Gruppenavn. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
-Bruk:
+Usage:
     gnavn = LC_GetGrPara(&ngi,&nko,&info);
    ==========================================================================
  
@@ -1292,7 +1288,7 @@ unsigned short *info  u   Diverse informasjon. En sum av følgende:
                           GI_SLETTA    = gruppen er sletta (merka som sletta)
                           GI_READ_ONLY = gruppen kan ikke endres.
 short           gnavn r   Gruppenavn. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
-Bruk:
+Usage:
     gnavn = LC_GetGrParaBgr(pBgr,&ngi,&nko,&info,&snr);
    =============================================================================
  
@@ -1313,7 +1309,7 @@ Type         Name    I/O   Explanation
 -----------------------------------------------------------------------------
 LC_FILADM * *ppFil    u   Peker til FilAdm-peker
 short        status   r   UT_TRUE = OK, UT_FALSE = Ingen aktuell gruppe
-Bruk:
+Usage:
     status = LC_GetGrFi(&pFil);
    =============================================================================
  
@@ -1337,7 +1333,7 @@ short  sStatus    i   Kode for endring:
                         END_UENDRA  0   Ikke endra
                         END_KOPI    1   Endra ved totalkopi fra annen gruppe
                         END_ENDRA   2   Endra ved normal Put fra program
-Bruk:
+Usage:
 LC_dg_SetEndringsstatus(END_KOPI);
 =============================================================================
  
@@ -1360,7 +1356,7 @@ Purpose:
 Legger inn et standard SOSI-filhode i ginfo i aktuell gruppe.
 Parameters:
     ingen
-Bruk:
+Usage:
     LC_NyttHode();
 ==========================================================================
  
@@ -1380,7 +1376,7 @@ Parameters:
  Type    Name    I/O   Explanation
 --------------------------------------------------------------------------
  short   ist      r    status: UT_TRUE=OK, UT_FALSE=feil
-Bruk:
+Usage:
     ist = LC_TestHode();
 ==========================================================================
  
@@ -1405,7 +1401,7 @@ double  *nv_n       u
 double  *oh_a       u
 double  *oh_n       u
 short    ist        r    status: UT_TRUE=OK, UT_FALSE=feil (navn er ikke funnet)
-Bruk:
+Usage:
     ist = LC_GetOmr(&nv_a,&nv_n,&oh_a,&oh_n);
 ==========================================================================
  
@@ -1432,7 +1428,7 @@ double   nv_n       i
 double   oh_a       i
 double   oh_n       i
 short    ist        r    status: UT_TRUE=OK, UT_FALSE=feil
-Bruk:
+Usage:
     ist = LC_PutOmr(nv_a,nv_n,oh_a,oh_n);
 ==========================================================================
  
@@ -1462,7 +1458,7 @@ double  *enhet      u    Enhet
 double  *enhet_h    u    ...ENHET-H
 double  *enhet_d    u    ...ENHET-D
 short    ist        r    status: UT_TRUE=OK, UT_FALSE=feil (navn er ikke funnet)
-Bruk:
+Usage:
     ist = LC_GetTrans(&koosys,&origo_a,&origo_n,&enhet,&enhet_h,&enhet_d);
 ==========================================================================
  
@@ -1505,7 +1501,7 @@ unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal he
                                  LC_TR_VERTDELTA - Vert-delta
 LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
 short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
-Bruk:
+Usage:
 unsigned short usMaske = LC_TR_ALLT;
 LC_TRANSPAR Trans;
 ist = LC_GetTransEx(&usMaske,&Trans);
@@ -1537,7 +1533,7 @@ double   enhet      i    Enhet
 double   enhet_h    i    Enhet-H
 double   enhet_d    i    Enhet-D
 short    ngi        r    Antall GINFO-linjer etter oppdateringen.
-Bruk:
+Usage:
     ngi = LC_PutTrans(koosys,origo_a,origo_n,enhet,enhet_h,enhet_d);
 ==========================================================================
  
@@ -1592,7 +1588,7 @@ unsigned short usMaske  i   Maske som styrer hvilke deler av TRANSPAR som brukt
                              LC_TR_VERTDELTA - Vert-delta          
 LC_TRANSPAR *   pTrans   i   Peker til struktur med ..TRANSPAR informasjonen.
 short          ngi      r   Antall GINFO-linjer etter oppdateringen.
-Bruk:
+Usage:
 LC_TRANSPAR Trans;
 unsigned short usMaske = LC_TR_KOORDSYS | LC_TR_ORIGO | LC_TR_ENHET;
 Trans.sKoordsys = 32;
@@ -1637,7 +1633,7 @@ double   oh_a          i             Øvre høyre hjørne
 double   oh_n          i
 short    sStatus       r    Status: UT_TRUE  = Funnet
                                     UT_FALSE = Ikke funnet
-Bruk:
+Usage:
 sStatus = HO_New(fil,koosys,origo_a,origo_n,enhet,enhet_h-enhet_d,
                  nv_a,nv_n,oh_a,oh_n);
 =============================================================================
@@ -1663,7 +1659,7 @@ char     *pszFil      i    Fullstendig filnavn
 UT_INT64 *sluttpos    u    Posisjon for .SLUTT
 short     ist         r    Status: UT_TRUE  = OK
                                  UT_FALSE = feil
-Bruk:
+Usage:
     ist = HO_TestSOSI(pszFil,&sluttpos);
 =============================================================================
  
@@ -1696,7 +1692,7 @@ long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
                                 KVAL_NOY_UKJENT  nøyaktighet er ukjent.
 short   ist                r  Statusvariabel: UT_TRUE  - OK, ..KVALITET er funnet
                                               UT_FALSE - ikke funnet
-Bruk:
+Usage:
      ist = HO_GetKvalitet(fil,&sMetode,&lNoyaktighet,&sSynbarhet,
                           &sHoydeMetode,&lHoydeNoyaktighet);
 =============================================================================
@@ -1726,7 +1722,7 @@ short  *psTegnsett  u   Tegnsett, konstanter definert:
                            TS_DECN7   = DEC norsk 7-bits
 short   sStatus     r   Status: UT_TRUE  = Funnet
                                 UT_FALSE = Ikke funnet
-Bruk:
+Usage:
      sStatus = HO_GetTegnsett(pszFil,&sTegnsett);
 ==========================================================================
  
@@ -1755,7 +1751,7 @@ short   *sett_nr     i/u  i: "Sett nummer"(linjenummer) for start søking (min 1)
                              tilslaget.
 char    *para_peker   r   Peker til parameter-streng avslutta med '/0'.
                           Hvis SOSI-navnet ikke er funnet returneres NULL.
-Bruk:
+Usage:
 para_peker = HO_GetVal(fil,sosi_navn,&sett_nr);
 	=============================================================================
  
@@ -1785,7 +1781,7 @@ double  *enhet       u   ...ENHET
 double  *enhet_h     u   ...ENHET-H
 double  *enhet_d     u   ...ENHET-D
 short    sStatus     r   UT_TRUE, eller UT_FALSE.
-Bruk:
+Usage:
 sStatus = HO_GetTrans(fil,&koosys,&origo_a,&origo_n,&enhet,&enhet_h,&enhet_d);
    =============================================================================
  
@@ -1823,7 +1819,7 @@ unsigned short *pusMaske  iu   [Inn] Styrer hvilke deler av TRANSPAR som skal he
                                  LC_TR_VERTDELTA - Vert-delta
 LC_TRANSPAR *    pTrans    iu   Peker til struktur som skal motta ..TRANSPAR informasjonen.
 short           sStatus   r    Status: UT_TRUE=OK, UT_FALSE=feil (ikke funnet).
-Bruk:
+Usage:
 unsigned short usMaske = LC_TR_ALLT;
 LC_TRANSPAR Trans;
 ist = HO_GetTransEx("Test.sos",&usMaske,&Trans);
@@ -1850,7 +1846,7 @@ double  *nv_n        u
 double  *oh_a        u
 double  *oh_n        u
 short    sStatus     r   UT_TRUE, eller UT_FALSE.
-Bruk:
+Usage:
 sStatus = HO_GetOmr(pszFil,&nv_a,&nv_n,&oh_a,&oh_n);
 	=============================================================================
  
@@ -1880,7 +1876,7 @@ short  *psTegnsett  u   Tegnsett, konstanter definert:
 short   sStatus     r   Status:  0  = Ikke funnet
                                  1  = Ett tegnsett funnet
                                  2  = Flere tegnsett funnet
-Bruk:
+Usage:
     sStatus = HO_SjekkTegnsett(fpek,tegnsett);
 =============================================================================
  
@@ -1919,7 +1915,7 @@ LC_BGR *     pBgr    iu   Tildelt gruppenummer i basen
 long        snr     u    Tildelt serienummer
 gnavn       short   r    Gruppenavn. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
                          INGEN_GRUPPE hvis det ikke er opprettet noen ny gruppe.
-Bruk:
+Usage:
 gnavn = LC_NyGr (pFil,sosi,&Bgr,&snr);
    =============================================================================
  
@@ -1990,7 +1986,7 @@ short gnavn     r   Gruppenavn - Følgende konstanter er definert:
                                      L_SYMBOL   =   (.SYMBOL) 
                                      L_HODE     =   (.HODE)       
                                      
-Bruk:
+Usage:
     gnavn = LC_RxGr(&Bgr,LES_OPTIMALT,&ngi,&nko,&info);
     if (info & GI_PINFO)        (gruppen har PINFO)
         ;
@@ -2021,7 +2017,7 @@ short k_stat   i   Skrivemetode:  Følgende konstanter er definert:
                      SKRIV_SOSI     = Skriv direkte til SOSI-filen
 short status   r   Status: UT_TRUE = OK
                            UT_FALSE = Ikke utført, pga. feil.
-Bruk:
+Usage:
 LC_WxGr(k_stat)
    ==========================================================================
  
@@ -2071,7 +2067,7 @@ unsigned short  *info    u   Diverse informasjon. En "sum" av følgende:
                          GI_READ_ONLY = gruppen kan ikke endres.
 long             gml_snr u    Serienummer gruppen hadde på ekstern fil
 short            gnavn   r    Gruppenavn. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
-Bruk:
+Usage:
     gnavn = LC_RsGr(&rstat,pFil,&ngi,&nko,&info,&gml_snr);
     if (info & GI_PINFO)        (gruppen har PINFO)
         ;
@@ -2111,7 +2107,7 @@ unsigned short  *info    u   Diverse informasjon. En "sum" av følgende:
                          GI_REF   = gruppen har referanser (.. :n)
                          GI_OY_REF= gruppen har referanser med øy
 short            gnavn   r    Gruppenavn. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
-Bruk:
+Usage:
     gnavn = LC_RsHode(pFil,&ngi,&nko,&info);
    =============================================================================
  
@@ -2131,7 +2127,7 @@ Parameters:
 Type       Name  I/O   Explanation
 -----------------------------------------------------------------------------
 LC_FILADM *pFil   i    Peker til FilAdm
-Bruk:
+Usage:
 LC_WsGr(pFil);
    =============================================================================
  
@@ -2155,7 +2151,7 @@ long       fra_punkt i    Punktnummer for første koordinat som skal skrives.
                           (Lovlig:  1  <=  fra_punkt  <=  nko)
 long       antall    i    Antall koordinatlinjer som skal skrives.
                           (Lovlig:  0  <=  antall  <=  nko)
-Bruk:
+Usage:
 LC_WsGrPart(pFil,fra_punkt,antall);
    ==========================================================================
  
@@ -2184,7 +2180,7 @@ Type       Name      I/O   Explanation
 LC_FILADM *pFil       i    Peker til FilAdm
 short      oppdatert  r    Skrivestatus (1=OK, 0=Det er ikke plass
                                          til å skrive hodet)
-Bruk:
+Usage:
 ist = LC_EndreHode(pFil);
    =============================================================================
  
@@ -2218,7 +2214,7 @@ Type   Name    I/O   Explanation
 --------------------------------------------------------------------------
 short  sStatus  r    Status:  UT_TRUE  = OK
                               UT_FALSE = feil, ikke sletta
-Bruk:
+Usage:
 sStatus = LC_DelGr();
    ==========================================================================
  
@@ -2243,7 +2239,7 @@ SK_EntPnt_FYBA short LC_DelGr(void)
 Purpose:
 Skriver gruppene som ligger i skrivekø ut til SOSI-fil.
 Parameters: ingen
-Bruk:
+Usage:
 LC_Save();
    ==========================================================================
  
@@ -2283,7 +2279,7 @@ short    linje    i    Linjenummer linjen skal skytes inn forran.
                        (Lovlig: 1  til  ngi+1)
 short    antall   i    Antall linjer som skal skytest inn.
 short    ngi      r    Antall GINFO-linjer i gruppen etter innskuddet.
-Bruk:
+Usage:
 ngi = LC_InsGiL(linje, antall);
    =============================================================================
  
@@ -2304,7 +2300,7 @@ Type     Name    I/O   Explanation
 -----------------------------------------------------------------------------
 short    ngi      r    Antall GINFO-linjer i gruppen etter utvidelsen.
                        (Linjenumret på den tilføyde linjen.)
-Bruk:
+Usage:
 ngi = LC_AppGiL();
    =============================================================================
  
@@ -2327,7 +2323,7 @@ long    linje    i    Linjenummer linjen skal skytes inn forran.
                        (Lovlig: 1  til  nko+1)
 long    antall   i    Antall linjer som skal skytest inn.
 long    nko      r    Antall koordinater i gruppen etter innskuddet.
-Bruk:
+Usage:
 nko = LC_InsKoL(linje, antall);
    ==========================================================================
  
@@ -2347,7 +2343,7 @@ Parameters:
 Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 long    nko      r    Antall koordinater i gruppen etter utvidelsen.
-Bruk:
+Usage:
 nko = LC_AppKoL();
    ==========================================================================
  
@@ -2370,7 +2366,7 @@ short    linje    i    Første linjenummer som skal fjernes.
                        (Lovlig: 2  til  ngi)
 short    antall   i    Antall linjer som skal fjernes.
 short    ngi      r    Antall GINFO-linjer i gruppen etter setting.
-Bruk:
+Usage:
 ngi = LC_DelGiL(linje, antall);
    =============================================================================
  
@@ -2393,7 +2389,7 @@ long    linje    i    Første linje som skal fjernes.
                        (Lovlig: 1  til  nko)
 long    antall   i    Antall linjer som skal fjernes.(Max resten av gruppen)
 long    nko      r    Antall koordinater i gruppen etter blanking.
-Bruk:
+Usage:
 nko = LC_DelKoL(linje, antall);
    =============================================================================
  
@@ -2451,7 +2447,7 @@ short    ngi      u    Antall linjer GINFO
 long     nko      u    Antall koordinater
 unsigned short    info     u    Diverse informasjon. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
 short    gnavn    r    Gruppenavn. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
-Bruk:
+Usage:
     gnavn = LC_CopyGr(&Bgr,ngis,&ngi,&nko,&info)
    ==========================================================================
  
@@ -2486,7 +2482,7 @@ short   ngi       u    Antall GINFO-linjer
 long    nko       u    Antall koordinater
 short   info      u    Diverse informasjon. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
 short   sStatus   r    Status: UT_TRUE=OK, UT_FALSE=ikke utført.
-Bruk:
+Usage:
 sStatus = LC_CopyCoord(bgr,retning,til_linje,&ngi,&nko,&info);
    =============================================================================
  
@@ -2518,7 +2514,7 @@ Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 char     *ginfo   i    GINFO-streng avslutta med '/0'
-Bruk:
+Usage:
 LC_PutGi(lin_nr,ginfo);
 	==========================================================================
  
@@ -2543,7 +2539,7 @@ char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 char     verdi        i    Streng som skal legges inn.
 short   *linje_nr     u    Linjenummer for endringen.
 short    ngi          r    Ant. ginfo-linjer etter  endringen.
-Bruk:
+Usage:
 ngi = LC_PutGP(sosi_navn,verdi,&linje_nr);
    ==========================================================================
  
@@ -2567,7 +2563,7 @@ char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 char     verdi        i    Streng som skal legges inn.
 short   *linje_nr     u    Linjenummer for endringen.
 short    ngi          r    Ant. ginfo-linjer etter  endringen.
-Bruk:
+Usage:
 ngi = LC_AppGP(sosi_navn,verdi,&linje_nr);
    ==========================================================================
  
@@ -2592,7 +2588,7 @@ short    linje_nr     i    Linjenummer som skal endres.
 char     sosi_navn    i    Sosi-navn det skal legges inn verdi til
 char     verdi        i    Streng som skall legges inn
 short    ist          r    1=ok, 0=navnet er ikke funnet
-Bruk:
+Usage:
 ist = LC_UpdateGP(linje_nr,sosi_navn,verdi);
    ==========================================================================
  
@@ -2621,7 +2617,7 @@ double      enhet    i    Grunnriss-enhet
 double      enhet_h  i    Høyde-enhet
 double      enhet_d  i    Dybde-enhet
 ngi         short    r    Antall GINFO-linjer etter oppdatering
-Bruk:
+Usage:
 ngi = LC_UpdateGiEnhet(pFil,enhet,enhet_h,enhet_d);
    ==========================================================================
  
@@ -2649,7 +2645,7 @@ short      sSynbarhet        i  Synbarhet i ..KVALITET
 short      sHoydeMetode      i  HøydeMetode i ..KVALITET
 long       lHoydeNoyaktighet i  HøydeNøyaktighet i ..KVALITET
 short      ngi               r  Antall linjer i ginfo.
-Bruk:
+Usage:
      ngi = LC_UpdateGiKvalitet(pFil,sMetode,lNoyaktighet,sSynbarhet,
                                sHoydeMetode,lHoydeNoyaktighet);
 ==========================================================================
@@ -2680,7 +2676,7 @@ short       sHoydeMetode      i  HøydeMetode i ..KVALITET
 long        lHoydeNoyaktighet i  HøydeNøyaktighet i ..KVALITET
 short       sStatus           r  UT_TRUE = OK,
                                  UT_FALSE = ikke utført (for lite plass tilgjengelig)
-Bruk:
+Usage:
 sStatus = LC_UpdatePiKvalitet(pFil,pnr,sMetode,lNoyaktighet,sSynbarhet,
                               sHoydeMetode,lHoydeNoyaktighet)
 ==========================================================================
@@ -2707,7 +2703,7 @@ endring  short   i   Kode for endring:
                       O_GINFO   (0) = Oppdater interne tabeller i fht. GINFO
                       O_ENDRET  (1) = Merk for endret og oppdat. tab.
                       O_SLETTET (2) = Merk for slettet og oppdat. tab.
-Bruk:
+Usage:
 LC_OppdaterEndret(O_ENDRET);
 =============================================================================
  
@@ -2728,7 +2724,7 @@ Type     Name             I/O   Explanation
 --------------------------------------------------------------------------
 char    *pszEgenskapName   i    SOSI-navn som skal slettes
 short    ngi               r    Antall GINFO-linjer i gruppen etter setting
-Bruk:
+Usage:
 ngi = LC_DelGiName("..RADIUS");
    ==========================================================================
  
@@ -2749,7 +2745,7 @@ Type     Name      I/O   Merknad
 -------------------------------------------------------------
 char    *pszGinfo   i    Streng med egenskapsnavn i starten
 short    sNivo      r    Antall prikker 
-Bruk:
+Usage:
 sNivo = LC_FinnNivo(pszGinfo);
   ================================================================
  
@@ -2774,7 +2770,7 @@ Parameters:
 Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 long     snr      i    Serienummer
-Bruk:
+Usage:
 LC_PutSn(snr);
    ==========================================================================
  
@@ -2800,7 +2796,7 @@ long     ref_array  i    Gruppenummer for refererte grupper.
                             SLUTT_OY = -9999999L = Slutt øy.
 long     ant_ref    i    Antall linjer i ref_array.
 short    *ngi       r    Antall linjer GINFO
-Bruk:
+Usage:
     ngi = LC_PutRef(ref_array,ant_ref);
 ==========================================================================
  
@@ -2827,7 +2823,7 @@ Type    Name      I/O   Explanation
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 double  aust       i    Øst-koordinat i meter i terreng
 double  nord       i    Nord-koordinat i meter i terreng
-Bruk:
+Usage:
 LC_PutTK(punkt_nr,aust,nord);
    ==========================================================================
  
@@ -2850,7 +2846,7 @@ long    punkt_nr   i    Punktnummer (1 er første punkt)
 double  hoyde      i    Høyde i meter i terreng. Konstanten
                         HOYDE_MANGLER (-999.999) angir at punktet ikke
                         har høydeverdi.
-Bruk:
+Usage:
 LC_PutTH(punkt_nr,hoyde);
    ==========================================================================
  
@@ -2873,7 +2869,7 @@ long    punkt_nr   i    Punktnummer (1 er første punkt)
 double  hoyde      i    Dybde i meter i terreng. Konstanten
                         HOYDE_MANGLER (-999.999) angir at punktet ikke
                         har dybdeverdi.
-Bruk:
+Usage:
 LC_PutTD(punkt_nr,dybde);
    ==========================================================================
  
@@ -2901,7 +2897,7 @@ Type    Name      I/O   Explanation
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 short   kp         i    Knutepunkt (lovlig verdi 0 - SHRT_MAX)
                         kp == 0 fjerner knutepunkt.
-Bruk:
+Usage:
 LC_PutKp(punkt_nr,kp);
    ==========================================================================
  
@@ -2933,7 +2929,7 @@ char   *pinfo      i    PINFO-streng som skal legges inn
                         (Knutepunkt regnes ikke som pinfo)
 short   sStatus    r    UT_TRUE = OK,
                         UT_FALSE = ikke utført (for lite plass tilgjengelig)
-Bruk:
+Usage:
 sStatus = LC_PutPi(punkt_nr,pinfo);
    ==========================================================================
  
@@ -2986,7 +2982,7 @@ Type     Name    I/O   Explanation
 --------------------------------------------------------------------------
 short    lin_nr   i    Linjenummer i GINFO   (1 er første linje)
 char    *ginfo    r    Peker til GINFO-streng avslutta med '/0'
-Bruk:
+Usage:
 ginfo = LC_GetGi(lin_nr);
    ==========================================================================
  
@@ -3039,7 +3035,7 @@ short   *forste_linje iu   GINFO-linjenummer for start søking
 short    siste_linje  i    Siste GINFO-linje det skal søkes i.
 char    *para_peker   r    Peker til parameter-streng avslutta med '/0'.
                            Hvis SOSI-navnet ikke er funnet returneres NULL.
-Bruk:
+Usage:
 para_peker = LC_GetGP(sosi_navn,&forste_linje,siste_linje);
    ==========================================================================
  
@@ -3064,7 +3060,7 @@ Parameters:
 Type  Name  I/O  Explanation
 --------------------------------------------------------------------
 long  snr    r   Serienr.  (INGEN_GRUPPE = ingen aktuell gruppe)
-Bruk:
+Usage:
 snr = LC_GetSn();
    ==========================================================================
  
@@ -3092,7 +3088,7 @@ long     max_ref    i    Max antall linjer i ref_array.
 short   *gilin      i/u  linje for start referanselesing
 short   *refpos     i/u  posisjon i linja for neste innlegging i array.
 long     ant_ref    r    Antall linjer brukt i ref_array.
-Bruk:
+Usage:
     ant_ref = LC_GetRef(ref_array,max_ref,&gilin,&refpos);
 ==========================================================================
  
@@ -3116,7 +3112,7 @@ Type     Name      I/O   Explanation
 long    ant_ref     r    Antall referanser i GINFO.
                            OBS! Start- og sluttparantes for øy blir regnet
                            som egne referanser.
-Bruk:
+Usage:
     long lAntRef;
     short sGiLin,sRefPos;
     long *plRefArray;
@@ -3143,7 +3139,7 @@ Parameters:
 Type           Name     I/O   Explanation
 --------------------------------------------------------------------------
 LC_GRF_STATUS * pRefStat  iu   Struktur med statusopplysninger.
-Bruk:
+Usage:
     LC_InitGetRefFlate(pGrfStat,pBgr);
 ==========================================================================
  
@@ -3176,7 +3172,7 @@ unsigned char  *ref_status u   Status for gruppene i ref_array.
 long            max_ref    i   Max antall linjer i ref_array og ref_status.
 long           ant_ref    r   Antall linjer brukt i ref_array.
                                0 viser at hele flata er behandla.
-Bruk:
+Usage:
    #define  MAX_REF  20
    long ref_arr[MAX_REF];
    char ref_status[MAX_REF];
@@ -3217,7 +3213,7 @@ SK_EntPnt_FYBA long LC_GetRefFlate(LC_GRF_STATUS * GrfStat,unsigned short usHent
 <A ID="LC_ErLinjeRefLin"NAME="LC_ErLinjeRefLin"></A><H2>LC_ErLinjeRefLin</H2>
 <BIG><I><B>Sjekk om linje inneholder referanser</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 sRefLin = LC_ErLinjeRefLin(gp,sRefLin);
 parametere:
 Type    Name        I/O  Explanation
@@ -3273,7 +3269,7 @@ short    *sfeil       u    Feilstatus, definert dersom ist = 0
 short    ist          r    Returstatus
                                    UT_TRUE  = Alt OK
                                    UT_FALSE = Feil, se returvariabel sfeil
-Bruk:
+Usage:
 ist = LC_GetBuePar(buff_retning, &as, &ns, &radius, &fi, &dfi, &sfeil )
    ============================================================================
  
@@ -3304,7 +3300,7 @@ double  *radius     u    Radius
 short   *storbue    u    0=vanlig bue, 1=storbue
 short    ist        r    status: UT_TRUE = OK,
                                  UT_FALSE = feil (Gruppen er ikke OK bue)
-Bruk:
+Usage:
     ist = LC_GetBue(retning,&a1,&n1,&a2,&n2,&radius,&storbue);
 ==========================================================================
  
@@ -3335,7 +3331,7 @@ double  *a3         u    Koordinat i siste punkt
 double  *n3         u
 short    ist        r    status: UT_TRUE = OK,
                                  UT_FALSE = feil (Gruppen er ikke OK buep)
-Bruk:
+Usage:
     ist = LC_GetBuep(retning,&a1,&n1,&a2,&n2,&a3,&n3);
 ==========================================================================
  
@@ -3360,7 +3356,7 @@ double  *ns         u
 double  *radius     u    Radius
 short    ist        r    status: UT_TRUE = OK,
                                  UT_FALSE = Feil (Gruppen er ikke OK sirkel)
-Bruk:
+Usage:
     ist = LC_GetSirkel(&as,&ns,&radius);
 ==========================================================================
  
@@ -3387,7 +3383,7 @@ double  *a3         u    Koordinat i P3
 double  *n3         u
 short    ist        r    status: UT_TRUE = OK,
                                  UT_FALSE = Feil (Gruppen er ikke OK sirkelp)
-Bruk:
+Usage:
     ist = LC_GetSirkelp(&a1,&n1,&a2,&n2,&a3,&n3);
 ==========================================================================
  
@@ -3425,7 +3421,7 @@ long   *plHoydeNoyaktighet u  Registreringsnøyaktighet
                                 KVAL_NOY_STD    standard nøyaktighet fra nivå over
 short    ist               r  Status: UT_TRUE  = OK, ..KVALITET er funnet
                                       UT_FALSE = ikke funnet
-Bruk:
+Usage:
      ist = LC_GetKvalitet(&sMetode,&lNoyaktighet,&sSynbarhet,
                           &sHoydeMetode,&lHoydeNoyaktighet);
 ==========================================================================
@@ -3454,7 +3450,7 @@ Type    Name      I/O   Explanation
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 double  *aust      u    Øst-koordinat i meter i terreng
 double  *nord      u    Nord-koordinat i meter i terreng
-Bruk:
+Usage:
 LC_GetTK(punkt_nr,&aust,&nord);
    ==========================================================================
  
@@ -3481,7 +3477,7 @@ long    fra_punkt   i    Fra punktnummer (1 eller nko  er første punkt)
 double  *aust       u    Peker til tab. for øst-koordinater
 double  *nord       u    Peker til tab. for nord-koordinater
 long    *antall     u    Antall punkt hentet
-Bruk:
+Usage:
 LC_GetArrayTK(retning,max_antall,fra_punkt,aust,nord,&lest);
    ==========================================================================
  
@@ -3505,7 +3501,7 @@ long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *hoyde      r    Høyde i meter i terreng. Konstanten
                         HOYDE_MANGLER (-999.999) angir at punktet ikke
                         har høydeverdi.
-Bruk:
+Usage:
 hoyde = LC_GetTH(punkt_nr);
    ==========================================================================
  
@@ -3531,7 +3527,7 @@ long    max_antall  i    Max antall punkt som kan hentes
 long    fra_punkt   i    Fra punktnummer (1 eller nko  er første punkt)
 double  *aust       u    Peker til tab. for høyder
 long   *antall     u    Antall punkt hentet
-Bruk:
+Usage:
 LC_GetArrayTH(retning,max_antall,fra_punkt,hoyde,&lest);
    ==========================================================================
  
@@ -3556,7 +3552,7 @@ long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *hoyde      r    Høyde i meter i terreng. Konstanten
                         HOYDE_MANGLER (-999.999) angir at punktet ikke
                         har høydeverdi.
-Bruk:
+Usage:
 hoyde = LC_GetHoyde(punkt_nr);
    ==========================================================================
  
@@ -3579,7 +3575,7 @@ long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *dybde      r    Dybde i meter i terreng. Konstanten
                         HOYDE_MANGLER (-999.999) angir at punktet ikke
                         har dybdeverdi.
-Bruk:
+Usage:
 dybde = LC_GetTD(punkt_nr);
    ==========================================================================
  
@@ -3603,7 +3599,7 @@ long    punkt_nr   i    Punktnummer (1 er første punkt)
 double *hoyde      r    Dybde i meter i terreng. Konstanten
                         HOYDE_MANGLER (-999.999) angir at punktet ikke
                         har høydeverdi.
-Bruk:
+Usage:
 dybde = LC_GetHoyde(punkt_nr);
    ==========================================================================
  
@@ -3630,7 +3626,7 @@ Type    Name      I/O   Explanation
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 short   kp_type    r    Knutepunkttype (1-4095)
                         (0 = punktet har ikke knutepunkt)
-Bruk:
+Usage:
 kp = LC_GetKp(punkt_nr);
    ==========================================================================
  
@@ -3655,7 +3651,7 @@ long    *forste_punkt iu   Punktnummer for start søking.
 long     siste_punkt  i    Siste punkt det skal søkes i.
 short   *kp           u    Knutepunkt.
 short    status       r    Søkestatus (1=funnet, 0=ikke funnet)
-Bruk:
+Usage:
 status = LC_FinnKp(&forste_punkt,siste_punkt,kp);
    ==========================================================================
  
@@ -3684,7 +3680,7 @@ Type    Name      I/O   Explanation
 --------------------------------------------------------------------------
 long   punkt_nr   i    Punktnummer (1 er første punkt)
 char   *pinfo      r    Peker til punktinformasjon eksklusiv knutepunkt
-Bruk:
+Usage:
 pinfo = LC_GetPi(punkt_nr);
    ==========================================================================
  
@@ -3708,7 +3704,7 @@ long            forste_punkt i   Første punkt. (1 er første pkt i gr)
 long            siste_punkt  i   Siste punkt det skal søkes i
 LC_GETPP_STATUS pp_stat      iu  Struktur med statusvariabler. Denne er
                                  bare for intern bruk i InitPP / GetPP.
-Bruk:
+Usage:
   Se under LC_GetPP.
    ==========================================================================
  
@@ -3737,7 +3733,7 @@ LC_GETPP_STATUS pp_stat iu  Struktur med statusvariabler. Denne er
                               bare for intern bruk i InitPP / GetPP.
 char    *para_peker        r  Peker til para.-streng avslutta med '/0'.
                               Hvis ingenting er funnet returneres NULL.
-Bruk:
+Usage:
 .
   LC_GETPP_STATUS pp_stat;
 .
@@ -3790,7 +3786,7 @@ short   *sSettNr      iu   PINFO-nummer   (1 er første sett i PINFO.)
                            Ved tilslag returneres settnummer for tilslaget.
 char    *pszVerdi     r    Peker til verdien avslutta med '/0'.
                            Hvis SOSI-navnet ikke er funnet returneres NULL.
-Bruk:
+Usage:
 pszVerdi = LC_GetPiVerdi(pszSosiName,lPnr,&sSettNr);
    ==========================================================================
  
@@ -3814,7 +3810,7 @@ Type    Name      I/O   Explanation
 long    punkt_nr   i    Punktnummer (1 er første punkt)
 short   sTestHoyde i    Bryter for å si om høyde skal regnes med i sjekken.
 short   sStatus    r    UT_TRUE=har "pinfo", UT_FALSE=har ikke "pinfo"
-Bruk:
+Usage:
 sStatus = LC_TestPi(punkt_nr,UT_TRUE);
    ==========================================================================
  
@@ -3845,7 +3841,7 @@ short      *nivaa    iu   angir nivå for henting, returnerer aktuelt nivå
 double     *enhet    u    Aktuell enhet
 double     *enhet_h  u    Aktuell enhet-H
 double     *enhet_d  u    Aktuell enhet-D
-Bruk:
+Usage:
     LC_GetCurEnhet(pFil,&nivaa,&enhet,&enhet_h,&enhet_d);
 ==========================================================================
  
@@ -3886,7 +3882,7 @@ long   *plHoydeNoyaktighet u   Registreringsnøyaktighet
 short   ist                r   Statusvariabel:
                                 UT_TRUE = OK, KVALITET er funnet
                                 UT_FALSE = KVALITET er ikke funnet
-Bruk:
+Usage:
  ist = LC_GetCurKvalitet(pFil,&nivaa,pnr,&sMetode,&lNoyaktighet,
                          &sSynbarhet,&sHoydeMetode,&lHoydeNoyaktighet);
 ==========================================================================
@@ -3911,7 +3907,7 @@ Type    Name       I/O  Explanation
 LC_BGR *pBgr        i   Gruppenummer det ønskes opplysninger om.
 char   *pszObjtype  r   OBJTYPE
                         NULL hvis gruppen ikke finnes
-Bruk:
+Usage:
 pszObjtype = LC_GetObjtypeBgr(pBgr);
 =============================================================================
  
@@ -3946,7 +3942,7 @@ bool       *bBrukt       Viser om navnet har/er brukt i filen
                          denne stående "true" selv om gruppen er slettet.
 const char *pszName  r   Peker til elementnavn, 
                          NULL = ukjent fil eller ulovlig linjenummer
-Bruk:
+Usage:
 // Går gjennom alle navnene ut over de forhåndsdefinerte navnene.
 short sNameNr = L_KP+1; 
 while ((pszName = LC_GetElementName(pFil,sNameNr)) != NULL)
@@ -3981,7 +3977,7 @@ Parameters:
 Type           Name   I/O  Explanation
 ------------------------------------------------------------------------
 LC_FILADM    **ppFil    u   Peker til FilAdm-peker
-Bruk:
+Usage:
     LC_InitNextFil(&pFil)
    ==========================================================================
  
@@ -4005,7 +4001,7 @@ unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
                               LC_FRAMGR, LC_BAKGR og /eller LC_SEKV
                               (Bruk "|" for å kombinere.)
 short          sStatus  r   Status  UT_TRUE=OK, UT_FALSE=ingen flere funnet
-Bruk:
+Usage:
     LC_FILADM *pFil;
               Denne løkka går gjennom alle framgrunns-filene i basen
     LC_InitNextFil(&pFil)
@@ -4033,7 +4029,7 @@ Parameters:
 Type           Name   I/O  Explanation
 ------------------------------------------------------------------------
 LC_BGR *        pBgr    iu  Peker til gruppestruktur
-Bruk:
+Usage:
     LC_InitNextBgr(&Bgr)
    ==========================================================================
  
@@ -4058,7 +4054,7 @@ unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
                               LC_FRAMGR og /eller LC_BAKGR
                               (Bruk "|" for å kombinere.)
 short          sStatus  r   Status  UT_TRUE=OK, UT_FALSE=ingen flere grupper
-Bruk:
+Usage:
     LC_BGR Bgr;
               Denne løkka går gjennom alle framgrunns-gruppene i basen
     LC_InitNextBgr(&Bgr);
@@ -4100,7 +4096,7 @@ double  *nvn       u    en enhet.
 double  *oha       u    
 double  *ohn       u    
 short    ist       r    Status. UT_TRUE=OK, UT_FALSE=ulovlig gruppenummer.
-Bruk:
+Usage:
    ist = LC_GetGrWin(&Bgr,&nva,&nvn,&oha,&ohn);
    ==========================================================================
  
@@ -4126,7 +4122,7 @@ double         nv_a       i   Koordinat nedre venstre hjørne
 double         nv_n       i
 double         oh_a       i   Koordinat øvre høyre hjørne
 double         oh_n       i
-Bruk:
+Usage:
 LC_GEO_STATUS GeoStat;
 .
 LC_SBFlate(&GeoStat,LC_FRAMGR | LC_BAKGR,nv_a,nv_n,oh_a,oh_n);
@@ -4159,7 +4155,7 @@ Type     Name      I/O  Explanation
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
 short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 Se under LC_SBFlate.
    =============================================================================
  
@@ -4181,7 +4177,7 @@ Type     Name      I/O  Explanation
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
 short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 Se under LC_SBFlate.
    ==========================================================================
  
@@ -4207,7 +4203,7 @@ double         nv_a       i   Koordinat nedre venstre hjørne.
 double         nv_n       i
 double         oh_a       i   Koordinat øvre høyre hjørne.
 double         oh_n       i
-Bruk:
+Usage:
 LC_GEO_STATUS GeoStat;
 .
 LC_SBGeo(&GeoStat,LC_FRAMGR | LC_BAKGR,nv_a,nv_n,oh_a,oh_n);
@@ -4240,7 +4236,7 @@ Type     Name      I/O  Explanation
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
 short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 Se under LC_SBGeo.
    ==========================================================================
  
@@ -4262,7 +4258,7 @@ Type           Name      I/O  Explanation
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_BGR *        pBgr       u   Funnet gruppe
 short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 Se under LC_SBGeo.
    ==========================================================================
  
@@ -4284,7 +4280,7 @@ Type           Name      I/O  Explanation
 --------------------------------------------------------------------------
 LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 long           lAntall    r   Antall funnet.
-Bruk:
+Usage:
 .
 LC_SBGeo(&GeoStat,LC_FRAMGR | LC_BAKGR,nv_a,nv_n,oh_a,oh_n);
 antall = LC_FAGeo(&Bgr);
@@ -4311,7 +4307,7 @@ LC_GEO_STATUS * pGeoStat   iu   Peker til struktur for søkestatus
 LC_FILADM *    pOnsketFil  i   Filpeker til den filen det skal søkes i.
 LC_BGR *        pBgr        u   Funnet gruppe
 short          sstat       r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 Se under LC_SBGeo.
    ==========================================================================
  
@@ -4335,7 +4331,7 @@ LC_GEO_STATUS * pGeoStat  iu   Peker til struktur for søkestatus
 LC_FILADM *    pFil      i    Filpeker til den filen det skal søkes i.
 LC_BGR *        pBgr       u   Funnet gruppe
 short          sstat      r   Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 Se under LC_SBGeo.
    ==========================================================================
  
@@ -4349,7 +4345,7 @@ SK_EntPnt_FYBA short LC_FNGeoFil(LC_GEO_STATUS * pGeoStat,LC_FILADM *pFil,LC_BGR
 <A ID="LC_AvsluttSok"NAME="LC_AvsluttSok"></A><H2>LC_AvsluttSok</H2>
 <BIG><I><B>Avslutter geografisk søk</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 parametere:
 Type            Name     I/O   Explanation
 -----------------------------------------------------------------------
@@ -4382,7 +4378,7 @@ double  oha        i
 double  ohn        i
 short   ist        r    status: 0 = ikke berøring
                                 1 = skjæring
-Bruk:
+Usage:
 .
 LC_SBGeo(&GeoStat,nv_a,nv_n,oh_a,oh_n);
 if (LC_FFGeo(&GeoStat,&Bgr)){
@@ -4418,7 +4414,7 @@ double  a        i    Punkt som skal sjekkes
 double  n        i
 short   ist      r    status: 0 = punktet er utenfor flaten
                               1 = punktet ligger inne på flaten
-Bruk:
+Usage:
 .
 LC_SBFlate(&GeoStat,a-d,n-d,a+d,n+d);
 if (LC_FFFlate(&GeoStat,&Bgr)) {
@@ -4455,7 +4451,7 @@ double  a        i    Punkt som skal sjekkes
 double  n        i
 short   ist      r    status: 0 = punktet er utenfor flaten
                               1 = punktet ligger inne på flaten
-Bruk:
+Usage:
 ist = LC_PTstOmkrets(a,n);
    ==========================================================================
  
@@ -4486,7 +4482,7 @@ LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_FILADM * pFil     i     Peker til FilAdm
 long        lMinSnr  i     Fra og med serienummer
 long        lMaxSnr  i     Til og med serienummer
-Bruk:
+Usage:
 LC_SNR_ADM SnrAdm;
 LC_SBSn(&SnrAdm,pFil,lMinSnr,lMaxSnr);
 =============================================================================
@@ -4513,7 +4509,7 @@ LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 long        lSnr     i     Serienummer som skal finnes
 LC_BGR     *pBgr     u     Gruppenummer i basen
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_MoveSn(pSnrAdm,snr,&Bgr);
 ================================================================================
  
@@ -4537,7 +4533,7 @@ LC_FILADM  *pFil     i     Peker til FilAdm
 long        lSnr     i     Serienummer som skal finnes
 LC_BGR     *pBgr     u     Gruppenummer i basen
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FiSn(pFil,lSnr,&Bgr);
 ================================================================================
  
@@ -4564,7 +4560,7 @@ short      antall   i     Antall linjer brukt i serienummertabellen
 long      *snr      i     Tabell med serienummer som skal finnes
 long      *bgr      u     Tabell med gruppenummer funnet
                             (INGEN_GRUPPE = ikke funnet)
-Bruk:
+Usage:
 LC_FiArraySn(pFil,antall,snr,bgr);
 ================================================================================
  
@@ -4586,7 +4582,7 @@ Type        Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_SNR_ADM *pSnrAdm  i    Peker til statusblokk for serienummersøk
 long        antall   r    Antall grupper funnet.
-Bruk:
+Usage:
 antall_funnet = LC_FASn(&SnrAdm);
 =============================================================================
  
@@ -4608,7 +4604,7 @@ Type        Name     I/O   Explanation
 LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR     *pBgr     u     Gruppenummer
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FFSn(&SnrAdm,&Bgr);
 ================================================================================
  
@@ -4630,7 +4626,7 @@ Type     Name     I/O   Explanation
 LC_SNR_ADM * pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR *     pBgr     u     Gruppenummer
 short        sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FNSn(&SnrAdm,&Bgr);
 ================================================================================
  
@@ -4652,7 +4648,7 @@ Type        Name     I/O   Explanation
 LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR     *pBgr     u     Gruppenummer
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FPSn(&SnrAdm,&Bgr);
 ================================================================================
  
@@ -4674,7 +4670,7 @@ Type        Name     I/O   Explanation
 LC_SNR_ADM *pSnrAdm  iu    Peker til statusblokk for serienummersøk
 LC_BGR     *pBgr     u     Gruppenummer
 short       sstat    r     Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FLSn(&SnrAdm,&Bgr);
 ================================================================================
  
@@ -4697,7 +4693,7 @@ LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FFSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 =============================================================================
  
@@ -4720,7 +4716,7 @@ LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FNSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
  
@@ -4744,7 +4740,7 @@ LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FPSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
  
@@ -4768,7 +4764,7 @@ LC_SNR_ADM *pSnrAdm   i    Peker til statusblokk for serienummersøk
 short       kolonne   i    Kolonne i brukt-tabellen som skal sjekkes
 LC_BGR     *pBgr      u    Gruppenummer
 short       sstat     r    Søkestatus (UT_TRUE=Funnet, UT_FALSE=Ingen funnet)
-Bruk:
+Usage:
 sstat = LC_FLSnBt(&SnrAdm,BT_GEOSOK,&Bgr);
 ================================================================================
  
@@ -4836,7 +4832,7 @@ Parameters:
 Type         Name   I/O  Explanation
 -----------------------------------------------------------------------
 LC_UT_ADM   *UtAdm   r   Peker til administrasjonsblokk for utvalg.
-Bruk:
+Usage:
 pUtAdm = LC_OpenQuery();
    ==========================================================================
  
@@ -4857,7 +4853,7 @@ Parameters:
 Type       Name    I/O   Explanation
 --------------------------------------------------------------------------
 LC_UT_ADM *UtAdm    i    Peker til administrasjonsblokk for utvalg.
-Bruk:
+Usage:
 LC_CloseQuery(pUtAdm);
    ==========================================================================
  
@@ -4880,7 +4876,7 @@ LC_UT_ADM *UtAdm  i    Peker til administrasjonsblokk for utvalg.
 char      *qulin  i    Linje med query-tekst. (Uten prikker på første nivå).
 short     sType   i    Gruppe eller Punkt (U_GRUPPE eller U_PUNKT).
 short      ist    r    Status (UT_TRUE=OK, UT_FALSE=linjen er ikke OK)
-Bruk:
+Usage:
 ist = LC_PutQueryLine(pUtAdm,qulin,sType);
    =============================================================================
  
@@ -4902,7 +4898,7 @@ Type         Name I/O   Explanation
 ------------------------------------------------------------------------
 LC_UTVALG   *pU    i    Peker til utvalg
 char        *navn  i    Regelnavn. 
-Bruk:
+Usage:
 LC_PutQueryRegel(pU,navn);
    =============================================================================
  
@@ -4925,7 +4921,7 @@ Type       Name    I/O   Explanation
 LC_UT_ADM *pUtAdm   i    Peker til administrasjonsblokk for utvalg.
 FILE      *pKomFil  i    Peker til "handle" for åpnet kommandofil.
 short      sStatus  r    UT_TRUE=OK, UT_FALSE=feil i linjen
-Bruk:
+Usage:
 sStatus = LC_LesUtvalg(pUtAdm,pKomFil);
    =============================================================================
  
@@ -4949,7 +4945,7 @@ LC_UT_ADM *pUtAdm     i     Peker til administrasjonsblokk for utvalg.
 short   *ist          iu    Status (Inn: 1=start,  0=neste)
                                    (Ut:  0=OK,    -1=ferdig);
 char    *regelpeker   r     Peker til utvalgsnavn.
-Bruk:
+Usage:
 regelpeker = LC_GetUtRegelName(pUtAdm,&ist);
    =============================================================================
  
@@ -4975,7 +4971,7 @@ short     *sstat     iu   Søkestatus, Inn: 1=start søk, 0=fortsett søk
                                       Ut : 0=tilslag, -1=ikke tilslag
 char     **regelnavn  u   Peker til regelnavn
 char      *regelnavn  u   Peker til utvalgsnavn
-Bruk:
+Usage:
 pszUtvalgsName = LC_GruppeUtvalg(pUtAdm.sPrior,&sstat,&regel);
    =============================================================================
  
@@ -5000,7 +4996,7 @@ short     *psStat     iu    Søkestatus, Inn: 1=start søk, 0=fortsett søk
                                         Ut : 0=tilslag, -1=ikke tilslag
 long       lPnr        i    Punktnummer som skal sjekkes.
 char     **ppszRegel   u    Peker til regelnavn
-Bruk:
+Usage:
 LC_PunktUtvalg(pUtAdm,sPrior,&psStat,lPnr,&ppszRegel);
    =============================================================================
  
@@ -5021,7 +5017,7 @@ Type          Name     I/O  Explanation
 LC_UT_ADM *    pUtAdm    i   Peker til administrasjonsblokk for utvalg.
 char         *pszName   i   Utvalgsnavn
 LC_UTVALG *    pUtvalg   r   Peker til utvalget. (NULL = ikke funnet)
-Bruk:
+Usage:
 pUtvalg = LC_FinnPinfoUtvalg(pszName);
    ==========================================================================
  
@@ -5044,7 +5040,7 @@ LC_UT_ADM *  pUtAdm    i   Administrasjonsblokk
 LC_UTVALG *  pU        i   Peker til utvalg
 long        lPnr      i    Punktnummer som skal sjekkes.
 short       sTilslag  r   Status: UT_TRUE=tilslag, UT_FALSE=ikke tilslag
-Bruk:
+Usage:
 sTilslag = LC_PiTestUtvalg(pUtAdm,pU,lPnr);
    ==========================================================================
  
@@ -5065,7 +5061,7 @@ Type       Name     I/O   Explanation
 -----------------------------------------------------------------------------
 LC_UT_ADM *pUtAdm    i    Peker til administrasjonsblokk for utvalg.
 short      status    r    Søkestatus, UT_TRUE=tilslag, UT_FALSE=ikke tilslag
-Bruk:
+Usage:
 ist = LC_GiQuery(pUtAdm);
    =============================================================================
  
@@ -5090,7 +5086,7 @@ LC_UT_ADM      *pUtAdm   i    Peker til administrasjonsblokk for utvalg.
 unsigned short  usLag    i    Velg hvilke "lag" det skal søkes i.
                                 LC_FRAMGR og /eller LC_BAKGR
 short           antall   r    Antall tilslag på utvalget.
-Bruk:
+Usage:
 antall = LC_FAGiQuery(pUtAdm, LC_FRAMGR | LC_BAKGR);
    =============================================================================
  
@@ -5120,7 +5116,7 @@ unsigned short  usLag     i    Velg hvilke "lag" det skal søkes i.
 short           sAlle     i    Flagg for hvorvidt utvalg for omkrets må slå til på 
                                alle gruppene i omkretsen. TRUE/FALSE
 short           antall    r    Antall tilslag på utvalget.
-Bruk:
+Usage:
 antall = LC_FAGiQuery(pUtAdm, LC_FRAMGR | LC_BAKGR);
    =============================================================================
  
@@ -5151,7 +5147,7 @@ unsigned short   *univ    u    Nivå: LC_GINFO = parameter er fra GINFO
 short   *ulin    u    GINFO-linjenummer for tilslaget.
 char   **para    u    Funnet parameter.
 short     funnet  r    Status: UT_TRUE=funnet, UT_FALSE=ikke funnet
-Bruk:
+Usage:
 funnet = LC_QueryGP(qulin,LC_GINFO | LC_HODE,&univ,&ulin,&para);
    =============================================================================
  
@@ -5172,7 +5168,7 @@ Type         Name          I/O   Explanation
 ----------------------------------------------------------------------
 LC_UT_ADM *   pUA            i    Peker til administrasjonsblokk for utvalg.
 short        sMaxPrioritet  r    Max prioritet
-Bruk:
+Usage:
 sMaxPrioritet = LC_InqMaxPrioritet(pUA);
    ==========================================================================
  
@@ -5194,7 +5190,7 @@ Type        Name      I/O   Explanation
 LC_UT_ADM *  pUtAdm     i    Peker til administrasjonsblokk for utvalg.
 short       sPrioritet i    Prioritet som skal testes.
 short       sBrukt     r    Status: UT_TRUE=brukt, UT_FALSE=ikke brukt.
-Bruk:
+Usage:
 sBrukt = LC_TestPrioritetBrukt(pUtAdm,sPrioritet);
    ==========================================================================
  
@@ -5215,7 +5211,7 @@ Parameters:
 Type           Name       I/O Explanation
 ---------------------------------------------------------------------------
 LC_UT_ADM     *pUtAdm      i  Peker til administrasjonsblokk for utvalg.
-Bruk:
+Usage:
 LC_UtvalgPrioritet(pUtAdm);
    ===========================================================================
  
@@ -5245,7 +5241,7 @@ Type    Name      I/O   Explanation
 LC_BGR * pGr       i    Gruppenummer
 short   kolonne   i    Kolonne som skal merkes.
                        (Lovlig BT_MIN_USER - BT_MAX_USER)
-Bruk:
+Usage:
 LC_SetBt(pGr,kolonne);
    ==========================================================================
  
@@ -5267,7 +5263,7 @@ Name     Type    I/O   Explanation
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal merkes.
                        (Lovlig BT_MIN_USER - BT_MAX_USER)
-Bruk:
+Usage:
 LC_ClrBt(pGr,kolonne);
    ==========================================================================
  
@@ -5290,7 +5286,7 @@ LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal brukes.
                        (Lovlig BT_MIN_BT - BT_MAX_BT)
 merke    short    r    UT_FALSE = ikke marka,  UT_TRUE = merka
-Bruk:
+Usage:
 merke = LC_GetBt(pGr,kolonne);
    ==========================================================================
  
@@ -5313,7 +5309,7 @@ fra_kol  short    i    Første kolonne som skal blankes.
                        (Lovlig BT_MIN_USER - BT_MAX_USER)
 til_kol  short    i    Siste kolonne som skall blankes.
                        (Lovlig BT_MIN_USER - BT_MAX_USER)
-Bruk:
+Usage:
 LC_EraseBt(fra_kol,til_kol);
    ==========================================================================
  
@@ -5343,7 +5339,7 @@ short  operasjon    i    Logisk operasjon mellom kolonnene.
                                         invertert verdi.
                           BC_EXCHANGE = Bytter innholdet i de to kolonnene.
                                           
-Bruk:
+Usage:
 LC_CopyBt(fra_kol,til_kol,operasjon);
    ==========================================================================
  
@@ -5366,7 +5362,7 @@ Type           Name   I/O  Explanation
 -----------------------------------------------------------------------
 unsigned short modus   i   0 = Ikke merk referert gruppe.
                            1 = Merk referert gruppe.
-Bruk:
+Usage:
 LC_SetModusMerk(1);
    ==========================================================================
  
@@ -5390,7 +5386,7 @@ short   sKolonne   i    Kolonne som skal merkes.
                         (Lovlig BT_MIN_USER - BT_MAX_USER)
 short   sBryter    i    Bryter   1=på, 0=av
 long    lAntall    r    Antall grupper merket.
-Bruk:
+Usage:
 lAntall = LC_MerkGr(sKolonne,sBryter);
    ==========================================================================
  
@@ -5467,7 +5463,7 @@ Parametere:
 Type        Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POLYGON *pPolygon  I     Peikar til polygonbeskrivelse
-Bruk:
+Usage:
 LC_POLYGON  Polygon;
 LC_POL_InitPolygon(&Polygon);
 =======================================================================
@@ -5488,7 +5484,7 @@ Parametere:
 Type        Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POLYGON *pPolygon  I     Peikar til polygonbeskrivelse
-Bruk:
+Usage:
 LC_POLYGON  Polygon;
 LC_POL_FrigiPolygon(&Polygon);
 =======================================================================
@@ -5503,7 +5499,7 @@ SK_EntPnt_FYBA void LC_POL_FrigiPolygon(LC_POLYGON *pPolygon)
 <A ID="LC_POL_InitOmkrets"NAME="LC_POL_InitOmkrets"></A><H2>LC_POL_InitOmkrets</H2>
 <BIG><I><B>Initierer polygon-omkrets</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 POL_OMKR  YtrePolygon;
 LC_POL_InitOmkrets(YtrePolygon);
 parametere:
@@ -5523,7 +5519,7 @@ SK_EntPnt_FYBA void LC_POL_InitOmkrets(LC_POL_OMKR *pPO)
 <A ID="LC_POL_LeggTilGruppeOmkrets"NAME="LC_POL_LeggTilGruppeOmkrets"></A><H2>LC_POL_LeggTilGruppeOmkrets</H2>
 <BIG><I><B>Legg til eit element</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_POL_OMKR  YtrePolygon;
 pElement = LC_POL_LeggTilGruppeOmkrets(YtrePolygon,pBgr,sRetning,lSnr);
 parametere:
@@ -5548,7 +5544,7 @@ SK_EntPnt_FYBA LC_POL_ELEMENT * LC_POL_LeggTilGruppeOmkrets(LC_POL_OMKR *pPO,LC_
 <A ID="LC_POL_FjernGruppeOmkrets"NAME="LC_POL_FjernGruppeOmkrets"></A><H2>LC_POL_FjernGruppeOmkrets</H2>
 <BIG><I><B>Fjernar element</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_POL_OMKR  YtrePolygon;
 LC_POL_FjernGruppeOmkrets(&YtrePolygon,);
 parametere:
@@ -5569,7 +5565,7 @@ SK_EntPnt_FYBA void LC_POL_FjernGruppeOmkrets(LC_POL_OMKR *pPO, LC_POL_ELEMENT *
 <A ID="LC_POL_FjernSisteGruppeOmkrets"NAME="LC_POL_FjernSisteGruppeOmkrets"></A><H2>LC_POL_FjernSisteGruppeOmkrets</H2>
 <BIG><I><B>Fjernar siste element</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_POL_OMKR  YtrePolygon;
 LC_POL_FjernSisteGruppeOmkrets(&YtrePolygon);
 parametere:
@@ -5589,7 +5585,7 @@ SK_EntPnt_FYBA void LC_POL_FjernSisteGruppeOmkrets(LC_POL_OMKR *pPO)
 <A ID="LC_POL_FrigiOmkrets"NAME="LC_POL_FrigiOmkrets"></A><H2>LC_POL_FrigiOmkrets</H2>
 <BIG><I><B>Frigjer minne som er allokert til kjede av polygonelement</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 parametere:
 Type         Name     I/O    Explanation
 -----------------------------------------------------------------------
@@ -5607,7 +5603,7 @@ SK_EntPnt_FYBA void LC_POL_FrigiOmkrets(LC_POL_OMKR *pPO)
 <A ID="LC_POL_InitOy"NAME="LC_POL_InitOy"></A><H2>LC_POL_InitOy</H2>
 <BIG><I><B>Initierer øy-kjeden</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_OY_ADM  OyKjede;
 LC_POL_InitOy(OyKjede);
 parametere:
@@ -5627,7 +5623,7 @@ SK_EntPnt_FYBA void LC_POL_InitOy(LC_OY_ADM *pOA)
 <A ID="LC_POL_FrigiAlleOyer"NAME="LC_POL_FrigiAlleOyer"></A><H2>LC_POL_FrigiAlleOyer</H2>
 <BIG><I><B>Frigjer minne som er allokert til kjede av øyelement</I></B></BIG><PRE>
 =======================================================================
-Bruk:                           
+Usage:                           
 LC_OY_ADM  OyKjede;
 LC_POL_FrigiAlleOyer(OyKjede);
 parametere:
@@ -5647,7 +5643,7 @@ SK_EntPnt_FYBA void LC_POL_FrigiAlleOyer(LC_OY_ADM *pOA)
 <A ID="LC_POL_FjernOy"NAME="LC_POL_FjernOy"></A><H2>LC_POL_FjernOy</H2>
 <BIG><I><B>Fjernar ei oy frå kjede av øyelement</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_OY_ADM  OyKjede;
 LC_POL_FjernOy(OyKjede,OyElement);
 parametere:
@@ -5668,7 +5664,7 @@ SK_EntPnt_FYBA void LC_POL_FjernOy(LC_OY_ADM *pOA,LC_OY_ELEMENT *pOE)
 <A ID="LC_POL_LeggTilOy"NAME="LC_POL_LeggTilOy"></A><H2>LC_POL_LeggTilOy</H2>
 <BIG><I><B>Legg til eit element</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_OY_ADM  OyKjede;
 LC_POL_LeggTilOy(&OyKjede,pPO);
 Parametere:
@@ -5690,7 +5686,7 @@ SK_EntPnt_FYBA void LC_POL_LeggTilOy(LC_OY_ADM *pOA,LC_POL_OMKR *pPO)
 <A ID="LC_POL_TestBrukt"NAME="LC_POL_TestBrukt"></A><H2>LC_POL_TestBrukt</H2>
 <BIG><I><B>Testar om ei gruppe er brukt i polygonet</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_POL_TestBrukt(pPolygon,&Bgr);
 parametere:
 Type        Name     I/O    Explanation
@@ -5719,7 +5715,7 @@ Type        Name     I/O    Explanation
 -----------------------------------------------------------------------
 LC_POLYGON *pPolygon  I     Polygonbeskrivelse
 short       ngi       r     Antall linjer GINFO
-Bruk:
+Usage:
 ngi = LC_POL_PutRef(pPolygon);
 =======================================================================
  
@@ -5739,7 +5735,7 @@ Parameters:
 Type         Name      I/O  Explanation
 -----------------------------------------------------------------------
 LC_POLYGON  *pPolygon   I   Peker til adm. for polygonbeskrivelse
-Bruk:
+Usage:
    short ngi;
    long nko;
    unsigned short info;
@@ -5785,7 +5781,7 @@ Parameters:
 Type          Name    I/O  Explanation
 -------------------------------------------------------------------------
 LC_POL_OMKR  *pPO;     IU  Peker til kjede som beskriver omkretsen.
-Bruk:
+Usage:
    LC_POL_GetRefOmkrets(&OyPO);
 ==========================================================================
  
@@ -5810,7 +5806,7 @@ double  a        i    Punkt som skal sjekkes
 double  n        i
 short   ist      r    status: UT_FALSE = punktet er utenfor flaten
                               UT_TRUE = punktet ligger inne på flaten
-Bruk:
+Usage:
 .
 ==========================================================================
  
@@ -5837,7 +5833,7 @@ double        a      i    Punkt som skal sjekkes
 double        n      i
 short         ist    r    status: UT_FALSE = punktet er utenfor flaten
                                   UT_TRUE  = punktet ligger inne på flaten
-Bruk:
+Usage:
 ist = LC_POL_PTstOmkrets(pPO,a,n);
    ==========================================================================
  
@@ -5851,7 +5847,7 @@ SK_EntPnt_FYBA short LC_POL_PTstOmkrets(LC_POL_OMKR *pPO,double a,double n)
 <A ID="LC_POL_Box"NAME="LC_POL_Box"></A><H2>LC_POL_Box</H2>
 <BIG><I><B>Henter omskreven boks</I></B></BIG><PRE>
 =======================================================================
-Bruk:
+Usage:
 LC_POL_Box(pPA,&nva,&nvn,&oha,&ohn);
 parametere:
 Type          Name     I/O    Explanation
@@ -5895,7 +5891,7 @@ Parameters:
 Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   areal     u    Beregnet areal
-Bruk:
+Usage:
 areal = LC_BerAreal();
    =============================================================================
  
@@ -5917,7 +5913,7 @@ Parameters:
 Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde    u    Beregnet lengde
-Bruk:
+Usage:
 areal = LC_BerLengde();
 =============================================================================
  
@@ -5941,7 +5937,7 @@ Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde    u    Beregnet lengde
 bool     beregnet  r    Status som viser om lengde er beregnet
-Bruk:
+Usage:
 beregnet = LC_BerLengde3D(&skraa_lengde);
 =============================================================================
  
@@ -5962,7 +5958,7 @@ Parameters:
 Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde     u    Beregnet areal
-Bruk:
+Usage:
 lengde = LC_BerAvgrensLengde();
 =============================================================================
  
@@ -5983,7 +5979,7 @@ Parameters:
 Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde     u    Beregnet lengde
-Bruk:
+Usage:
 lengde = LC_BerYtreAvgrensLengde();
 =============================================================================
  
@@ -6004,7 +6000,7 @@ Parameters:
 Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
 double   lengde     u    Beregnet lengde
-Bruk:
+Usage:
 lengde = LC_BerIndreAvgrensLengde();
 =============================================================================
  
@@ -6022,7 +6018,7 @@ Purpose:
 Endrer koordinatene i aktuell gruppe i buffer til valgt enhet.
 (Rutinen blir utført fra LC_WxGr.)
 Parameters: ingen
-Bruk:
+Usage:
 LC_RoundKoord();
 ==============================================================================
  
@@ -6054,7 +6050,7 @@ Type    Name    I/O   Explanation
 -----------------------------------------------------------------------------
 short   sStatus  r    Status: UT_TRUE  = OK
                               UT_FALSE = feil, ikke splittet
-Bruk:
+Usage:
    status = LC_SnuGr();
    =============================================================================
  
@@ -6099,7 +6095,7 @@ short   ngi         u    Antall GINFO-linjer
 long    nko         u    Antall koordinater
 unsigned short info u    Diverse informasjon. (Se under <A HREF="file:///LC_RxGr">LC_RxGr</A>)
 short   sStatus     r    Status: UT_TRUE=OK, UT_FALSE=ikke utført.
-Bruk:
+Usage:
 sStatus = LC_SammenfoyGr(bgr,retning,plassering,metode,&ngi,&nko,&info);
    =============================================================================
  
@@ -6133,7 +6129,7 @@ long    sP2     i    Punktnummer 2.   (Må være mindre enn nko)
 LC_BGR *  pBgr2   u    Nytt gruppenummer for siste del av gruppen.
 short    sStatus r    Status: UT_TRUE  = OK
                               UT_FALSE = feil, ikke splittet
-Bruk:
+Usage:
 sStatus = LC_SplittGr(sP1,sP2,&Bgr2);
    ==========================================================================
  
@@ -6158,7 +6154,7 @@ long       lNyttSnr       i   Ny gruppe
                               Verdien 0 fører til gammelt serienummer 
                               fjernes uten at det legges inn noe nytt.
 bool       bSammeRetning  i   Gruppene er digitalisert i samme retning
-Bruk:
+Usage:
 sStatus = LC_ErstattReferanse(pFil, lGmlSnr, lNyttSnr, bSammeRetning);
 ==========================================================================
  
@@ -6186,7 +6182,7 @@ unsigned short usLag    i   Velg hvilke "lag" det skal søkes i.
                               LC_FRAMGR og /eller LC_BAKGR
                               (Bruk "|" for å kombinere.)
 short          sAntall  r   Antall filer i aktuell base.
-Bruk:
+Usage:
    Finner antall framgrunnsfiler i basen
    sAntall = LC_InqAntFiler(LC_FRAMGR);
    ==========================================================================
@@ -6215,7 +6211,7 @@ Name     Type    I/O   Explanation
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal merkes.
                        (Lovlig 0 til LC_MAX_ANT_PRIOR-1)
-Bruk:
+Usage:
 LC_ClrPrioritet(pGr,kolonne);
    ==========================================================================
  
@@ -6237,7 +6233,7 @@ Name     Type    I/O   Explanation
 LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal merkes.
                        (Lovlig 0 til LC_MAX_ANT_PRIOR-1)
-Bruk:
+Usage:
 LC_SetPrioritet(pGr,kolonne);
    ==========================================================================
  
@@ -6260,7 +6256,7 @@ LC_BGR *  pGr      i    Gruppenummer
 kolonne  short    i    Kolonne som skal hentes.
                        (Lovlig 0 til LC_MAX_ANT_PRIOR-1)
 short    sAvPaa   r    Av eller På  (UT_TRUE = På, UT_FALSE = Av)
-Bruk:
+Usage:
 sAvPaa = LC_InqPrioritet(pGr,kolonne);
    ==========================================================================
  
@@ -6280,7 +6276,7 @@ Parameters:
 Name     Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_BGR *  pGr      i    Gruppenummer
-Bruk:
+Usage:
 LC_ErasePrioritet(pGr);
    ==========================================================================
  
@@ -6300,7 +6296,7 @@ Parameters:
 Name        Type    I/O   Explanation
 --------------------------------------------------------------------------
 LC_FILADM  *pFil     i    Filpeker
-Bruk:
+Usage:
 LC_EraseAllPrioritet(pFil);
    ==========================================================================
  
@@ -6343,7 +6339,7 @@ long    lHoydeNoyaktighet i Registreringsnøyaktighet
                               KVAL_NOY_UKJENT nøyaktighet er ukjent.
                               KVAL_NOY_STD    standard nøyaktighet fra nivå over 
 char   *pszParameter      r Peker til '/0'-avslutta streng.
-Bruk:
+Usage:
  pszParameter = LC_FormatterKvalitet(sMetode,lNoyaktighet,sSynbarhet,
                                      sHoydeMetode,lHoydeNoyaktighet);
 =============================================================================
@@ -6376,7 +6372,7 @@ long     n_rec      i    Antall reckords som skal nullstilles. Disse kan
 short    rec_len    i    Reckordlengde. (Bruk sizeof for å finne lengden.)
 void    *buffer     i    Peker til buffer som skal brukes for nullstilling.
 short    ist        r    Status. (0=OK, -1=feil)
-Bruk:
+Usage:
  .
  struct{
     long snr;
@@ -6413,7 +6409,7 @@ long      linje   i    Linjenummer som skal legges inn. (0 er første linje)
                        (Største lovlige er 1 større enn det største hittil.)
 void     *buffer  i    Peker til struktur som skal legges inn.
 short     ist     r    Status (0=OK, -1=feil)
-Bruk:
+Usage:
 ist = LC_PutTabel(linje,(void *)&buffer);
    =============================================================================
  
@@ -6435,7 +6431,7 @@ Type      Name   I/O   Explanation
 long      linje   i    Linjenummer som skal hentes.  (0 er første linje)
 void     *buffer  i    Peker til struktur som skal ta mot lest reckord.
 short     ist     r    Status (0=OK, -1=feil)
-Bruk:
+Usage:
 ist = LC_GetTabel(linje,(void *)&buffer);
    =============================================================================
  
@@ -6454,7 +6450,7 @@ Avslutter tabellsystemet og stenger og sletter filen.
 Tabellen kan nå åpnes på nytt for annen bruk.
 Parameters: ingen
    
-Bruk:
+Usage:
 LC_CloseTabel();
    =============================================================================
  
@@ -6490,7 +6486,7 @@ Parameters:
 Type   Name                       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f) (short ,char *,char *)  i   Peker til feilmeldingsrutine
-Bruk:
+Usage:
 LC_SetErrorHandler(ErrorHandler);
 Feilmeldingsrutinen skal ha følgende definisjon:
 void ErrorHandler(short feil_nr,const char *logtx,const char *vartx);
@@ -6520,7 +6516,7 @@ Parameters:
 Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f)(char*)  i   Peker til initieringsrutine
-Bruk:
+Usage:
 LC_SetStartMessageHandler(StartMessageHandler);
 Initieringsrutinen skal ha følgende definisjon:
 void StartMessageHandler(char *pszFilnavn);
@@ -6547,7 +6543,7 @@ Parameters:
 Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f)(double)  i   Peker til visningsrutine
-Bruk:
+Usage:
 LC_SetShowMessageHandler(ShowMessageHandler);
 Visningsrutinen skal ha følgende definisjon:
 void ShowMessageHandler(double prosent);
@@ -6574,7 +6570,7 @@ Parameters:
 Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 void  (*f)(void)  i   Peker til avslutningsrutine
-Bruk:
+Usage:
 LC_SetEndMessageHandler(EndMessageHandler);
 Avslutningsrutinen skal ha følgende definisjon:
 void EndMessageHandler(void);
@@ -6598,7 +6594,7 @@ Parameters:
 Type   Name       I/O  Explanation
 -----------------------------------------------------------------------------
 short  (*f)(void)  i   Peker til rutine for avbruddsstyring.
-Bruk:
+Usage:
 LC_SetCancelHandler(CancelHandler);
 Rutine for avbruddsstyring skal ha følgende definisjon:
 short CancelHandler(void);
@@ -6630,7 +6626,7 @@ Parameters:
 Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 char    *pszFilnavn   i   Ekstra meldingstekst  (filnavn)
-Bruk:
+Usage:
 LC_StartMessage(pszFilnavn);
 =============================================================================
  
@@ -6650,7 +6646,7 @@ Parameters:
 Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
 double   prosent      i   Prosent ferdig (0.0 - 100.0)
-Bruk:
+Usage:
 LC_ShowMessage(prosent);
 =============================================================================
  
@@ -6669,7 +6665,7 @@ Avslutt melding om baseoppbygging.
 Parameters:
 Type     Name        I/O  Explanation
 -----------------------------------------------------------------------------
-Bruk:
+Usage:
 LC_EndMessage();
 =============================================================================
  
@@ -6690,7 +6686,7 @@ Type   Name      I/O   Explanation
 --------------------------------------------------------------------------
 short  sAvbrutt   r    UT_TRUE  = Cancel
                        UT_FALSE = ikke avbrudd
-Bruk:
+Usage:
 sAvbrutt = LC_Cancel();
 ==========================================================================
  
@@ -6714,7 +6710,7 @@ short    feil_nr      i   Feil-nummer
 char    *logtx        i   Tekst som bare skrives til logfil.
                           Eks:"(utført i LC_RxGr)"
 char    *vartx        i   Denne tekststreng henges etter feilmeldingsteksten.
-Bruk:
+Usage:
 LC_Error(35,"(Kallt i LC_Xxxx)","");
 =============================================================================
  
@@ -6749,7 +6745,7 @@ short   *strategi     r   Feilnivå (0-4)
                           2 = Normal feilmelding. Vises ca. 1 sekund.
                           3 = Alvorlig. Krev tastetrykk for å fortsette.
                           4 = Svært alvorlig. Programmet bør avbrytes.
-Bruk:
+Usage:
 strategi = LC_StrError(ckap,feil_nr,&feilmeldingspeker);
    ==========================================================================
  
@@ -6773,7 +6769,7 @@ Dump interne tabeller til stderr
 Parameters:
 Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
-Bruk:
+Usage:
 LC_DumpTab();
    =============================================================================
  
