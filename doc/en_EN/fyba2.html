@@ -8,12 +8,12 @@
 <BR>
 <FONT COLOR="Red" SIZE="+6" FACE="Comic Sans MS"><I><B><CENTER>FYBA</CENTER></I></B></FONT>
 <BR>
-<FONT SIZE="+2" FACE="Comic Sans MS"><I><B><CENTER>A storage system for geo data in SOSI-format.</CENTER></I></B></FONT>
+<FONT SIZE="+2" FACE="Comic Sans MS"><I><B><CENTER>A Storage System for Geo Data in SOSI format.</CENTER></I></B></FONT>
 <BR>
 <BR>
 <BR>
 <BR>
-<FONT SIZE="-1"><CENTER>Last updated: 2014-08-05 by rubund. Translated from the norwegian version dated 2013-10-09</CENTER></FONT>
+<FONT SIZE="-1"><CENTER>Last updated: 2014-08-24 by rubund. Translated from the norwegian version dated 2013-10-09</CENTER></FONT>
 
 
 
@@ -156,7 +156,7 @@ The following bits are defined:
 In order to increase the speed, the library makes a binary copy of the SOSI file.
 This copy is partly stored in RAM and partly on the hard drive.
 
-The copy consists of group information, coordinates and point information.
+The copy consists of group information, coordinates and node information.
 
 The group information for one group is treated as a long string with pointers
 to the start position for every GINFO-line
@@ -174,9 +174,9 @@ to the start position for every GINFO-line
 !        !-----           !
 !        !-----------------
 
-The coordinates are stored in separate arrays. The point information is stored
-as a long string for the entire group with pointers to every point to the start
-position for PINFO for every point in the same way as GINFO.
+The coordinates are stored in separate arrays. The node information is stored
+as a long string for the entire group with pointers to every node to the start
+position for PINFO for every node in the same way as GINFO.
 
 !--------! !--------! !----------:-------:--------!
 ! East   ! ! North  ! ! Altitude !  KP   ! PINFO  !
@@ -490,7 +490,7 @@ SK_EntPnt_FYBA short LC_GetUtvidModus(void)
 <BR>
 <BR>
 <BR>
-<A ID="O6"NAME="O6"></A><H1>6 Opening Base and SOSI files</H1>
+<A ID="O6"NAME="O6"></A><H1>6 Opening Base and SOSI Files</H1>
 
 <BR>
 <BR>
@@ -721,12 +721,12 @@ SK_EntPnt_FYBA void LC_FcloseSos(LC_FILADM *pFil)
 <BR>
 <BR>
 <BR>
-<A ID="O7"NAME="O7"></A><H1>7 Helper functions</H1>
+<A ID="O7"NAME="O7"></A><H1>7 Helper Functions</H1>
 
 <BR>
 <BR>
 <BR>
-<A ID="O8"NAME="O8"></A><H2>7.1 Base og file</H2>
+<A ID="O8"NAME="O8"></A><H2>7.1 Base og File</H2>
 <BR>
 <BR>
 <HR>
@@ -762,7 +762,7 @@ SK_EntPnt_FYBA short LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,dou
 <BR>
 <BR>
 <A ID="LC_GetFiOm"NAME="LC_GetFiOm"></A><H2>LC_GetFiOm</H2>
-<BIG><I><B>Hent område fra fil-hode</I></B></BIG><PRE>
+<BIG><I><B>Get area from the file header</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Hent område for en SOSI-fil i basen.
@@ -788,7 +788,7 @@ SK_EntPnt_FYBA short LC_GetFiOm(LC_FILADM *pFil,double *nva,double *nvn,double *
 <BR>
 <BR>
 <A ID="LC_GetFiNr"NAME="LC_GetFiNr"></A><H2>LC_GetFiNr</H2>
-<BIG><I><B>Get fil nummer</I></B></BIG><PRE>
+<BIG><I><B>Get file number</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Sjekker alle filer i aktuell base om noen av den har det gitte filnavnet.
@@ -809,7 +809,7 @@ SK_EntPnt_FYBA LC_FILADM *LC_GetFiNr(const char *fil_navn)
 <BR>
 <BR>
 <A ID="LC_GetFiNa"NAME="LC_GetFiNa"></A><H2>LC_GetFiNa</H2>
-<BIG><I><B>Hent filnavn</I></B></BIG><PRE>
+<BIG><I><B>Get filename</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Henter filnavnet for en fil i basen. Fungerer både for basefiler
@@ -833,7 +833,7 @@ SK_EntPnt_FYBA char *LC_GetFiNa(LC_FILADM *pFil)
 <BR>
 <BR>
 <A ID="LC_GetTegnsett"NAME="LC_GetTegnsett"></A><H2>LC_GetTegnsett</H2>
-<BIG><I><B>Finner tegnsett</I></B></BIG><PRE>
+<BIG><I><B>Get encoding</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Finne tegnsett i ginfo i aktuell gruppe.
@@ -861,7 +861,7 @@ SK_EntPnt_FYBA short LC_GetTegnsett(short *psTegnsett)
 <BR>
 <BR>
 <A ID="LC_InqLag"NAME="LC_InqLag"></A><H2>LC_InqLag</H2>
-<BIG><I><B>Finn hvilet lag aktuell gruppe tilhører</I></B></BIG><PRE>
+<BIG><I><B>Get which layer the active group belongs to</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Finn hvilket lag aktuell gruppe tilhører.
@@ -882,7 +882,7 @@ SK_EntPnt_FYBA short LC_InqLag(unsigned short *usLag)
 <BR>
 <BR>
 <A ID="LC_InqFilLag"NAME="LC_InqFilLag"></A><H2>LC_InqFilLag</H2>
-<BIG><I><B>Finn hvilet lag en fil tilhører</I></B></BIG><PRE>
+<BIG><I><B>Get which layer a file belongs to</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Finn hvilket lag en fil tilhører.
@@ -903,7 +903,7 @@ SK_EntPnt_FYBA unsigned short LC_InqFilLag(LC_FILADM *pFil)
 <BR>
 <BR>
 <A ID="LC_SetFilLag"NAME="LC_SetFilLag"></A><H2>LC_SetFilLag</H2>
-<BIG><I><B>Velg hvilet lag en fil tilhører</I></B></BIG><PRE>
+<BIG><I><B>Set which layer a file belongs to</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Velg hvilket lag en fil tilhører.
@@ -924,7 +924,7 @@ SK_EntPnt_FYBA void LC_SetFilLag(LC_FILADM *pFil,unsigned short usLag)
 <BR>
 <BR>
 <A ID="LC_FiLastGr"NAME="LC_FiLastGr"></A><H2>LC_FiLastGr</H2>
-<BIG><I><B>Finn siste gruppe i filen</I></B></BIG><PRE>
+<BIG><I><B>Find the last group in the file</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Finner gruppenummer for siste gruppe i filen.
@@ -945,7 +945,7 @@ SK_EntPnt_FYBA long LC_FiLastGr(LC_FILADM *pFil)
 <BR>
 <BR>
 <A ID="LC_ErFilBase"NAME="LC_ErFilBase"></A><H2>LC_ErFilBase</H2>
-<BIG><I><B>Sjekker om en fil er i basen</I></B></BIG><PRE>
+<BIG><I><B>Check if the file is in the base</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Sjekker om en fil er i basen.
@@ -968,7 +968,7 @@ SK_EntPnt_FYBA short LC_ErFilBase(const char *fil)
 <BR>
 <BR>
 <A ID="LC_ErKoordsysLik"NAME="LC_ErKoordsysLik"></A><H2>LC_ErKoordsysLik</H2>
-<BIG><I><B>Sjekker KOORDSYS</I></B></BIG><PRE>
+<BIG><I><B>Check that all files in the base have the same coordinate system</I></B></BIG><PRE>
 =======================================================================
 Purpose:
 Sjekk at alle filene i basen har samme koordinatsystem.
@@ -989,7 +989,7 @@ SK_EntPnt_FYBA short LC_ErKoordsysLik(void)
 <BR>
 <BR>
 <A ID="LC_ErVertdatumLik"NAME="LC_ErVertdatumLik"></A><H2>LC_ErVertdatumLik</H2>
-<BIG><I><B>Sjekker VERT-DATUM</I></B></BIG><PRE>
+<BIG><I><B>Check that all files have the same VERT-DATUM</I></B></BIG><PRE>
 =======================================================================
 Purpose:
 Sjekk at alle filene i basen har samme VERT-DATUM.
@@ -1010,7 +1010,7 @@ SK_EntPnt_FYBA short LC_ErVertdatumLik(void)
 <BR>
 <BR>
 <A ID="LC_Backup"NAME="LC_Backup"></A><H2>LC_Backup</H2>
-<BIG><I><B>Lag backup av gitt SOSI-fil</I></B></BIG><PRE>
+<BIG><I><B>Make backup of a SOSI file</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Lag backup av gitt SOSI-fil.
@@ -1036,7 +1036,7 @@ SK_EntPnt_FYBA short LC_Backup(LC_FILADM *pFil, const char *pszBackupPath)
 <BR>
 <BR>
 <A ID="LC_GetNgisLag"NAME="LC_GetNgisLag"></A><H2>LC_GetNgisLag</H2>
-<BIG><I><B>Hent NGIS-LAG </I></B></BIG><PRE>
+<BIG><I><B>Get NGIS-LAG from a file</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Henter NGIS-LAG for gitt fil.
@@ -1062,7 +1062,7 @@ SK_EntPnt_FYBA char* LC_GetNgisLag(LC_FILADM *pFil)
 <BR>
 <BR>
 <A ID="LC_SetFilType"NAME="LC_SetFilType"></A><H2>LC_SetFilType</H2>
-<BIG><I><B>Setter filtype for en sosifil</I></B></BIG><PRE>
+<BIG><I><B>Set file type for a SOSI file</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Setter filtype for en fil.
@@ -1099,7 +1099,7 @@ SK_EntPnt_FYBA void LC_SetFilType(LC_FILADM *pFil, short sType)
 <BR>
 <BR>
 <A ID="LC_GetFilType"NAME="LC_GetFilType"></A><H2>LC_GetFilType</H2>
-<BIG><I><B>Henter filtype for en sosifil</I></B></BIG><PRE>
+<BIG><I><B>Get file type for a SOSI file</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Finner filtypen for en fil.
@@ -1207,7 +1207,7 @@ SK_EntPnt_FYBA bool LC_ErReferert(void)
 <BR>
 <BR>
 <BR>
-<A ID="O9"NAME="O9"></A><H2>7.2 SOSI-gruppe</H2>
+<A ID="O9"NAME="O9"></A><H2>7.2 SOSI Group</H2>
 <BR>
 <BR>
 <HR>
@@ -1343,7 +1343,7 @@ SK_EntPnt_FYBA void LC_SetEndringsstatus(short sStatus)
 <BR>
 <BR>
 <BR>
-<A ID="O10"NAME="O10"></A><H2>7.3 Hode, aktuell gruppe</H2>
+<A ID="O10"NAME="O10"></A><H2>7.3 Header, active group</H2>
 <BR>
 <BR>
 <HR>
@@ -1604,7 +1604,7 @@ SK_EntPnt_FYBA short LC_PutTransEx(unsigned short usMaske, LC_TRANSPAR * pTrans)
 <BR>
 <BR>
 <BR>
-<A ID="O11"NAME="O11"></A><H2>7.4 Hode, direkte fra SOSI-fil</H2>
+<A ID="O11"NAME="O11"></A><H2>7.4 Header, directly from SOSI-file</H2>
 <BR>
 <BR>
 <HR>
@@ -1889,7 +1889,7 @@ SK_EntPnt_FYBA short HO_SjekkTegnsett(const char *pszFil,short *psTegnsett)
 <BR>
 <BR>
 <BR>
-<A ID="O12"NAME="O12"></A><H1>8 Ny gruppe</H1>
+<A ID="O12"NAME="O12"></A><H1>8 New Group</H1>
 <BR>
 <BR>
 <HR>
@@ -1928,7 +1928,7 @@ SK_EntPnt_FYBA short LC_NyGr (LC_FILADM *pFil,char *sosi,LC_BGR * pBgr,long *snr
 <BR>
 <BR>
 <BR>
-<A ID="O13"NAME="O13"></A><H1>9 Direkte les/skriv</H1>
+<A ID="O13"NAME="O13"></A><H1>9 Direct Read/Write</H1>
 <BR>
 <BR>
 <HR>
@@ -2030,7 +2030,7 @@ SK_EntPnt_FYBA short LC_WxGr(short k_stat)
 <BR>
 <BR>
 <BR>
-<A ID="O14"NAME="O14"></A><H1>10 Sekvensiell les/skriv</H1>
+<A ID="O14"NAME="O14"></A><H1>10 Sequential Read/Write</H1>
 <BR>
 <BR>
 <HR>
@@ -2193,7 +2193,7 @@ SK_EntPnt_FYBA short LC_EndreHode(LC_FILADM *pFil)
 <BR>
 <BR>
 <BR>
-<A ID="O15"NAME="O15"></A><H1>11 Slette gruppe</H1>
+<A ID="O15"NAME="O15"></A><H1>11 Delete Group</H1>
 <BR>
 <BR>
 <HR>
@@ -2227,7 +2227,7 @@ SK_EntPnt_FYBA short LC_DelGr(void)
 <BR>
 <BR>
 <BR>
-<A ID="O16"NAME="O16"></A><H1>12 Tilbakeskriving av buffret info til SOSI-fil</H1>
+<A ID="O16"NAME="O16"></A><H1>12 Storing Back the Buffered Info to a SOSI File</H1>
 <BR>
 <BR>
 <HR>
@@ -2253,14 +2253,14 @@ SK_EntPnt_FYBA void LC_Save(void)
 <BR>
 <BR>
 <BR>
-<A ID="O17"NAME="O17"></A><H1>13 Reservere plass i ringbuffer</H1>
+<A ID="O17"NAME="O17"></A><H1>13 Reserve Space in the Ring Buffer</H1>
 </PRE>
-Dette er rutiner for å tildele/reservere plass til Ginfo/Koordinater
-i ringbufferet, og må utføres før det legges data inn i rungbuffer
-med rutiner som LC_PuGi og LC_PuTK
+These are functions to allocate space for Ginfo/coordinates in the
+ring buffer, and they must be called before data is added to the 
+ring buffer with functions such as LC_PuGi and LC_PuTK
 
- OBS:  Aktuell datagruppe må først være lest/valgt med rutinene
-       LC_RxGr eller LC_NyGr.
+ Note: The active data group must first be read/selected with the 
+       functions LC_RxGr or LC_NyGr
 
 <BR>
 <BR>
@@ -2403,20 +2403,21 @@ SK_EntPnt_FYBA long LC_DelKoL(long linje, long antall)
 <BR>
 <BR>
 <BR>
-<A ID="O18"NAME="O18"></A><H1>14 Legge data inn i ringbuffer</H1>
+<A ID="O18"NAME="O18"></A><H1>14 Add Data to the Ring Buffer</H1>
 </PRE>
-Dette er rutiner for legge data inn i ringbufferet.
-Rutinene arbeider mot aktuell datagruppe.
-Det forutsettes at det er tildelt plass med rutinene i kapittelet foran.
-(dvs: LC_AppGiL,LC_InsGiL,LC_AppKoL,LC_InsKoL)
+These are functions to add data to the ring buffer.
+The functions interact with the current data group.
+It is assumed that there is allocated place with the functions in the
+previous chapter.
+(LC_AppGiL,LC_InsGiL,LC_AppKoL,LC_InsKoL)
 
-OBS:  Etter at du er ferdig mned å legge inn nytt innhold må du
-      lagre data med LC_WxGr.
+Note: After having added all the desired data, it is required to save
+     the data with LC_WxGr.
 
 <BR>
 <BR>
 <BR>
-<A ID="O19"NAME="O19"></A><H2>14.1 Kopiere gruppe</H2>
+<A ID="O19"NAME="O19"></A><H2>14.1 Copying group</H2>
 <BR>
 <BR>
 <HR>
@@ -2493,7 +2494,7 @@ SK_EntPnt_FYBA short LC_CopyCoord(LC_BGR * pBgr,short retning,long til_linje,sho
 <BR>
 <BR>
 <BR>
-<A ID="O20"NAME="O20"></A><H2>14.2 Gruppeinforasjon</H2>
+<A ID="O20"NAME="O20"></A><H2>14.2 Group Information</H2>
 <BR>
 <BR>
 <HR>
@@ -2755,7 +2756,7 @@ SK_EntPnt_FYBA short LC_FinnNivo(const char * pszName)
 <BR>
 <BR>
 <BR>
-<A ID="O21"NAME="O21"></A><H2>14.3 Serienummer og referansenummer</H2>
+<A ID="O21"NAME="O21"></A><H2>14.3 Serial Number and Reference Number</H2>
 <BR>
 <BR>
 <HR>
@@ -2806,7 +2807,7 @@ SK_EntPnt_FYBA short LC_PutRef(long *ref_array,long ant_ref)
 <BR>
 <BR>
 <BR>
-<A ID="O22"NAME="O22"></A><H2>14.4 Koordinater</H2>
+<A ID="O22"NAME="O22"></A><H2>14.4 Coordinates</H2>
 <BR>
 <BR>
 <HR>
@@ -2879,7 +2880,7 @@ SK_EntPnt_FYBA void LC_PutTD(long punkt_nr, double dybde)
 <BR>
 <BR>
 <BR>
-<A ID="O23"NAME="O23"></A><H2>14.5 Knutepunkt</H2>
+<A ID="O23"NAME="O23"></A><H2>14.5 Connection Nodes</H2>
 <BR>
 <BR>
 <HR>
@@ -2907,7 +2908,7 @@ SK_EntPnt_FYBA void LC_PutKp(long punkt_nr, short kp)
 <BR>
 <BR>
 <BR>
-<A ID="O24"NAME="O24"></A><H2>14.6 Punktinformasjon</H2>
+<A ID="O24"NAME="O24"></A><H2>14.6 Node information</H2>
 <BR>
 <BR>
 <HR>
@@ -2942,27 +2943,27 @@ SK_EntPnt_FYBA short LC_PutPi(long punkt_nr, const char *pinfo)
 <BR>
 <BR>
 <BR>
-<A ID="O25"NAME="O25"></A><H1>15 Hente data fra ringbuffer</H1>
+<A ID="O25"NAME="O25"></A><H1>15 Get Data from the Ring Buffer</H1>
 </PRE>
-Dette er rutiner for hente data ut fra ringbufferet.
-Rutinene arbeider mot current datagruppe.
-Denne kan du ha fått inn enten ved les fra SOSI-fil eller at du er i
-etableringsfasen av en ny.
+These are functions to get data from the ring buffer.
+They interact with the current data group.
+The current data group may be chosen either by reading from a SOSI file
+or by establishing a new SOSI file.
 
 <BR>
 <BR>
 <BR>
-<A ID="O26"NAME="O26"></A><H2>15.1 Generell verdi til et SOSI-navn</H2>
+<A ID="O26"NAME="O26"></A><H2>15.1 General Value for a SOSI Name</H2>
 </PRE>
-I henhold til den generelle mekanisme på SOSI-fila hvor info kan
-være enten i HODE ,GINFO eller PINFO er det behov for rutine som går
-over det hele for å finne aktuell verdi for denne gruppa
-Det tenkes her spesiellt på kavlitetsopplysninger, dato etc.
+Regarding the general mechanism in the SOSI file where the information
+can either be in HODE, GINFO or PINFO, there's a need for a functions that
+checks everything to find the actual value for this group.
+This applies mainly for quality information, date etc.
 
 <BR>
 <BR>
 <BR>
-<A ID="O27"NAME="O27"></A><H2>15.2 Gruppeinforasjon</H2>
+<A ID="O27"NAME="O27"></A><H2>15.2 Group Information</H2>
 <BR>
 <BR>
 <HR>
@@ -3045,7 +3046,7 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
 <BR>
 <BR>
 <BR>
-<A ID="O28"NAME="O28"></A><H2>15.3 Serienummer og referansenummer</H2>
+<A ID="O28"NAME="O28"></A><H2>15.3 Serial Number and Reference Number</H2>
 <BR>
 <BR>
 <HR>
@@ -3230,7 +3231,7 @@ short LC_ErLinjeRefLin(char *pszSosiLin, short sRefLin)
 <BR>
 <BR>
 <BR>
-<A ID="O29"NAME="O29"></A><H2>15.4 Spesielle get-rutiner</H2>
+<A ID="O29"NAME="O29"></A><H2>15.4 Special get functions</H2>
 <BR>
 <BR>
 <HR>
@@ -3433,7 +3434,7 @@ SK_EntPnt_FYBA short LC_GetKvalitet(short *psMetode,long *plNoyaktighet,short *p
 <BR>
 <BR>
 <BR>
-<A ID="O30"NAME="O30"></A><H2>15.5 Koordinater</H2>
+<A ID="O30"NAME="O30"></A><H2>15.5 Coordinates</H2>
 <BR>
 <BR>
 <HR>
@@ -3609,7 +3610,7 @@ SK_EntPnt_FYBA double LC_GetDybde(long punkt_nr)
 <BR>
 <BR>
 <BR>
-<A ID="O31"NAME="O31"></A><H2>15.6 Knutepunkt</H2>
+<A ID="O31"NAME="O31"></A><H2>15.6 Connection Nodes</H2>
 <BR>
 <BR>
 <HR>
@@ -3661,7 +3662,7 @@ short LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp)
 <BR>
 <BR>
 <BR>
-<A ID="O32"NAME="O32"></A><H2>15.7 Punktinformasjon</H2>
+<A ID="O32"NAME="O32"></A><H2>15.7 Node Information</H2>
 <BR>
 <BR>
 <HR>
@@ -3820,7 +3821,7 @@ SK_EntPnt_FYBA short LC_TestPi(long punkt_nr,short sTestHoyde)
 <BR>
 <BR>
 <BR>
-<A ID="O33"NAME="O33"></A><H2>15.8 Spesielle henteoperasjoner</H2>
+<A ID="O33"NAME="O33"></A><H2>15.8 Special get operations</H2>
 <BR>
 <BR>
 <HR>
@@ -3962,7 +3963,7 @@ SK_EntPnt_FYBA const char *LC_GetElementName(LC_FILADM *pFil,short sNameNr,bool 
 <BR>
 <BR>
 <BR>
-<A ID="O34"NAME="O34"></A><H1>16 Blaing i basen</H1>
+<A ID="O34"NAME="O34"></A><H1>16 Iterating in the Base</H1>
 <BR>
 <BR>
 <HR>
@@ -4075,7 +4076,7 @@ SK_EntPnt_FYBA short LC_NextBgr(LC_BGR * pBgr,unsigned short usLag)
 <BR>
 <BR>
 <BR>
-<A ID="O35"NAME="O35"></A><H1>17 Geografisk søking</H1>
+<A ID="O35"NAME="O35"></A><H1>17 Geographical Search</H1>
 <BR>
 <BR>
 <HR>
@@ -4464,7 +4465,7 @@ SK_EntPnt_FYBA short LC_PTstOmkrets(double a,double n)
 <BR>
 <BR>
 <BR>
-<A ID="O36"NAME="O36"></A><H1>18 Serienummer-søking</H1>
+<A ID="O36"NAME="O36"></A><H1>18 Serial Number Search</H1>
 <BR>
 <BR>
 <HR>
@@ -4777,7 +4778,7 @@ SK_EntPnt_FYBA short LC_FLSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
 <BR>
 <BR>
 <BR>
-<A ID="O37"NAME="O37"></A><H1>19 Egenskapsutvalg</H1>
+<A ID="O37"NAME="O37"></A><H1>19 Property Subset</H1>
 FYBA har en egen "utvalgsmotor" som har et rikt sett av utvalgsmetoder.
 Disse metodene er spesiellt tilpasset SOSI-formatet.
 
@@ -5224,7 +5225,7 @@ SK_EntPnt_FYBA void LC_UtvalgPrioritet(LC_UT_ADM *pUtAdm)
 <BR>
 <BR>
 <BR>
-<A ID="O38"NAME="O38"></A><H1>20 Merke grupper</H1>
+<A ID="O38"NAME="O38"></A><H1>20 Marking Groups</H1>
 <BR>
 <BR>
 <HR>
@@ -5399,17 +5400,18 @@ SK_EntPnt_FYBA long LC_MerkGr(short sKolonne,short sBryter)
 <BR>
 <BR>
 <BR>
-<A ID="O39"NAME="O39"></A><H1>21 Spesiell handtering av flater</H1>
+<A ID="O39"NAME="O39"></A><H1>21 Special Handling of Polygons</H1>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
-<A ID="Polygonbeskrivelse"NAME="Polygonbeskrivelse"></A><H2>Polygonbeskrivelse</H2>
-<BIG><I><B>Strukturer for polygonbeskrivelse.</I></B></BIG><PRE>
+<A ID="Polygonbeskrivelse"NAME="Polygonbeskrivelse"></A><H2>Polygon Description</H2>
+<BIG><I><B>Structs for polygon description.</I></B></BIG><PRE>
 
-Dette er et sett med strukturer som er kjedet sammen til en komplett
-beskrielse av en flate. Eksempel på bruk er gitt under <A HREF="file:///LC_POL_GetRef">LC_POL_GetRef</A>.
+This is a set of structs that are linked together in order to form complete description
+of a polygon. Examples usage can be found in:
+<A HREF="file:///LC_POL_GetRef">LC_POL_GetRef</A>.
 
 
   !-----------------!
@@ -5869,19 +5871,19 @@ SK_EntPnt_FYBA void LC_POL_Box(LC_POL_OMKR *pPO,double *nva,double *nvn, double 
 <BR>
 <BR>
 <BR>
-<A ID="O40"NAME="O40"></A><H1>22 Diverse funksjoner</H1>
+<A ID="O40"NAME="O40"></A><H1>22 Various Functions</H1>
 
 <BR>
 <BR>
 <BR>
-<A ID="O41"NAME="O41"></A><H2>22.1 Beregninger</H2>
+<A ID="O41"NAME="O41"></A><H2>22.1 Calculations</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_BerAreal"NAME="LC_BerAreal"></A><H2>LC_BerAreal</H2>
-<BIG><I><B>Beregn areal av aktuell FLATE</I></B></BIG><PRE>
+<BIG><I><B>Calculate the area of the active group</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Beregner arealet av aktuell gruppe hvis denne er flate.
@@ -5903,7 +5905,7 @@ SK_EntPnt_FYBA double LC_BerAreal(void)
 <BR>
 <BR>
 <A ID="LC_BerLengde"NAME="LC_BerLengde"></A><H2>LC_BerLengde</H2>
-<BIG><I><B>Beregn horisontal lengde av aktuell gruppe</I></B></BIG><PRE>
+<BIG><I><B>Calculate the horizonal length of the active group</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Beregn horisontal lengde av aktuell gruppe.
@@ -5925,7 +5927,7 @@ SK_EntPnt_FYBA double LC_BerLengde(void)
 <BR>
 <BR>
 <A ID="LC_BerLengde3D"NAME="LC_BerLengde3D"></A><H2>LC_BerLengde3D</H2>
-<BIG><I><B>Beregn skrå lengde av aktuell gruppe</I></B></BIG><PRE>
+<BIG><I><B>Calculate the diagonal length of the active group</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Beregn skrå lengde av aktuell gruppe.
@@ -5949,7 +5951,7 @@ SK_EntPnt_FYBA bool LC_BerLengde3D(double *skraa_lengde)
 <BR>
 <BR>
 <A ID="LC_BerAvgrensLengde"NAME="LC_BerAvgrensLengde"></A><H2>LC_BerAvgrensLengde</H2>
-<BIG><I><B>Beregn lengden av avgrensning av FLATE</I></B></BIG><PRE>
+<BIG><I><B>Calculate the length of the perimeter of a polygon</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Beregn lengden av avgrensningen av aktuell gruppe hvis denne er flate.
@@ -5970,7 +5972,7 @@ SK_EntPnt_FYBA double LC_BerAvgrensLengde(void)
 <BR>
 <BR>
 <A ID="LC_BerYtreAvgrensLengde"NAME="LC_BerYtreAvgrensLengde"></A><H2>LC_BerYtreAvgrensLengde</H2>
-<BIG><I><B>Beregn lengden av ytre avgrensning av FLATE</I></B></BIG><PRE>
+<BIG><I><B>Calculate the length of the outer perimeter of a polygon</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Beregn lengden av ytre avgrensningen av aktuell gruppe hvis denne er flate.
@@ -5991,7 +5993,7 @@ SK_EntPnt_FYBA double LC_BerYtreAvgrensLengde(void)
 <BR>
 <BR>
 <A ID="LC_BerIndreAvgrensLengde"NAME="LC_BerIndreAvgrensLengde"></A><H2>LC_BerIndreAvgrensLengde</H2>
-<BIG><I><B>Beregn lengden av indre avgrensning av FLATE</I></B></BIG><PRE>
+<BIG><I><B>Calculate the length of the inner perimeter of a polygon</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Beregn lengden av indre avgrensningen av aktuell gruppe hvis denne er flate.
@@ -6012,7 +6014,7 @@ SK_EntPnt_FYBA double LC_BerIndreAvgrensLengde(void)
 <BR>
 <BR>
 <A ID="LC_RoundKoord"NAME="LC_RoundKoord"></A><H2>LC_RoundKoord</H2>
-<BIG><I><B>Endre koordinatene i buffer til riktig enhet</I></B></BIG><PRE>
+<BIG><I><B>Change the coordinates in the active group to the correct unit</I></B></BIG><PRE>
 ===========================================================================
 Purpose:
 Endrer koordinatene i aktuell gruppe i buffer til valgt enhet.
@@ -6028,14 +6030,14 @@ SK_EntPnt_FYBA void LC_RoundKoord(void)
 <BR>
 <BR>
 <BR>
-<A ID="O42"NAME="O42"></A><H2>22.2 Strukturendring</H2>
+<A ID="O42"NAME="O42"></A><H2>22.2 Structure Changes</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_SnuGr"NAME="LC_SnuGr"></A><H2>LC_SnuGr</H2>
-<BIG><I><B>Snu gruppe</I></B></BIG><PRE>
+<BIG><I><B>Invert group order</I></B></BIG><PRE>
 ===========================================================================
 Purpose:
 Snur en gruppe.
@@ -6062,7 +6064,7 @@ SK_EntPnt_FYBA short LC_SnuGr(void)
 <BR>
 <BR>
 <A ID="LC_SammenfoyGr"NAME="LC_SammenfoyGr"></A><H2>LC_SammenfoyGr</H2>
-<BIG><I><B>Sammenføy grupper</I></B></BIG><PRE>
+<BIG><I><B>Merge groups</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Sammenføye to grupper.
@@ -6108,7 +6110,7 @@ SK_EntPnt_FYBA short LC_SammenfoyGr(LC_BGR * pFraBgr,short retning,short plasser
 <BR>
 <BR>
 <A ID="LC_SplittGr"NAME="LC_SplittGr"></A><H2>LC_SplittGr</H2>
-<BIG><I><B>Splitt gruppe</I></B></BIG><PRE>
+<BIG><I><B>Split group</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Splitter aktuell gruppe i to deler.
@@ -6141,7 +6143,7 @@ SK_EntPnt_FYBA short LC_SplittGr (long sP1,long sP2,LC_BGR * pBgr2)
 <BR>
 <BR>
 <A ID="LC_ErstattReferanse"NAME="LC_ErstattReferanse"></A><H2>LC_ErstattReferanse</H2>
-<BIG><I><B>Erstatt referanse </I></B></BIG><PRE>
+<BIG><I><B>Replace reference</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Erstatt referanse i alle grupper i gitt fil.
@@ -6164,14 +6166,14 @@ SK_EntPnt_FYBA void LC_ErstattReferanse (LC_FILADM *pFil,long lGmlSnr,long lNytt
 <BR>
 <BR>
 <BR>
-<A ID="O43"NAME="O43"></A><H2>22.3 Hele basen</H2>
+<A ID="O43"NAME="O43"></A><H2>22.3 The Entire Base</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_InqAntFiler"NAME="LC_InqAntFiler"></A><H2>LC_InqAntFiler</H2>
-<BIG><I><B>Finn antall filer i basen</I></B></BIG><PRE>
+<BIG><I><B>Get number of files in the base</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Finn antall filer i aktuell base.
@@ -6194,14 +6196,14 @@ SK_EntPnt_FYBA short LC_InqAntFiler(unsigned short usLag)
 <BR>
 <BR>
 <BR>
-<A ID="O44"NAME="O44"></A><H2>22.4 Prioritet</H2>
+<A ID="O44"NAME="O44"></A><H2>22.4 Priority</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_ClrPrioritet"NAME="LC_ClrPrioritet"></A><H2>LC_ClrPrioritet</H2>
-<BIG><I><B>Slett prioritets-bit</I></B></BIG><PRE>
+<BIG><I><B>Clear priority bit</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Slett prioritets-bit.
@@ -6223,7 +6225,7 @@ SK_EntPnt_FYBA void LC_ClrPrioritet(LC_BGR * pGr,short kolonne)
 <BR>
 <BR>
 <A ID="LC_SetPrioritet"NAME="LC_SetPrioritet"></A><H2>LC_SetPrioritet</H2>
-<BIG><I><B>Sett prioritets-bit</I></B></BIG><PRE>
+<BIG><I><B>Set priority bit</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Sett prioritets-bit.
@@ -6245,7 +6247,7 @@ SK_EntPnt_FYBA void LC_SetPrioritet(LC_BGR * pGr,short kolonne)
 <BR>
 <BR>
 <A ID="LC_InqPrioritet"NAME="LC_InqPrioritet"></A><H2>LC_InqPrioritet</H2>
-<BIG><I><B>Hent prioritets-bit</I></B></BIG><PRE>
+<BIG><I><B>Get priority bit</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Hent prioritets-bit.
@@ -6268,7 +6270,7 @@ SK_EntPnt_FYBA short LC_InqPrioritet(LC_BGR * pGr,short kolonne)
 <BR>
 <BR>
 <A ID="LC_ErasePrioritet"NAME="LC_ErasePrioritet"></A><H2>LC_ErasePrioritet</H2>
-<BIG><I><B>Blank ut prioritets-bit</I></B></BIG><PRE>
+<BIG><I><B>Erase priority bit</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Blank ut prioritets-bit.
@@ -6288,7 +6290,7 @@ SK_EntPnt_FYBA void LC_ErasePrioritet(LC_BGR * pGr)
 <BR>
 <BR>
 <A ID="LC_EraseAllPrioritet"NAME="LC_EraseAllPrioritet"></A><H2>LC_EraseAllPrioritet</H2>
-<BIG><I><B>Blank ut ALLE prioritets-bit</I></B></BIG><PRE>
+<BIG><I><B>Erase all priority bits</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Blank ut alle prioritets-bit på alle gruppene i denne filen.
@@ -6306,14 +6308,14 @@ SK_EntPnt_FYBA void LC_EraseAllPrioritet(LC_FILADM *pFil)
 <BR>
 <BR>
 <BR>
-<A ID="O45"NAME="O45"></A><H2>22.5 Kvalitet</H2>
+<A ID="O45"NAME="O45"></A><H2>22.5 Quality</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_FormatterKvalitet"NAME="LC_FormatterKvalitet"></A><H2>LC_FormatterKvalitet</H2>
-<BIG><I><B>Formatter KVALITET</I></B></BIG><PRE>
+<BIG><I><B>Format for KVALITET</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Formater parameterstrengen for KVALITET.
@@ -6351,14 +6353,14 @@ SK_EntPnt_FYBA char *LC_FormatterKvalitet(short sMetode,long lNoyaktighet,short 
 <BR>
 <BR>
 <BR>
-<A ID="O46"NAME="O46"></A><H2>22.6 Tabellhandtering</H2>
+<A ID="O46"NAME="O46"></A><H2>22.6 Table Handling</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_InitTabel"NAME="LC_InitTabel"></A><H2>LC_InitTabel</H2>
-<BIG><I><B>Åpner tabellsystemet</I></B></BIG><PRE>
+<BIG><I><B>Initialise the table system</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Initierer tabellsystemet og åpner filen.
@@ -6398,7 +6400,7 @@ SK_EntPnt_FYBA short LC_InitTabel(long n_rec,short rec_len,void *buffer)
 <BR>
 <BR>
 <A ID="LC_PutTabel"NAME="LC_PutTabel"></A><H2>LC_PutTabel</H2>
-<BIG><I><B>Put tabell-linje</I></B></BIG><PRE>
+<BIG><I><B>Add one line to the table file (push)</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Legg inn en linje fra tabellfilen.
@@ -6421,7 +6423,7 @@ SK_EntPnt_FYBA short LC_PutTabel(long linje,void *buffer)
 <BR>
 <BR>
 <A ID="LC_GetTabel"NAME="LC_GetTabel"></A><H2>LC_GetTabel</H2>
-<BIG><I><B>Get tabell-linje</I></B></BIG><PRE>
+<BIG><I><B>Get one line from the table file</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Henter en linje fra tabellfilen.
@@ -6443,7 +6445,7 @@ SK_EntPnt_FYBA short LC_GetTabel(long linje,void *buffer)
 <BR>
 <BR>
 <A ID="LC_CloseTabel"NAME="LC_CloseTabel"></A><H2>LC_CloseTabel</H2>
-<BIG><I><B>Stenge tabellsystemet</I></B></BIG><PRE>
+<BIG><I><B>Close the table system</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Avslutter tabellsystemet og stenger og sletter filen.
@@ -6460,24 +6462,26 @@ SK_EntPnt_FYBA void LC_CloseTabel(void)
 <BR>
 <BR>
 <BR>
-<A ID="O47"NAME="O47"></A><H2>22.7 Meldingshandtering</H2>
-FYBA har en mekanisme som muliggjør at kallende program handterer meldinger til bruker.
-Dette er callback-rutiner som kalles fra FYBA for feilmeldings-handtering
-og visning av framdrift under indeksoppbygging.
+<A ID="O47"NAME="O47"></A><H2>22.7 Message Handling</H2>
+FYBA has a feature which makes it possible to let the calling program handle the
+messages for the user.
+This is made up of callback-functions which are called from FYBA for error message
+handling and to present the progress while the indices are being built.
 
-Et eksempel på implementasjon ligger i Fyba_Callback.cpp.
-For å få et godt brukergrensesnitt bør disse rutinene endres slik at de bruker
-det meldings og feilhandteringssystemet som brukes av hovedprogrammet.
+One example implementation can be found in Fyba_Callback.cpp.
+In order to have a good user interface, these functions should be changed such that
+they use the message and error handling system that is used by the main program.
 
-Hvis FYBA brukes som en DLL må meldingshandteringsrutinene registreres
-med følgende rutiner:
+If FYBA is used as a DLL, the message handling functions must be registered with
+the following functions:
+
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_SetErrorHandler"NAME="LC_SetErrorHandler"></A><H2>LC_SetErrorHandler</H2>
-<BIG><I><B>Registrer feilmeldingsrutine</I></B></BIG><PRE>
+<BIG><I><B>Set error handler</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Registrer feilmeldingsrutine.
@@ -6507,7 +6511,7 @@ SK_EntPnt_FYBA void LC_SetErrorHandler(void (*f) (short,const char*,const char*)
 <BR>
 <BR>
 <A ID="LC_SetStartMessageHandler"NAME="LC_SetStartMessageHandler"></A><H2>LC_SetStartMessageHandler</H2>
-<BIG><I><B>Registrer initieringsrutine</I></B></BIG><PRE>
+<BIG><I><B>Set start message handler</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Registrer initieringsrutine.
@@ -6534,7 +6538,7 @@ SK_EntPnt_FYBA void LC_SetStartMessageHandler(void (*f)(const char*))
 <BR>
 <BR>
 <A ID="LC_SetShowMessageHandler"NAME="LC_SetShowMessageHandler"></A><H2>LC_SetShowMessageHandler</H2>
-<BIG><I><B>Registrer visningsrutine</I></B></BIG><PRE>
+<BIG><I><B>Set show message handler</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Registrer visningsrutine.
@@ -6561,7 +6565,7 @@ SK_EntPnt_FYBA void LC_SetShowMessageHandler(void (*f)(double))
 <BR>
 <BR>
 <A ID="LC_SetEndMessageHandler"NAME="LC_SetEndMessageHandler"></A><H2>LC_SetEndMessageHandler</H2>
-<BIG><I><B>Registrer avslutningsrutine</I></B></BIG><PRE>
+<BIG><I><B>Set end message handler</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Registrer avslutningsrutine.
@@ -6584,7 +6588,7 @@ SK_EntPnt_FYBA void LC_SetEndMessageHandler(void (*f)(void))
 <BR>
 <BR>
 <A ID="LC_SetCancelHandler"NAME="LC_SetCancelHandler"></A><H2>LC_SetCancelHandler</H2>
-<BIG><I><B>Registrer avbruddsstyring</I></B></BIG><PRE>
+<BIG><I><B>Set cancel handler</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Registrer avbruddsstyring.
@@ -6618,7 +6622,7 @@ ikke blir aktivisert.
 <BR>
 <BR>
 <A ID="LC_StartMessage"NAME="LC_StartMessage"></A><H2>LC_StartMessage</H2>
-<BIG><I><B>Vise melding</I></B></BIG><PRE>
+<BIG><I><B>Start message</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Starter vising av melding om baseoppbygging.
@@ -6638,7 +6642,7 @@ void LC_StartMessage(const char *pszFilnavn)
 <BR>
 <BR>
 <A ID="LC_ShowMessage"NAME="LC_ShowMessage"></A><H2>LC_ShowMessage</H2>
-<BIG><I><B>Vise melding</I></B></BIG><PRE>
+<BIG><I><B>Show message</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Vising av melding om baseoppbygging.
@@ -6658,7 +6662,7 @@ void LC_ShowMessage(double prosent)
 <BR>
 <BR>
 <A ID="LC_EndMessage"NAME="LC_EndMessage"></A><H2>LC_EndMessage</H2>
-<BIG><I><B>Avslutt melding</I></B></BIG><PRE>
+<BIG><I><B>End message</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Avslutt melding om baseoppbygging.
@@ -6677,7 +6681,7 @@ void LC_EndMessage(void)
 <BR>
 <BR>
 <A ID="LC_Cancel"NAME="LC_Cancel"></A><H2>LC_Cancel</H2>
-<BIG><I><B>Sjekk om Esc er trykket</I></B></BIG><PRE>
+<BIG><I><B>Check if Esc has been pushed</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Sjekk om det er trykkt på Esc (Avbryte indeksoppbygging).
@@ -6699,7 +6703,7 @@ short LC_Cancel(void)
 <BR>
 <BR>
 <A ID="LC_Error"NAME="LC_Error"></A><H2>LC_Error</H2>
-<BIG><I><B>Feilmeldingsrutine</I></B></BIG><PRE>
+<BIG><I><B>Error message function</I></B></BIG><PRE>
 =============================================================================
 Purpose:
 Standard feilmeldingsrutine.
@@ -6720,14 +6724,14 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
 <BR>
 <BR>
 <BR>
-<A ID="O48"NAME="O48"></A><H2>22.8 Hjelperutine for meldingshandtering</H2>
+<A ID="O48"NAME="O48"></A><H2>22.8 Helper Functions for Message Handling</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_StrError"NAME="LC_StrError"></A><H2>LC_StrError</H2>
-<BIG><I><B>Feilmeldingstekst</I></B></BIG><PRE>
+<BIG><I><B>Error message text</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
 Henter feilmeldingstekst og nivå for et feilmeldingsnummer.
@@ -6755,17 +6759,17 @@ SK_EntPnt_FYBA short LC_StrError(short feil_nr,char **feilmelding)
 <BR>
 <BR>
 <BR>
-<A ID="O49"NAME="O49"></A><H2>22.9 Feilsøking</H2>
+<A ID="O49"NAME="O49"></A><H2>22.9 Debugging</H2>
 <BR>
 <BR>
 <HR>
 <BR>
 <BR>
 <A ID="LC_DumpTab"NAME="LC_DumpTab"></A><H2>LC_DumpTab</H2>
-<BIG><I><B>Dump interne tabeller til stderr</I></B></BIG><PRE>
+<BIG><I><B>Dump internal tables to stderr</I></B></BIG><PRE>
 ==========================================================================
 Purpose:
-Dump interne tabeller til stderr
+Dump internal tables to stderr
 Parameters:
 Type     Name     I/O   Explanation
 --------------------------------------------------------------------------
