@@ -33,4 +33,4 @@ AC_FUNC_STRTOD
 AC_CHECK_FUNCS([floor getcwd memmove memset mkdir modf pow rmdir sqrt strchr strerror strpbrk strstr strtol strtoul])
 
 AC_OUTPUT
-AC_OUTPUT(Makefile src/GM/Makefile src/UT/Makefile src/FYBA/Makefile doc/Makefile)
+AC_OUTPUT(fyba.pc Makefile src/GM/Makefile src/UT/Makefile src/FYBA/Makefile doc/Makefile)
