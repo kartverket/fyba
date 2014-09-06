@@ -36,7 +36,7 @@
 #include <windows.h>
 #endif
 
-#include <fyba.h>
+#include "fyba.h"
 
 //static short sProsent;
 

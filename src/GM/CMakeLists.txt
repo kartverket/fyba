@@ -1,0 +1,8 @@
+IF(UNIX)
+	ADD_DEFINITIONS(-pedantic -Wno-long-long -Wall -O2 -D_FILE_OFFSET_BITS=64 -DUNIX -DLINUX -fPIC -Wno-write-strings)
+ENDIF(UNIX)
+
+ADD_LIBRARY(gm STATIC GM.cpp stdafx.cpp)
+
+INSTALL(FILES fygm.h DESTINATION include/fyba)
+INSTALL(TARGETS gm ARCHIVE DESTINATION lib)
