@@ -1,7 +1,9 @@
 4.1.1:
+    Automake build routines
     Simplified building routines in Linux, Windows and Mac
-    ...
-    ...
+    Removed routines possibly copyrighted by Borland
+    Handling for file permission denied of index files
     Translated some documentation into English.
+    Added ChangeLog :) 
 4.1.0:
     First release to be published under an open source license

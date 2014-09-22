@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.59])
-AC_INIT(fyba, 4.1.0, thomas.hirsch@statkart.no)
-AM_INIT_AUTOMAKE(fyba, 4.1.0)
+AC_INIT(fyba, 4.1.1, thomas.hirsch@statkart.no)
+AM_INIT_AUTOMAKE(fyba, 4.1.1)
 LT_INIT()
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([include/fygm.h])
