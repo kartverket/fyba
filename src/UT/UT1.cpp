@@ -23,7 +23,7 @@ CD  Ansvarlig..: Georg Langerak / Andreas Røstad
 CD
 CD  #include...: fyut.h
 CD  ==================================================================
-*/ 
+*/
 
 #include "stdafx.h"
 
@@ -45,7 +45,7 @@ CD  ==================================================================
 
 #ifdef LINUX /*This is just a quick fix. The two parameter versions of these are just not portable.*/
 #   define strcpy_s strcpy
-#   define strcat_s strcat 
+#   define strcat_s strcat
 #endif
 
 #ifdef WIN32
@@ -368,16 +368,17 @@ _SH_DENYNO : Permits read and write access
 _SH_SECURE : Sets secure mode (shared read, exclusive write access).
 */
 
-																
+
    // ----- Selve filåpningen
 	if (mode[0] != '\0') {
-#ifdef UNIX
-         fp = fopen(path,mode); 
-#else
+         fp = fopen(path,mode);
+#if 0
+	// TODO: File locking on windows
+	// FIXME: LI_OpenIdxFil always opens in UT_UPDATE mode
       if (mode[0] == 'w' || mode[2] == '+')
       {
          fp = _fsopen(path,mode,_SH_DENYWR);   // Sperrer mot at andre åpner filen for skriving, godtar lesing
-      }           
+      }
       else
       {
          fp = _fsopen(path,mode,_SH_DENYNO);
@@ -415,14 +416,14 @@ _SH_SECURE : Sets secure mode (shared read, exclusive write access).
 		/* UT_FPRINTF(stderr,strerror(*ierr)); */
 	}
 
-   else 
+   else
    {
 		*ierr = UT_ERROR;
 		return (NULL);
 	}
 
 	if (*ierr != UT_OK)  fp=NULL;
-	
+
    return fp;
 }
 
@@ -553,7 +554,7 @@ SK_EntPnt_UT short UT_ReadLine(FILE *pfil,short llin, char *clin)
             ierr = UT_ERROR;
          }
          break;
-      
+
       } else if (c == '\n') {
          *cp = c;
          cp++;
@@ -706,7 +707,7 @@ CD pfil      FILE         i   Peker til filstruktur (def i stdio.h)
 SK_EntPnt_UT short UT_Save (FILE *pfil)
 {
    if (fflush(pfil) == EOF)  return (UT_ERROR);
- 
+
    return(UT_OK);
 }
 

@@ -28,7 +28,7 @@
 
 #include "stdafx.h"
 
-#include <fyba.h>
+#include "fyba.h"
 
 #ifdef WIN32
 #  include <windows.h>
