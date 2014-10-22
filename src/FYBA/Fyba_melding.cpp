@@ -5,21 +5,21 @@
 //
 //////////////////////////////////////////////////////////////////////////
 //
-// Denne filen inneholder eksempel på callback-rutiner som kalles
+// Denne filen inneholder eksempel pÃ¥ callback-rutiner som kalles
 // av FYBA for feilmeldings-handtering og visning av framdrift under
 // indeksoppbygging.
 //
-// For å få et godt brukergrensesnitt bør disse rutinene endres til
+// For Ã¥ fÃ¥ et godt brukergrensesnitt bÃ¸r disse rutinene endres til
 // det meldings og feilhandteringssystemet som brukes av hovedprogrammet.
 //
-// Rutinene må kompileres og linkes sammen med hovedprogrammet når
+// Rutinene mÃ¥ kompileres og linkes sammen med hovedprogrammet nÃ¥r
 // FYBA brukes som LIB.
 //
 //////////////////////////////////////////////////////////////////////////
 
 
 //
-// Innholdet i rutinene må byttes ut med meldingshandtering som er tilpasset
+// Innholdet i rutinene mÃ¥ byttes ut med meldingshandtering som er tilpasset
 // det aktuelle hovedprogrammet.
 //////////////////////////////////////////////////////////////////////////
 
@@ -27,8 +27,8 @@
 //////////////////////////////////////////////////////////////////////////
 // Fyba_melding.cpp
 //
-// Denne filen inneholder eksempel på rutiner som må linkes inn i
-// hovedprogrammet når FYBA brukes som LIB.
+// Denne filen inneholder eksempel pÃ¥ rutiner som mÃ¥ linkes inn i
+// hovedprogrammet nÃ¥r FYBA brukes som LIB.
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +45,7 @@
 AR-890911
 CH LC_Error                                                  Feilmeldingsrutine
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Standard feilmeldingsrutine.
 CD
 CD Parametre:
@@ -53,7 +53,7 @@ CD Type     Navn        I/U  Forklaring
 CD -----------------------------------------------------------------------------
 CD short    feil_nr      i   Feil-nummer
 CD char    *logtx        i   Tekst som bare skrives til logfil.
-CD                           Eks:"(utført i LC_RxGr)"
+CD                           Eks:"(utfÃ¸rt i LC_RxGr)"
 CD char    *vartx        i   Denne tekststreng henges etter feilmeldingsteksten.
 CD
 CD Bruk:
@@ -71,27 +71,24 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
    /* Hent feilmeldingstekst og strategi */
    strategi = LC_StrError(feil_nr,&pszFeilmelding);
    switch(strategi) {
-      case 2:  UT_SNPRINTF(szErrMsg,260,"%s","Observer følgende! \n\n");  break;
-      case 3:  UT_SNPRINTF(szErrMsg,260,"%s","Det er oppstått en feil! \n\n");  break;
+      case 2:  UT_SNPRINTF(szErrMsg,260,"%s","Observer fÃ¸lgende! \n\n");  break;
+      case 3:  UT_SNPRINTF(szErrMsg,260,"%s","Det er oppstÃ¥tt en feil! \n\n");  break;
       case 4:  UT_SNPRINTF(szErrMsg,260,"%s","Alvorlig feil avslutt programmet! \n\n");  break;
       default: szErrMsg[0]='\0';
    }
 
    #ifdef WIN32
-   if (strategi > 2) {
-      Beep(100,500);
-   }
 
    if (UT_StrCat (szErrMsg,pszFeilmelding, sizeof(szErrMsg))) {
       if (UT_StrCat (szErrMsg,&vartx[0], sizeof(szErrMsg))) {
          MessageBox(NULL, szErrMsg, "Melding fra FYBA ", MB_ICONHAND | MB_OK);
 
       } else {
-         MessageBox(NULL, "Klarer ikke å vise teksten", "Melding fra FYBA ", MB_ICONHAND | MB_OK);
+         MessageBox(NULL, "Klarer ikke Ã¥ vise teksten", "Melding fra FYBA ", MB_ICONHAND | MB_OK);
       }
 
    } else {
-      MessageBox(NULL, "Klarer ikke å vise teksten", "Melding fra FYBA ", MB_ICONHAND | MB_OK);
+      MessageBox(NULL, "Klarer ikke Ã¥ vise teksten", "Melding fra FYBA ", MB_ICONHAND | MB_OK);
    }
    #else 
       printf("\nError: %s ",pszFeilmelding);
@@ -104,7 +101,7 @@ void LC_Error(short feil_nr,const char *logtx,const char *vartx)
 AR-900609
 CH LC_StartMess                                          Vise melding
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Starter vising av melding om baseoppbygging.
 CD
 CD Parametre:
@@ -130,7 +127,7 @@ void LC_StartMessage(char const *pszFilnavn)
 AR-900609
 CH LC_ShowMess                                          Vise melding
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Vising av melding om baseoppbygging.
 CD
 CD Parametre:
@@ -155,7 +152,7 @@ void LC_ShowMessage(double prosent)
 AR-900609
 CH LC_EndMess                                          Avslutt melding
 CD =============================================================================
-CD Formål:
+CD FormÃ¥l:
 CD Avslutt melding om baseoppbygging.
 CD
 CD Parametre:
@@ -179,8 +176,8 @@ void LC_EndMessage(void)
 AR-910402
 CH LC_Cancel                                         Sjekk om Esc er trykket
 CD ==========================================================================
-CD Formål:
-CD Sjekk om det er trykkt på Esc (Avbryte indeksoppbygging).
+CD FormÃ¥l:
+CD Sjekk om det er trykkt pÃ¥ Esc (Avbryte indeksoppbygging).
 CD
 CD
 CD Parametre:
@@ -195,7 +192,7 @@ CD sAvbrutt = LC_Cancel();
 */
 short LC_Cancel(void)
 {
-      /* Ikke mulig å avbryte */
+      /* Ikke mulig Ã¥ avbryte */
       return UT_FALSE;
 }
 
