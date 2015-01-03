@@ -15,7 +15,11 @@
 #  include<stdio.h>
 #  include<sys/time.h>
 #  include<sys/types.h>
-#  include<sys/vfs.h>
+#  ifdef __APPLE__
+#    include<sys/mount.h>
+#  else
+#    include<sys/vfs.h>
+#  endif
 #  include<fcntl.h>
 #  include<sys/stat.h>
 #  include<errno.h>
