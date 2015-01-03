@@ -17,7 +17,11 @@
 #     include <sys/statvfs.h>
 #  else
 #     include <sys/stat.h>
-#     include <sys/vfs.h>
+#     ifdef __APPLE__
+#        include<sys/mount.h>
+#     else
+#        include<sys/vfs.h>
+#     endif
 #  endif
 
 #  include <sys/types.h>
