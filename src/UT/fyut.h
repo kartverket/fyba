@@ -57,6 +57,11 @@
 
 #else
           /* For UNIX */
+#  ifdef __APPLE__
+#    include <stdint.h>
+#    define UT_INT64 int64_t
+#  endif
+
 #  ifdef LINUX /* specifically the LINUX */
 #    include <stdint.h>
 #    include <inttypes.h>
