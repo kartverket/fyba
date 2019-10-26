@@ -1,4 +1,4 @@
-AM_CPPFLAGS = --pedantic -Wno-long-long -Wall -O2 -D_FILE_OFFSET_BITS=64 -DUNIX -DLINUX -fPIC -Wno-write-strings -I../GM -I../UT
+AM_CPPFLAGS = --pedantic -Wno-long-long -Wall -O2 -D_FILE_OFFSET_BITS=64 -DUNIX -DLINUX -fPIC -Wno-write-strings -I$(srcdir)/../GM -I$(srcdir)/../UT
 ACLOCAL_AMFLAGS = -I m5
 
 lib_LTLIBRARIES = libfyba.la
