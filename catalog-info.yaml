@@ -1,0 +1,38 @@
+# nonk8s
+apiVersion: "backstage.io/v1alpha1"
+kind: "Component"
+metadata:
+  name: "fyba"
+  tags:
+  - "public"
+spec:
+  type: "library"
+  lifecycle: "production"
+  owner: "fysak"
+  system: "fysak"
+---
+apiVersion: "backstage.io/v1alpha1"
+kind: "Group"
+metadata:
+  name: "security_champion_fyba"
+  title: "Security Champion fyba"
+spec:
+  type: "security_champion"
+  parent: "land_security_champions"
+  members:
+  - "ulvtro"
+  children:
+  - "resource:fyba"
+---
+apiVersion: "backstage.io/v1alpha1"
+kind: "Resource"
+metadata:
+  name: "fyba"
+  links:
+  - url: "https://github.com/kartverket/fyba"
+    title: "fyba på GitHub"
+spec:
+  type: "repo"
+  owner: "security_champion_fyba"
+  dependencyOf:
+  - "component:fyba"
