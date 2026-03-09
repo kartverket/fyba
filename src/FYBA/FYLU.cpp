@@ -1232,7 +1232,7 @@ static short LU_PiTestLinje(LC_UTVALG_ELEMENT * pUE,long lPnr)
 
    } else if (metode == LC_U_IKKEFLERE) {          /* Metode "!FL" */
       /* Teller opp antall av dette SOSI-navnet */
-      lMaxAntall = max(atol(pUE->min),1l);
+      lMaxAntall = MAX(atol(pUE->min),1l);
       tilslag = 0;
       
       while (LC_GetPiVerdi(pUE->sosi,lPnr,&sSett) != NULL) {
@@ -1831,7 +1831,7 @@ static short LU_GiTestLinje(LC_UT_ADM * pUtAdm,LC_UTVALG_ELEMENT * pUE,
    /* Metode "!FL" */
    } else if (metode == LC_U_IKKEFLERE) {
       /* Teller opp antall av dette SOSI-navnet */
-      lMaxAntall = max(atol(pUE->min),1l);
+      lMaxAntall = MAX(atol(pUE->min),1l);
       tilslag = 0;
       while ((*apara = LC_GetGP(pUE->sosi,gilin,9999)) != NULL) {
          tilslag++;
@@ -2097,10 +2097,10 @@ static void LU_JustPara(char *para,short ledd,short start,short slutt,
    if (cp != NULL){
       if (start != 0){
          if (slutt != 0){
-            slutt = min(slutt,((short)strlen(cp)));
+            slutt = MIN(slutt,((short)strlen(cp)));
             *(cp+slutt) = '\0';
          }
-         start = min(start,((short)strlen(cp)));
+         start = MIN(start,((short)strlen(cp)));
          cp += (start-1);
       }
       UT_StrCopy(akt_para,cp,max_len);

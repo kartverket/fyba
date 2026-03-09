@@ -207,7 +207,7 @@ SK_EntPnt_FYBA long LC_FASn(LC_SNR_ADM * pSnrAdm)
    LC_BGR AktBgr,Bgr;
    long lSnr,lGrNr;
    long lAntall = 0;
-   long lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
+   long lMaxSnr = MIN(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
 
    /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FASn"); */
@@ -269,7 +269,7 @@ SK_EntPnt_FYBA short LC_FFSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
    /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FFSn"); */
    LO_TestFilpeker(pSnrAdm->pFil,"FFSn");
 
-   lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
+   lMaxSnr = MIN(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
    /* Sjekker fra starten av søkeområdet */
    for (lSnr=pSnrAdm->lMinSnr; lSnr<=lMaxSnr; lSnr++) {
@@ -314,7 +314,7 @@ SK_EntPnt_FYBA short LC_FFSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
    /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FFSnBt"); */
    LO_TestFilpeker(pSnrAdm->pFil,"FFSnBt");
 
-   lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
+   lMaxSnr = MIN(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
    /* Sjekker fra starten av søkeområdet */
    for (lSnr=pSnrAdm->lMinSnr; lSnr<=lMaxSnr; lSnr++) {
@@ -361,7 +361,7 @@ SK_EntPnt_FYBA short LC_FNSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
    /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FNSn"); */
    LO_TestFilpeker(pSnrAdm->pFil,"FNSn");
 
-   lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
+   lMaxSnr = MIN(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
    /* Sjekker fra aktuellt serienummer */
    for (lSnr=pSnrAdm->lAktSnr+1L; lSnr<=lMaxSnr; lSnr++) {
@@ -406,7 +406,7 @@ SK_EntPnt_FYBA short LC_FNSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
    /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FNSnBt"); */
    LO_TestFilpeker(pSnrAdm->pFil,"FNSnBt");
 
-   lMaxSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
+   lMaxSnr = MIN(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
    /* Sjekker fra aktuellt serienummer */
    for (lSnr=pSnrAdm->lAktSnr+1L; lSnr<=lMaxSnr; lSnr++) {
@@ -540,7 +540,7 @@ SK_EntPnt_FYBA short LC_FLSn(LC_SNR_ADM * pSnrAdm,LC_BGR * pBgr)
    /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FLSn"); */
    LO_TestFilpeker(pSnrAdm->pFil,"FLSn");
 
-   lSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
+   lSnr = MIN(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
    /* Sjekker fra slutten av tabellen */
    for (; lSnr>=pSnrAdm->lMinSnr; lSnr--) {
@@ -586,7 +586,7 @@ SK_EntPnt_FYBA short LC_FLSnBt(LC_SNR_ADM * pSnrAdm,short kolonne,LC_BGR * pBgr)
    /* LO_TestFilpeker(pSnrAdm->pFil,"LC_FLSnBt"); */
    LO_TestFilpeker(pSnrAdm->pFil,"FLSnBt");
 
-   lSnr = min(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
+   lSnr = MIN(pSnrAdm->pFil->lMaxSnr, pSnrAdm->lMaxSnr);
 
    /* Sjekker fra slutten av tabellen */
    for (; lSnr>=pSnrAdm->lMinSnr; lSnr--) {

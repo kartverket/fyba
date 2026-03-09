@@ -1123,8 +1123,8 @@ CD LC_EraseBt(fra_kol,til_kol);
 SK_EntPnt_FYBA void LC_EraseBt(short fra_kol,short til_kol)
 {
                        /* Beregner lovlige kolonner */
-   fra_kol = max(fra_kol,BT_MIN_USER);
-   til_kol = min(til_kol,BT_MAX_USER);
+   fra_kol = MAX(fra_kol,BT_MIN_USER);
+   til_kol = MIN(til_kol,BT_MAX_USER);
 
    LI_EraseBt(fra_kol,til_kol);
 }
@@ -1230,8 +1230,8 @@ void LI_EraseBt(short fra_kol,short til_kol)
    LC_FILADM *pFil;
 
                                                /* Beregner lovlige områder */
-   fra_kol = max(fra_kol,BT_MIN_BT);
-   til_kol = min(til_kol,BT_MAX_BT);
+   fra_kol = MAX(fra_kol,BT_MIN_BT);
+   til_kol = MIN(til_kol,BT_MAX_BT);
 
    maske = 0x0000;                             /* Lager slettemaske */
    for ( ; fra_kol <= til_kol; fra_kol++){
@@ -1284,8 +1284,8 @@ SK_EntPnt_FYBA void LC_CopyBt(short fra_kol,short til_kol,short operasjon)
    unsigned long ul;
 
                                            /* Beregner lovlige områder */
-   fra_kol = min(max(fra_kol,0),BT_MAX_BT);
-   til_kol = min(max(til_kol,0),BT_MAX_USER);
+   fra_kol = MIN(MAX(fra_kol,0),BT_MAX_BT);
+   til_kol = MIN(MAX(til_kol,0),BT_MAX_USER);
 
                                            /* Returner verdi */
    maske_fra = 0x00000001UL << fra_kol;

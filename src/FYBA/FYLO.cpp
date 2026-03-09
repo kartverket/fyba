@@ -1592,10 +1592,10 @@ SK_EntPnt_FYBA void LC_CloseSos(LC_FILADM *pFil,short s_stat)
         if (pFil->usLag & (LC_FRAMGR | LC_BAKGR)) {
            /* Filen inneholder data */
            if (pFil->pGeoRN != NULL) {
-              pB->dMinAust = min(pB->dMinAust,pFil->Omraade.dMinAust);
-              pB->dMinNord = min(pB->dMinNord,pFil->Omraade.dMinNord);
-              pB->dMaxAust = max(pB->dMaxAust,pFil->Omraade.dMaxAust);
-              pB->dMaxNord = max(pB->dMaxNord,pFil->Omraade.dMaxNord);
+              pB->dMinAust = MIN(pB->dMinAust,pFil->Omraade.dMinAust);
+              pB->dMinNord = MIN(pB->dMinNord,pFil->Omraade.dMinNord);
+              pB->dMaxAust = MAX(pB->dMaxAust,pFil->Omraade.dMaxAust);
+              pB->dMaxNord = MAX(pB->dMaxNord,pFil->Omraade.dMaxNord);
            }
         }
         pFil = pFil->pNesteFil;
@@ -1783,10 +1783,10 @@ SK_EntPnt_FYBA short LC_GetBaOm(unsigned short usLag,double *nva,double *nvn,dou
 	while (LC_NextFil(&pFil,usLag)) {
       sAntall++;
       if (LC_GetFiOm(pFil,&na,&nn,&oa,&on)) {
-         *nva = min (*nva, na);
-         *nvn = min (*nvn, nn);
-         *oha = max (*oha, oa);
-         *ohn = max (*ohn, on);
+         *nva = MIN(*nva, na);
+         *nvn = MIN(*nvn, nn);
+         *oha = MAX(*oha, oa);
+         *ohn = MAX(*ohn, on);
       }
    }
    
@@ -2027,10 +2027,10 @@ static short LO_InklSos(LC_FILADM *pFil,short sVisStatus)
             if (pFil->usLag & (LC_FRAMGR | LC_BAKGR)) {
                /* Filen inneholder data */
                if (pFil->pGeoRN != NULL) {
-                  pB->dMinAust = min(pB->dMinAust,pFil->Omraade.dMinAust);
-                  pB->dMinNord = min(pB->dMinNord,pFil->Omraade.dMinNord);
-                  pB->dMaxAust = max(pB->dMaxAust,pFil->Omraade.dMaxAust);
-                  pB->dMaxNord = max(pB->dMaxNord,pFil->Omraade.dMaxNord);
+                  pB->dMinAust = MIN(pB->dMinAust,pFil->Omraade.dMinAust);
+                  pB->dMinNord = MIN(pB->dMinNord,pFil->Omraade.dMinNord);
+                  pB->dMaxAust = MAX(pB->dMaxAust,pFil->Omraade.dMaxAust);
+                  pB->dMaxNord = MAX(pB->dMaxNord,pFil->Omraade.dMaxNord);
                }
             }
             pFil = pFil->pNesteFil;
