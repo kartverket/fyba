@@ -4,11 +4,11 @@
 /*  Innhold: Rutiner for utvalg                                             */
 /* ======================================================================== */
 
-#include "stdafx.h"
-
 #include <ctype.h>
 #include <math.h>
 #include <locale>
+
+#include "stdafx.h"
 
 using namespace std;
 
