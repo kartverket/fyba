@@ -141,10 +141,10 @@ void LR_Indx(void)
 
             // Spesialhandtering av ulogiske sirkler og buer. Håndteres som KURVE
             for (pt=0; pt<Sys.pGrInfo->nko; pt++) {
-               min_a = min(min_a,*(Sys.pdAust + pt));
-               min_n = min(min_n,*(Sys.pdNord + pt));
-               max_a = max(max_a,*(Sys.pdAust + pt));
-               max_n = max(max_n,*(Sys.pdNord + pt));
+               min_a = MIN(min_a,*(Sys.pdAust + pt));
+               min_n = MIN(min_n,*(Sys.pdNord + pt));
+               max_a = MAX(max_a,*(Sys.pdAust + pt));
+               max_n = MAX(max_n,*(Sys.pdNord + pt));
             }
          }
 
@@ -152,10 +152,10 @@ void LR_Indx(void)
       } else {
          /* Omskreven firkant */
          for (pt=0; pt<Sys.pGrInfo->nko; pt++) {
-            min_a = min(min_a,*(Sys.pdAust + pt));
-            min_n = min(min_n,*(Sys.pdNord + pt));
-            max_a = max(max_a,*(Sys.pdAust + pt));
-            max_n = max(max_n,*(Sys.pdNord + pt));
+            min_a = MIN(min_a,*(Sys.pdAust + pt));
+            min_n = MIN(min_n,*(Sys.pdNord + pt));
+            max_a = MAX(max_a,*(Sys.pdAust + pt));
+            max_n = MAX(max_n,*(Sys.pdNord + pt));
          }
       }
 
@@ -412,10 +412,10 @@ void LR_IndxFlate(void)
          for (s=0; s<ant_ref; s++) {
             pRL = LI_GetGeo(pFi,ref_arr[s]);
             if (pRL != NULL) {
-               min_a = min(min_a, pRL->Boks.dMinAust);
-               min_n = min(min_n, pRL->Boks.dMinNord);
-               max_a = max(max_a, pRL->Boks.dMaxAust);
-               max_n = max(max_n, pRL->Boks.dMaxNord);
+               min_a = MIN(min_a, pRL->Boks.dMinAust);
+               min_n = MIN(min_n, pRL->Boks.dMinNord);
+               max_a = MAX(max_a, pRL->Boks.dMaxAust);
+               max_n = MAX(max_n, pRL->Boks.dMaxNord);
             }
          }
 
@@ -1857,10 +1857,10 @@ CD =======================================================================
 */
 static void LR_R_BoksSum(LC_BOKS * pB1,LC_BOKS * pB2)
 {
-   pB1->dMinAust = min(pB1->dMinAust,pB2->dMinAust);
-	pB1->dMinNord = min(pB1->dMinNord,pB2->dMinNord);
-   pB1->dMaxAust = max(pB1->dMaxAust,pB2->dMaxAust);      
-   pB1->dMaxNord = max(pB1->dMaxNord,pB2->dMaxNord);  
+   pB1->dMinAust = MIN(pB1->dMinAust,pB2->dMinAust);
+	pB1->dMinNord = MIN(pB1->dMinNord,pB2->dMinNord);
+   pB1->dMaxAust = MAX(pB1->dMaxAust,pB2->dMaxAust);      
+   pB1->dMaxNord = MAX(pB1->dMaxNord,pB2->dMaxNord);  
 }
 
 
@@ -1886,8 +1886,8 @@ static double LR_BoksDeltaArealSum(LC_BOKS * pB1,LC_BOKS * pB2)
     //lGml = (pB1->dMaxAust - pB1->dMinAust) * (pB1->dMaxNord - pB1->dMinNord);
     //return (lNy - lGml); 
 
-    double dDeltaAreal = (max(pB1->dMaxAust,pB2->dMaxAust) - min(pB1->dMinAust,pB2->dMinAust)) *
-                         (max(pB1->dMaxNord,pB2->dMaxNord) - min(pB1->dMinNord,pB2->dMinNord));
+    double dDeltaAreal = (MAX(pB1->dMaxAust,pB2->dMaxAust) - MIN(pB1->dMinAust,pB2->dMinAust)) *
+                         (MAX(pB1->dMaxNord,pB2->dMaxNord) - MIN(pB1->dMinNord,pB2->dMinNord));
 
     return dDeltaAreal; 
 }

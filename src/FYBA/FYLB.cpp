@@ -710,8 +710,8 @@ SK_EntPnt_FYBA void LC_WsGrPart(LC_FILADM *pFil,long fra_punkt,long antall)
                                            /* OK ==> Skriv */
        } else{
                                          /* Sjekker at punktnummer er lovlig */
-           fra_punkt = min( max(1,fra_punkt), max(1,Sys.pGrInfo->nko) );
-           antall = min( max(antall,0), (Sys.pGrInfo->nko-fra_punkt+1) );
+           fra_punkt = MIN( MAX(1,fra_punkt), MAX(1,Sys.pGrInfo->nko) );
+           antall = MIN( MAX(antall,0), (Sys.pGrInfo->nko-fra_punkt+1) );
 
                                                         /* Skriver */
            LB_WGru(SKRIV_SISTE,fra_punkt,antall,pFil,pFil->n64AktPos,&neste);
@@ -2738,7 +2738,7 @@ CD LB_FormaterEnhet(streng,sStrengMaxLen,"..ENHET",enhet);
 char *LB_FormaterEnhet(char *streng,short sStrengMaxLen,char *SosiNavn,double enhet)
 {
    char enhet_buffer[20],*cp;
-   short sAntDes = max(1,UT_RoundDS(fabs(min(1.0,log10(enhet)))));
+   short sAntDes = MAX(1,UT_RoundDS(fabs(MIN(1.0,log10(enhet)))));
 
    UT_StrCopy(streng,SosiNavn,sStrengMaxLen);
    UT_StrCat(streng," ",sStrengMaxLen);
@@ -3014,11 +3014,11 @@ SK_EntPnt_FYBA short LC_DelGiL(short linje, short antall)
       if (antall > 0) {
          Sys.sGrEndra = (short)END_ENDRA;
 
-         start = max(linje,2);           /* 2 er første lovlige linje */
+         start = MAX(linje,2);           /* 2 er første lovlige linje */
          antall -= (start-linje);        /* Juster antall tilsvarende */
 
          /* Max antall er resten av GINFO */
-         antall = min(start+antall-1,Sys.pGrInfo->ngi) - start + 1;
+         antall = MIN(start+antall-1,Sys.pGrInfo->ngi) - start + 1;
 
          if (start+antall <= Sys.pGrInfo->ngi) {
             /* Beregn forflytting */
@@ -3116,11 +3116,11 @@ SK_EntPnt_FYBA long LC_DelKoL(long linje, long antall)
       Sys.sGrEndra = (short)END_ENDRA;
       if (linje <= Sys.lPibufPnr)  Sys.sPibufStatus = LC_PIBUF_TOM;
             
-      start = max(linje,1);             /* 1 er første lovlige linje */
+      start = MAX(linje,1);             /* 1 er første lovlige linje */
       antall -= (start-linje);          /* Juster antall tilsvarende */
 
                                         /* Max antall er resten av punktene */
-      antall = min(start+antall-1,Sys.pGrInfo->nko) - start + 1;
+      antall = MIN(start+antall-1,Sys.pGrInfo->nko) - start + 1;
 
       /* UT_FPRINTF(stderr," %hd - %hd\n",start,antall); */
 

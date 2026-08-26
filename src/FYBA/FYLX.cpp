@@ -2086,7 +2086,7 @@ SK_EntPnt_FYBA char *LC_GetGP(const char *sosi_navn,short *forste_linje,short si
             if (sSlutt != 0  &&  sSlutt < (short)strlen(rp)) {
                *(rp+sSlutt) = '\0';
             }
-            sStart = min(sStart,((short)strlen(rp)));
+            sStart = MIN(sStart,((short)strlen(rp)));
             rp += (sStart-1);
          }
 
@@ -2279,7 +2279,7 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
                      /* Hent enhet og formater høyden */
                      niv = 2;
                      LC_GetCurEnhet(Sys.GrId.pFil,&niv,&enhet,&enhet_h,&enhet_d);
-                     sAntDes = UT_RoundDS(fabs(min(0.0,log10(enhet_h))));
+                     sAntDes = UT_RoundDS(fabs(MIN(0.0,log10(enhet_h))));
                      UT_SNPRINTF(format,20,"%%.%dlf",sAntDes);
                      UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,format,h);
                      funnet = UT_TRUE;
@@ -2329,7 +2329,7 @@ SK_EntPnt_FYBA char *LC_GetPiVerdi(const char *pszSosiNavn,long lPnr,short *sSet
                   if (sSlutt != 0  &&  sSlutt < (short)strlen(rp)) {
                      *(rp+sSlutt) = '\0';
                   }
-                  sStart = min(sStart,((short)strlen(rp)));
+                  sStart = MIN(sStart,((short)strlen(rp)));
                   rp += (sStart-1);
                }
 
@@ -2600,7 +2600,7 @@ SK_EntPnt_FYBA short LC_PutGP(const char *sosi_navn,const char *verdi,short *lin
             if (sSlutt != 0  &&  sSlutt < (short)strlen(rp)) {
                *(rp+sSlutt) = '\0';
             }
-            sStart = min(sStart,((short)strlen(rp)));
+            sStart = MIN(sStart,((short)strlen(rp)));
             rp += (sStart-1);
          }
 
@@ -2783,28 +2783,28 @@ SK_EntPnt_FYBA void LC_InitPP(char *sosi_navn,long forste_punkt,long siste_punkt
 
        UT_StrToken(sosi_navn,0,&itxu,LC_MAX_SOSINAVN_LEN,pp_stat->pinfo_navn);  /* SOSI-navnet */
        UT_StrUpper(pp_stat->pinfo_navn);
-       pp_stat->slutt_punkt = min(siste_punkt,Sys.pGrInfo->nko) + 1;
+       pp_stat->slutt_punkt = MIN(siste_punkt,Sys.pGrInfo->nko) + 1;
 
        /* -------- Knutepunkt */
        if (strcmp(pp_stat->pinfo_navn,"...KP") == 0){
            pp_stat->type = LC_GETPP_KP;
-           pp_stat->curr_punkt = max(forste_punkt,1) -1;  /* Sjekk punktnummer */
+           pp_stat->curr_punkt = MAX(forste_punkt,1) -1;  /* Sjekk punktnummer */
 
        /* -------- Høyde */
        } else if (strcmp(pp_stat->pinfo_navn,"HØYDE") == 0) {
            pp_stat->type = LC_GETPP_HOYDE;
-           pp_stat->curr_punkt = max(forste_punkt,1) -1;  /* Sjekk punktnummer */
+           pp_stat->curr_punkt = MAX(forste_punkt,1) -1;  /* Sjekk punktnummer */
 
        /* -------- Kvalitet */
        } else if (strcmp(pp_stat->pinfo_navn,"KVALITET") == 0) {
            pp_stat->type = LC_GETPP_KVALITET;
-           pp_stat->curr_punkt = max(forste_punkt,1) -1;  /* Sjekk punktnummer */
+           pp_stat->curr_punkt = MAX(forste_punkt,1) -1;  /* Sjekk punktnummer */
 
        /* -------- Annen PINFO */
        } else {
            pp_stat->type = LC_GETPP_VANLIG;
            pp_stat->neste_tegn = 0;
-           pp_stat->curr_punkt = max(forste_punkt,1);  /* Sjekk punktnummer */
+           pp_stat->curr_punkt = MAX(forste_punkt,1);  /* Sjekk punktnummer */
        }
    }
 }
@@ -2874,7 +2874,7 @@ SK_EntPnt_FYBA char *LC_GetPP(long *punkt,LC_GETPP_STATUS *pp_stat)
             niv = 2;
             LC_GetCurEnhet(Sys.GrId.pFil,&niv,&enhet,&enhet_h,&enhet_d);
             
-            sAntDes = UT_RoundDS(fabs(min(0.0,log10(enhet_h))));
+            sAntDes = UT_RoundDS(fabs(MIN(0.0,log10(enhet_h))));
             UT_SNPRINTF(format,20,"%%.%dlf",sAntDes);
             UT_SNPRINTF(retur_str,LC_MAX_SOSI_LINJE_LEN,format,h);
 
@@ -3001,8 +3001,8 @@ short LC_FinnKp(long *forste_punkt,long siste_punkt,short *kp)
 
    if (Sys.GrId.lNr != INGEN_GRUPPE){                 /* Aktuell gruppe OK */
       if(Sys.pGrInfo->info & GI_KP){                 /* Gruppen har knutepunkt */
-         punkt = max(*forste_punkt,1);               /* Sjekk punktnummer */
-         siste_punkt = min(siste_punkt,Sys.pGrInfo->nko);
+         punkt = MAX(*forste_punkt,1);               /* Sjekk punktnummer */
+         siste_punkt = MIN(siste_punkt,Sys.pGrInfo->nko);
 
          /* Skann gruppen */
          for (punkt--; punkt<siste_punkt; ++punkt) {

@@ -20,8 +20,8 @@
 #define GM_ACCY  1.0E-8
 
 /* --- Makroer -- */
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#define min(a,b) (((a) < (b)) ? (a) : (b))
+#define MAX(a,b) (((a) > (b)) ? (a) : (b))
+#define MIN(a,b) (((a) < (b)) ? (a) : (b))
 
 
 /*
@@ -214,10 +214,10 @@ SK_EntPnt_GM short GM_wtstPunkt(double PktA, double PktN, double wa1, double wn1
    short sAntSkjaer;
    
    // Sjekk 1: Ligger punktet utenfor omskrevet rektangel - så ligger det utenfor vinduet
-   dPolyMaxA=max(wa1,wa2); dPolyMaxA=max(dPolyMaxA,wa3); dPolyMaxA=max(dPolyMaxA,wa4);
-   dPolyMaxN=max(wn1,wn2); dPolyMaxN=max(dPolyMaxN,wn3); dPolyMaxN=max(dPolyMaxN,wn4);
-   dPolyMinA=min(wa1,wa2); dPolyMinA=min(dPolyMinA,wa3); dPolyMinA=min(dPolyMinA,wa4);
-   dPolyMinN=min(wn1,wn2); dPolyMinN=min(dPolyMinN,wn3); dPolyMinN=min(dPolyMinN,wn4);
+   dPolyMaxA=MAX(wa1,wa2); dPolyMaxA=MAX(dPolyMaxA,wa3); dPolyMaxA=MAX(dPolyMaxA,wa4);
+   dPolyMaxN=MAX(wn1,wn2); dPolyMaxN=MAX(dPolyMaxN,wn3); dPolyMaxN=MAX(dPolyMaxN,wn4);
+   dPolyMinA=MIN(wa1,wa2); dPolyMinA=MIN(dPolyMinA,wa3); dPolyMinA=MIN(dPolyMinA,wa4);
+   dPolyMinN=MIN(wn1,wn2); dPolyMinN=MIN(dPolyMinN,wn3); dPolyMinN=MIN(dPolyMinN,wn4);
    if((PktA>dPolyMaxA) || (PktA<dPolyMinA) || (PktN>dPolyMaxN) || (PktN<dPolyMinN))
       return 0;
 
@@ -276,16 +276,16 @@ SK_EntPnt_GM short GM_sver(double ka,double kn,double la,double ln,double na,dou
    unsigned int kryss = 0;
    double mini,maxi;
 
-   mini = min(ka,la);
-   maxi = max(ka,la);
+   mini = MIN(ka,la);
+   maxi = MAX(ka,la);
 
    if (na >= mini  &&  ma <= maxi){        /* (ma er lik na) */
        if (fabs(la-ka) > 0.0001){
                                                /* Beregn skjæringspunktet */
            *sa = ma;
            *sn = kn + ((*sa-ka)*(ln-kn))/(la-ka);
-           mini = min(mn,nn) - ACCY;
-           maxi = max(mn,nn) + ACCY;
+           mini = MIN(mn,nn) - ACCY;
+           maxi = MAX(mn,nn) + ACCY;
                                                /* Sjekk om det er skjæring */
            kryss = (unsigned int)(*sn >= mini  &&  *sn <= maxi);
        }
@@ -335,16 +335,16 @@ SK_EntPnt_GM short GM_shor(double ka,double kn,double la,double ln,double na,dou
    unsigned int kryss = 0;
    double mini,maxi;
 
-   mini = min(kn,ln);
-   maxi = max(kn,ln);
+   mini = MIN(kn,ln);
+   maxi = MAX(kn,ln);
 
    if (mn >= mini  &&  nn <= maxi){        /* (mn er lik nn) */
        if (fabs(ln-kn) > 0.0001){
                                                /* Beregn skjæringspunktet */
            *sn = mn;
            *sa = ka + ((*sn-kn)*(la-ka))/(ln-kn);
-           mini = min(ma,na) - ACCY;
-           maxi = max(ma,na) + ACCY;
+           mini = MIN(ma,na) - ACCY;
+           maxi = MAX(ma,na) + ACCY;
                                                /* Sjekk om det er skjæring */
            kryss = (unsigned int)(*sa >= mini  &&  *sa <= maxi);
        }
@@ -401,10 +401,10 @@ SK_EntPnt_GM short GM_sLinLin(double ka,double kn,double la,double ln,double ma,
 
 
    /* Sorterer først ut åpenbare tilfeller der det ikke er skjæring */ 
-   if (max(ka,la) < min(ma,na))  return 0;
-   if (min(ka,la) > max(ma,na))  return 0;
-   if (max(kn,ln) < min(mn,nn))  return 0;
-   if (min(kn,ln) > max(mn,nn))  return 0;
+   if (MAX(ka,la) < MIN(ma,na))  return 0;
+   if (MIN(ka,la) > MAX(ma,na))  return 0;
+   if (MAX(kn,ln) < MIN(mn,nn))  return 0;
+   if (MIN(kn,ln) > MAX(mn,nn))  return 0;
 
    det = anm * nlk - nnm * alk;
 
@@ -429,10 +429,10 @@ SK_EntPnt_GM short GM_sLinLin(double ka,double kn,double la,double ln,double ma,
     *  Sjekker etterpå om skjæringspunktet ligger på linjebitene.
     */
    if (GM_sVektVekt(ka,kn,la,ln,ma,mn,na,nn,sa,sn)){
-      if (*sn <= max(kn,ln)+ACCY  &&  *sn >= min(kn,ln)-ACCY  &&
-          *sa <= max(ka,la)+ACCY  &&  *sa >= min(ka,la)-ACCY  &&
-          *sn <= max(mn,nn)+ACCY  &&  *sn >= min(mn,nn)-ACCY  &&
-          *sa <= max(ma,na)+ACCY  &&  *sa >= min(ma,na)-ACCY) {
+      if (*sn <= MAX(kn,ln)+ACCY  &&  *sn >= MIN(kn,ln)-ACCY  &&
+          *sa <= MAX(ka,la)+ACCY  &&  *sa >= MIN(ka,la)-ACCY  &&
+          *sn <= MAX(mn,nn)+ACCY  &&  *sn >= MIN(mn,nn)-ACCY  &&
+          *sa <= MAX(ma,na)+ACCY  &&  *sa >= MIN(ma,na)-ACCY) {
 
          return 1;     /* Skjæring funnet ==> returnerer */
       }
@@ -486,17 +486,17 @@ CD kryss = GM_Overlapp(ka,kn,la,ln,ma,mn,na,nn);
 SK_EntPnt_GM short GM_Overlapp(double ka,double kn,double la,double ln,double ma,double mn,double na,double nn)
 {
    // Sorterer først ut åpenbare tilfeller der det ikke er skjæring
-   if (max(ka,la) < min(ma,na))  return 0;
-   if (min(ka,la) > max(ma,na))  return 0;
-   if (max(kn,ln) < min(mn,nn))  return 0;
-   if (min(kn,ln) > max(mn,nn))  return 0;
+   if (MAX(ka,la) < MIN(ma,na))  return 0;
+   if (MIN(ka,la) > MAX(ma,na))  return 0;
+   if (MAX(kn,ln) < MIN(mn,nn))  return 0;
+   if (MIN(kn,ln) > MAX(mn,nn))  return 0;
 
 
    // Linjene er like
-   if (fabs((min(ka,la) - min(ma,na))) < GM_ACCY &&
-       fabs((max(ka,la) - max(ma,na))) < GM_ACCY &&
-       fabs((min(kn,ln) - min(mn,nn))) < GM_ACCY &&
-       fabs((max(kn,ln) - max(mn,nn))) < GM_ACCY)
+   if (fabs((MIN(ka,la) - MIN(ma,na))) < GM_ACCY &&
+       fabs((MAX(ka,la) - MAX(ma,na))) < GM_ACCY &&
+       fabs((MIN(kn,ln) - MIN(mn,nn))) < GM_ACCY &&
+       fabs((MAX(kn,ln) - MAX(mn,nn))) < GM_ACCY)
    {
       return 3;
    }
@@ -594,10 +594,10 @@ SK_EntPnt_GM short GM_sVektVekt(double ka,double kn,double la,double ln,double m
 
 
    /* Sorterer først ut åpenbare tilfeller der det ikke er skjæring */ 
-   //if (max(ka,la) < min(ma,na))  return 0;
-   //if (min(ka,la) > max(ma,na))  return 0;
-   //if (max(kn,ln) < min(mn,nn))  return 0;
-   //if (min(kn,ln) > max(mn,nn))  return 0;
+   //if (MAX(ka,la) < MIN(ma,na))  return 0;
+   //if (MIN(ka,la) > MAX(ma,na))  return 0;
+   //if (MAX(kn,ln) < MIN(mn,nn))  return 0;
+   //if (MIN(kn,ln) > MAX(mn,nn))  return 0;
 
    det = anm * nlk - nnm * alk;
 
@@ -679,10 +679,10 @@ SK_EntPnt_GM short GM_sLinBue(double sa,double sn,double radius,double fi,double
 
                         /* Sjekk om punktene ligger på linjen */
    if (kryss > 0){
-       minn = min(kn,ln) - ACCY;
-       mina = min(ka,la) - ACCY;
-       maxn = max(kn,ln) + ACCY;
-       maxa = max(ka,la) + ACCY;
+       minn = MIN(kn,ln) - ACCY;
+       mina = MIN(ka,la) - ACCY;
+       maxn = MAX(kn,ln) + ACCY;
+       maxa = MAX(ka,la) + ACCY;
 
        if (kryss == 2){
            if (! (*a2 <= maxa  &&  *a2 >= mina  &&
@@ -1025,8 +1025,8 @@ SK_EntPnt_GM short GM_fotp(double a1,double n1,double a2,double n2,double ap,dou
       }
 
       /* Sjekk at fotpunktet er på linjen */
-      //if ( (*nf <= max(n1,n2)+ACCY)  &&  (*nf >= min(n1,n2)-ACCY) ) {
-      if ( (*nf <= max(n1,n2))  &&  (*nf >= min(n1,n2)) ) {
+      //if ( (*nf <= MAX(n1,n2)+ACCY)  &&  (*nf >= MIN(n1,n2)-ACCY) ) {
+      if ( (*nf <= MAX(n1,n2))  &&  (*nf >= MIN(n1,n2)) ) {
          beregnet = 2;
       } else {
          beregnet = 1;
@@ -1038,8 +1038,8 @@ SK_EntPnt_GM short GM_fotp(double a1,double n1,double a2,double n2,double ap,dou
       *nf = n1;
 
       /* Sjekk at fotpunktet er på linjen */
-      //if ( (*af <= max(a1,a2)+ACCY)  &&  (*af >= min(a1,a2)-ACCY) ) {
-      if ( (*af <= max(a1,a2))  &&  (*af >= min(a1,a2)) ) {
+      //if ( (*af <= MAX(a1,a2)+ACCY)  &&  (*af >= MIN(a1,a2)-ACCY) ) {
+      if ( (*af <= MAX(a1,a2))  &&  (*af >= MIN(a1,a2)) ) {
          beregnet = 2;
       } else {
          beregnet = 1;
@@ -1073,10 +1073,10 @@ SK_EntPnt_GM short GM_fotp(double a1,double n1,double a2,double n2,double ap,dou
      */
 
       /* Sjekk at fotpunktet er på linjen */
-      //if (*nf <= (max(n1,n2)+ACCY)  &&  *nf >= (min(n1,n2)-ACCY)  &&
-      //   *af <= (max(a1,a2)+ACCY)  &&  *af >= (min(a1,a2)-ACCY)){
-      if (*nf <= (max(n1,n2))  &&  *nf >= (min(n1,n2))  &&
-         *af <= (max(a1,a2))  &&  *af >= (min(a1,a2))){
+      //if (*nf <= (MAX(n1,n2)+ACCY)  &&  *nf >= (MIN(n1,n2)-ACCY)  &&
+      //   *af <= (MAX(a1,a2)+ACCY)  &&  *af >= (MIN(a1,a2)-ACCY)){
+      if (*nf <= (MAX(n1,n2))  &&  *nf >= (MIN(n1,n2))  &&
+         *af <= (MAX(a1,a2))  &&  *af >= (MIN(a1,a2))){
          beregnet = 2;                     /* På linjen */
       } else {
          beregnet = 1;            /* Utenfor linjen */
@@ -1186,7 +1186,7 @@ SK_EntPnt_GM short GM_fotp_ny(double a1, double n1, double a2, double n2, double
       }
 
       /* Sjekk at fotpunktet er på linjen */
-      if ( (*nf <= max(n1,n2)+ACCY)  &&  (*nf >= min(n1,n2)-ACCY) ) {
+      if ( (*nf <= MAX(n1,n2)+ACCY)  &&  (*nf >= MIN(n1,n2)-ACCY) ) {
          beregnet = 2;
       } else {
          beregnet = 1;
@@ -1198,7 +1198,7 @@ SK_EntPnt_GM short GM_fotp_ny(double a1, double n1, double a2, double n2, double
       *nf = n1;
 
       /* Sjekk at fotpunktet er på linjen */
-      if ( (*af <= max(a1,a2)+ACCY)  &&  (*af >= min(a1,a2)-ACCY) ) {
+      if ( (*af <= MAX(a1,a2)+ACCY)  &&  (*af >= MIN(a1,a2)-ACCY) ) {
          beregnet = 2;
       } else {
          beregnet = 1;
@@ -1212,12 +1212,12 @@ SK_EntPnt_GM short GM_fotp_ny(double a1, double n1, double a2, double n2, double
       // Forslag til ny metode for fotpunktberegning. Endrer ikke de opprinnelige punktene,
       // og det blir da mulig å gi korrekt tilbakemelding om punktet ligger inne på den gitte linjen.
       retning = GM_RetnGon(a1,n1,a2,n2);
-      GM_PolRettv(&ap1, &np1, retning+100.0, max(da,dn));
+      GM_PolRettv(&ap1, &np1, retning+100.0, MAX(da,dn));
       GM_sVektVekt(a1,n1,a2,n2,ap,np,ap1,np1,af,nf);
       
       /* Sjekk at fotpunktet er på linjen */
-      if (*nf <= (max(n1,n2)+ACCY)  &&  *nf >= (min(n1,n2)-ACCY)  &&
-         *af <= (max(a1,a2)+ACCY)  &&  *af >= (min(a1,a2)-ACCY)){
+      if (*nf <= (MAX(n1,n2)+ACCY)  &&  *nf >= (MIN(n1,n2)-ACCY)  &&
+         *af <= (MAX(a1,a2)+ACCY)  &&  *af >= (MIN(a1,a2)-ACCY)){
          beregnet = 2;                     /* På linjen */
       } else {
          beregnet = 1;            /* Utenfor linjen */
@@ -1658,8 +1658,8 @@ SK_EntPnt_GM short GM_bepa(double a1, double n1, double a2, double n2,
 
    if(atmp > ACCY  ||  ntmp > ACCY) {
    
-      dmx = max(atmp,ntmp);
-      dmn = min(atmp,ntmp);
+      dmx = MAX(atmp,ntmp);
+      dmn = MIN(atmp,ntmp);
       div = dmn / dmx;
 
       rinv = 1.0 / (dmx * sqrt(1.0+div*div));
@@ -2035,10 +2035,10 @@ SK_EntPnt_GM void GM_buebox(double as,double ns,double radius,double fi,double d
    a2 = as + r*cos(fi+dfi);
    n2 = ns + r*sin(fi+dfi);
 
-   *nva = min(a1,a2);
-   *nvn = min(n1,n2);
-   *oha = max(a1,a2);
-   *ohn = max(n1,n2);
+   *nva = MIN(a1,a2);
+   *nvn = MIN(n1,n2);
+   *oha = MAX(a1,a2);
+   *ohn = MAX(n1,n2);
 
    // For hver akse (fra sentrumspunktet) som krysses utvides omskrevet boks
    radius = fabs(radius);
@@ -2103,27 +2103,27 @@ SK_EntPnt_GM void GM_buebox(double as,double ns,double radius,double fi,double d
    if (fi >= 0.0 && fi < PI/2.0){
                                               // Slutt i 1. kvadrant
       if (r2 >= 0.0 && r2 < PI/2.0){
-         *nva = min(a1,a2);
-         *nvn = min(n1,n2);
-         *oha = max(a1,a2);
-         *ohn = max(n1,n2);
+         *nva = MIN(a1,a2);
+         *nvn = MIN(n1,n2);
+         *oha = MAX(a1,a2);
+         *ohn = MAX(n1,n2);
                            // Slutt i 2. kvadrant
       } else if (r2 >= PI/2.0L && r2 < PI){
-         *nva = min(a1,a2);
-         *nvn = min(n1,n2);
-         *oha = max(a1,a2);
+         *nva = MIN(a1,a2);
+         *nvn = MIN(n1,n2);
+         *oha = MAX(a1,a2);
          *ohn = ns + r;
                            // Slutt i 3. kvadrant
       } else if (r2 >=PI && r2 < PI*3.0L/2.0L){
          *nva = as - r;
-         *nvn = min(n1,n2);
-         *oha = max(a1,a2);
+         *nvn = MIN(n1,n2);
+         *oha = MAX(a1,a2);
          *ohn = ns + r;
                            // Slutt i 4. kvadrant
       } else{
          *nva = as - r;
          *nvn = ns - r;
-         *oha = max(a1,a2);
+         *oha = MAX(a1,a2);
          *ohn = ns + r;
       }
 
@@ -2134,82 +2134,82 @@ SK_EntPnt_GM void GM_buebox(double as,double ns,double radius,double fi,double d
          *nva = as - r;
          *nvn = ns - r;
          *oha = as + r;
-         *ohn = max(n1,n2);
+         *ohn = MAX(n1,n2);
                            // Slutt i 2. kvadrant
       } else if (r2 >= PI/2.0L && r2 < PI){
-         *nva = min(a1,a2);
-         *nvn = min(n1,n2);
-         *oha = max(a1,a2);
-         *ohn = max(n1,n2);
+         *nva = MIN(a1,a2);
+         *nvn = MIN(n1,n2);
+         *oha = MAX(a1,a2);
+         *ohn = MAX(n1,n2);
                            // Slutt i 3. kvadrant 
       } else if (r2 >=PI && r2 < PI*3.0L/2.0L){
          *nva = as - r;
-         *nvn = min(n1,n2);
-         *oha = max(a1,a2);
-         *ohn = max(n1,n2);
+         *nvn = MIN(n1,n2);
+         *oha = MAX(a1,a2);
+         *ohn = MAX(n1,n2);
                            // Slutt i 4. kvadrant 
       } else{
          *nva = as - r;
          *nvn = ns - r;
-         *oha = max(a1,a2);
-         *ohn = max(n1,n2);
+         *oha = MAX(a1,a2);
+         *ohn = MAX(n1,n2);
       }
 
                            // Start i 3. kvadrant 
    } else if (fi >=PI && fi < PI*3.0L/2.0L){
                            // Slutt i 1. kvadrant 
       if (r2 >= 0.0 && r2 < PI/2.0){
-         *nva = min(a1,a2);
+         *nva = MIN(a1,a2);
          *nvn = ns - r;
          *oha = as + r;
-         *ohn = max(n1,n2);
+         *ohn = MAX(n1,n2);
                            // Slutt i 2. kvadrant 
       } else if (r2 >= PI/2.0L && r2 < PI){
-         *nva = min(a1,a2);
+         *nva = MIN(a1,a2);
          *nvn = ns - r;
          *oha = as + r;
          *ohn = ns + r;
                            // Slutt i 3. kvadrant 
       } else if (r2 >=PI && r2 < PI*3.0L/2.0L){
-         *nva = min(a1,a2);
-         *nvn = min(n1,n2);
-         *oha = max(a1,a2);
-         *ohn = max(n1,n2);
+         *nva = MIN(a1,a2);
+         *nvn = MIN(n1,n2);
+         *oha = MAX(a1,a2);
+         *ohn = MAX(n1,n2);
       } else{
                            // Slutt i 4. kvadrant 
-         *nva = min(a1,a2);
+         *nva = MIN(a1,a2);
          *nvn = ns - r;
-         *oha = max(a1,a2);
-         *ohn = max(n1,n2);
+         *oha = MAX(a1,a2);
+         *ohn = MAX(n1,n2);
       }
 
                            // Start i 4. kvadrant 
    } else {
                            // Slutt i 1. kvadrant 
       if (r2 >= 0.0 && r2 < PI/2.0) {
-         *nva = min(a1,a2);
-         *nvn = min(n1,n2);
+         *nva = MIN(a1,a2);
+         *nvn = MIN(n1,n2);
          *oha = as + r;
-         *ohn = max(n1,n2);
+         *ohn = MAX(n1,n2);
                            // Slutt i 2. kvadrant 
       } else if (r2 >= PI/2.0L && r2 < PI) {
-         *nva = min(a1,a2);
-         *nvn = min(n1,n2);
+         *nva = MIN(a1,a2);
+         *nvn = MIN(n1,n2);
          *oha = as + r;
          *ohn = ns + r;
 
                            // Slutt i 3. kvadrant 
       } else if (r2 >=PI && r2 < PI*3.0L/2.0L) {
          *nva = as - r;
-         *nvn = min(n1,n2);
+         *nvn = MIN(n1,n2);
          *oha = as + r;
          *ohn = ns + r;
                            // Slutt i 4. kvadrant 
       } else {
-         *nva = min(a1,a2);
-         *nvn = min(n1,n2);
-         *oha = max(a1,a2);
-         *ohn = max(n1,n2);
+         *nva = MIN(a1,a2);
+         *nvn = MIN(n1,n2);
+         *oha = MAX(a1,a2);
+         *ohn = MAX(n1,n2);
       }
    }
 }

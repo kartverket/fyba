@@ -68,7 +68,7 @@ SK_EntPnt_UT void UT_Pause (short dur)
 
    UT_InqTime (tid);
    t1 = 100*tid[2] + tid[3];
-   t2 = t1 + min (dur,6000);
+   t2 = t1 + MIN(dur,6000);
    do {
       UT_InqTime (tid);
       t = 100*tid[2] + tid[3];
